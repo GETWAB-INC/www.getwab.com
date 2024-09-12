@@ -45,5 +45,8 @@ jobs:
             # Clear and cache views
             php artisan view:clear
             php artisan view:cache
+            # composer install
+            cd /var/www/html/www.getwabinc.com
+            composer install
             # Restart web server if needed
             sudo systemctl restart apache2
