@@ -1,0 +1,377 @@
+body {
+    font-family: 'Gudea', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f4f8;
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+h1, h2, h3 {
+    font-family: 'Gudea', sans-serif;
+}
+
+.body-lock {
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+}
+
+.menu-close {
+    display: none;
+}
+
+header {
+    width: 100%;
+    background: #012169;
+    color: #fff;
+}
+
+footer {
+    width: 100%;
+    background: #012169;
+    color: #fff;
+    padding: 20px 0;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+footer p {
+    margin: 0;
+}
+
+footer a {
+    color: #ffcc00;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+.footer-content {
+    align-items: center;
+    padding: 0 20px;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 auto;
+    max-width: 1100px;
+    padding: 10px 20px;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    text-decoration: none;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.logo-icon {
+    width: 50px;
+    height: auto;
+    margin-right: 10px;
+}
+
+.logo-text {
+    text-align: left;
+}
+
+.logo-text .tagline {
+    display: block;
+    font-size: 0.5em;
+    font-weight: normal;
+    color: #fff;
+    letter-spacing: 0.5px;
+    margin-top: -10px;
+    line-height: 1.2;
+}
+
+.container {
+    padding-top: 80px;
+    flex: 1;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.section {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.section h1 {
+    color: #004080;
+    margin-top: 0;
+}
+
+.services {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.service {
+    background: #e6f0ff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.capability {
+    text-align: center;
+    background: #012169;
+    color: #fff;
+    padding: 20px;
+}
+
+.capability a {
+    color: #ffcc00;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2em;
+    cursor: pointer;
+}
+
+nav a {
+    position: relative;
+    display: inline-block;
+    padding: 10px 0;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+nav a::before {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #fff;
+    transition: width 0.3s ease;
+}
+
+nav a:hover::before {
+    width: 100%;
+}
+
+nav {
+    display: flex;
+    gap: 20px;
+    background: #012169;
+}
+
+ /* banner */
+.banner {
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    z-index: 1;
+    background-color: #004080;
+}
+
+.banner-content {
+    color: #ffcc00;
+    text-align: center;
+    max-width: 600px;
+    z-index: 2;
+    padding: 10px 20px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.banner h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    color: #ffffff;
+}
+
+.banner p {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #ffffff;
+}
+
+.image-dots {
+    text-align: center;
+    margin-bottom: 16px;
+    z-index: 2;
+}
+
+.dot {
+    height: 15px;
+    width: 15px;
+    margin: 0 5px;
+    background-color: #e6f0ff;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.dot:hover, .active {
+    background-color: #012169;
+}
+
+.fade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.fade.active {
+    opacity: 1;
+}
+ /* banner end*/
+
+ .capability {
+    cursor: pointer;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
+
+    header, footer {
+        background: #0d1b2a;
+        color: #fff;
+    }
+
+    .section {
+        background: #1f1f1f;
+        color: #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .service {
+        background: #2a2a2a;
+        color: #e0e0e0;
+    }
+
+    nav {
+        background: #0d1b2a;
+    }
+
+    nav a {
+        color: #e0e0e0;
+    }
+
+    nav a::before {
+        background: #e0e0e0;
+    }
+
+    .capability {
+        background: #0d1b2a;
+        color: #fff;
+    }
+
+    .capability a {
+        color: #ffd700;
+    }
+
+    footer a {
+        color: #ffd700;
+    }
+
+    .menu-toggle, .menu-close {
+        color: #fff;
+    }
+
+}
+
+@media (max-width: 768px) {
+    .menu-toggle, .menu-close {
+        display: block;
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 2em;
+        cursor: pointer;
+        position: absolute;
+        right: 20px;
+        top: 16px;
+    }
+
+    nav {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        width: 100%;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding-top: 60px;
+        z-index: 9999;
+    }
+
+    nav a {
+        font-size: 1.5em;
+        padding: 20px;
+        width: 100%;
+        text-align: center;
+    }
+
+    nav.open .menu-close {
+        display: block;
+    }
+
+    .services {
+        flex-direction: column;
+
+    }
+
+}
+
+
