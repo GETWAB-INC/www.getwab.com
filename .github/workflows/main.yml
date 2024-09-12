@@ -1,0 +1,49 @@
+name: Deploy PHP Project
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Sync Files
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: 'root'
+          password: ${{ secrets.SERVER_PASSWORD }}
+          source: "."
+          target: "/var/www/html/www.getwabinc.com"
+          strip_components: 1
+
+      - name: Final Setup on Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: 'root'
+          password: ${{ secrets.SERVER_PASSWORD }}
+          command_timeout: 90m
+          script: |
+            # Remove .git and .github directories
+            sudo rm -rf /var/www/html/www.getwabinc.com/.git
+            sudo rm -rf /var/www/html/www.getwabinc.com/.github
+            # Set permissions to the web directory
+            sudo chown -R www-data:www-data /var/www/html/www.getwabinc.com
+            sudo chmod -R 755 /var/www/html/www.getwabinc.com
+            # Clear and cache configurations
+            php artisan config:clear
+            php artisan config:cache
+            # Clear and cache routes
+            php artisan route:clear
+            php artisan route:cache
+            # Clear and cache views
+            php artisan view:clear
+            php artisan view:cache
+            # Restart web server if needed
+            sudo systemctl restart apache2

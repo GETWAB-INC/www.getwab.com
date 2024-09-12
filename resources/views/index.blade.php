@@ -5,20 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="canonical" href="https://www.getwabinc.com/">
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png">
-    <link rel="manifest" href="/favicon_io/site.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon_io/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon_io/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon_io/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('favicon_io/site.webmanifest') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gudea:wght@400;700&display=swap">
     <title>GETWAB INC. - Premier Software Development & IT Consulting</title>
     <meta name="description" content="GETWAB INC. offers expert software development and IT consulting services to help businesses innovate and grow. Discover our solutions for web, mobile, and enterprise applications tailored to meet your unique needs.">
+
 </head>
 <body>
 
 <header>
     <div class="header-content">
         <a href="/" class="logo-link" aria-label="Homepage">
-            <img src="/images/visionary-software.svg" alt="Visionary Software Logo" class="logo-icon">
+            <img src="{{ asset('images/visionary-software.svg') }}" alt="Visionary Software Logo" class="logo-icon">
             <div class="logo-text">
                 GETWAB INC.<span class="tagline">Visionary Software</span>
             </div>
@@ -90,61 +91,41 @@
         <p>&copy; 2024 GETWAB INC. All Rights Reserved.</p>
     </div>
 </footer>
-
-</body>
-</html>
+<script src="{{ asset('js/menu.js') }}" defer></script>
 <script>
-/* mobile menu */
-document.addEventListener('DOMContentLoaded', function() {
-    const body = document.body;
-    const menuToggle = document.querySelector('.menu-toggle');
-    const menuClose = document.querySelector('.menu-close');
-    const nav = document.querySelector('nav');
-
-    menuToggle.addEventListener('click', function() {
-        nav.style.transform = 'translateX(0%)';
-        menuClose.style.display = 'block';
-        body.classList.add('body-lock');
-    });
-
-    menuClose.addEventListener('click', function() {
-        nav.style.transform = 'translateX(100%)';
-        menuClose.style.display = 'none';
-        body.classList.remove('body-lock');
-    });
-});
-/* banner */
+    /* banner */
 let slideIndex = 0;
+const baseUrl = "{{ asset('') }}";
 const slides = [
     {
         title: "Healthcare",
         text: "Transforming Healthcare Through Technology",
-        image: "/images/banner/healthcare.webp"
+        image: baseUrl + "images/banner/healthcare.webp"
     },
     {
         title: "Education",
         text: "Empowering the Future of Education",
-        image: "/images/banner/education.webp"
+        image: baseUrl + "images/banner/education.webp"
     },
     {
         title: "Transportation and Infrastructure",
         text: "Smart Cities Start with Smart Solutions",
-        image: "/images/banner/transportation.webp"
+        image: baseUrl + "images/banner/transportation.webp"
     },
     {
         title: "Energy and Environment",
         text: "Powering a Clean, Digital Future",
-        image: "/images/banner/energy.webp"
+        image: baseUrl + "images/banner/energy.webp"
     },
     {
         title: "Public Safety and Law Enforcement",
         text: "Digital Security for a Safer World",
-        image: "/images/banner/law.webp"
+        image: baseUrl + "images/banner/law.webp"
     },
     {
         title: "Finance and Accounting",
         text: "Automating Government Finances",
-        image: "/images/banner/finance.webp"
+        image: baseUrl + "images/banner/finance.webp"
     }
 ];
 
@@ -196,9 +177,6 @@ function currentSlide(n) {
 
 initSlider();
 
-/* capability */
-document.getElementById('capability-section').addEventListener('click', function() {
-    window.location.href = 'https://www.getwabinc.com/capability-statement.pdf';
-});
-
 </script>
+</body>
+</html>
