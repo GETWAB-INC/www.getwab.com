@@ -1,17 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <link rel="canonical" href="https://www.getwabinc.com/500.html">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon_io/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon_io/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon_io/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ asset('favicon_io/site.webmanifest') }}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gudea:wght@400;700&display=swap">
+    @include('include.head')
     <title>500 Internal Server Error - GETWAB INC.</title>
     <meta name="description" content="An unexpected error occurred on the GETWAB INC. website. We are working to resolve the issue.">
+    <link rel="canonical" href="https://www.getwabinc.com/500.html">
 </head>
 <body>
 <header>

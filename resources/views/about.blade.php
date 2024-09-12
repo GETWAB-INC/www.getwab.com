@@ -1,17 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <link rel="canonical" href="https://www.getwabinc.com/about.html"/>
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon_io/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon_io/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon_io/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ asset('favicon_io/site.webmanifest') }}">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gudea:wght@400;700&display=swap">
+    @include('include.head')
     <title>GETWAB INC. - About Us</title>
     <meta name="description" content="Learn more about GETWAB INC., a dynamic and innovative IT development company dedicated to providing tailored software solutions.">
+    <link rel="canonical" href="https://www.getwabinc.com/about.html"/>
 </head>
 <header>
     <div class="header-content">
