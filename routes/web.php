@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\EmailCampaignController;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 Route::get('/', function () {
     return view('index');
@@ -40,6 +42,21 @@ Route::get('login', function () {
     return view('login');
 });
 
+// Add Campaigns page
+Route::get('/add-campaign', function () {
+    if (!Auth::check()) {
+        return redirect('/login');
+    }
+    return app(EmailCampaignController::class)->create();
+})->name('add-campaign');
+
+Route::post('/add-campaign', function () {
+    if (!Auth::check()) {
+        return redirect('/login');
+    }
+    return app(EmailCampaignController::class)->store(request());
+})->name('store-campaign');
+
 Route::post('/logout', function () {
     Auth::logout();
     request()->session()->invalidate();
@@ -55,5 +72,9 @@ Route::get('dashboard', function () {
         return redirect('/login');
     }
 
-    return view('dashboard');
-});
+    // Извлекаем данные из таблицы 'companies'
+    $companies = DB::table('email_campaigns')->get();
+
+    // Передаем данные в представление 'dashboard'
+    return view('dashboard', ['companies' => $companies]);
+})->name('dashboard');

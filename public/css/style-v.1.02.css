@@ -216,12 +216,15 @@ label {
 }
 
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+input[type="text"],
+input[type="date"], textarea {
     width: 100%;
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
 }
+
 
 .btn.btn-primary {
     width: 100%;
@@ -237,6 +240,12 @@ input[type="password"] {
 
 .btn.btn-primary:hover {
     background-color: #012169;
+}
+
+.add-campaign{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
  /* alert */
