@@ -16,8 +16,8 @@ class EmailCampaignController extends Controller
     {
         // Валидация входных данных
         $validator = Validator::make($request->all(), [
-            'recipient_name' => 'required|string|max:255',
-            'recipient_email' => 'required|email|unique:email_campaigns,recipient_email',
+            'recipient_name' => 'nullable|string|max:255',
+            'recipient_email' => 'required|email|unique:email_companies,recipient_email',
             'company_name' => 'nullable|string|max:255',
             'contract_id' => 'nullable|string|max:50',
             'contract_topic' => 'nullable|string|max:255',
@@ -27,8 +27,16 @@ class EmailCampaignController extends Controller
             'contract_end_date' => 'nullable|date',
         ]);
 
+        // Проверка на ошибки валидации
+        if ($validator->fails()) {
+            // Возвращаем пользователя на страницу с формой с заполненными ранее полями и ошибками валидации
+            return redirect('add-campaign')
+                ->withErrors($validator)
+                ->withInput($request->except('password'));
+        }
+
         // Вставка данных в таблицу 'campaigns'
-        DB::table('email_campaigns')->insert([
+        DB::table('email_companies')->insert([
             'recipient_name' => $request->input('recipient_name'),
             'recipient_email' => $request->input('recipient_email'),
             'company_name' => $request->input('company_name'),

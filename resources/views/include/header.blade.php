@@ -15,6 +15,9 @@
     <a href="https://mail.getwabinc.com/">Mail</a>
 
     @auth
+        <a href="{{ route('dashboard') }}">
+            Dashboard
+        </a>
         <a href="{{ route('logout') }}"
            onclick="event.preventDefault();
                      document.getElementById('logout-form').submit();">

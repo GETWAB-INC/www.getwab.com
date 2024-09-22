@@ -11,9 +11,19 @@
     @include('include.header')
     <div class="container" id="main-container">
         <section class="section">
-        <a class="link" href="{{ url()->previous() }}">◄ Go Back</a>
-        <h1>Add New Campaign</h1>
+        <a class="link" href="{{ route('dashboard') }}">◄ Go Back</a>
+        <h1>Add New Company</h1>
         <form action="{{ route('store-campaign') }}" method="POST">
+            <!-- errors -->
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
             @csrf
             <div class="form-group">
                 <label for="recipient_name">Recipient Name:</label>
@@ -21,7 +31,7 @@
             </div>
             <div class="form-group">
                 <label for="recipient_email">Recipient Email:</label>
-                <input type="email" id="recipient_email" name="recipient_email" required>
+                <input type="email" id="recipient_email" name="recipient_email">
             </div>
             <div class="form-group">
                 <label for="company_name">Company Name:</label>

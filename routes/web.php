@@ -73,7 +73,7 @@ Route::get('dashboard', function () {
     }
 
     // Извлекаем данные из таблицы 'companies'
-    $companies = DB::table('email_campaigns')->get();
+    $companies = DB::table('email_companies')->get();
 
     // Передаем данные в представление 'dashboard'
     return view('dashboard', ['companies' => $companies]);
