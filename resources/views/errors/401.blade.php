@@ -4,7 +4,7 @@
     @include('include.head')
     <title>401 Unauthorized - GETWAB INC.</title>
     <meta name="description" content="You do not have permission to access the requested resource on GETWAB INC.">
-    <link rel="canonical" href="https://www.getwabinc.com/401.html">
+    <link rel="canonical" href="https://www.getwabinc.com/401">
 </head>
 <body>
 @include('include.header')

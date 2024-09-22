@@ -4,7 +4,7 @@
     @include('include.head')
     <title>GETWAB INC. - Services</title>
     <meta name="description" content="Explore the wide range of services offered by GETWAB INC., including AI implementation, cybersecurity, data analytics, mobile and web application development, and specialized software solutions for various business needs.">
-    <link rel="canonical" href="https://www.getwabinc.com/services.html"/>
+    <link rel="canonical" href="https://www.getwabinc.com/services"/>
 </head>
 <body>
 @include('include.header')

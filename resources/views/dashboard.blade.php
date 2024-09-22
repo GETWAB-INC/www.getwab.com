@@ -5,7 +5,7 @@
     <title>GETWAB INC. - Dashboard</title>
     <meta name="description" content="View your dashboard and manage your settings at GETWAB INC.">
     <meta name="robots" content="noindex, nofollow">
-    <link rel="canonical" href="https://www.getwabinc.com/dashboard.html"/>
+    <link rel="canonical" href="https://www.getwabinc.com/dashboard"/>
     <style>
         .container, .header-content {
             max-width: 100%;

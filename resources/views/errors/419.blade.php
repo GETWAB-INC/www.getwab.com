@@ -4,7 +4,7 @@
     @include('include.head')
     <title>419 Page Expired - GETWAB INC.</title>
     <meta name="description" content="The page you are trying to access has expired due to inactivity. Please refresh and try again.">
-    <link rel="canonical" href="https://www.getwabinc.com/419.html">
+    <link rel="canonical" href="https://www.getwabinc.com/419">
 </head>
 <body>
 @include('include.header')

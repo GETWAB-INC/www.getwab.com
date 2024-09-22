@@ -4,7 +4,7 @@
     @include('include.head')
     <title>404 Not Found - GETWAB INC.</title>
     <meta name="description" content="The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.">
-    <link rel="canonical" href="https://www.getwabinc.com/404.html">
+    <link rel="canonical" href="https://www.getwabinc.com/404">
 </head>
 <body>
 @include('include.header')

@@ -4,7 +4,7 @@
     @include('include.head')
     <title>500 Internal Server Error - GETWAB INC.</title>
     <meta name="description" content="An unexpected error occurred on the GETWAB INC. website. We are working to resolve the issue.">
-    <link rel="canonical" href="https://www.getwabinc.com/500.html">
+    <link rel="canonical" href="https://www.getwabinc.com/500">
 </head>
 <body>
 @include('include.header')

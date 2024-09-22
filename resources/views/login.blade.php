@@ -4,7 +4,7 @@
     @include('include.head')
     <title>GETWAB INC. - Login</title>
     <meta name="description" content="Access your GETWAB INC. account. Enter your credentials to log in and manage your preferences, settings, and services. Secure and user-friendly login to keep your data protected.">
-    <link rel="canonical" href="https://www.getwabinc.com/login.html"/>
+    <link rel="canonical" href="https://www.getwabinc.com/login"/>
 </head>
 <body>
     @include('include.header')

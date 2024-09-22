@@ -4,7 +4,7 @@
     @include('include.head')
     <title>GETWAB INC. - About Us</title>
     <meta name="description" content="Learn more about GETWAB INC., a dynamic and innovative IT development company dedicated to providing tailored software solutions.">
-    <link rel="canonical" href="https://www.getwabinc.com/about.html"/>
+    <link rel="canonical" href="https://www.getwabinc.com/about"/>
 </head>
 @include('include.header')
 <div class="container" id="main-container">
