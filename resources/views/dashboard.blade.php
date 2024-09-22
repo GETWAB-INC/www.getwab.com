@@ -21,8 +21,8 @@
                 <a href="{{ route('add-campaign') }}" class="link">↳ Add Company</a>
             </div>
             <p>Welcome to your dashboard! Here you can manage your settings, view data, and access your account details.</p>
+            <h2>Your Companies</h2>
             <div class="table-responsive">
-                <h2>Your Companies</h2>
                 <table border="1" style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr>
