@@ -229,6 +229,7 @@ input[type="date"], textarea {
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    background-color: #f0f4f8;
 }
 
 
@@ -248,7 +249,7 @@ input[type="date"], textarea {
     background-color: #012169;
 }
 
-.add-campaign{
+.add-company{
     display: flex;
     justify-content: space-between;
     align-items: center;

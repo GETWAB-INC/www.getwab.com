@@ -13,7 +13,7 @@
         <section class="section">
         <a class="link" href="{{ route('dashboard') }}">◄ Go Back</a>
         <h1>Add New Company</h1>
-        <form action="{{ route('store-campaign') }}" method="POST">
+        <form action="{{ route('store-company') }}" method="POST">
             <!-- errors -->
                 @if ($errors->any())
                     <div class="alert alert-danger">

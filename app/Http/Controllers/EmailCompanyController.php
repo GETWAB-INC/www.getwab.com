@@ -5,16 +5,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class EmailCampaignController extends Controller
+class EmailCompanyController extends Controller
 {
     public function create()
     {
-        return view('add-campaign');
+        return view('add-company');
     }
 
     public function store(Request $request)
     {
-        // Валидация входных данных
         $validator = Validator::make($request->all(), [
             'recipient_name' => 'nullable|string|max:255',
             'recipient_email' => 'required|email|unique:email_companies,recipient_email',
@@ -27,15 +26,12 @@ class EmailCampaignController extends Controller
             'contract_end_date' => 'nullable|date',
         ]);
 
-        // Проверка на ошибки валидации
         if ($validator->fails()) {
-            // Возвращаем пользователя на страницу с формой с заполненными ранее полями и ошибками валидации
-            return redirect('add-campaign')
+            return redirect('add-company')
                 ->withErrors($validator)
                 ->withInput($request->except('password'));
         }
 
-        // Вставка данных в таблицу 'campaigns'
         DB::table('email_companies')->insert([
             'recipient_name' => $request->input('recipient_name'),
             'recipient_email' => $request->input('recipient_email'),
@@ -50,7 +46,23 @@ class EmailCampaignController extends Controller
             'updated_at' => now()
         ]);
 
-        // Перенаправление на страницу дашборда с сообщением об успехе
-        return redirect()->route('dashboard')->with('success', 'Campaign added successfully!');
+        return redirect()->route('dashboard')->with('success', 'Company added successfully!');
+    }
+
+    public function unsubscribe(Request $request)
+    {
+        $email = $request->input('email');
+
+        $exists = DB::table('email_companies')->where('recipient_email', $email)->exists();
+
+        if ($exists) {
+            DB::table('email_companies')->where('recipient_email', $email)
+                ->update(['subscribe' => 1]);
+
+            return view('mail.unsubscribe_success', ['email' => $email])
+                ->with('success', 'You have been successfully unsubscribed.');
+        } else {
+            return back()->with('error', 'Email not found.');
+        }
     }
 }

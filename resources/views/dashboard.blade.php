@@ -16,9 +16,9 @@
     @include('include.header')
     <div class="container" id="main-container">
         <section class="section">
-            <div class="add-campaign">
+            <div class="add-company">
                 <h1>Dashboard</h1>
-                <a href="{{ route('add-campaign') }}" class="link">↳ Add Company</a>
+                <a href="{{ route('add-company') }}" class="link">↳ Add Company</a>
             </div>
             <p>Welcome to your dashboard! Here you can manage your settings, view data, and access your account details.</p>
             <h2>Your Companies</h2>
