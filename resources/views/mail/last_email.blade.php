@@ -8,7 +8,7 @@
 <body style="font-family: 'Gudea', sans-serif; margin: 0; padding: 0; background-color: #f0f4f8; color: #333; line-height: 1.6;">
     <header style="width: 100%; background-color: #012169; padding-top: 10px; padding-bottom: 10px; color: #fff; text-align: center; display: flex; justify-content: center; align-items: center;">
         <a href="https://www.getwabinc.com" style="display: flex; align-items: center; color: #fff; text-decoration: none; font-size: 2em; font-weight: bold;">
-            <img src="https://www.getwabinc.com/images/visionary-software.svg" alt="Visionary Software Logo" style="width: 50px; height: auto; margin-right: 10px;">
+            <img src="https://www.getwabinc.com/images/visionary-software.png" style="width: 50px;height: 50px;margin-right: 10px;">
             <div style="text-align: center;">
                 GETWAB INC.<span style="display: block; font-size: 0.5em; font-weight: normal; color: #fff; letter-spacing: 0.5px; margin-top: -10px; line-height: 1.2;">Visionary Software</span>
             </div>
