@@ -76,58 +76,58 @@ Route::get('dashboard', function () {
     return view('dashboard', ['companies' => $companies]);
 })->name('dashboard');
 
-Route::get('/hello-email', function () {
-    $company = new stdClass();
-    $company->recipient_name = 'Name';
-    $company->recipient_email = 'email@example.com';
-    $company->company_name = 'Your Company';
-    $company->contract_topic = 'Contract';
-    $company->contract_id = '12345';
-    $company->contract_start_date = '2024-01-01';
-    $company->contract_end_date = '2024-12-31';
-    $company->subscribe = 'Yes';
-    $company->hello_email = '2024-01-02';
-    $company->hello_email_again = '2024-06-01';
-    $company->last_email_at = '2024-06-01';
-    $company->created_at = '2024-01-01';
+// Route::get('/hello-email', function () {
+//     $company = new stdClass();
+//     $company->recipient_name = 'Name';
+//     $company->recipient_email = 'email@example.com';
+//     $company->company_name = 'Your Company';
+//     $company->contract_topic = 'Contract';
+//     $company->contract_id = '12345';
+//     $company->contract_start_date = '2024-01-01';
+//     $company->contract_end_date = '2024-12-31';
+//     $company->subscribe = 'Yes';
+//     $company->hello_email = '2024-01-02';
+//     $company->hello_email_again = '2024-06-01';
+//     $company->last_email_at = '2024-06-01';
+//     $company->created_at = '2024-01-01';
 
-    return view('mail.hello_email', ['company' => $company]);
-});
+//     return view('mail.hello_email', ['company' => $company]);
+// });
 
-Route::get('/hello-again', function () {
-    $company = new stdClass();
-    $company->recipient_name = 'Name';
-    $company->recipient_email = 'email@example.com';
-    $company->company_name = 'Your Company';
-    $company->contract_topic = 'Contract';
-    $company->contract_id = '12345';
-    $company->contract_start_date = '2024-01-01';
-    $company->contract_end_date = '2024-12-31';
-    $company->subscribe = 'Yes';
-    $company->hello_email = '2024-01-02';
-    $company->hello_email_again = '2024-06-01';
-    $company->last_email_at = '2024-06-01';
-    $company->created_at = '2024-01-01';
+// Route::get('/hello-again', function () {
+//     $company = new stdClass();
+//     $company->recipient_name = 'Name';
+//     $company->recipient_email = 'email@example.com';
+//     $company->company_name = 'Your Company';
+//     $company->contract_topic = 'Contract';
+//     $company->contract_id = '12345';
+//     $company->contract_start_date = '2024-01-01';
+//     $company->contract_end_date = '2024-12-31';
+//     $company->subscribe = 'Yes';
+//     $company->hello_email = '2024-01-02';
+//     $company->hello_email_again = '2024-06-01';
+//     $company->last_email_at = '2024-06-01';
+//     $company->created_at = '2024-01-01';
 
-    return view('mail.hello_again', ['company' => $company]);
-});
+//     return view('mail.hello_again', ['company' => $company]);
+// });
 
-Route::get('/last-email', function () {
-    $company = new stdClass();
-    $company->recipient_name = 'Name';
-    $company->recipient_email = 'email@example.com';
-    $company->company_name = 'Your Company';
-    $company->contract_topic = 'Contract';
-    $company->contract_id = '12345';
-    $company->contract_start_date = '2024-01-01';
-    $company->contract_end_date = '2024-12-31';
-    $company->subscribe = 'Yes';
-    $company->hello_email = '2024-01-02';
-    $company->hello_email_again = '2024-06-01';
-    $company->last_email_at = '2024-06-01';
-    $company->created_at = '2024-01-01';
+// Route::get('/last-email', function () {
+//     $company = new stdClass();
+//     $company->recipient_name = 'Name';
+//     $company->recipient_email = 'email@example.com';
+//     $company->company_name = 'Your Company';
+//     $company->contract_topic = 'Contract';
+//     $company->contract_id = '12345';
+//     $company->contract_start_date = '2024-01-01';
+//     $company->contract_end_date = '2024-12-31';
+//     $company->subscribe = 'Yes';
+//     $company->hello_email = '2024-01-02';
+//     $company->hello_email_again = '2024-06-01';
+//     $company->last_email_at = '2024-06-01';
+//     $company->created_at = '2024-01-01';
 
-    return view('mail.last_email', ['company' => $company]);
-});
+//     return view('mail.last_email', ['company' => $company]);
+// });
 
 Route::get('/unsubscribe', [EmailCompanyController::class, 'unsubscribe'])->name('unsubscribe');

@@ -3,9 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\EmailCampaign; // Предполагается, что модель для таблицы так называется
 use Illuminate\Support\Facades\Mail;
-use App\Mail\HelloEmail; // Предположим, что это ваш Mailable класс
+use App\Mail\HelloEmail;
 use Illuminate\Support\Facades\DB;
 
 
@@ -28,7 +27,7 @@ class SendHelloEmail extends Command
 
     if ($company) {
         Mail::to($company->recipient_email)->send(new HelloEmail($company));
-        
+
         DB::table('email_companies')
           ->where('id', $company->id)
           ->update(['hello_email' => now()]);
