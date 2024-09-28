@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Carbon\Carbon;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,7 +25,21 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('send:helloemail')->everyMinute();
+        // Пример для команд, которые работают только с 9:00 до 18:00 по времени UTC-5
+        $schedule->command('send:helloemail')
+            ->everyMinute()
+            ->timezone('America/New_York') // Устанавливаем часовой пояс Восточного времени США (UTC-5)
+            ->between('9:00', '18:00');    // Рабочие часы с 9:00 до 18:00
+
+        $schedule->command('send:againemail')
+            ->everyMinute()
+            ->timezone('America/New_York')
+            ->between('9:00', '18:00');
+
+        $schedule->command('send:lastemail')
+            ->everyMinute()
+            ->timezone('America/New_York')
+            ->between('9:00', '18:00');
     }
 
     /**
