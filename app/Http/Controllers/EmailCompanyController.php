@@ -75,8 +75,12 @@ class EmailCompanyController extends Controller
         $dkimSigningTable = shell_exec('cat /etc/opendkim/SigningTable');
         $trustedHosts = shell_exec('cat /etc/opendkim/TrustedHosts');
 
-        // Вывод этих данных на страницу
-        return view('dkim', compact('dkimKeyTable', 'dkimSigningTable', 'trustedHosts'));
+        // Получение прав доступа к файлам и их владельцев
+        $keyTablePermissions = shell_exec('ls -l /etc/opendkim/KeyTable');
+        $signingTablePermissions = shell_exec('ls -l /etc/opendkim/SigningTable');
+        $trustedHostsPermissions = shell_exec('ls -l /etc/opendkim/TrustedHosts');
+
+        return view('dkim.index', compact('dkimKeyTable', 'dkimSigningTable', 'trustedHosts', 'keyTablePermissions', 'signingTablePermissions', 'trustedHostsPermissions'));
     }
 
 }
