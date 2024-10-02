@@ -80,7 +80,7 @@ class EmailCompanyController extends Controller
         $signingTablePermissions = shell_exec('ls -l /etc/opendkim/SigningTable');
         $trustedHostsPermissions = shell_exec('ls -l /etc/opendkim/TrustedHosts');
 
-        return view('dkim.index', compact('dkimKeyTable', 'dkimSigningTable', 'trustedHosts', 'keyTablePermissions', 'signingTablePermissions', 'trustedHostsPermissions'));
+        return view('dkim', compact('dkimKeyTable', 'dkimSigningTable', 'trustedHosts', 'keyTablePermissions', 'signingTablePermissions', 'trustedHostsPermissions'));
     }
 
 }
