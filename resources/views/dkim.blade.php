@@ -50,7 +50,6 @@
 <div class="container" id="main-container">
     <a class="link" href="{{ route('dashboard') }}">◄ Go Back</a>
     <section class="section">
-
         <h1>DKIM Configuration</h1>
 
         <h2>KeyTable</h2>
@@ -91,6 +90,33 @@
     <section class="section">
         <h2>OpenDKIM Logs</h2>
         <pre>{{ $opendkimLogs }}</pre>
+    </section>
+
+    <section class="section">
+        <h2>Postfix Error Logs</h2>
+        <pre>{{ $postfixErrorLogs }}</pre>
+    </section>
+
+    <section class="section">
+        <h2>OpenDKIM Socket</h2>
+        <div><strong>Socket Exists:</strong> {{ $opendkimSocketExists ? 'Yes' : 'No' }}</div>
+        <div class="permissions-title">Socket Permissions:</div>
+        <pre class="permissions">{{ $opendkimSocketPermissions }}</pre>
+    </section>
+
+    <section class="section">
+        <h2>OpenDKIM Configuration</h2>
+        <pre>{{ $opendkimConfig }}</pre>
+    </section>
+
+    <section class="section">
+        <h2>DKIM Selector in Postfix</h2>
+        <pre>{{ $postfixSelectorConfig }}</pre>
+    </section>
+
+    <section class="section">
+        <h2>Reverse DNS Record</h2>
+        <pre>{{ $reverseDnsRecord }}</pre>
     </section>
 
     <section class="section">

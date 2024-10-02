@@ -69,52 +69,73 @@ class EmailCompanyController extends Controller
     }
 
     public function getDkim()
-    {
-        // Чтение содержимого файлов конфигурации DKIM
-        $dkimKeyTable = shell_exec('cat /etc/opendkim/KeyTable');
-        $dkimSigningTable = shell_exec('cat /etc/opendkim/SigningTable');
-        $trustedHosts = shell_exec('cat /etc/opendkim/TrustedHosts');
+{
+    // Чтение содержимого файлов конфигурации DKIM
+    $dkimKeyTable = shell_exec('cat /etc/opendkim/KeyTable');
+    $dkimSigningTable = shell_exec('cat /etc/opendkim/SigningTable');
+    $trustedHosts = shell_exec('cat /etc/opendkim/TrustedHosts');
 
-        // Получение прав доступа к файлам и их владельцев
-        $keyTablePermissions = shell_exec('ls -l /etc/opendkim/KeyTable');
-        $signingTablePermissions = shell_exec('ls -l /etc/opendkim/SigningTable');
-        $trustedHostsPermissions = shell_exec('ls -l /etc/opendkim/TrustedHosts');
+    // Получение прав доступа к файлам и их владельцев
+    $keyTablePermissions = shell_exec('ls -l /etc/opendkim/KeyTable');
+    $signingTablePermissions = shell_exec('ls -l /etc/opendkim/SigningTable');
+    $trustedHostsPermissions = shell_exec('ls -l /etc/opendkim/TrustedHosts');
 
-        // Статусы сервисов
-        $opendkimStatus = shell_exec('systemctl status opendkim | grep Active');
-        $postfixStatus = shell_exec('systemctl status postfix | grep Active');
+    // Статусы сервисов
+    $opendkimStatus = shell_exec('systemctl status opendkim | grep Active');
+    $postfixStatus = shell_exec('systemctl status postfix | grep Active');
 
-        // Конфигурация Postfix для DKIM
-        $postfixConfig = shell_exec('postconf | grep milter');
+    // Конфигурация Postfix для DKIM
+    $postfixConfig = shell_exec('postconf | grep milter');
 
-        // Проверка записи DKIM в DNS
-        $dnsDkimRecord = shell_exec('dig TXT s1._domainkey.getwabinc.com');
+    // Проверка записи DKIM в DNS
+    $dnsDkimRecord = shell_exec('dig TXT s1._domainkey.getwabinc.com');
 
-        // Логи OpenDKIM
-        $opendkimLogs = shell_exec('tail -n 20 /var/log/mail.log | grep opendkim');
+    // Логи OpenDKIM
+    $opendkimLogs = shell_exec('tail -n 20 /var/log/mail.log | grep opendkim');
 
-        
-        // Существование файлов конфигурации
-        $keyTableExists = file_exists('/etc/opendkim/KeyTable');
-        $signingTableExists = file_exists('/etc/opendkim/SigningTable');
-        $trustedHostsExists = file_exists('/etc/opendkim/TrustedHosts');
+    // Логи Postfix для проверки ошибок
+    $postfixErrorLogs = shell_exec('tail -n 20 /var/log/mail.log | grep postfix');
 
-        return view('dkim', compact(
-            'dkimKeyTable',
-            'dkimSigningTable',
-            'trustedHosts',
-            'keyTablePermissions',
-            'signingTablePermissions',
-            'trustedHostsPermissions',
-            'opendkimStatus',
-            'postfixStatus',
-            'postfixConfig',
-            'dnsDkimRecord',
-            'opendkimLogs',
-            'keyTableExists',
-            'signingTableExists',
-            'trustedHostsExists'
-        ));
-    }
+    // Проверка сокета OpenDKIM
+    $opendkimSocketExists = file_exists('/run/opendkim/opendkim.sock');
+    $opendkimSocketPermissions = shell_exec('ls -l /run/opendkim/opendkim.sock');
+
+    // Конфигурация OpenDKIM
+    $opendkimConfig = shell_exec('cat /etc/opendkim.conf');
+
+    // Проверка селектора DKIM в Postfix
+    $postfixSelectorConfig = shell_exec('postconf | grep -i dkim');
+
+    // Проверка обратной DNS-записи (PTR)
+    $reverseDnsRecord = shell_exec('dig -x 45.88.106.243');
+
+    // Существование файлов конфигурации
+    $keyTableExists = file_exists('/etc/opendkim/KeyTable');
+    $signingTableExists = file_exists('/etc/opendkim/SigningTable');
+    $trustedHostsExists = file_exists('/etc/opendkim/TrustedHosts');
+
+    return view('dkim', compact(
+        'dkimKeyTable',
+        'dkimSigningTable',
+        'trustedHosts',
+        'keyTablePermissions',
+        'signingTablePermissions',
+        'trustedHostsPermissions',
+        'opendkimStatus',
+        'postfixStatus',
+        'postfixConfig',
+        'dnsDkimRecord',
+        'opendkimLogs',
+        'postfixErrorLogs',
+        'opendkimSocketExists',
+        'opendkimSocketPermissions',
+        'opendkimConfig',
+        'postfixSelectorConfig',
+        'reverseDnsRecord',
+        'keyTableExists',
+        'signingTableExists',
+        'trustedHostsExists'
+    ));
+}
 
 }
