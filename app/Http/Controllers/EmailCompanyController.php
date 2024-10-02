@@ -93,6 +93,7 @@ class EmailCompanyController extends Controller
         // Логи OpenDKIM
         $opendkimLogs = shell_exec('tail -n 20 /var/log/mail.log | grep opendkim');
 
+        
         // Существование файлов конфигурации
         $keyTableExists = file_exists('/etc/opendkim/KeyTable');
         $signingTableExists = file_exists('/etc/opendkim/SigningTable');
