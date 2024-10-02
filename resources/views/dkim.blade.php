@@ -24,7 +24,7 @@
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            white-space: pre-wrap; /* Wrap long lines */
+            white-space: pre-wrap;
             word-wrap: break-word;
         }
 
@@ -55,22 +55,48 @@
         <pre>{{ $dkimKeyTable }}</pre>
         <div class="permissions-title">KeyTable Permissions:</div>
         <pre class="permissions">{{ $keyTablePermissions }}</pre>
-    </section>
 
-    <section class="section">
         <h2>SigningTable</h2>
         <pre>{{ $dkimSigningTable }}</pre>
         <div class="permissions-title">SigningTable Permissions:</div>
         <pre class="permissions">{{ $signingTablePermissions }}</pre>
-    </section>
 
-    <section class="section">
         <h2>TrustedHosts</h2>
         <pre>{{ $trustedHosts }}</pre>
         <div class="permissions-title">TrustedHosts Permissions:</div>
         <pre class="permissions">{{ $trustedHostsPermissions }}</pre>
     </section>
 
+    <section class="section">
+        <h2>System Status</h2>
+        <div><strong>OpenDKIM Status:</strong></div>
+        <pre>{{ $opendkimStatus }}</pre>
+
+        <div><strong>Postfix Status:</strong></div>
+        <pre>{{ $postfixStatus }}</pre>
+    </section>
+
+    <section class="section">
+        <h2>Postfix DKIM Configuration</h2>
+        <pre>{{ $postfixConfig }}</pre>
+    </section>
+
+    <section class="section">
+        <h2>DNS DKIM Record</h2>
+        <pre>{{ $dnsDkimRecord }}</pre>
+    </section>
+
+    <section class="section">
+        <h2>OpenDKIM Logs</h2>
+        <pre>{{ $opendkimLogs }}</pre>
+    </section>
+
+    <section class="section">
+        <h2>File Existence Check</h2>
+        <div><strong>KeyTable Exists:</strong> {{ $keyTableExists ? 'Yes' : 'No' }}</div>
+        <div><strong>SigningTable Exists:</strong> {{ $signingTableExists ? 'Yes' : 'No' }}</div>
+        <div><strong>TrustedHosts Exists:</strong> {{ $trustedHostsExists ? 'Yes' : 'No' }}</div>
+    </section>
 </div>
 @include('include.footer')
 <script src="{{ asset('js/menu.js') }}" defer></script>

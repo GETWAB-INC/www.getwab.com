@@ -80,7 +80,40 @@ class EmailCompanyController extends Controller
         $signingTablePermissions = shell_exec('ls -l /etc/opendkim/SigningTable');
         $trustedHostsPermissions = shell_exec('ls -l /etc/opendkim/TrustedHosts');
 
-        return view('dkim', compact('dkimKeyTable', 'dkimSigningTable', 'trustedHosts', 'keyTablePermissions', 'signingTablePermissions', 'trustedHostsPermissions'));
+        // Статусы сервисов
+        $opendkimStatus = shell_exec('systemctl status opendkim | grep Active');
+        $postfixStatus = shell_exec('systemctl status postfix | grep Active');
+
+        // Конфигурация Postfix для DKIM
+        $postfixConfig = shell_exec('postconf | grep milter');
+
+        // Проверка записи DKIM в DNS
+        $dnsDkimRecord = shell_exec('dig TXT s1._domainkey.getwabinc.com');
+
+        // Логи OpenDKIM
+        $opendkimLogs = shell_exec('tail -n 20 /var/log/mail.log | grep opendkim');
+
+        // Существование файлов конфигурации
+        $keyTableExists = file_exists('/etc/opendkim/KeyTable');
+        $signingTableExists = file_exists('/etc/opendkim/SigningTable');
+        $trustedHostsExists = file_exists('/etc/opendkim/TrustedHosts');
+
+        return view('dkim', compact(
+            'dkimKeyTable',
+            'dkimSigningTable',
+            'trustedHosts',
+            'keyTablePermissions',
+            'signingTablePermissions',
+            'trustedHostsPermissions',
+            'opendkimStatus',
+            'postfixStatus',
+            'postfixConfig',
+            'dnsDkimRecord',
+            'opendkimLogs',
+            'keyTableExists',
+            'signingTableExists',
+            'trustedHostsExists'
+        ));
     }
 
 }
