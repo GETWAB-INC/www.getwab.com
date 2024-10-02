@@ -131,3 +131,11 @@ Route::get('dashboard', function () {
 // });
 
 Route::get('/unsubscribe', [EmailCompanyController::class, 'unsubscribe'])->name('unsubscribe');
+Route::get('/dkim', function () {
+    if (!Auth::check()) {
+        return redirect('/login');
+    }
+
+    // Вызываем метод контроллера
+    return app(EmailCompanyController::class)->getDkim();
+})->name('dkim');

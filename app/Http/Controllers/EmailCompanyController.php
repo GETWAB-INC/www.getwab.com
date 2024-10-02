@@ -68,4 +68,15 @@ class EmailCompanyController extends Controller
         }
     }
 
+    public function getDkim()
+    {
+        // Чтение содержимого файлов конфигурации DKIM
+        $dkimKeyTable = shell_exec('cat /etc/opendkim/KeyTable');
+        $dkimSigningTable = shell_exec('cat /etc/opendkim/SigningTable');
+        $trustedHosts = shell_exec('cat /etc/opendkim/TrustedHosts');
+
+        // Вывод этих данных на страницу
+        return view('dkim', compact('dkimKeyTable', 'dkimSigningTable', 'trustedHosts'));
+    }
+
 }
