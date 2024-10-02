@@ -10,11 +10,34 @@
         .container, .header-content {
             max-width: 100%;
         }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .navigation a {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        .navigation a:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
     @include('include.header')
     <div class="container" id="main-container">
+        <!-- Навигация между Dashboard и DKIM -->
+        <div class="navigation">
+            <a href="{{ route('dkim') }}">DKIM</a>
+        </div>
         <section class="section">
             <div class="add-company">
                 <h1>Dashboard</h1>

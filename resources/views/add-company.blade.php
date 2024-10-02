@@ -10,8 +10,9 @@
 <body>
     @include('include.header')
     <div class="container" id="main-container">
-        <section class="section">
         <a class="link" href="{{ route('dashboard') }}">◄ Go Back</a>
+        <section class="section">
+
         <h1>Add New Company</h1>
         <form action="{{ route('store-company') }}" method="POST">
             <!-- errors -->

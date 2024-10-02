@@ -48,7 +48,9 @@
 <body>
 @include('include.header')
 <div class="container" id="main-container">
+    <a class="link" href="{{ route('dashboard') }}">◄ Go Back</a>
     <section class="section">
+
         <h1>DKIM Configuration</h1>
 
         <h2>KeyTable</h2>
