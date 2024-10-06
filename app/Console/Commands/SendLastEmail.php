@@ -11,7 +11,7 @@ use Carbon\Carbon;
 class SendLastEmail extends Command
 {
     protected $signature = 'send:lastemail';
-    protected $description = 'Sends a follow-up last email every 7 days after the again email, if the user is still subscribed, excluding Fridays, Saturdays, and Sundays.';
+    protected $description = 'Sends a follow-up last email every 7 days after the again email, if the user is still subscribed.';
 
     public function __construct()
     {
@@ -22,13 +22,7 @@ class SendLastEmail extends Command
     {
         $now = Carbon::now();
 
-        // Проверяем, что сегодня не пятница, суббота или воскресенье
-        if ($this->isWeekend($now)) {
-            $this->info('Today is a weekend. No emails will be sent.');
-            return;
-        }
-
-        // Получаем одну компанию, которая получила again_email, но еще не отписалась, и прошло 7 дней с момента отправки again_email
+        // Получаем компанию, которая получила again_email, но еще не отписалась, и прошло 7 дней с момента отправки again_email
         $company = DB::table('email_companies')
                     ->whereNotNull('hello_email_again')
                     ->where('subscribe', 0) // Убедимся, что пользователь не отписался
@@ -59,15 +53,5 @@ class SendLastEmail extends Command
         } else {
             $this->info('No eligible emails to send.');
         }
-    }
-
-    /**
-     * Проверка на выходные (пятница, суббота, воскресенье)
-     */
-    private function isWeekend($date)
-    {
-        // Пятница = 5, Суббота = 6, Воскресенье = 0
-        $dayOfWeek = $date->dayOfWeek;
-        return $dayOfWeek === 5 || $dayOfWeek === 6 || $dayOfWeek === 0;
     }
 }

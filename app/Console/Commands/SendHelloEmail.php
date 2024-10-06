@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
 class SendHelloEmail extends Command
 {
     protected $signature = 'send:helloemail';
-    protected $description = 'Sends a hello email to the company who have not received one, excluding Fridays, Saturdays, and Sundays.';
+    protected $description = 'Sends a hello email to the company who have not received one.';
 
     public function __construct()
     {
@@ -21,16 +21,6 @@ class SendHelloEmail extends Command
 
     public function handle()
     {
-        $now = Carbon::now();
-
-        // Проверяем, что сегодня не пятница, суббота или воскресенье
-        if ($this->isWeekend($now)) {
-            $message = 'Today is a weekend. No emails will be sent.';
-            $this->info($message);
-            Log::channel('helloemail')->info($message);  // Логируем в отдельный файл
-            return;
-        }
-
         // Получаем компанию, которая еще не получила hello_email
         $company = DB::table('email_companies')
                     ->whereNull('hello_email')
@@ -54,15 +44,5 @@ class SendHelloEmail extends Command
             $this->info($message);
             Log::channel('helloemail')->info($message);  // Логируем в отдельный файл
         }
-    }
-
-    /**
-     * Проверка на выходные (пятница, суббота, воскресенье)
-     */
-    private function isWeekend($date)
-    {
-        // Пятница = 5, Суббота = 6, Воскресенье = 0
-        $dayOfWeek = $date->dayOfWeek;
-        return $dayOfWeek === 5 || $dayOfWeek === 6 || $dayOfWeek === 0;
     }
 }

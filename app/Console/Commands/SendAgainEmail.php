@@ -11,7 +11,7 @@ use Carbon\Carbon;
 class SendAgainEmail extends Command
 {
     protected $signature = 'send:againemail';
-    protected $description = 'Sends a follow-up email one week after the hello email, excluding Fridays, Saturdays, and Sundays.';
+    protected $description = 'Sends a follow-up email one week after the hello email.';
 
     public function __construct()
     {
@@ -31,8 +31,8 @@ class SendAgainEmail extends Command
             $helloEmailDate = Carbon::parse($company->hello_email);
             $now = Carbon::now();
 
-            // Проверяем, прошла ли неделя и если сегодня не пятница, суббота или воскресенье
-            if ($now->diffInDays($helloEmailDate) >= 7 && !$this->isWeekend($now)) {
+            // Проверяем, прошла ли неделя с момента отправки hello_email
+            if ($now->diffInDays($helloEmailDate) >= 7) {
                 // Отправляем повторное письмо
                 Mail::to($company->recipient_email)->send(new AgainEmail($company));
 
@@ -43,20 +43,10 @@ class SendAgainEmail extends Command
 
                 $this->info('Follow-up email sent to ' . $company->recipient_email);
             } else {
-                $this->info('No eligible emails to send or today is a weekend.');
+                $this->info('No eligible emails to send yet.');
             }
         } else {
             $this->info('No companies found that require a follow-up email.');
         }
-    }
-
-    /**
-     * Проверка на выходные (пятница, суббота, воскресенье)
-     */
-    private function isWeekend($date)
-    {
-        // Пятница = 5, Суббота = 6, Воскресенье = 0
-        $dayOfWeek = $date->dayOfWeek;
-        return $dayOfWeek === 5 || $dayOfWeek === 6 || $dayOfWeek === 0;
     }
 }
