@@ -26,20 +26,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('send:helloemail')
-            ->everyMinute()
-            ->timezone('America/New_York')
-            ->between('9:00', '18:00');
+        $schedule->command('send:helloemail')->everyMinute();
 
-        $schedule->command('send:againemail')
-            ->everyMinute()
-            ->timezone('America/New_York')
-            ->between('9:00', '18:00');
+        $schedule->command('send:againemail')->everyMinute();
 
-        $schedule->command('send:lastemail')
-            ->everyMinute()
-            ->timezone('America/New_York')
-            ->between('9:00', '18:00');
+        $schedule->command('send:lastemail')->everyMinute();
     }
 
     /**
