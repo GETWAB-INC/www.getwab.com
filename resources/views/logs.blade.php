@@ -10,12 +10,24 @@
     <a class="link" href="{{ route('dashboard') }}">◄ Go Back</a>
     <section class="section">
         <h1>Log</h1>
-        @if ($logs instanceof \Illuminate\Pagination\LengthAwarePaginator)
+        @if ($logs instanceof \Illuminate\Pagination\Paginator)
     @foreach ($logs as $log)
         <p>{{ $log }}</p>
     @endforeach
 
-    {{ $logs->links() }}
+    <div class="pagination">
+        @if ($logs->onFirstPage())
+            <span><<</span>
+        @else
+            <a href="{{ $logs->previousPageUrl() }}"><<</a>
+        @endif
+
+        @if ($logs->hasMorePages())
+            <a href="{{ $logs->nextPageUrl() }}">>></a>
+        @else
+            <span>>></span>
+        @endif
+    </div>
 @else
     <p>{{ $logs }}</p>
 @endif
