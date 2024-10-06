@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\HelloEmail;
+use Illuminate\Support\Facades\File;
 
 class EmailCompanyController extends Controller
 {
@@ -137,5 +136,20 @@ class EmailCompanyController extends Controller
         'trustedHostsExists'
     ));
 }
+
+public function showLogs()
+    {
+        // Путь к файлу логов Laravel (обычно это storage/logs/laravel.log)
+        $logPath = storage_path('logs/helloemail.log');
+
+        // Проверяем, существует ли файл логов
+        if (File::exists($logPath)) {
+            // Читаем содержимое файла
+            $logs = File::get($logPath);
+            return view('logs', ['logs' => $logs]);
+        } else {
+            return view('logs', ['logs' => 'Log file not found.']);
+        }
+    }
 
 }

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\HelloEmail;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class SendHelloEmail extends Command
 {
@@ -24,7 +25,9 @@ class SendHelloEmail extends Command
 
         // Проверяем, что сегодня не пятница, суббота или воскресенье
         if ($this->isWeekend($now)) {
-            $this->info('Today is a weekend. No emails will be sent.');
+            $message = 'Today is a weekend. No emails will be sent.';
+            $this->info($message);
+            Log::channel('helloemail')->info($message);  // Логируем в отдельный файл
             return;
         }
 
@@ -43,9 +46,13 @@ class SendHelloEmail extends Command
               ->where('id', $company->id)
               ->update(['hello_email' => now()]);
 
-            $this->info('Hello email sent to ' . $company->recipient_email);
+            $message = 'Hello email sent to ' . $company->recipient_email;
+            $this->info($message);
+            Log::channel('helloemail')->info($message);  // Логируем в отдельный файл
         } else {
-            $this->info('No eligible emails to send.');
+            $message = 'No eligible emails to send.';
+            $this->info($message);
+            Log::channel('helloemail')->info($message);  // Логируем в отдельный файл
         }
     }
 

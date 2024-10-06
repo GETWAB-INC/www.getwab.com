@@ -127,6 +127,12 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'helloemail' => [
+        'driver' => 'single',
+        'path' => storage_path('logs/helloemail.log'),  // Указываем путь к новому лог-файлу
+        'level' => 'info',
+        ],
+
     ],
 
 ];

@@ -37,6 +37,10 @@
         <!-- Навигация между Dashboard и DKIM -->
         <div class="navigation">
             <a href="{{ route('dkim') }}">DKIM</a>
+            <a href="{{ route('hello-email') }}">Hello Email</a>
+            <a href="{{ route('hello-again') }}">Hello Again</a>
+            <a href="{{ route('last-email') }}">Last Email</a>
+            <a href="{{ route('show-logs') }}">Logs</a>
         </div>
         <section class="section">
             <div class="add-company">
