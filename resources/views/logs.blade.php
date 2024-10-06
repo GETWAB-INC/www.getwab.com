@@ -10,7 +10,15 @@
     <a class="link" href="{{ route('dashboard') }}">◄ Go Back</a>
     <section class="section">
         <h1>Log</h1>
-        <pre>{{ $logs }}</pre>
+        @if ($logs instanceof \Illuminate\Pagination\LengthAwarePaginator)
+    @foreach ($logs as $log)
+        <p>{{ $log }}</p>
+    @endforeach
+
+    {{ $logs->links() }}
+@else
+    <p>{{ $logs }}</p>
+@endif
     </section>
 </div>
 @include('include.footer')

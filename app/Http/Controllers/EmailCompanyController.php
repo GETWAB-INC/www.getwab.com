@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class EmailCompanyController extends Controller
 {
@@ -156,10 +157,23 @@ public function showLogs()
         // Переворачиваем строки для реверсного отображения
         $logLines = array_reverse($logLines);
 
-        // Присоединяем строки обратно
-        $logs = implode(PHP_EOL, $logLines);
+        // Преобразуем массив строк в коллекцию
+        $logsCollection = collect($logLines);
 
-        return view('logs', ['logs' => $logs]);
+        // Настраиваем пагинацию
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $perPage = 20; // Количество строк на одной странице
+        $currentPageLogs = $logsCollection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+
+        $paginatedLogs = new LengthAwarePaginator(
+            $currentPageLogs, // Элементы текущей страницы
+            $logsCollection->count(), // Общее количество элементов
+            $perPage, // Количество элементов на странице
+            $currentPage, // Текущая страница
+            ['path' => LengthAwarePaginator::resolveCurrentPath()] // Путь для генерации ссылок пагинации
+        );
+
+        return view('logs', ['logs' => $paginatedLogs]);
     } else {
         return view('logs', ['logs' => 'Log file not found.']);
     }
