@@ -19,11 +19,11 @@
         @if ($logs->onFirstPage())
             <span><<</span>
         @else
-            <a href="{{ $logs->previousPageUrl() }}"><<</a>
+            <a href="{{ $logs->previousPageUrl() }}" rel="prev"><<</a>
         @endif
 
         @if ($logs->hasMorePages())
-            <a href="{{ $logs->nextPageUrl() }}">>></a>
+            <a href="{{ $logs->nextPageUrl() }}" rel="next">>></a>
         @else
             <span>>></span>
         @endif
