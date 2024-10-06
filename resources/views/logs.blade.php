@@ -7,6 +7,7 @@
 <body>
 @include('include.header')
 <div class="container" id="main-container">
+    <a class="link" href="{{ route('dashboard') }}">◄ Go Back</a>
     <section class="section">
         <h1>Log</h1>
         <pre>{{ $logs }}</pre>
