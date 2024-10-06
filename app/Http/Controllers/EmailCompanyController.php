@@ -138,18 +138,31 @@ class EmailCompanyController extends Controller
 }
 
 public function showLogs()
-    {
-        // Путь к файлу логов Laravel (обычно это storage/logs/laravel.log)
-        $logPath = storage_path('logs/helloemail.log');
+{
+    // Путь к файлу логов
+    $logPath = storage_path('logs/helloemail.log');
 
-        // Проверяем, существует ли файл логов
-        if (File::exists($logPath)) {
-            // Читаем содержимое файла
-            $logs = File::get($logPath);
-            return view('logs', ['logs' => $logs]);
-        } else {
-            return view('logs', ['logs' => 'Log file not found.']);
-        }
+    // Проверяем, существует ли файл логов
+    if (File::exists($logPath)) {
+        // Читаем содержимое файла
+        $logs = File::get($logPath);
+
+        // Разделяем содержимое файла по строкам
+        $logLines = explode(PHP_EOL, $logs);
+
+        // Убираем пустые строки
+        $logLines = array_filter($logLines);
+
+        // Переворачиваем строки для реверсного отображения
+        $logLines = array_reverse($logLines);
+
+        // Присоединяем строки обратно
+        $logs = implode(PHP_EOL, $logLines);
+
+        return view('logs', ['logs' => $logs]);
+    } else {
+        return view('logs', ['logs' => 'Log file not found.']);
     }
+}
 
 }
