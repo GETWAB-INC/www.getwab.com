@@ -5,7 +5,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
-use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
+
 
 class EmailCompanyController extends Controller
 {
@@ -157,16 +158,22 @@ public function showLogs()
         // Переворачиваем строки для реверсного отображения
         $logLines = array_reverse($logLines);
 
-        // Преобразуем массив строк в коллекцию и задаем простую пагинацию
+        // Преобразуем массив строк в коллекцию
         $logsCollection = collect($logLines);
+
+        // Пагинация
         $perPage = 20; // Количество строк на одной странице
-        $currentPage = Paginator::resolveCurrentPage();
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $currentPageLogs = $logsCollection->slice(($currentPage - 1) * $perPage, $perPage)->all();
 
         // Создаем пагинацию
-        $paginatedLogs = new Paginator($currentPageLogs, $perPage, $currentPage, [
-            'path' => Paginator::resolveCurrentPath(),
-        ]);
+        $paginatedLogs = new LengthAwarePaginator(
+            $currentPageLogs,
+            $logsCollection->count(),
+            $perPage,
+            $currentPage,
+            ['path' => LengthAwarePaginator::resolveCurrentPath()]
+        );
 
         return view('logs', ['logs' => $paginatedLogs]);
     } else {

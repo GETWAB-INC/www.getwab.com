@@ -3,6 +3,14 @@
 <head>
     @include('include.head')
     <title>Log</title>
+    <style>
+        /* Custom styling to reduce the spacing between log entries */
+        .log-entry {
+            margin-top: 0;
+            margin-bottom: 0;
+            padding: 0;
+        }
+    </style>
 </head>
 <body>
 @include('include.header')
@@ -10,27 +18,22 @@
     <a class="link" href="{{ route('dashboard') }}">◄ Go Back</a>
     <section class="section">
         <h1>Log</h1>
-        @if ($logs instanceof \Illuminate\Pagination\Paginator)
-    @foreach ($logs as $log)
-        <p>{{ $log }}</p>
-    @endforeach
 
-    <div class="pagination">
-        @if ($logs->onFirstPage())
-            <span><<</span>
-        @else
-            <a href="{{ $logs->previousPageUrl() }}" rel="prev"><<</a>
-        @endif
+        {{-- Display each log line --}}
+        @foreach ($logs as $log)
+            <p class="log-entry">{{ $log }}</p>
+        @endforeach
 
-        @if ($logs->hasMorePages())
-            <a href="{{ $logs->nextPageUrl() }}" rel="next">>></a>
-        @else
-            <span>>></span>
-        @endif
-    </div>
-@else
-    <p>{{ $logs }}</p>
-@endif
+        {{-- Pagination Links --}}
+        <div class="pagination">
+            @if (!$logs->onFirstPage())
+                <a href="{{ $logs->previousPageUrl() }}" rel="prev"><<<</a>
+            @endif
+
+            @if ($logs->hasMorePages())
+                <a href="{{ $logs->nextPageUrl() }}" rel="next">>>></a>
+            @endif
+        </div>
     </section>
 </div>
 @include('include.footer')
