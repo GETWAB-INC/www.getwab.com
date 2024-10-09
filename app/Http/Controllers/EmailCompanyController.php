@@ -127,21 +127,35 @@ public function destroy($id)
 }
 
     public function unsubscribe(Request $request)
-    {
-        $email = $request->input('email');
+{
+    $email = $request->input('email');
+    $exists = DB::table('email_companies')->where('recipient_email', $email)->exists();
 
-        $exists = DB::table('email_companies')->where('recipient_email', $email)->exists();
+    if ($exists) {
+        // Unsubscribe the user
+        DB::table('email_companies')
+            ->where('recipient_email', $email)
+            ->update(['subscribe' => 1]);
 
-        if ($exists) {
-            DB::table('email_companies')->where('recipient_email', $email)
-                ->update(['subscribe' => 1]);
+        // Log the unsubscription details
+        DB::table('unsubscribe_logs')->insert([
+            'email' => $email,
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->header('User-Agent'),
+            'referrer' => $request->headers->get('referer'),
+            'screen_resolution' => $request->input('screen_resolution'),
+            'time_zone' => $request->input('time_zone'),
+            'browser_language' => $request->header('Accept-Language'),
+            'unsubscribed_at' => now(),
+            'created_at' => now(),
+        ]);
 
-            return view('mail.unsubscribe_success', ['email' => $email])
-                ->with('success', 'You have been successfully unsubscribed.');
-        } else {
-            return back()->with('error', 'Email not found.');
-        }
+        return view('mail.unsubscribe_success', ['email' => $email])
+            ->with('success', 'You have been successfully unsubscribed.');
+    } else {
+        return back()->with('error', 'Email not found.');
     }
+}
 
     public function getDkim()
 {
