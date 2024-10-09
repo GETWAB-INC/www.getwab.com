@@ -13,6 +13,9 @@
         .log-section {
             margin-bottom: 20px;
         }
+        .view-more {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -24,26 +27,38 @@
 
         <div class="log-section">
             <h2>Hello Email Logs</h2>
-            {{-- Display each log line --}}
+            {{-- Display a few log lines --}}
             @foreach ($helloEmailLogs as $log)
                 <p class="log-entry">{{ $log }}</p>
             @endforeach
+            {{-- Link to detailed logs with pagination --}}
+            <div class="view-more">
+                <a href="{{ route('show-hello-email-logs') }}">View full Hello Email logs</a>
+            </div>
         </div>
 
         <div class="log-section">
             <h2>Again Email Logs</h2>
-            {{-- Display each log line --}}
+            {{-- Display a few log lines --}}
             @foreach ($againEmailLogs as $log)
                 <p class="log-entry">{{ $log }}</p>
             @endforeach
+            {{-- Link to detailed logs with pagination --}}
+            <div class="view-more">
+                <a href="{{ route('show-again-email-logs') }}">View full Again Email logs</a>
+            </div>
         </div>
 
         <div class="log-section">
             <h2>Last Email Logs</h2>
-            {{-- Display each log line --}}
+            {{-- Display a few log lines --}}
             @foreach ($lastEmailLogs as $log)
                 <p class="log-entry">{{ $log }}</p>
             @endforeach
+            {{-- Link to detailed logs with pagination --}}
+            <div class="view-more">
+                <a href="{{ route('show-last-email-logs') }}">View full Last Email logs</a>
+            </div>
         </div>
 
     </section>

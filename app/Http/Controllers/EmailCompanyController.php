@@ -172,7 +172,8 @@ public function logs()
     ]);
 }
 
-public function showLogs()
+// Метод для отображения логов HelloEmail
+public function showHelloEmailLogs()
 {
     // Путь к файлу логов
     $logPath = storage_path('logs/helloemail.log');
@@ -208,9 +209,95 @@ public function showLogs()
             ['path' => LengthAwarePaginator::resolveCurrentPath()]
         );
 
-        return view('logs', ['logs' => $paginatedLogs]);
+        return view('hello-email-logs', ['logs' => $paginatedLogs]);
     } else {
-        return view('logs', ['logs' => 'Log file not found.']);
+        return view('hello-email-logs', ['logs' => 'Log file not found.']);
+    }
+}
+
+// Метод для отображения логов AgainEmail
+public function showAgainEmailLogs()
+{
+    // Путь к файлу логов
+    $logPath = storage_path('logs/againemail.log');
+
+    // Проверяем, существует ли файл логов
+    if (File::exists($logPath)) {
+        // Читаем содержимое файла
+        $logs = File::get($logPath);
+
+        // Разделяем содержимое файла по строкам
+        $logLines = explode(PHP_EOL, $logs);
+
+        // Убираем пустые строки
+        $logLines = array_filter($logLines);
+
+        // Переворачиваем строки для реверсного отображения
+        $logLines = array_reverse($logLines);
+
+        // Преобразуем массив строк в коллекцию
+        $logsCollection = collect($logLines);
+
+        // Пагинация
+        $perPage = 20; // Количество строк на одной странице
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $currentPageLogs = $logsCollection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+
+        // Создаем пагинацию
+        $paginatedLogs = new LengthAwarePaginator(
+            $currentPageLogs,
+            $logsCollection->count(),
+            $perPage,
+            $currentPage,
+            ['path' => LengthAwarePaginator::resolveCurrentPath()]
+        );
+
+        return view('again-email-logs', ['logs' => $paginatedLogs]);
+    } else {
+        return view('again-email-logs', ['logs' => 'Log file not found.']);
+    }
+}
+
+// Метод для отображения логов LastEmail
+public function showLastEmailLogs()
+{
+    // Путь к файлу логов
+    $logPath = storage_path('logs/lastemail.log');
+
+    // Проверяем, существует ли файл логов
+    if (File::exists($logPath)) {
+        // Читаем содержимое файла
+        $logs = File::get($logPath);
+
+        // Разделяем содержимое файла по строкам
+        $logLines = explode(PHP_EOL, $logs);
+
+        // Убираем пустые строки
+        $logLines = array_filter($logLines);
+
+        // Переворачиваем строки для реверсного отображения
+        $logLines = array_reverse($logLines);
+
+        // Преобразуем массив строк в коллекцию
+        $logsCollection = collect($logLines);
+
+        // Пагинация
+        $perPage = 20; // Количество строк на одной странице
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $currentPageLogs = $logsCollection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+
+        // Создаем пагинацию
+        $paginatedLogs = new LengthAwarePaginator(
+            $currentPageLogs,
+            $logsCollection->count(),
+            $perPage,
+            $currentPage,
+            ['path' => LengthAwarePaginator::resolveCurrentPath()]
+        );
+
+        return view('last-email-logs', ['logs' => $paginatedLogs]);
+    } else {
+        return view('last-email-logs', ['logs' => 'Log file not found.']);
     }
 }
 
