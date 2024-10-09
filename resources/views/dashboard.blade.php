@@ -29,6 +29,18 @@
         .navigation a:hover {
             background-color: #45a049;
         }
+
+            .table-responsive table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table-responsive th,
+    .table-responsive td {
+        text-align: center;
+        padding: 8px;
+        border: 1px solid #ddd;
+    }
     </style>
 </head>
 <body>
@@ -85,10 +97,16 @@
                                 <td>{{ $company->hello_email_again }}</td>
                                 <td>{{ $company->last_email_at }}</td>
                                 <td>{{ $company->created_at }}</td>
-                                <td>
-                                    <a href="#">Edit</a>
-                                    <a href="#">Delete</a>
-                                </td>
+<td>
+    <form action="{{ route('edit-company', ['id' => $company->id]) }}" method="GET" style="display:inline;">
+        <button type="submit">Edit</button>
+    </form>
+    <form action="{{ route('delete-company', ['id' => $company->id]) }}" method="POST" style="display:inline;">
+        @csrf
+        @method('DELETE')
+        <button type="submit" onclick="return confirm('Are you sure you want to delete this company?')">Delete</button>
+    </form>
+</td>
                             </tr>
                         @endforeach
                     </tbody>

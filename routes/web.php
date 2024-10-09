@@ -91,10 +91,23 @@ Route::middleware('auth')->group(function () {
     Route::post('/add-company', [EmailCompanyController::class, 'store'])
         ->name('store-company');
 
+    // Edit company form
+    Route::get('/edit-company/{id}', [EmailCompanyController::class, 'edit'])
+    ->name('edit-company');
+
+    // Update company
+    Route::put('/update-company/{id}', [EmailCompanyController::class, 'update'])
+    ->name('update-company');
+
+    // Delete company
+    Route::delete('/delete-company/{id}', [EmailCompanyController::class, 'destroy'])
+    ->name('delete-company');
+
     // Get DKIM settings
     Route::get('/dkim', [EmailCompanyController::class, 'getDkim'])
         ->name('dkim');
 
+    // Logs
     Route::get('/logs', [EmailCompanyController::class, 'logs'])->name('logs');
     Route::get('/logs-hello-email', [EmailCompanyController::class, 'showHelloEmailLogs'])->name('show-hello-email-logs');
     Route::get('/logs-again-email', [EmailCompanyController::class, 'showAgainEmailLogs'])->name('show-again-email-logs');
