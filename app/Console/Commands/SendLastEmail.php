@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\LastEmail; // Мейлер для последнего письма
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
 
 class SendLastEmail extends Command
 {
@@ -20,7 +22,8 @@ class SendLastEmail extends Command
 
     public function handle()
     {
-        $now = Carbon::now();
+        // Путь к лог файлу
+        $logPath = storage_path('logs/lastemail.log');
 
         // Получаем компанию, которая получила again_email, но еще не отписалась, и прошло 7 дней с момента отправки again_email
         $company = DB::table('email_companies')
@@ -34,7 +37,8 @@ class SendLastEmail extends Command
                     ->first();
 
         if ($company) {
-            $againEmailDate = Carbon::parse($company->again_email);
+            $againEmailDate = Carbon::parse($company->hello_email_again);
+            $now = Carbon::now();
 
             // Проверяем, прошло ли 7 дней с момента отправки again_email
             if ($now->diffInDays($againEmailDate) >= 7) {
@@ -46,12 +50,40 @@ class SendLastEmail extends Command
                     ->where('id', $company->id)
                     ->update(['last_email_at' => now()]);
 
-                $this->info('Last email sent to ' . $company->recipient_email);
+                $message = 'Last email sent to ' . $company->recipient_email;
+                $this->info($message);
+                Log::channel('lastemail')->info($message);  // Логируем отправку письма
             } else {
-                $this->info('It has not been 7 days since the again email.');
+                $this->updateNoEmailLog($logPath);  // Обновляем лог "It has not been 7 days since the again email."
             }
         } else {
-            $this->info('No eligible emails to send.');
+            $this->updateNoEmailLog($logPath);  // Обновляем лог "No eligible emails to send."
         }
+    }
+
+    /**
+     * Метод для обновления лога, если нет писем для отправки
+     */
+    private function updateNoEmailLog($logPath)
+    {
+        $logMessage = "No eligible emails to send.";
+
+        if (File::exists($logPath)) {
+            $logContents = File::get($logPath);
+
+            // Если строка уже существует, заменяем её
+            if (strpos($logContents, $logMessage) !== false) {
+                $logContents = preg_replace("/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] production.INFO: $logMessage/", '[' . now() . "] production.INFO: $logMessage", $logContents);
+                File::put($logPath, $logContents);
+            } else {
+                // Если строки нет, добавляем её
+                Log::channel('lastemail')->info($logMessage);
+            }
+        } else {
+            // Если файл не существует, создаем и записываем строку
+            Log::channel('lastemail')->info($logMessage);
+        }
+
+        $this->info('No eligible emails to send. Log updated.');
     }
 }

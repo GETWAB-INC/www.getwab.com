@@ -133,6 +133,18 @@ return [
         'level' => 'info',
         ],
 
+        'againemail' => [
+        'driver' => 'single',
+        'path' => storage_path('logs/againemail.log'),  // Указываем путь к новому лог-файлу
+        'level' => 'info',
+        ],
+
+        'lastemail' => [
+        'driver' => 'single',
+        'path' => storage_path('logs/lastemail.log'),  // Указываем путь к новому лог-файлу
+        'level' => 'info',
+        ],
+
     ],
 
 ];

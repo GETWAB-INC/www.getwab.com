@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\AgainEmail; // Мейлер для повторного письма
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
 
 class SendAgainEmail extends Command
 {
@@ -20,6 +22,9 @@ class SendAgainEmail extends Command
 
     public function handle()
     {
+        // Путь к лог файлу
+        $logPath = storage_path('logs/againemail.log');
+
         // Получаем одну компанию, которая получила hello_email неделю назад и еще не получила again_email
         $company = DB::table('email_companies')
                     ->whereNotNull('hello_email')
@@ -41,12 +46,40 @@ class SendAgainEmail extends Command
                     ->where('id', $company->id)
                     ->update(['hello_email_again' => now()]);
 
-                $this->info('Follow-up email sent to ' . $company->recipient_email);
+                $message = 'Follow-up email sent to ' . $company->recipient_email;
+                $this->info($message);
+                Log::channel('againemail')->info($message);  // Логируем отправку
             } else {
-                $this->info('No eligible emails to send yet.');
+                $this->updateNoEmailLog($logPath);  // Обновляем лог "No eligible emails to send yet"
             }
         } else {
-            $this->info('No companies found that require a follow-up email.');
+            $this->updateNoEmailLog($logPath);  // Обновляем лог "No eligible emails to send yet"
         }
+    }
+
+    /**
+     * Метод для обновления лога, если нет писем для отправки
+     */
+    private function updateNoEmailLog($logPath)
+    {
+        $logMessage = "No eligible emails to send yet.";
+
+        if (File::exists($logPath)) {
+            $logContents = File::get($logPath);
+
+            // Если строка уже существует, заменяем её
+            if (strpos($logContents, $logMessage) !== false) {
+                $logContents = preg_replace("/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] production.INFO: $logMessage/", '[' . now() . "] production.INFO: $logMessage", $logContents);
+                File::put($logPath, $logContents);
+            } else {
+                // Если строки нет, добавляем её
+                Log::channel('againemail')->info($logMessage);
+            }
+        } else {
+            // Если файл не существует, создаем и записываем строку
+            Log::channel('againemail')->info($logMessage);
+        }
+
+        $this->info('No eligible emails to send yet. Log updated.');
     }
 }
