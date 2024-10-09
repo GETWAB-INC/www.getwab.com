@@ -150,8 +150,7 @@ public function unsubscribe(Request $request)
             'unsubscribed_at' => now(),
         ]);
 
-        // After successful unsubscription, redirect to a confirmation page
-        return redirect()->route('unsubscribe.details', ['email' => $email]);
+        return view('mail.unsubscribe_success', ['email' => $email])->with('success', 'You have been successfully unsubscribed.');
     } else {
         return back()->with('error', 'Email not found.');
     }
@@ -159,13 +158,24 @@ public function unsubscribe(Request $request)
 
 public function showUnsubscribeDetails($company_id)
 {
-    $unsubscribeDetails = DB::table('unsubscribe_logs')->where('company_id', $company_id)->first();
+    // Fetch the company details by the given ID
+    $company = DB::table('email_companies')->where('id', $company_id)->first();
 
-    if ($unsubscribeDetails) {
-        return view('unsubscribe_details', ['details' => $unsubscribeDetails]);
-    } else {
-        return back()->with('error', 'No unsubscribe details found for this company.');
+    // Check if the company exists
+    if (!$company) {
+        return redirect()->back()->with('error', 'Company not found.');
     }
+
+    // Fetch the unsubscribe log for the company based on email
+    $unsubscribeLog = DB::table('unsubscribe_logs')->where('email', $company->recipient_email)->first();
+
+    // Check if there's an unsubscribe record
+    if (!$unsubscribeLog) {
+        return view('mail.unsubscribe_details', ['message' => 'No unsubscription log found for this company.', 'company' => $company]);
+    }
+
+    // Pass the company and unsubscribe details to the view
+    return view('mail.unsubscribe_details', ['unsubscribeLog' => $unsubscribeLog, 'company' => $company]);
 }
 
     public function getDkim()
