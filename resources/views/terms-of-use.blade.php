@@ -26,7 +26,7 @@
         <p>We may update these terms from time to time to reflect changes in our practices or regulatory requirements. Any modifications will be effective immediately upon posting on this site.</p>
 
         <h2>Contact Us</h2>
-        <p>If you have any questions regarding these Terms of Use, please reach out to us through our <a href="/contact.html">Contact page</a>. We are eager to assist you.</p>
+        <p>If you have any questions regarding these Terms of Use, please reach out to us through our <a href="/contact">Contact page</a>. We are eager to assist you.</p>
     </section>
 </main>
 @include('include.footer')

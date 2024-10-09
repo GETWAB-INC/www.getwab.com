@@ -22,7 +22,7 @@
         <h2>Managing Cookies</h2>
         <p>Since our website uses minimal cookies, there is no direct action required from you to manage cookies on our site. However, you can adjust your browser settings to block cookies from any third-party services like Google Fonts, though this may affect the display of certain textual content on our site.</p>
 
-        <p>For more information or if you have questions about our Cookie Policy, please visit our <a href="/contact.html">Contact Page</a>.</p>
+        <p>For more information or if you have questions about our Cookie Policy, please visit our <a href="/contact">Contact Page</a>.</p>
     </section>
 </div>
 @include('include.footer')
