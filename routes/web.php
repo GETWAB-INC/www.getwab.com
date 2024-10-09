@@ -95,6 +95,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dkim', [EmailCompanyController::class, 'getDkim'])
         ->name('dkim');
 
+    Route::get('/logs', [EmailCompanyController::class, 'logs'])->name('logs');
     Route::get('/log', [EmailCompanyController::class, 'showLogs'])->name('show-logs');
 
     // -------------------- Email Views for Sending --------------------

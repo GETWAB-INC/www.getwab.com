@@ -139,6 +139,39 @@ class EmailCompanyController extends Controller
     ));
 }
 
+public function logs()
+{
+    // Путь к файлу логов helloemail
+    $logPathHelloEmail = storage_path('logs/helloemail.log');
+    // Путь к файлу логов againemail
+    $logPathAgainEmail = storage_path('logs/againemail.log');
+    // Путь к файлу логов lastemail
+    $logPathLastEmail = storage_path('logs/lastemail.log');
+
+    // Функция для получения последних 50 строк из файла
+    $getLastLines = function ($logPath) {
+        if (File::exists($logPath)) {
+            // Чтение всех строк файла
+            $lines = file($logPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            // Возвращаем последние 50 строк
+            return array_slice($lines, -50);
+        }
+        return ['Log file not found.'];
+    };
+
+    // Получаем последние 50 строк из каждого файла
+    $helloEmailLogs = $getLastLines($logPathHelloEmail);
+    $againEmailLogs = $getLastLines($logPathAgainEmail);
+    $lastEmailLogs = $getLastLines($logPathLastEmail);
+
+    // Передаем логи в шаблон
+    return view('logs', [
+        'helloEmailLogs' => $helloEmailLogs,
+        'againEmailLogs' => $againEmailLogs,
+        'lastEmailLogs' => $lastEmailLogs
+    ]);
+}
+
 public function showLogs()
 {
     // Путь к файлу логов
