@@ -78,10 +78,14 @@ Route::get('login', function () {
 // Группа маршрутов, требующих аутентификацию
 Route::middleware('auth')->group(function () {
     // Dashboard route
-    Route::get('dashboard', function () {
-        $companies = DB::table('email_companies')->get();
-        return view('dashboard', ['companies' => $companies]);
-    })->name('dashboard');
+Route::get('dashboard', function () {
+    // Получаем компании, сортируя их по полю created_at в порядке убывания
+    $companies = DB::table('email_companies')
+                   ->orderBy('created_at', 'desc')
+                   ->get();
+
+    return view('dashboard', ['companies' => $companies]);
+})->name('dashboard');
 
     // Add company form
     Route::get('/add-company', [EmailCompanyController::class, 'create'])
