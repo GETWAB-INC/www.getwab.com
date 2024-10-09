@@ -22,6 +22,22 @@
             <p>We are interested in serving as a subcontractor, offering our services for complex tasks related to software development and support.</p>
         @endif
 
+        @if (!empty($company->contract_id))
+            <p>Contract ID: <u>{{ $company->contract_id }}</u></p>
+        @endif
+
+        @if (!empty($company->contract_description))
+            <p>Contract Description: <u>{{ $company->contract_description }}</u></p>
+        @endif
+
+        @if (!empty($company->contract_start_date))
+            <p>Contract Start Date: <u>{{ \Carbon\Carbon::parse($company->contract_start_date)->format('F d, Y') }}</u></p>
+        @endif
+
+        @if (!empty($company->contract_end_date))
+            <p>Contract End Date: <u>{{ \Carbon\Carbon::parse($company->contract_end_date)->format('F d, Y') }}</u></p>
+        @endif
+
         <ul>
             <li>Complete design and development of software according to customer specifications.</li>
             <li>Integration of developed software with existing systems of the customer.</li>

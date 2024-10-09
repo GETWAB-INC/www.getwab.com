@@ -17,18 +17,38 @@
             @endif
             and GETWAB INC.</p>
 
-            <p>As we previously discussed, our interest in participating as a subcontractor remains high. We believe that our expertise in custom software development can significantly enhance the scope and implementation of your current and future government projects.</p>
+            <p>Our interest in participating as a subcontractor remains high. We believe that our expertise in custom software development can significantly enhance the scope and implementation of your current and future government projects.</p>
 
-            <p>This week, we would like to highlight some specific capabilities that may be of particular interest:</p>
-            <ul>
-                <li>Advanced analytics and data integration solutions.</li>
-                <li>Custom CRM and ERP systems tailored for government contractors.</li>
-                <li>Secure cloud infrastructure setup and management.</li>
-            </ul>
+            @if (!empty($company->contract_id) || !empty($company->contract_topic) || !empty($company->contract_description))
+                <p>Here are some details from the project we discussed:</p>
+                <ul>
+                    @if (!empty($company->contract_id))
+                        <li><strong>Contract ID:</strong> {{ $company->contract_id }}</li>
+                    @endif
+                    @if (!empty($company->contract_topic))
+                        <li><strong>Contract Topic:</strong> {{ $company->contract_topic }}</li>
+                    @endif
+                    @if (!empty($company->contract_description))
+                        <li><strong>Contract Description:</strong> {{ $company->contract_description }}</li>
+                    @endif
+                </ul>
+            @endif
 
-            <p>We are confident that a partnership with GETWAB INC. will bring innovative solutions to your projects, ensuring they not only meet but exceed expectations.</p>
+            @if (!empty($company->contract_start_date) || !empty($company->contract_end_date))
+                <p>The contract timeline is:</p>
+                <ul>
+                    @if (!empty($company->contract_start_date))
+                        <li><strong>Start Date:</strong> {{ \Carbon\Carbon::parse($company->contract_start_date)->format('F d, Y') }}</li>
+                    @endif
+                    @if (!empty($company->contract_end_date))
+                        <li><strong>End Date:</strong> {{ \Carbon\Carbon::parse($company->contract_end_date)->format('F d, Y') }}</li>
+                    @endif
+                </ul>
+            @endif
 
-            <p>Please let me know if there is a convenient time for us to discuss this further. You can reach me directly at <a href="mailto:contact@getwabinc.com">contact@getwabinc.com</a> or by phone at Phone: <a href="tel:+19414020472">+1 941-402-0472</a>.</p>
+            <p>We believe that a partnership with GETWAB INC. will bring innovative solutions to your projects, ensuring they not only meet but exceed expectations.</p>
+
+            <p>Please let me know if there is a convenient time for us to discuss this further. You can reach me directly at <a href="mailto:contact@getwabinc.com">contact@getwabinc.com</a> or by phone at <a href="tel:+19414020472">+1 941-402-0472</a>.</p>
 
             <p>Looking forward to the opportunity to collaborate,<p>
 
