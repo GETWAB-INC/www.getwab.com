@@ -157,6 +157,28 @@ public function destroy($id)
     }
 }
 
+public function showUnsubscribeDetails($company_id)
+{
+    // Fetch the company details by the given ID
+    $company = DB::table('email_companies')->where('id', $company_id)->first();
+
+    // Check if the company exists
+    if (!$company) {
+        return redirect()->back()->with('error', 'Company not found.');
+    }
+
+    // Fetch the unsubscribe log for the company based on email
+    $unsubscribeLog = DB::table('unsubscribe_logs')->where('email', $company->recipient_email)->first();
+
+    // Check if there's an unsubscribe record
+    if (!$unsubscribeLog) {
+        return view('mail.unsubscribe_details', ['message' => 'No unsubscription log found for this company.', 'company' => $company]);
+    }
+
+    // Pass the company and unsubscribe details to the view
+    return view('mail.unsubscribe_details', ['unsubscribeLog' => $unsubscribeLog, 'company' => $company]);
+}
+
     public function getDkim()
 {
     // Чтение содержимого файлов конфигурации DKIM

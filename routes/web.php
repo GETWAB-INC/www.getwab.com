@@ -195,5 +195,6 @@ Route::get('dashboard', function () {
 
 // Unsubscribe route
 Route::get('/unsubscribe', [EmailCompanyController::class, 'unsubscribe'])->name('unsubscribe');
+Route::get('/unsubscribe/{company_id}', [EmailCompanyController::class, 'showUnsubscribeDetails'])->name('unsubscribe.details');
 
 // -------------------- End Unsubscribe Functionality --------------------

@@ -92,7 +92,13 @@
                                 <td>{{ $company->contract_topic }}</td>
                                 <td>{{ $company->contract_start_date }}</td>
                                 <td>{{ $company->contract_end_date }}</td>
-                                <td>{{ $company->subscribe }}</td>
+                                <td>
+    @if($company->subscribe == 1)
+        <a href="{{ route('unsubscribe.details', ['company_id' => $company->id]) }}">1</a>
+    @else
+        0
+    @endif
+</td>
                                 <td>{{ $company->hello_email }}</td>
                                 <td>{{ $company->hello_email_again }}</td>
                                 <td>{{ $company->last_email_at }}</td>
