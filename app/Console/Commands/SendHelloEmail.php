@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -8,6 +7,7 @@ use App\Mail\HelloEmail;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
 
 class SendHelloEmail extends Command
 {
@@ -21,6 +21,9 @@ class SendHelloEmail extends Command
 
     public function handle()
     {
+        // Путь к лог файлу
+        $logPath = storage_path('logs/helloemail.log');
+
         // Получаем компанию, которая еще не получила hello_email
         $company = DB::table('email_companies')
                     ->whereNull('hello_email')
@@ -38,11 +41,35 @@ class SendHelloEmail extends Command
 
             $message = 'Hello email sent to ' . $company->recipient_email;
             $this->info($message);
-            Log::channel('helloemail')->info($message);  // Логируем в отдельный файл
+            Log::channel('helloemail')->info($message);  // Логируем отправку
         } else {
-            $message = 'No eligible emails to send.';
-            $this->info($message);
-            Log::channel('helloemail')->info($message);  // Логируем в отдельный файл
+            $this->updateNoEmailLog($logPath);  // Обновляем лог с "No eligible emails"
         }
+    }
+
+    /**
+     * Метод для обновления лога, если нет писем для отправки
+     */
+    private function updateNoEmailLog($logPath)
+    {
+        $logMessage = "No eligible emails to send.";
+
+        if (File::exists($logPath)) {
+            $logContents = File::get($logPath);
+
+            // Если строка уже существует, заменяем её
+            if (strpos($logContents, $logMessage) !== false) {
+                $logContents = preg_replace("/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] production.INFO: $logMessage/", '[' . now() . "] production.INFO: $logMessage", $logContents);
+                File::put($logPath, $logContents);
+            } else {
+                // Если строки нет, добавляем её
+                Log::channel('helloemail')->info($logMessage);
+            }
+        } else {
+            // Если файл не существует, создаем и записываем строку
+            Log::channel('helloemail')->info($logMessage);
+        }
+
+        $this->info('No eligible emails to send. Log updated.');
     }
 }
