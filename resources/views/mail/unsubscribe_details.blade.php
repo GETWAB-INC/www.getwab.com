@@ -2,31 +2,26 @@
 <html lang="en">
 <head>
     @include('include.head')
-    <title>Unsubscribe Details for {{ $company->company_name }}</title>
+    <title>GETWAB INC. - Unsubscribe Details</title>
+    <meta name="description" content="View the details of unsubscribed users at GETWAB INC.">
+    <link rel="canonical" href="https://www.getwabinc.com/unsubscribe-details"/>
 </head>
 <body>
-    @include('include.header')
-
-    <div class="container">
-        <a href="{{ route('dashboard') }}" class="link">◄ Back</a>
-        <section class="section">
-            <h1>Unsubscribe Details for {{ $company->company_name ?? 'Unknown Company' }}</h1>
-
-            @if(isset($unsubscribeLog))
-                <p><strong>Email:</strong> {{ $unsubscribeLog->email }}</p>
-                <p><strong>IP Address:</strong> {{ $unsubscribeLog->ip_address ?? 'N/A' }}</p>
-                <p><strong>User Agent:</strong> {{ $unsubscribeLog->user_agent ?? 'N/A' }}</p>
-                <p><strong>Screen Resolution:</strong> {{ $unsubscribeLog->screen_resolution ?? 'N/A' }}</p>
-                <p><strong>Time Zone:</strong> {{ $unsubscribeLog->time_zone ?? 'N/A' }}</p>
-                <p><strong>Referrer:</strong> {{ $unsubscribeLog->referrer ?? 'N/A' }}</p>
-                <p><strong>Unsubscribed At:</strong> {{ $unsubscribeLog->unsubscribed_at ?? 'N/A' }}</p>
-            @else
-                <p>{{ $message }}</p>
-            @endif
-
-        </section>
-    </div>
-
-    @include('include.footer')
+@include('include.header')
+<div class="container" id="main-container">
+    <section class="section">
+        <h1>Unsubscribe Details for Company ID: {{ $details->company_id }}</h1>
+        <ul>
+            <li>Email: {{ $details->email }}</li>
+            <li>IP Address: {{ $details->ip_address }}</li>
+            <li>User Agent: {{ $details->user_agent }}</li>
+            <li>Screen Resolution: {{ $details->screen_resolution }}</li>
+            <li>Time Zone: {{ $details->time_zone }}</li>
+            <li>Unsubscribed At: {{ $details->unsubscribed_at }}</li>
+        </ul>
+    </section>
+</div>
+@include('include.footer')
+<script src="{{ asset('js/menu.js') }}" defer></script>
 </body>
 </html>

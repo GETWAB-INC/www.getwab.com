@@ -126,32 +126,31 @@ public function destroy($id)
     return redirect()->route('dashboard')->with('success', 'Company deleted successfully.');
 }
 
-    public function unsubscribe(Request $request)
+public function unsubscribe(Request $request)
 {
     $email = $request->input('email');
+    $screenResolution = $request->input('screen_resolution');
+    $timeZone = $request->input('time_zone');
+    $referrer = $request->header('referer'); // Capture referrer if needed
+
     $exists = DB::table('email_companies')->where('recipient_email', $email)->exists();
 
     if ($exists) {
         // Unsubscribe the user
-        DB::table('email_companies')
-            ->where('recipient_email', $email)
-            ->update(['subscribe' => 1]);
+        DB::table('email_companies')->where('recipient_email', $email)->update(['subscribe' => 1]);
 
-        // Log the unsubscription details
+        // Log unsubscription details
         DB::table('unsubscribe_logs')->insert([
             'email' => $email,
             'ip_address' => $request->ip(),
-            'user_agent' => $request->header('User-Agent'),
-            'referrer' => $request->headers->get('referer'),
-            'screen_resolution' => $request->input('screen_resolution'),
-            'time_zone' => $request->input('time_zone'),
-            'browser_language' => $request->header('Accept-Language'),
+            'user_agent' => $request->userAgent(),
+            'referrer' => $referrer,
+            'screen_resolution' => $screenResolution,
+            'time_zone' => $timeZone,
             'unsubscribed_at' => now(),
-            'created_at' => now(),
         ]);
 
-        return view('mail.unsubscribe_success', ['email' => $email])
-            ->with('success', 'You have been successfully unsubscribed.');
+        return view('mail.unsubscribe_success', ['email' => $email])->with('success', 'You have been successfully unsubscribed.');
     } else {
         return back()->with('error', 'Email not found.');
     }
@@ -159,24 +158,13 @@ public function destroy($id)
 
 public function showUnsubscribeDetails($company_id)
 {
-    // Fetch the company details by the given ID
-    $company = DB::table('email_companies')->where('id', $company_id)->first();
+    $unsubscribeDetails = DB::table('unsubscribe_logs')->where('company_id', $company_id)->first();
 
-    // Check if the company exists
-    if (!$company) {
-        return redirect()->back()->with('error', 'Company not found.');
+    if ($unsubscribeDetails) {
+        return view('unsubscribe_details', ['details' => $unsubscribeDetails]);
+    } else {
+        return back()->with('error', 'No unsubscribe details found for this company.');
     }
-
-    // Fetch the unsubscribe log for the company based on email
-    $unsubscribeLog = DB::table('unsubscribe_logs')->where('email', $company->recipient_email)->first();
-
-    // Check if there's an unsubscribe record
-    if (!$unsubscribeLog) {
-        return view('mail.unsubscribe_details', ['message' => 'No unsubscription log found for this company.', 'company' => $company]);
-    }
-
-    // Pass the company and unsubscribe details to the view
-    return view('mail.unsubscribe_details', ['unsubscribeLog' => $unsubscribeLog, 'company' => $company]);
 }
 
     public function getDkim()
