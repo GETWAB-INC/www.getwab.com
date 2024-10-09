@@ -153,8 +153,8 @@ public function logs()
         if (File::exists($logPath)) {
             // Чтение всех строк файла
             $lines = file($logPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-            // Возвращаем последние 50 строк
-            return array_slice($lines, -50);
+            // Возвращаем последние 50 строк и переворачиваем их, чтобы новые строки были сверху
+            return array_reverse(array_slice($lines, -50));
         }
         return ['Log file not found.'];
     };
