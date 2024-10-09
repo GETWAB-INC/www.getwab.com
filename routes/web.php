@@ -95,6 +95,14 @@ Route::get('dashboard', function () {
     Route::post('/add-company', [EmailCompanyController::class, 'store'])
         ->name('store-company');
 
+    // View Hello Email
+    Route::get('/view-hello-email/{id}', [EmailCompanyController::class, 'viewHelloEmail'])
+    ->name('view-hello-email');
+
+    // View Again Email
+    Route::get('/view-again-email/{id}', [EmailCompanyController::class, 'viewAgainEmail'])
+    ->name('view-again-email');
+
     // Edit company form
     Route::get('/edit-company/{id}', [EmailCompanyController::class, 'edit'])
     ->name('edit-company');

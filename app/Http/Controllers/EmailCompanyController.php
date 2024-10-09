@@ -52,6 +52,24 @@ class EmailCompanyController extends Controller
         return redirect()->route('dashboard')->with('success', 'Company added successfully!');
     }
 
+    public function viewHelloEmail($id)
+    {
+
+        $company = DB::table('email_companies')->where('id', $id)->first();
+
+
+    return view('mail.hello_email', ['company' => $company]);
+}
+
+public function viewAgainEmail($id)
+    {
+
+        $company = DB::table('email_companies')->where('id', $id)->first();
+
+
+    return view('mail.hello_again', ['company' => $company]);
+}
+
     // Метод для редактирования компании
 public function edit($id)
 {

@@ -98,6 +98,12 @@
                                 <td>{{ $company->last_email_at }}</td>
                                 <td>{{ $company->created_at }}</td>
 <td>
+    <form action="{{ route('view-hello-email', ['id' => $company->id]) }}" method="GET" style="display:inline;">
+        <button type="submit">Hello</button>
+    </form>
+    <form action="{{ route('view-again-email', ['id' => $company->id]) }}" method="GET" style="display:inline;">
+        <button type="submit">Again</button>
+    </form>
     <form action="{{ route('edit-company', ['id' => $company->id]) }}" method="GET" style="display:inline;">
         <button type="submit">Edit</button>
     </form>
