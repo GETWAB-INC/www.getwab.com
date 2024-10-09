@@ -150,7 +150,8 @@ public function unsubscribe(Request $request)
             'unsubscribed_at' => now(),
         ]);
 
-        return view('mail.unsubscribe_success', ['email' => $email])->with('success', 'You have been successfully unsubscribed.');
+        // After successful unsubscription, redirect to a confirmation page
+        return redirect()->route('unsubscribe.details', ['email' => $email]);
     } else {
         return back()->with('error', 'Email not found.');
     }

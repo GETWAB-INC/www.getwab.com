@@ -8,18 +8,51 @@
     <meta name="robots" content="noindex, nofollow">
     <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Capture screen resolution and timezone
-        var screenResolution = window.screen.width + 'x' + window.screen.height;
-        var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (!localStorage.getItem('unsubscribeSubmitted')) {
+            // Capture screen resolution and timezone
+            var screenResolution = window.screen.width + 'x' + window.screen.height;
+            var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-        // Build the URL with query parameters for unsubscription
-        var unsubscribeUrl = "{{ route('unsubscribe') }}" +
-            "?screen_resolution=" + encodeURIComponent(screenResolution) +
-            "&time_zone=" + encodeURIComponent(timeZone) +
-            "&email=" + encodeURIComponent("{{ $email }}");
+            // Create an invisible form to submit data automatically
+            var unsubscribeForm = document.createElement('form');
+            unsubscribeForm.method = 'POST';
+            unsubscribeForm.action = "{{ route('unsubscribe') }}";
 
-        // Redirect to the unsubscribe URL with the collected data
-        window.location.href = unsubscribeUrl;
+            // CSRF token
+            var csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_token';
+            csrfToken.value = '{{ csrf_token() }}';
+            unsubscribeForm.appendChild(csrfToken);
+
+            // Email input
+            var emailInput = document.createElement('input');
+            emailInput.type = 'hidden';
+            emailInput.name = 'email';
+            emailInput.value = "{{ $email }}";
+            unsubscribeForm.appendChild(emailInput);
+
+            // Screen resolution input
+            var resolutionInput = document.createElement('input');
+            resolutionInput.type = 'hidden';
+            resolutionInput.name = 'screen_resolution';
+            resolutionInput.value = screenResolution;
+            unsubscribeForm.appendChild(resolutionInput);
+
+            // Time zone input
+            var timeZoneInput = document.createElement('input');
+            timeZoneInput.type = 'hidden';
+            timeZoneInput.name = 'time_zone';
+            timeZoneInput.value = timeZone;
+            unsubscribeForm.appendChild(timeZoneInput);
+
+            // Automatically submit the form
+            document.body.appendChild(unsubscribeForm);
+            unsubscribeForm.submit();
+
+            // Mark as submitted to prevent resubmission
+            localStorage.setItem('unsubscribeSubmitted', 'true');
+        }
     });
     </script>
 </head>
