@@ -126,71 +126,93 @@ public function destroy($id)
     return redirect()->route('dashboard')->with('success', 'Company deleted successfully.');
 }
 
-public function unsubscribe(Request $request)
-{
-    // Получаем данные из запроса
-    $email = $request->input('email');
-    $screenResolution = $request->input('screen_resolution');
-    $timeZone = $request->input('time_zone');
-    $browserLanguage = $request->input('browser_language');
-    $referrer = $request->input('referrer'); // Захват реферера
+/**
+     * Метод для отображения страницы отписки (GET-запрос)
+     * Этот метод будет вызван при переходе по ссылке из письма
+     */
+    public function showUnsubscribePage(Request $request)
+    {
+        // Получаем email из URL-параметра ?email=example@mail.com
+        $email = $request->query('email');
 
-    // Логируем все данные запроса для отладки
-    Log::info('Unsubscribe Request Data:', [
-        'email' => $email,
-        'screen_resolution' => $screenResolution,
-        'time_zone' => $timeZone,
-        'browser_language' => $browserLanguage,
-        'referrer' => $referrer,
-        'ip_address' => $request->ip(),
-        'user_agent' => $request->userAgent()
-    ]);
-
-    // Проверка наличия email в таблице email_companies
-    $exists = DB::table('email_companies')->where('recipient_email', $email)->exists();
-
-    if ($exists) {
-        // Отписываем пользователя (устанавливаем subscribe в 1)
-        DB::table('email_companies')->where('recipient_email', $email)->update(['subscribe' => 1]);
-
-        // Проверяем, существует ли запись в unsubscribe_logs
-        $unsubscribeLogExists = DB::table('unsubscribe_logs')->where('email', $email)->exists();
-
-        if ($unsubscribeLogExists) {
-            // Обновляем запись, если она уже существует
-            DB::table('unsubscribe_logs')->where('email', $email)->update([
-                'ip_address' => $request->ip(),
-                'user_agent' => $request->userAgent(),
-                'referrer' => $referrer,
-                'screen_resolution' => $screenResolution,
-                'time_zone' => $timeZone,
-                'browser_language' => $browserLanguage,
-                'unsubscribed_at' => now(),
-                'updated_at' => now(),
-            ]);
-        } else {
-            // Создаем новую запись, если такой записи нет
-            DB::table('unsubscribe_logs')->insert([
-                'email' => $email,
-                'ip_address' => $request->ip(),
-                'user_agent' => $request->userAgent(),
-                'referrer' => $referrer,
-                'screen_resolution' => $screenResolution,
-                'time_zone' => $timeZone,
-                'browser_language' => $browserLanguage,
-                'unsubscribed_at' => now(),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+        // Проверяем, есть ли email в базе данных
+        if (!$email) {
+            return redirect()->back()->with('error', 'Email not provided.');
         }
 
-        return view('mail.unsubscribe_success', ['email' => $email])->with('success', 'You have been successfully unsubscribed.');
-    } else {
-        // Логируем сообщение, если email не найден
-        Log::warning('Email not found for unsubscription:', ['email' => $email]);
-        return back()->with('error', 'Email not found.');
+        // Отображаем страницу отписки с email
+        return view('mail.unsubscribe', ['email' => $email]);
     }
-}
+
+    /**
+     * Метод для обработки отписки (POST-запрос)
+     * Этот метод обрабатывает данные, полученные с JavaScript через POST
+     */
+    public function unsubscribe(Request $request)
+    {
+        // Получаем данные из запроса POST
+        $email = $request->input('email');
+        $screenResolution = $request->input('screen_resolution');
+        $timeZone = $request->input('time_zone');
+        $browserLanguage = $request->input('browser_language');
+        $referrer = $request->input('referrer'); // Захват реферера
+
+        // Логируем все данные для отладки
+        Log::info('Unsubscribe Request Data:', [
+            'email' => $email,
+            'screen_resolution' => $screenResolution,
+            'time_zone' => $timeZone,
+            'browser_language' => $browserLanguage,
+            'referrer' => $referrer,
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent()
+        ]);
+
+        // Проверка наличия email в таблице email_companies
+        $exists = DB::table('email_companies')->where('recipient_email', $email)->exists();
+
+        if ($exists) {
+            // Отписываем пользователя (устанавливаем subscribe в 1)
+            DB::table('email_companies')->where('recipient_email', $email)->update(['subscribe' => 1]);
+
+            // Проверяем, существует ли запись в unsubscribe_logs
+            $unsubscribeLogExists = DB::table('unsubscribe_logs')->where('email', $email)->exists();
+
+            if ($unsubscribeLogExists) {
+                // Обновляем запись, если она уже существует
+                DB::table('unsubscribe_logs')->where('email', $email)->update([
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                    'referrer' => $referrer,
+                    'screen_resolution' => $screenResolution,
+                    'time_zone' => $timeZone,
+                    'browser_language' => $browserLanguage,
+                    'unsubscribed_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            } else {
+                // Создаем новую запись, если такой записи нет
+                DB::table('unsubscribe_logs')->insert([
+                    'email' => $email,
+                    'ip_address' => $request->ip(),
+                    'user_agent' => $request->userAgent(),
+                    'referrer' => $referrer,
+                    'screen_resolution' => $screenResolution,
+                    'time_zone' => $timeZone,
+                    'browser_language' => $browserLanguage,
+                    'unsubscribed_at' => now(),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+            return view('mail.unsubscribe_success', ['email' => $email])->with('success', 'You have been successfully unsubscribed.');
+        } else {
+            // Логируем сообщение, если email не найден
+            Log::warning('Email not found for unsubscription:', ['email' => $email]);
+            return back()->with('error', 'Email not found.');
+        }
+    }
 
 public function showUnsubscribeDetails($company_id)
 {

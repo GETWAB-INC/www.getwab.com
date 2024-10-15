@@ -194,7 +194,11 @@ Route::get('dashboard', function () {
 // -------------------- Unsubscribe Functionality --------------------
 
 // Unsubscribe route
-Route::get('/unsubscribe', [EmailCompanyController::class, 'unsubscribe'])->name('unsubscribe');
+// Маршрут для перехода с email (GET-запрос)
+Route::get('/unsubscribe', [EmailCompanyController::class, 'showUnsubscribePage'])->name('unsubscribe');
+
+// Маршрут для обработки POST-запроса (реальная отписка)
+Route::post('/unsubscribe', [EmailCompanyController::class, 'unsubscribe'])->name('unsubscribe.post');
 Route::get('/unsubscribe/{company_id}', [EmailCompanyController::class, 'showUnsubscribeDetails'])->name('unsubscribe.details');
 
 // -------------------- End Unsubscribe Functionality --------------------
