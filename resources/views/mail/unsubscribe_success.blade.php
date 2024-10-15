@@ -8,7 +8,7 @@
     <meta name="robots" content="noindex, nofollow">
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Захватываем разрешение экрана, временную зону и язык браузера
+        // Захватываем разрешение экрана, временную зону, язык браузера и реферер
         var screenResolution = window.screen.width + 'x' + window.screen.height;
         var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         var browserLanguage = navigator.language || navigator.userLanguage;
@@ -17,24 +17,30 @@
         // URL для отписки
         var unsubscribeUrl = "{{ route('unsubscribe') }}";
 
+        // Создаем объект FormData для отправки данных
+        var formData = new FormData();
+        formData.append('email', "{{ $email }}");
+        formData.append('screen_resolution', screenResolution);
+        formData.append('time_zone', timeZone);
+        formData.append('browser_language', browserLanguage);
+        formData.append('referrer', referrer);
+
         // Отправляем данные через POST запрос
         fetch(unsubscribeUrl, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
             },
-            body: JSON.stringify({
-                email: "{{ $email }}",
-                screen_resolution: screenResolution,
-                time_zone: timeZone,
-                browser_language: browserLanguage,
-                referrer: referrer
-            })
+            body: formData
         }).then(function(response) {
-            return response.json();
+            if (response.ok) {
+                console.log('Unsubscription data sent successfully:', response);
+                return response.json();
+            } else {
+                console.error('Unsubscription request failed:', response);
+            }
         }).then(function(data) {
-            console.log('Unsubscription data sent successfully:', data);
+            console.log('Response data:', data);
         }).catch(function(error) {
             console.error('Error in unsubscription data:', error);
         });

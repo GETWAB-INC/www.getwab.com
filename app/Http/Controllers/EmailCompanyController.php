@@ -135,7 +135,7 @@ public function unsubscribe(Request $request)
     $browserLanguage = $request->input('browser_language');
     $referrer = $request->input('referrer'); // Захват реферера
 
-    // Логируем все данные запроса
+    // Логируем все данные запроса для отладки
     Log::info('Unsubscribe Request Data:', [
         'email' => $email,
         'screen_resolution' => $screenResolution,
