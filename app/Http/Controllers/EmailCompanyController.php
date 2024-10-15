@@ -131,29 +131,37 @@ public function unsubscribe(Request $request)
     $email = $request->input('email');
     $screenResolution = $request->input('screen_resolution');
     $timeZone = $request->input('time_zone');
-    $referrer = $request->header('referer'); // Capture referrer if needed
+    $referrer = $request->header('referer'); // Захват реферера
 
-    $exists = DB::table('email_companies')->where('recipient_email', $email)->exists();
+    // Проверка наличия email в таблице email_companies
+    $company = DB::table('email_companies')->where('recipient_email', $email)->first();
 
-    if ($exists) {
-        // Unsubscribe the user
-        DB::table('email_companies')->where('recipient_email', $email)->update(['subscribe' => 1]);
-
-        // Log unsubscription details
-        DB::table('unsubscribe_logs')->insert([
-            'email' => $email,
-            'ip_address' => $request->ip(),
-            'user_agent' => $request->userAgent(),
-            'referrer' => $referrer,
-            'screen_resolution' => $screenResolution,
-            'time_zone' => $timeZone,
-            'unsubscribed_at' => now(),
-        ]);
-
-        return view('mail.unsubscribe_success', ['email' => $email])->with('success', 'You have been successfully unsubscribed.');
-    } else {
+    if (!$company) {
+        // Если email не найден
         return back()->with('error', 'Email not found.');
     }
+
+    if ($company->subscribe == 1) {
+        // Если пользователь уже отписан
+        return view('mail.unsubscribe_success', ['email' => $email])->with('success', 'You have already successfully unsubscribed.');
+    }
+
+    // Отписываем пользователя (устанавливаем subscribe в 1)
+    DB::table('email_companies')->where('recipient_email', $email)->update(['subscribe' => 1]);
+
+    // Логируем детали отписки
+    DB::table('unsubscribe_logs')->insert([
+        'email' => $email,
+        'ip_address' => $request->ip(),
+        'user_agent' => $request->userAgent(),
+        'referrer' => $referrer,
+        'screen_resolution' => $screenResolution,
+        'time_zone' => $timeZone,
+        'unsubscribed_at' => now(),
+    ]);
+
+    // Отображаем сообщение об успешной отписке
+    return view('mail.unsubscribe_success', ['email' => $email])->with('success', 'You have been successfully unsubscribed.');
 }
 
 public function showUnsubscribeDetails($company_id)

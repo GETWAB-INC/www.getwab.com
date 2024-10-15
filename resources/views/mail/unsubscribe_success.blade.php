@@ -6,19 +6,40 @@
     <meta name="description" content="You have successfully unsubscribed from GETWAB INC. notifications.">
     <link rel="canonical" href="https://www.getwabinc.com/unsubscribe"/>
     <meta name="robots" content="noindex, nofollow">
-    <script>
+<script>
     document.addEventListener("DOMContentLoaded", function () {
         // Capture screen resolution and timezone
         var screenResolution = window.screen.width + 'x' + window.screen.height;
         var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        var browserLanguage = navigator.language || navigator.userLanguage;
+        var referrer = document.referrer;
 
         // Build the URL with query parameters for unsubscription
-        var unsubscribeUrl = "{{ route('unsubscribe') }}" +
-            "?screen_resolution=" + encodeURIComponent(screenResolution) +
-            "&time_zone=" + encodeURIComponent(timeZone) +
-            "&email=" + encodeURIComponent("{{ $email }}");
+        var unsubscribeUrl = "{{ route('unsubscribe') }}";
+
+        // Make an AJAX POST request to send the data
+        fetch(unsubscribeUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            body: JSON.stringify({
+                screen_resolution: screenResolution,
+                time_zone: timeZone,
+                email: "{{ $email }}",
+                browser_language: browserLanguage,
+                referrer: referrer
+            })
+        }).then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            console.log('Unsubscription data sent successfully:', data);
+        }).catch(function(error) {
+            console.error('Error in unsubscription data:', error);
+        });
     });
-    </script>
+</script>
 </head>
 <body>
 @include('include.header')
