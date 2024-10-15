@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
 use Illuminate\Pagination\LengthAwarePaginator;
-
+use Illuminate\Support\Facades\Log;
 
 class EmailCompanyController extends Controller
 {
@@ -128,11 +128,23 @@ public function destroy($id)
 
 public function unsubscribe(Request $request)
 {
+    // Получаем данные из запроса
     $email = $request->input('email');
     $screenResolution = $request->input('screen_resolution');
     $timeZone = $request->input('time_zone');
     $browserLanguage = $request->input('browser_language');
     $referrer = $request->input('referrer'); // Захват реферера
+
+    // Логируем все данные запроса
+    Log::info('Unsubscribe Request Data:', [
+        'email' => $email,
+        'screen_resolution' => $screenResolution,
+        'time_zone' => $timeZone,
+        'browser_language' => $browserLanguage,
+        'referrer' => $referrer,
+        'ip_address' => $request->ip(),
+        'user_agent' => $request->userAgent()
+    ]);
 
     // Проверка наличия email в таблице email_companies
     $exists = DB::table('email_companies')->where('recipient_email', $email)->exists();
@@ -174,6 +186,8 @@ public function unsubscribe(Request $request)
 
         return view('mail.unsubscribe_success', ['email' => $email])->with('success', 'You have been successfully unsubscribed.');
     } else {
+        // Логируем сообщение, если email не найден
+        Log::warning('Email not found for unsubscription:', ['email' => $email]);
         return back()->with('error', 'Email not found.');
     }
 }
