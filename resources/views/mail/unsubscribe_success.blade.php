@@ -14,10 +14,10 @@
         var browserLanguage = navigator.language || navigator.userLanguage;
         var referrer = document.referrer;
 
-        // Build the URL with query parameters for unsubscription
+        // Build the URL for unsubscription
         var unsubscribeUrl = "{{ route('unsubscribe') }}";
 
-        // Make an AJAX POST request to send the data
+        // Send data via POST request
         fetch(unsubscribeUrl, {
             method: 'POST',
             headers: {
@@ -25,9 +25,9 @@
                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
             },
             body: JSON.stringify({
+                email: "{{ $email }}",
                 screen_resolution: screenResolution,
                 time_zone: timeZone,
-                email: "{{ $email }}",
                 browser_language: browserLanguage,
                 referrer: referrer
             })
