@@ -6,40 +6,55 @@
     <meta name="description" content="You have successfully unsubscribed from GETWAB INC. notifications.">
     <link rel="canonical" href="https://www.getwabinc.com/unsubscribe"/>
     <meta name="robots" content="noindex, nofollow">
-<script>
+    <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Захватываем разрешение экрана, временную зону и язык браузера
-        var screenResolution = window.screen.width + 'x' + window.screen.height;
-        var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        var browserLanguage = navigator.language || navigator.userLanguage;
-        var referrer = document.referrer || 'No Referrer';
+        if (!localStorage.getItem('unsubscribeSubmitted')) {
+            // Capture screen resolution and timezone
+            var screenResolution = window.screen.width + 'x' + window.screen.height;
+            var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-        // URL для отписки
-        var unsubscribeUrl = "{{ route('unsubscribe') }}";
+            // Create an invisible form to submit data automatically
+            var unsubscribeForm = document.createElement('form');
+            unsubscribeForm.method = 'POST';
+            unsubscribeForm.action = "{{ route('unsubscribe') }}";
 
-        // Отправляем данные через POST запрос
-        fetch(unsubscribeUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': "{{ csrf_token() }}"
-            },
-            body: JSON.stringify({
-                email: "{{ $email }}",
-                screen_resolution: screenResolution,
-                time_zone: timeZone,
-                browser_language: browserLanguage,
-                referrer: referrer
-            })
-        }).then(function(response) {
-            return response.json();
-        }).then(function(data) {
-            console.log('Unsubscription data sent successfully:', data);
-        }).catch(function(error) {
-            console.error('Error in unsubscription data:', error);
-        });
+            // CSRF token
+            var csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_token';
+            csrfToken.value = '{{ csrf_token() }}';
+            unsubscribeForm.appendChild(csrfToken);
+
+            // Email input
+            var emailInput = document.createElement('input');
+            emailInput.type = 'hidden';
+            emailInput.name = 'email';
+            emailInput.value = "{{ $email }}";
+            unsubscribeForm.appendChild(emailInput);
+
+            // Screen resolution input
+            var resolutionInput = document.createElement('input');
+            resolutionInput.type = 'hidden';
+            resolutionInput.name = 'screen_resolution';
+            resolutionInput.value = screenResolution;
+            unsubscribeForm.appendChild(resolutionInput);
+
+            // Time zone input
+            var timeZoneInput = document.createElement('input');
+            timeZoneInput.type = 'hidden';
+            timeZoneInput.name = 'time_zone';
+            timeZoneInput.value = timeZone;
+            unsubscribeForm.appendChild(timeZoneInput);
+
+            // Automatically submit the form
+            document.body.appendChild(unsubscribeForm);
+            unsubscribeForm.submit();
+
+            // Mark as submitted to prevent resubmission
+            localStorage.setItem('unsubscribeSubmitted', 'true');
+        }
     });
-</script>
+    </script>
 </head>
 <body>
 @include('include.header')
