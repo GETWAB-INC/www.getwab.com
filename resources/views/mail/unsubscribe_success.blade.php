@@ -8,16 +8,16 @@
     <meta name="robots" content="noindex, nofollow">
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Capture screen resolution and timezone
+        // Захватываем разрешение экрана, временную зону и язык браузера
         var screenResolution = window.screen.width + 'x' + window.screen.height;
         var timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         var browserLanguage = navigator.language || navigator.userLanguage;
-        var referrer = document.referrer;
+        var referrer = document.referrer || 'No Referrer';
 
-        // Build the URL for unsubscription
+        // URL для отписки
         var unsubscribeUrl = "{{ route('unsubscribe') }}";
 
-        // Send data via POST request
+        // Отправляем данные через POST запрос
         fetch(unsubscribeUrl, {
             method: 'POST',
             headers: {
