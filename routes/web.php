@@ -81,7 +81,7 @@ Route::middleware('auth')->group(function () {
 Route::get('dashboard', function () {
     // Получаем компании, сортируя их по полю created_at в порядке убывания
     $companies = DB::table('email_companies')
-                   ->orderBy('created_at', 'desc')
+                   ->orderBy('id', 'desc')
                    ->get();
 
     return view('dashboard', ['companies' => $companies]);
