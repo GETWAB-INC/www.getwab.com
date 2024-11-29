@@ -56,8 +56,8 @@
             Ilia Oborin<br>
             CEO & Founder<br>
             GETWAB INC.<br>
-            4532 Parnell Dr,<br>
-            Sarasota, FL 34232<br>
+            {{-- 4532 Parnell Dr,<br>
+            Sarasota, FL 34232<br> --}}
             Phone: <a href="tel:+19414020472">+1 941-402-0472</a><br>
             Email: contact@getwabinc.com<br>
             Website: <a href="https://www.getwabinc.com">www.getwabinc.com</a><br>
