@@ -15,8 +15,8 @@
     <ul>
         <li>Email: <a href="mailto:contact@getwabinc.com">contact@getwabinc.com</a></li>
         <li>Phone: <a href="tel:+19414020472">+1 941-402-0472</a></li>
+        <li>Mailing Address: 9602 4th Avenue, Apt. 5O, Brooklyn, NY 11209</li>
         <li>Main Address: 2155 Anchor Ct, Suite 2003, Fort Lauderdale, FL 33312-5250</li>
-        <li>Mailing Address: 4532 Parnell Dr, Sarasota, FL 34232-5340</li>
         <li>Contact Name: Ilia</li>
     </ul>
 </section>
