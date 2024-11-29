@@ -47,4 +47,4 @@ jobs:
             # Clear and cache views
             php artisan view:clear
             php artisan view:cache
-            composer install
+            # composer install
