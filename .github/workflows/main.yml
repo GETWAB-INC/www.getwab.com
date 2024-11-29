@@ -19,7 +19,7 @@ jobs:
           username: 'root'
           password: ${{ secrets.SERVER_PASSWORD }}
           source: "."
-          target: "/var/www/html/www.getwabinc.com"
+          target: "/home/userwww/web/getwabinc.com/public_html"
           strip_components: 1
 
       - name: Final Setup on Server
@@ -31,11 +31,11 @@ jobs:
           command_timeout: 90m
           script: |
             # Remove .git and .github directories
-            sudo rm -rf /var/www/html/www.getwabinc.com/.git
-            sudo rm -rf /var/www/html/www.getwabinc.com/.github
+            sudo rm -rf /home/userwww/web/getwabinc.com/public_html/.git
+            sudo rm -rf /home/userwww/web/getwabinc.com/public_html/.github
             # Set permissions to the web directory
-            sudo chown -R www-data:www-data /var/www/html/www.getwabinc.com
-            sudo chmod -R 755 /var/www/html/www.getwabinc.com
+            sudo chown -R www-data:www-data /home/userwww/web/getwabinc.com/public_html
+            sudo chmod -R 755 /home/userwww/web/getwabinc.com/public_html
             # Clear and cache configurations
             php artisan config:clear
             php artisan config:cache
@@ -46,7 +46,7 @@ jobs:
             php artisan view:clear
             php artisan view:cache
             # composer install
-            cd /var/www/html/www.getwabinc.com
+            cd /home/userwww/web/getwabinc.com/public_html
             composer install
             # Restart web server if needed
-            sudo systemctl restart apache2
+            # sudo systemctl restart apache2
