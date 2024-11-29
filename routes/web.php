@@ -115,9 +115,8 @@ Route::get('dashboard', function () {
     Route::delete('/delete-company/{id}', [EmailCompanyController::class, 'destroy'])
     ->name('delete-company');
 
-    // Get DKIM settings
-    Route::get('/dkim', [EmailCompanyController::class, 'getDkim'])
-        ->name('dkim');
+    Route::get('/file-annual-report', function () {
+    return view('file-annual-report');})->name('file.annual.report');
 
     // Logs
     Route::get('/logs', [EmailCompanyController::class, 'logs'])->name('logs');
