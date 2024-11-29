@@ -33,31 +33,29 @@ class SendAgainEmail extends Command
                     ->first();
 
         if ($company) {
-            $helloEmailDate = Carbon::parse($company->hello_email);
-            $now = Carbon::now();
+            $helloEmailDate = Carbon::parse($company->hello_email)->setTimezone('UTC'); // Установка временной зоны UTC
+            $now = Carbon::now('UTC'); // Используем текущую дату в UTC
 
             // Проверяем, прошла ли неделя с момента отправки hello_email
             if ($now->diffInDays($helloEmailDate) >= 7) {
-                // Отправляем повторное письмо
-                Mail::to($company->recipient_email)->send(new AgainEmail($company));
+                try {
+                    // Отправляем повторное письмо
+                    Mail::to($company->recipient_email)->send(new AgainEmail($company));
 
-                // Обновляем запись в базе данных, чтобы отметить отправку повторного письма
-                DB::table('email_companies')
-                    ->where('id', $company->id)
-                    ->update(['hello_email_again' => now()]);
+                    // Обновляем запись в базе данных, чтобы отметить отправку повторного письма
+                    DB::table('email_companies')
+                        ->where('id', $company->id)
+                        ->update(['hello_email_again' => now()]);
 
-                $message = 'Follow-up email sent to ' . $company->recipient_email;
-                $this->info($message);
-                Log::channel('againemail')->info($message);  // Логируем отправку
+                    $message = 'Follow-up email sent to ' . $company->recipient_email;
+                    $this->info($message);
+                    Log::channel('againemail')->info($message);  // Логируем отправку
+                } catch (\Exception $e) {
+                    $this->error('Error sending email: ' . $e->getMessage());
+                    Log::channel('againemail')->error('Error sending email: ' . $e->getMessage());
+                }
             } else {
                 $this->updateNoEmailLog($logPath);  // Обновляем лог "No eligible emails to send yet"
-                // Добавляем логирование переменных
-    $this->info('Debug info:');
-    $this->info('Current date: ' . $now);
-    $this->info('Hello email date: ' . $helloEmailDate);
-    $this->info('Days passed: ' . $now->diffInDays($helloEmailDate));
-    $this->info('Company ID: ' . $company->id);
-    $this->info('Company Email: ' . $company->recipient_email);
             }
         } else {
             $this->updateNoEmailLog($logPath);  // Обновляем лог "No eligible emails to send yet"
