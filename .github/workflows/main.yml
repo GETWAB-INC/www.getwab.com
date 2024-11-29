@@ -33,10 +33,12 @@ jobs:
             # Remove .git and .github directories
             sudo rm -rf /home/userwww/web/getwabinc.com/public_html/.git
             sudo rm -rf /home/userwww/web/getwabinc.com/public_html/.github
+            sudo rm -rf /home/userwww/web/getwabinc.com/public_html/.DS_Store
             # Set permissions to the web directory
             sudo chown -R www-data:www-data /home/userwww/web/getwabinc.com/public_html
             sudo chmod -R 755 /home/userwww/web/getwabinc.com/public_html
             # Clear and cache configurations
+            cd /home/userwww/web/getwabinc.com/public_html
             php artisan config:clear
             php artisan config:cache
             # Clear and cache routes
@@ -45,8 +47,4 @@ jobs:
             # Clear and cache views
             php artisan view:clear
             php artisan view:cache
-            # composer install
-            cd /home/userwww/web/getwabinc.com/public_html
             composer install
-            # Restart web server if needed
-            # sudo systemctl restart apache2
