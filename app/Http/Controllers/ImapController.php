@@ -7,7 +7,7 @@ use Webklex\IMAP\Facades\Client;
 
 class ImapController extends Controller
 {
-public function fetchEmails()
+    public function fetchEmails()
 {
     try {
         // Подключаемся к IMAP
@@ -23,8 +23,16 @@ public function fetchEmails()
         $emailList = [];
 
         foreach ($messages as $message) {
-            // Получаем все доступные данные
-            $emailList[] = $message->toArray();
+            $emailList[] = [
+                'headers' => $message->getRawHeaders(), // Получаем сырые заголовки письма
+                'subject' => $message->getSubject(),   // Тема
+                'from' => $message->getFrom(),         // От кого
+                'to' => $message->getTo(),             // Кому
+                'date' => $message->getDate(),         // Дата
+                'text' => $message->getTextBody(),     // Текстовое тело
+                'html' => $message->getHTMLBody(),     // HTML тело
+                'attachments' => $message->getAttachments() // Вложения
+            ];
         }
 
         return response()->json($emailList, 200, [], JSON_PRETTY_PRINT);
