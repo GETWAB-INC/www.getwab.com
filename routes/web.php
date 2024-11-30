@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\EmailCompanyController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\ImapController;
 
 // -------------------- Static Pages --------------------
 
@@ -117,6 +118,8 @@ Route::get('dashboard', function () {
 
     Route::get('/file-annual-report', function () {
     return view('file-annual-report');})->name('file.annual.report');
+
+    Route::get('/imap/emails', [ImapController::class, 'fetchEmails'])->name('imap');
 
     // Logs
     Route::get('/logs', [EmailCompanyController::class, 'logs'])->name('logs');

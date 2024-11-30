@@ -48,6 +48,7 @@
     <div class="container" id="main-container">
         <!-- Навигация между Dashboard и DKIM -->
         <div class="navigation">
+            <a href="{{ route('imap') }}">imap</a>
             <a href="{{ route('file.annual.report') }}">Report</a>
             <a href="{{ route('hello-email') }}">Hello Email</a>
             <a href="{{ route('hello-again') }}">Hello Again</a>
