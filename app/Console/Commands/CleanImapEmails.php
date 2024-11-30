@@ -13,64 +13,52 @@ class CleanImapEmails extends Command
 
     public function handle()
     {
-        try {
-            $this->info('Подключение к почтовому серверу...');
-            $client = Client::account('default'); // Используем настройки IMAP из config/imap.php
-            $client->connect();
+        $this->info("Подключение к почтовому серверу...");
+        $client = Client::account('default'); // Используем настройки IMAP из config/imap.php
+        $client->connect();
 
-            $this->info('Открытие папки INBOX...');
-            $folder = $client->getFolder('INBOX'); // Открываем папку "Входящие"
-            $messages = $folder->query()->since(now()->subDays(7))->get(); // Берём письма за последние 7 дней
+        $this->info("Открытие папки INBOX...");
+        $folder = $client->getFolder('INBOX'); // Открываем папку "Входящие"
 
-            $this->info('Обработка писем...');
-            foreach ($messages as $message) {
-                $subject = $message->getSubject();
-                $body = $message->getTextBody();
+        $this->info("Обработка писем...");
+        $messages = $folder->query()->all()->get(); // Берём все письма
 
-                // Проверяем, содержит ли письмо ошибку доставки
-                if (str_contains($subject, 'Mail delivery failed') || str_contains($body, 'This message was created automatically by mail delivery software')) {
-                    $failedEmail = $this->extractEmail($body);
+        foreach ($messages as $message) {
+            $rawHeaders = $message->getHeader()->raw ?? '';
+            $failedRecipient = $this->extractHeaderField($rawHeaders, 'X-Failed-Recipients');
 
-                    if ($failedEmail) {
-                        // Обновляем запись в базе данных
-                        $updated = DB::table('email_companies')
-                            ->where('recipient_email', $failedEmail)
-                            ->update(['subscribe' => 2]);
+            if ($failedRecipient) {
+                // Обновляем запись в базе данных
+                DB::table('email_companies')
+                    ->where('recipient_email', $failedRecipient)
+                    ->update(['subscribe' => 2]);
 
-                        if ($updated) {
-                            $this->info("БД обновлена: $failedEmail");
-                        } else {
-                            $this->warn("Email не найден в базе данных: $failedEmail");
-                        }
+                $this->info("Обновлено в БД: $failedRecipient");
 
-                        // Удаляем письмо с сервера
-                        $message->delete();
-                        $this->info("Письмо удалено: $subject");
-                    } else {
-                        $this->warn("Не удалось извлечь email из письма: $subject");
-                    }
-                }
+                // Удаляем письмо с сервера
+                $message->delete();
+                $this->info("Письмо удалено: {$message->getSubject()}");
+            } else {
+                $this->info("Не удалось извлечь failed_recipient из письма: {$message->getSubject()}");
             }
-
-            $client->expunge(); // Подтверждаем удаление писем
-            $this->info('Очистка завершена!');
-        } catch (\Exception $e) {
-            $this->error('Произошла ошибка: ' . $e->getMessage());
         }
+
+        $client->expunge(); // Подтверждаем удаление писем
+        $this->info('Очистка завершена!');
     }
 
     /**
-     * Извлечение email из текста письма.
+     * Извлекает значение указанного поля из заголовков.
      *
-     * @param string $body
+     * @param string $headers
+     * @param string $field
      * @return string|null
      */
-    private function extractEmail(string $body): ?string
+    private function extractHeaderField($headers, $field)
     {
-        if (preg_match('/Final-Recipient: rfc822;(.*?@[\w.]+)/', $body, $matches)) {
+        if (preg_match('/^' . preg_quote($field, '/') . ': (.+)$/mi', $headers, $matches)) {
             return trim($matches[1]);
         }
-
         return null;
     }
 }
