@@ -13,3 +13,4 @@ Artisan::command('inspire', function () {
 Schedule::command('send:helloemail')->everyMinute();
 Schedule::command('send:againemail')->everyMinute();
 Schedule::command('send:lastemail')->everyMinute();
+
