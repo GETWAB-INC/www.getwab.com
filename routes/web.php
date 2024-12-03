@@ -80,34 +80,20 @@ Route::get('login', function () {
 Route::middleware('auth')->group(function () {
     // Dashboard route
     Route::get('/dashboard', [DashBoardController::class, 'index'])->name('dashboard');
-
     // Add company form
-    Route::get('/add-company', [EmailCompanyController::class, 'create'])
-        ->name('add-company');
-
+    Route::get('/add-company', [EmailCompanyController::class, 'create'])->name('add-company');
     // Store new company
-    Route::post('/add-company', [EmailCompanyController::class, 'store'])
-        ->name('store-company');
-
+    Route::post('/add-company', [EmailCompanyController::class, 'store'])->name('store-company');
     // View Hello Email
-    Route::get('/view-hello-email/{id}', [EmailCompanyController::class, 'viewHelloEmail'])
-    ->name('view-hello-email');
-
+    Route::get('/view-hello-email/{id}', [EmailCompanyController::class, 'viewHelloEmail'])->name('view-hello-email');
     // View Again Email
-    Route::get('/view-again-email/{id}', [EmailCompanyController::class, 'viewAgainEmail'])
-    ->name('view-again-email');
-
+    Route::get('/view-again-email/{id}', [EmailCompanyController::class, 'viewAgainEmail'])->name('view-again-email');
     // Edit company form
-    Route::get('/edit-company/{id}', [EmailCompanyController::class, 'edit'])
-    ->name('edit-company');
-
+    Route::get('/edit-company/{id}', [EmailCompanyController::class, 'edit'])->name('edit-company');
     // Update company
-    Route::put('/update-company/{id}', [EmailCompanyController::class, 'update'])
-    ->name('update-company');
-
+    Route::put('/update-company/{id}', [EmailCompanyController::class, 'update'])->name('update-company');
     // Delete company
-    Route::delete('/delete-company/{id}', [EmailCompanyController::class, 'destroy'])
-    ->name('delete-company');
+    Route::delete('/delete-company/{id}', [EmailCompanyController::class, 'destroy'])->name('delete-company');
 
     Route::get('/file-annual-report', function () {
     return view('file-annual-report');})->name('file.annual.report');
