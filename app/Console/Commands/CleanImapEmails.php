@@ -70,30 +70,33 @@ class CleanImapEmails extends Command
         return null;
     }
 
-    /**
-     * Проверяет тело письма по различным паттернам для извлечения email.
-     *
-     * @param string $body
-     * @return string|null
-     */
-    private function extractFromBodyPatterns($body)
-    {
-        $patterns = [
-            // Паттерн 1: для писем с фразой "The address to which the message has not yet been delivered is:"
-            '/The address to which the message has not yet been delivered is:\s+([^\s]+)/i',
+/**
+ * Проверяет тело письма по различным паттернам для извлечения email.
+ *
+ * @param string $body
+ * @return string|null
+ */
+private function extractFromBodyPatterns($body)
+{
+    $patterns = [
+        // Паттерн 1: для писем с фразой "The address to which the message has not yet been delivered is:"
+        '/The address to which the message has not yet been delivered is:\s+([^\s]+)/i',
 
-            // Паттерн 2: Для других типов сообщений, если есть необходимость
-            '/SMTP error from remote mail server after RCPT TO:<([^>]+)>/i',
+        // Паттерн 2: Для сообщений от Microsoft с текстом "Your message to ... couldn't be delivered."
+        '/Your message to ([^\s]+) couldn\'t be delivered\./i',
 
-            // Добавьте другие паттерны здесь
-        ];
+        // Паттерн 3: Для других типов сообщений (SMTP error)
+        '/SMTP error from remote mail server after RCPT TO:<([^>]+)>/i',
 
-        foreach ($patterns as $pattern) {
-            if (preg_match($pattern, $body, $matches)) {
-                return trim($matches[1]);
-            }
+        // Добавьте дополнительные паттерны при необходимости
+    ];
+
+    foreach ($patterns as $pattern) {
+        if (preg_match($pattern, $body, $matches)) {
+            return trim($matches[1]);
         }
-
-        return null;
     }
+
+    return null;
+}
 }
