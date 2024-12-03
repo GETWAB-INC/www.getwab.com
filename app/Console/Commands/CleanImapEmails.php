@@ -28,6 +28,10 @@ class CleanImapEmails extends Command
             $failedRecipient = $this->extractHeaderField($rawHeaders, 'X-Failed-Recipients');
 
             if ($failedRecipient) {
+                if (!DB::table('email_companies')->where('recipient_email', $failedRecipient)->exists()) {
+            $this->warn("Email $failedRecipient не найден в базе данных.");
+            continue;
+        }
                 // Обновляем запись в базе данных
                 // НЕ СТАВИТСЯ 2 НУЖНО ИСПРАВИТЬ!!!
                 DB::table('email_companies')
