@@ -121,6 +121,17 @@
                 </table>
             </div>
         </section>
+        {{-- Pagination Links --}}
+        <p>Page {{ $companies->currentPage() }} of {{ $companies->lastPage() }}</p>
+        <div class="pagination">
+            @if (!$companies->onFirstPage())
+                <a href="{{ $companies->previousPageUrl() }}" rel="prev"><<<</a>
+            @endif
+
+            @if ($companies->hasMorePages())
+                <a href="{{ $companies->nextPageUrl() }}" rel="next">>>></a>
+            @endif
+        </div>
     </div>
     @include('include.footer')
     <script src="{{ asset('js/menu.js') }}" defer></script>

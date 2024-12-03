@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\EmailCompanyController;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\ImapController;
 use App\Http\Controllers\DashBoardController;
 
@@ -80,16 +79,7 @@ Route::get('login', function () {
 // Группа маршрутов, требующих аутентификацию
 Route::middleware('auth')->group(function () {
     // Dashboard route
-// Route::get('dashboard', function () {
-//     // Получаем компании, сортируя их по полю created_at в порядке убывания
-//     $companies = DB::table('email_companies')
-//                    ->orderBy('id', 'desc')
-//                    ->get();
-
-//     return view('dashboard', ['companies' => $companies]);
-// })->name('dashboard');
-
-Route::get('/dashboard', [DashBoardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashBoardController::class, 'index'])->name('dashboard');
 
     // Add company form
     Route::get('/add-company', [EmailCompanyController::class, 'create'])
