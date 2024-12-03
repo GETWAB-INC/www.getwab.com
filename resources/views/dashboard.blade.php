@@ -48,7 +48,7 @@
     <div class="container" id="main-container">
         <!-- Навигация между Dashboard и DKIM -->
         <div class="navigation">
-            
+
             <a href="{{ route('imap') }}">imap</a>
             <a href="{{ route('file.annual.report') }}">Report</a>
             <a href="{{ route('hello-email') }}">Hello Email</a>
@@ -94,13 +94,7 @@
                                 <td>{{ $company->contract_topic }}</td>
                                 <td>{{ $company->contract_start_date }}</td>
                                 <td>{{ $company->contract_end_date }}</td>
-                                <td>
-    @if($company->subscribe == 1)
-        <a href="{{ route('unsubscribe.details', ['company_id' => $company->id]) }}">1</a>
-    @else
-        0
-    @endif
-</td>
+                                <td><a href="{{ route('unsubscribe.details', ['company_id' => $company->id]) }}">{{$company->subscribe}}</a></td>
                                 <td>{{ $company->hello_email }}</td>
                                 <td>{{ $company->hello_email_again }}</td>
                                 <td>{{ $company->last_email_at }}</td>
