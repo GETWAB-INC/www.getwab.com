@@ -25,10 +25,17 @@ class CleanImapEmails extends Command
 
         foreach ($messages as $message) {
             $rawHeaders = $message->getHeader()->raw ?? '';
+            $body = $message->getTextBody() ?? '';
+
+            // Сначала ищем стандартный заголовок X-Failed-Recipients
             $failedRecipient = $this->extractHeaderField($rawHeaders, 'X-Failed-Recipients');
 
-            if ($failedRecipient) {
+            // Если заголовок отсутствует, ищем в теле письма
+            if (!$failedRecipient) {
+                $failedRecipient = $this->extractFromBodyPatterns($body);
+            }
 
+            if ($failedRecipient) {
                 // Обновляем запись в базе данных
                 DB::table('email_companies')
                     ->where('recipient_email', '=', $failedRecipient)
@@ -40,7 +47,7 @@ class CleanImapEmails extends Command
                 $message->delete();
                 $this->info("Письмо удалено: {$message->getSubject()}");
             } else {
-                $this->info("Не удалось извлечь failed_recipient из письма: {$message->getSubject()}");
+                $this->info("Не удалось извлечь email из письма: {$message->getSubject()}");
             }
         }
 
@@ -60,6 +67,33 @@ class CleanImapEmails extends Command
         if (preg_match('/^' . preg_quote($field, '/') . ': (.+)$/mi', $headers, $matches)) {
             return trim($matches[1]);
         }
+        return null;
+    }
+
+    /**
+     * Проверяет тело письма по различным паттернам для извлечения email.
+     *
+     * @param string $body
+     * @return string|null
+     */
+    private function extractFromBodyPatterns($body)
+    {
+        $patterns = [
+            // Паттерн 1: для писем с фразой "The address to which the message has not yet been delivered is:"
+            '/The address to which the message has not yet been delivered is:\s+([^\s]+)/i',
+
+            // Паттерн 2: Для других типов сообщений, если есть необходимость
+            '/SMTP error from remote mail server after RCPT TO:<([^>]+)>/i',
+
+            // Добавьте другие паттерны здесь
+        ];
+
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $body, $matches)) {
+                return trim($matches[1]);
+            }
+        }
+
         return null;
     }
 }
