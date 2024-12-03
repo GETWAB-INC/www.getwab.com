@@ -31,7 +31,7 @@ class CleanImapEmails extends Command
                 // Обновляем запись в базе данных
                 // НЕ СТАВИТСЯ 2 НУЖНО ИСПРАВИТЬ!!!
                 DB::table('email_companies')
-                    ->where('recipient_email', $failedRecipient)
+                    ->where('recipient_email', '=', $failedRecipient)
                     ->update(['subscribe' => 2]);
 
                 $this->info("Обновлено в БД: $failedRecipient");
