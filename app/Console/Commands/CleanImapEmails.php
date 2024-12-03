@@ -29,6 +29,7 @@ class CleanImapEmails extends Command
 
             if ($failedRecipient) {
                 // Обновляем запись в базе данных
+                // НЕ СТАВИТСЯ 2 НУЖНО ИСПРАВИТЬ!!!
                 DB::table('email_companies')
                     ->where('recipient_email', $failedRecipient)
                     ->update(['subscribe' => 2]);
@@ -36,7 +37,7 @@ class CleanImapEmails extends Command
                 $this->info("Обновлено в БД: $failedRecipient");
 
                 // Удаляем письмо с сервера
-                $message->delete();
+                // $message->delete();
                 $this->info("Письмо удалено: {$message->getSubject()}");
             } else {
                 $this->info("Не удалось извлечь failed_recipient из письма: {$message->getSubject()}");
