@@ -25,6 +25,7 @@
         @endforeach
 
         {{-- Pagination Links --}}
+        <p>Page {{ $logs->currentPage() }} of {{ $logs->lastPage() }}</p>
         <div class="pagination">
             @if (!$logs->onFirstPage())
                 <a href="{{ $logs->previousPageUrl() }}" rel="prev"><<<</a>
