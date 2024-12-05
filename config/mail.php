@@ -49,6 +49,18 @@ return [
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url(env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
         ],
 
+        'second_smtp' => [
+        'transport' => 'smtp',
+        'host' => env('SECOND_MAIL_HOST'),
+        'port' => env('SECOND_MAIL_PORT'),
+        'encryption' => env('SECOND_MAIL_ENCRYPTION'),
+        'username' => env('SECOND_MAIL_USERNAME'),
+        'password' => env('SECOND_MAIL_PASSWORD'),
+        'timeout' => null,
+        'auth_mode' => null,
+        
+        ],
+
         'ses' => [
             'transport' => 'ses',
         ],

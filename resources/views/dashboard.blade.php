@@ -63,6 +63,19 @@
             </div>
             <p>Welcome to your dashboard! Here you can manage your settings, view data, and access your account details.</p>
             <h2>Your Companies</h2>
+
+            {{-- Pagination Links --}}
+        <p>Page {{ $companies->currentPage() }} of {{ $companies->lastPage() }}</p>
+        <div class="pagination">
+            @if (!$companies->onFirstPage())
+                <a href="{{ $companies->previousPageUrl() }}" rel="prev"><<<</a>
+            @endif
+
+            @if ($companies->hasMorePages())
+                <a href="{{ $companies->nextPageUrl() }}" rel="next">>>></a>
+            @endif
+        </div>
+
             <div class="table-responsive">
                 <table border="1" style="width: 100%; border-collapse: collapse;">
                     <thead>
@@ -121,17 +134,7 @@
                 </table>
             </div>
         </section>
-        {{-- Pagination Links --}}
-        <p>Page {{ $companies->currentPage() }} of {{ $companies->lastPage() }}</p>
-        <div class="pagination">
-            @if (!$companies->onFirstPage())
-                <a href="{{ $companies->previousPageUrl() }}" rel="prev"><<<</a>
-            @endif
 
-            @if ($companies->hasMorePages())
-                <a href="{{ $companies->nextPageUrl() }}" rel="next">>>></a>
-            @endif
-        </div>
     </div>
     @include('include.footer')
     <script src="{{ asset('js/menu.js') }}" defer></script>

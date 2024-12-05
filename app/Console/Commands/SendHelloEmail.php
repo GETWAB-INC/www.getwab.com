@@ -5,7 +5,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\HelloEmail;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 
@@ -41,10 +40,40 @@ class SendHelloEmail extends Command
 
             $message = 'Hello email sent to ' . $company->recipient_email;
             $this->info($message);
-            Log::channel('helloemail')->info($message);  // Логируем отправку
+            $this->appendToLog($logPath, $message);  // Логируем отправку
         } else {
             $this->updateNoEmailLog($logPath);  // Обновляем лог с "No eligible emails"
         }
+    }
+
+    /**
+     * Метод для добавления записи в лог
+     */
+    private function appendToLog($logPath, $message)
+    {
+        $timestamp = '[' . now() . '] production.INFO: ';
+
+        if (File::exists($logPath)) {
+            $logContents = File::get($logPath);
+
+            // Убираем запись "No eligible emails" если она последняя
+            if (strpos($logContents, "No eligible emails to send.") !== false) {
+                $lines = explode(PHP_EOL, trim($logContents));
+                if (!empty($lines) && strpos(end($lines), "No eligible emails to send.") !== false) {
+                    array_pop($lines);
+                }
+                $logContents = implode(PHP_EOL, $lines);
+            }
+
+            // Добавляем новую запись
+            $logContents .= PHP_EOL . $timestamp . $message;
+            File::put($logPath, $logContents);
+        } else {
+            // Если файл не существует, создаем и записываем строку
+            File::put($logPath, $timestamp . $message);
+        }
+
+        Log::channel('helloemail')->info($message);
     }
 
     /**
@@ -52,24 +81,27 @@ class SendHelloEmail extends Command
      */
     private function updateNoEmailLog($logPath)
     {
-        $logMessage = "No eligible emails to send.";
+        $logMessage = 'No eligible emails to send.';
+        $timestamp = '[' . now() . '] production.INFO: ';
 
         if (File::exists($logPath)) {
             $logContents = File::get($logPath);
 
-            // Если строка уже существует, заменяем её
-            if (strpos($logContents, $logMessage) !== false) {
-                $logContents = preg_replace("/\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] production.INFO: $logMessage/", '[' . now() . "] production.INFO: $logMessage", $logContents);
-                File::put($logPath, $logContents);
+            // Если строка уже существует, заменяем её только если она последняя
+            $lines = explode(PHP_EOL, trim($logContents));
+            if (!empty($lines) && strpos(end($lines), $logMessage) !== false) {
+                $lines[count($lines) - 1] = $timestamp . $logMessage;
+                $logContents = implode(PHP_EOL, $lines);
             } else {
-                // Если строки нет, добавляем её
-                Log::channel('helloemail')->info($logMessage);
+                // Если строки нет или она не последняя, добавляем её
+                $logContents .= PHP_EOL . $timestamp . $logMessage;
             }
+            File::put($logPath, $logContents);
         } else {
             // Если файл не существует, создаем и записываем строку
-            Log::channel('helloemail')->info($logMessage);
+            File::put($logPath, $timestamp . $logMessage);
         }
 
-        $this->info('No eligible emails to send. Log updated.');
+        Log::channel('helloemail')->info($logMessage);
     }
 }
