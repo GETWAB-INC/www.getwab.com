@@ -245,18 +245,18 @@ public function logs()
     // Путь к файлу логов lastemail
     $logPathLastEmail = storage_path('logs/lastemail.log');
 
-    // Функция для получения последних 50 строк из файла
+    // Функция для получения последних 15 строк из файла
     $getLastLines = function ($logPath) {
         if (File::exists($logPath)) {
             // Чтение всех строк файла
             $lines = file($logPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-            // Возвращаем последние 50 строк и переворачиваем их, чтобы новые строки были сверху
-            return array_reverse(array_slice($lines, -50));
+            // Возвращаем последние 15 строк и переворачиваем их, чтобы новые строки были сверху
+            return array_reverse(array_slice($lines, -15));
         }
         return ['Log file not found.'];
     };
 
-    // Получаем последние 50 строк из каждого файла
+    // Получаем последние 15 строк из каждого файла
     $helloEmailLogs = $getLastLines($logPathHelloEmail);
     $againEmailLogs = $getLastLines($logPathAgainEmail);
     $lastEmailLogs = $getLastLines($logPathLastEmail);
