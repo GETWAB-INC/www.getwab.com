@@ -20,46 +20,38 @@ class SendLastEmail extends Command
         parent::__construct();
     }
 
-    public function handle()
-    {
-        // Путь к лог файлу
-        $logPath = storage_path('logs/lastemail.log');
+  public function handle()
+{
+    // Путь к лог файлу
+    $logPath = storage_path('logs/lastemail.log');
 
-        // Получаем компанию, которая получила again_email, но еще не отписалась, и прошло 7 дней с момента отправки again_email
-        $company = DB::table('email_companies')
-                    ->whereNotNull('hello_email_again')
-                    ->where('subscribe', 0) // Убедимся, что пользователь не отписался
-                    ->where(function($query) {
-                        // Добавляем условие, чтобы получить компании, которые либо не получили last_email, либо прошло 7 дней с момента отправки last_email
-                        $query->whereNull('last_email_at')
-                              ->orWhere('last_email_at', '<=', Carbon::now()->subDays(7));
-                    })
-                    ->first();
+    // Получаем компанию, которая соответствует условиям
+    $company = DB::table('email_companies')
+                ->whereNotNull('hello_email_again')
+                ->where('subscribe', 0) // Убедимся, что пользователь не отписался
+                ->where(function($query) {
+                    $query->whereNull('last_email_at')
+                          ->orWhere('last_email_at', '<=', Carbon::now()->subDays(7));
+                })
+                ->where('hello_email_again', '<=', Carbon::now()->subDays(7)) // Проверяем 7 дней для hello_email_again
+                ->first();
 
-        if ($company) {
-            $againEmailDate = Carbon::parse($company->hello_email_again);
-            $now = Carbon::now();
+    if ($company) {
+        // Отправляем последнее письмо
+        Mail::to($company->recipient_email)->send(new LastEmail($company));
 
-            // Проверяем, прошло ли 7 дней с момента отправки again_email
-            if ($now->diffInDays($againEmailDate) >= 7) {
-                // Отправляем последнее письмо
-                Mail::to($company->recipient_email)->send(new LastEmail($company));
+        // Обновляем запись в базе данных
+        DB::table('email_companies')
+            ->where('id', $company->id)
+            ->update(['last_email_at' => now()]);
 
-                // Обновляем запись в базе данных, чтобы отметить отправку последнего письма
-                DB::table('email_companies')
-                    ->where('id', $company->id)
-                    ->update(['last_email_at' => now()]);
-
-                $message = 'Last email sent to ' . $company->recipient_email;
-                $this->info($message);
-                Log::channel('lastemail')->info($message);  // Логируем отправку письма
-            } else {
-                $this->updateNoEmailLog($logPath);  // Обновляем лог "It has not been 7 days since the again email."
-            }
-        } else {
-            $this->updateNoEmailLog($logPath);  // Обновляем лог "No eligible emails to send."
-        }
+        $message = 'Last email sent to ' . $company->recipient_email;
+        $this->info($message);
+        Log::channel('lastemail')->info($message);  // Логируем отправку письма
+    } else {
+        $this->updateNoEmailLog($logPath);  // Обновляем лог "No eligible emails to send."
     }
+}
 
     /**
      * Метод для обновления лога, если нет писем для отправки
