@@ -8,12 +8,21 @@ class DashBoardController extends Controller
 {
     public function index()
     {
-        // Используем paginate вместо simplePaginate
-        $companies = DB::table('email_companies')
-                       ->where('subscribe', '=', 0)
-                       ->orderBy('id', 'desc')
-                       ->paginate(20);
+        // Получаем контракты из таблицы email_companies
+        $contracts = DB::table('email_companies')
+            ->where('subscribe', '=', 0)
+            ->orderBy('id', 'desc')
+            ->paginate(20);
 
-        return view('dashboard', ['companies' => $companies]);
+        // Получаем компании из таблицы empstateweb_emails
+        $companies = DB::table('empstateweb_emails')
+            ->orderBy('id', 'desc')
+            ->paginate(20);
+
+        // Передаём обе переменные в представление
+        return view('dashboard', [
+            'contracts' => $contracts,
+            'companies' => $companies
+        ]);
     }
 }

@@ -15,7 +15,7 @@ class EmailCompanyController extends Controller
         return view('add-company');
     }
 
-    public function store(Request $request)
+    public function storeContract(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'recipient_name' => 'nullable|string|max:255',
@@ -45,6 +45,34 @@ class EmailCompanyController extends Controller
             'additional_details' => $request->input('additional_details'),
             'contract_start_date' => $request->input('contract_start_date'),
             'contract_end_date' => $request->input('contract_end_date'),
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Contract added successfully!');
+    }
+
+    public function storeCompany(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'nullable|string|max:255',
+            'company' => 'nullable|string|max:255',
+            'email' => 'required|email|unique:empstateweb_emails,email',
+            'company_url' => 'nullable|string|max:50'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('add-company')
+            ->withErrors($validator)
+                ->withInput($request->except('password'));
+        }
+
+        DB::table('empstateweb_emails')->insert([
+            'name' => $request->input('name'),
+            'company' => $request->input('company'),
+            'email' => $request->input('email'),
+            'company_url' => $request->input('company_url'),
+            'subscribe' => 0,
             'created_at' => now(),
             'updated_at' => now()
         ]);

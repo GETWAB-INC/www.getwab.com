@@ -82,8 +82,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashBoardController::class, 'index'])->name('dashboard');
     // Add company form
     Route::get('/add-company', [EmailCompanyController::class, 'create'])->name('add-company');
+    // Store new contract
+    Route::post('/add-contract', [EmailCompanyController::class, 'storeContract'])->name('store-contract');
     // Store new company
-    Route::post('/add-company', [EmailCompanyController::class, 'store'])->name('store-company');
+    Route::post('/add-company', [EmailCompanyController::class, 'storeCompany'])->name('store-company');
     // View Hello Email
     Route::get('/view-hello-email/{id}', [EmailCompanyController::class, 'viewHelloEmail'])->name('view-hello-email');
     // View Again Email
