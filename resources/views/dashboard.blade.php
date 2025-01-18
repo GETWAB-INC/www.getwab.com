@@ -105,7 +105,7 @@
         <section class="section">
             <div class="add-company">
                 <h1>Two Dashboards Available</h1>
-                <strong><a href="{{ route('add-company') }}" class="link">↳ Add Company</a></strong>
+                <strong><a href="{{ route('add-company') }}" class="link">↳ Add</a></strong>
             </div>
 
             <!-- Табы -->
@@ -220,6 +220,11 @@
                                 <th>Email</th>
                                 <th>Company</th>
                                 <th>Company URL</th>
+                                <th>Subscribe</th>
+                                <th>Hello Email At</th>
+                                <th>Hello Again At</th>
+                                <th>Last Email At</th>
+                                <th>Created At</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -230,15 +235,31 @@
                                     <td>{{ $company->name }}</td>
                                     <td>{{ $company->email }}</td>
                                     <td>{{ $company->company }}</td>
-                                    <td>{{ $company->company_url }}</td>
+                                    <td><a target="_blank" href="{{ $company->company_url }}">{{ $company->company_url }}</a></td>
+                                    <td>{{ $company->subscribe }}</td>
+                                    <td>{{ $contract->hello_email }}</td>
+                                    <td>{{ $contract->hello_email_again }}</td>
+                                    <td>{{ $contract->last_email_at }}</td>
+                                    <td>{{ $contract->created_at }}</td>
                                     <td>
-                                        <form action="{{ route('view-hello-email', ['id' => $company->id]) }}"
+                                        <form action="{{ route('bussines-view-hello-email', ['id' => $company->id]) }}"
                                             method="GET" style="display:inline;">
                                             <button type="submit">Hello</button>
                                         </form>
-                                        <form action="{{ route('view-again-email', ['id' => $company->id]) }}"
+                                        <form action="{{ route('bussines-view-again-email', ['id' => $company->id]) }}"
                                             method="GET" style="display:inline;">
                                             <button type="submit">Again</button>
+                                        </form>
+                                        <form action="{{ route('edit-company', ['id' => $contract->id]) }}"
+                                            method="GET" style="display:inline;">
+                                            <button type="submit">Edit</button>
+                                        </form>
+                                        <form action="{{ route('delete-company', ['id' => $contract->id]) }}"
+                                            method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                onclick="return confirm('Are you sure you want to delete this contract?')">Delete</button>
                                         </form>
                                     </td>
                                 </tr>

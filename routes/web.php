@@ -86,16 +86,24 @@ Route::middleware('auth')->group(function () {
     Route::post('/add-contract', [EmailCompanyController::class, 'storeContract'])->name('store-contract');
     // Store new company
     Route::post('/add-company', [EmailCompanyController::class, 'storeCompany'])->name('store-company');
-    // View Hello Email
+
     Route::get('/view-hello-email/{id}', [EmailCompanyController::class, 'viewHelloEmail'])->name('view-hello-email');
-    // View Again Email
     Route::get('/view-again-email/{id}', [EmailCompanyController::class, 'viewAgainEmail'])->name('view-again-email');
-    // Edit company form
-    Route::get('/edit-company/{id}', [EmailCompanyController::class, 'edit'])->name('edit-company');
-    // Update company
-    Route::put('/update-company/{id}', [EmailCompanyController::class, 'update'])->name('update-company');
-    // Delete company
-    Route::delete('/delete-company/{id}', [EmailCompanyController::class, 'destroy'])->name('delete-company');
+    
+    Route::get('/bussines/view-hello-email/{id}', [EmailCompanyController::class, 'bussinesViewHelloEmail'])->name('bussines-view-hello-email');
+    Route::get('/bussines/view-again-email/{id}', [EmailCompanyController::class, 'bussinesViewAgainEmail'])->name('bussines-view-again-email');
+
+    Route::get('/edit-contract/{id}', [EmailCompanyController::class, 'edit'])->name('edit-contract');
+    Route::put('/update-contract/{id}', [EmailCompanyController::class, 'update'])->name('update-contract');
+    Route::delete('/delete-contract/{id}', [EmailCompanyController::class, 'destroy'])->name('delete-contract');
+
+    Route::get('/edit-company/{id}', [EmailCompanyController::class, 'editCompany'])->name('edit-company');
+    Route::put('/update-company/{id}', [EmailCompanyController::class, 'updateCompany'])->name('update-company');
+    Route::delete('/delete-company/{id}', [EmailCompanyController::class, 'destroyCompany'])->name('delete-company');
+
+    Route::get('/edit-bussines/{id}', [EmailCompanyController::class, 'editBussines'])->name('edit-bussines');
+    Route::put('/update-bussines/{id}', [EmailCompanyController::class, 'updateBussines'])->name('update-bussines');
+    Route::delete('/delete-bussines/{id}', [EmailCompanyController::class, 'destroyBussines'])->name('delete-bussines');
 
     Route::get('/file-annual-report', function () {
     return view('file-annual-report');})->name('file.annual.report');

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -63,7 +64,7 @@ class EmailCompanyController extends Controller
 
         if ($validator->fails()) {
             return redirect('add-company')
-            ->withErrors($validator)
+                ->withErrors($validator)
                 ->withInput($request->except('password'));
         }
 
@@ -86,75 +87,93 @@ class EmailCompanyController extends Controller
         $company = DB::table('email_companies')->where('id', $id)->first();
 
 
-    return view('mail.hello_email', ['company' => $company]);
-}
+        return view('mail.hello_email', ['company' => $company]);
+    }
 
-public function viewAgainEmail($id)
+    public function viewAgainEmail($id)
     {
 
         $company = DB::table('email_companies')->where('id', $id)->first();
 
 
-    return view('mail.hello_again', ['company' => $company]);
-}
+        return view('mail.hello_again', ['company' => $company]);
+    }
+
+    public function bussinesViewHelloEmail($id)
+    {
+
+        $company = DB::table('empstateweb_emails')->where('id', $id)->first();
+
+
+        return view('mail.bussines.hello_email', ['company' => $company]);
+    }
+
+    public function bussinesViewAgainEmail($id)
+    {
+
+        $company = DB::table('empstateweb_emails')->where('id', $id)->first();
+
+
+        return view('mail.bussines.hello_again', ['company' => $company]);
+    }
 
     // Метод для редактирования компании
-public function edit($id)
-{
-    $company = DB::table('email_companies')->where('id', $id)->first();
+    public function edit($id)
+    {
+        $company = DB::table('email_companies')->where('id', $id)->first();
 
-    if (!$company) {
-        return redirect()->route('dashboard')->with('error', 'Company not found.');
+        if (!$company) {
+            return redirect()->route('dashboard')->with('error', 'Company not found.');
+        }
+
+        return view('edit-company', ['company' => $company]);
     }
 
-    return view('edit-company', ['company' => $company]);
-}
+    // Метод для обновления компании
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'recipient_name' => 'nullable|string|max:255',
+            'recipient_email' => 'required|email|unique:email_companies,recipient_email,' . $id,
+            'company_name' => 'nullable|string|max:255',
+            'contract_id' => 'nullable|string|max:50',
+            'contract_topic' => 'nullable|string|max:255',
+            'contract_description' => 'nullable|string',
+            'additional_details' => 'nullable|string',
+            'contract_start_date' => 'nullable|date',
+            'contract_end_date' => 'nullable|date',
+        ]);
 
-// Метод для обновления компании
-public function update(Request $request, $id)
-{
-    $validator = Validator::make($request->all(), [
-        'recipient_name' => 'nullable|string|max:255',
-        'recipient_email' => 'required|email|unique:email_companies,recipient_email,' . $id,
-        'company_name' => 'nullable|string|max:255',
-        'contract_id' => 'nullable|string|max:50',
-        'contract_topic' => 'nullable|string|max:255',
-        'contract_description' => 'nullable|string',
-        'additional_details' => 'nullable|string',
-        'contract_start_date' => 'nullable|date',
-        'contract_end_date' => 'nullable|date',
-    ]);
+        if ($validator->fails()) {
+            return redirect()->route('edit-company', ['id' => $id])
+                ->withErrors($validator)
+                ->withInput();
+        }
 
-    if ($validator->fails()) {
-        return redirect()->route('edit-company', ['id' => $id])
-            ->withErrors($validator)
-            ->withInput();
+        DB::table('email_companies')->where('id', $id)->update([
+            'recipient_name' => $request->input('recipient_name'),
+            'recipient_email' => $request->input('recipient_email'),
+            'company_name' => $request->input('company_name'),
+            'contract_id' => $request->input('contract_id'),
+            'contract_topic' => $request->input('contract_topic'),
+            'contract_description' => $request->input('contract_description'),
+            'additional_details' => $request->input('additional_details'),
+            'contract_start_date' => $request->input('contract_start_date'),
+            'contract_end_date' => $request->input('contract_end_date'),
+            'updated_at' => now()
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Company updated successfully!');
     }
 
-    DB::table('email_companies')->where('id', $id)->update([
-        'recipient_name' => $request->input('recipient_name'),
-        'recipient_email' => $request->input('recipient_email'),
-        'company_name' => $request->input('company_name'),
-        'contract_id' => $request->input('contract_id'),
-        'contract_topic' => $request->input('contract_topic'),
-        'contract_description' => $request->input('contract_description'),
-        'additional_details' => $request->input('additional_details'),
-        'contract_start_date' => $request->input('contract_start_date'),
-        'contract_end_date' => $request->input('contract_end_date'),
-        'updated_at' => now()
-    ]);
+    // Метод для удаления компании
+    public function destroy($id)
+    {
+        DB::table('email_companies')->where('id', $id)->delete();
+        return redirect()->route('dashboard')->with('success', 'Company deleted successfully.');
+    }
 
-    return redirect()->route('dashboard')->with('success', 'Company updated successfully!');
-}
-
-// Метод для удаления компании
-public function destroy($id)
-{
-    DB::table('email_companies')->where('id', $id)->delete();
-    return redirect()->route('dashboard')->with('success', 'Company deleted successfully.');
-}
-
-/**
+    /**
      * Метод для отображения страницы отписки (GET-запрос)
      * Этот метод будет вызван при переходе по ссылке из письма
      */
@@ -242,188 +261,187 @@ public function destroy($id)
         }
     }
 
-public function showUnsubscribeDetails($company_id)
-{
-    // Fetch the company details by the given ID
-    $company = DB::table('email_companies')->where('id', $company_id)->first();
+    public function showUnsubscribeDetails($company_id)
+    {
+        // Fetch the company details by the given ID
+        $company = DB::table('email_companies')->where('id', $company_id)->first();
 
-    // Check if the company exists
-    if (!$company) {
-        return redirect()->back()->with('error', 'Company not found.');
-    }
-
-    // Fetch the unsubscribe log for the company based on email
-    $unsubscribeLog = DB::table('unsubscribe_logs')->where('email', $company->recipient_email)->first();
-
-    // Check if there's an unsubscribe record
-    if (!$unsubscribeLog) {
-        return view('mail.unsubscribe_details', ['message' => 'No unsubscription log found for this company.', 'company' => $company]);
-    }
-
-    // Pass the company and unsubscribe details to the view
-    return view('mail.unsubscribe_details', ['unsubscribeLog' => $unsubscribeLog, 'company' => $company]);
-}
-
-public function logs()
-{
-    // Путь к файлу логов helloemail
-    $logPathHelloEmail = storage_path('logs/helloemail.log');
-    // Путь к файлу логов againemail
-    $logPathAgainEmail = storage_path('logs/againemail.log');
-    // Путь к файлу логов lastemail
-    $logPathLastEmail = storage_path('logs/lastemail.log');
-
-    // Функция для получения последних 15 строк из файла
-    $getLastLines = function ($logPath) {
-        if (File::exists($logPath)) {
-            // Чтение всех строк файла
-            $lines = file($logPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-            // Возвращаем последние 15 строк и переворачиваем их, чтобы новые строки были сверху
-            return array_reverse(array_slice($lines, -15));
+        // Check if the company exists
+        if (!$company) {
+            return redirect()->back()->with('error', 'Company not found.');
         }
-        return ['Log file not found.'];
-    };
 
-    // Получаем последние 15 строк из каждого файла
-    $helloEmailLogs = $getLastLines($logPathHelloEmail);
-    $againEmailLogs = $getLastLines($logPathAgainEmail);
-    $lastEmailLogs = $getLastLines($logPathLastEmail);
+        // Fetch the unsubscribe log for the company based on email
+        $unsubscribeLog = DB::table('unsubscribe_logs')->where('email', $company->recipient_email)->first();
 
-    // Передаем логи в шаблон
-    return view('logs', [
-        'helloEmailLogs' => $helloEmailLogs,
-        'againEmailLogs' => $againEmailLogs,
-        'lastEmailLogs' => $lastEmailLogs
-    ]);
-}
+        // Check if there's an unsubscribe record
+        if (!$unsubscribeLog) {
+            return view('mail.unsubscribe_details', ['message' => 'No unsubscription log found for this company.', 'company' => $company]);
+        }
 
-// Метод для отображения логов HelloEmail
-public function showHelloEmailLogs()
-{
-    // Путь к файлу логов
-    $logPath = storage_path('logs/helloemail.log');
-
-    // Проверяем, существует ли файл логов
-    if (File::exists($logPath)) {
-        // Читаем содержимое файла
-        $logs = File::get($logPath);
-
-        // Разделяем содержимое файла по строкам
-        $logLines = explode(PHP_EOL, $logs);
-
-        // Убираем пустые строки
-        $logLines = array_filter($logLines);
-
-        // Переворачиваем строки для реверсного отображения
-        $logLines = array_reverse($logLines);
-
-        // Преобразуем массив строк в коллекцию
-        $logsCollection = collect($logLines);
-
-        // Пагинация
-        $perPage = 20; // Количество строк на одной странице
-        $currentPage = LengthAwarePaginator::resolveCurrentPage();
-        $currentPageLogs = $logsCollection->slice(($currentPage - 1) * $perPage, $perPage)->all();
-
-        // Создаем пагинацию
-        $paginatedLogs = new LengthAwarePaginator(
-            $currentPageLogs,
-            $logsCollection->count(),
-            $perPage,
-            $currentPage,
-            ['path' => LengthAwarePaginator::resolveCurrentPath()]
-        );
-
-        return view('hello-email-logs', ['logs' => $paginatedLogs]);
-    } else {
-        return view('hello-email-logs', ['logs' => 'Log file not found.']);
+        // Pass the company and unsubscribe details to the view
+        return view('mail.unsubscribe_details', ['unsubscribeLog' => $unsubscribeLog, 'company' => $company]);
     }
-}
 
-// Метод для отображения логов AgainEmail
-public function showAgainEmailLogs()
-{
-    // Путь к файлу логов
-    $logPath = storage_path('logs/againemail.log');
+    public function logs()
+    {
+        // Путь к файлу логов helloemail
+        $logPathHelloEmail = storage_path('logs/helloemail.log');
+        // Путь к файлу логов againemail
+        $logPathAgainEmail = storage_path('logs/againemail.log');
+        // Путь к файлу логов lastemail
+        $logPathLastEmail = storage_path('logs/lastemail.log');
 
-    // Проверяем, существует ли файл логов
-    if (File::exists($logPath)) {
-        // Читаем содержимое файла
-        $logs = File::get($logPath);
+        // Функция для получения последних 15 строк из файла
+        $getLastLines = function ($logPath) {
+            if (File::exists($logPath)) {
+                // Чтение всех строк файла
+                $lines = file($logPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                // Возвращаем последние 15 строк и переворачиваем их, чтобы новые строки были сверху
+                return array_reverse(array_slice($lines, -15));
+            }
+            return ['Log file not found.'];
+        };
 
-        // Разделяем содержимое файла по строкам
-        $logLines = explode(PHP_EOL, $logs);
+        // Получаем последние 15 строк из каждого файла
+        $helloEmailLogs = $getLastLines($logPathHelloEmail);
+        $againEmailLogs = $getLastLines($logPathAgainEmail);
+        $lastEmailLogs = $getLastLines($logPathLastEmail);
 
-        // Убираем пустые строки
-        $logLines = array_filter($logLines);
-
-        // Переворачиваем строки для реверсного отображения
-        $logLines = array_reverse($logLines);
-
-        // Преобразуем массив строк в коллекцию
-        $logsCollection = collect($logLines);
-
-        // Пагинация
-        $perPage = 20; // Количество строк на одной странице
-        $currentPage = LengthAwarePaginator::resolveCurrentPage();
-        $currentPageLogs = $logsCollection->slice(($currentPage - 1) * $perPage, $perPage)->all();
-
-        // Создаем пагинацию
-        $paginatedLogs = new LengthAwarePaginator(
-            $currentPageLogs,
-            $logsCollection->count(),
-            $perPage,
-            $currentPage,
-            ['path' => LengthAwarePaginator::resolveCurrentPath()]
-        );
-
-        return view('again-email-logs', ['logs' => $paginatedLogs]);
-    } else {
-        return view('again-email-logs', ['logs' => 'Log file not found.']);
+        // Передаем логи в шаблон
+        return view('logs', [
+            'helloEmailLogs' => $helloEmailLogs,
+            'againEmailLogs' => $againEmailLogs,
+            'lastEmailLogs' => $lastEmailLogs
+        ]);
     }
-}
 
-// Метод для отображения логов LastEmail
-public function showLastEmailLogs()
-{
-    // Путь к файлу логов
-    $logPath = storage_path('logs/lastemail.log');
+    // Метод для отображения логов HelloEmail
+    public function showHelloEmailLogs()
+    {
+        // Путь к файлу логов
+        $logPath = storage_path('logs/helloemail.log');
 
-    // Проверяем, существует ли файл логов
-    if (File::exists($logPath)) {
-        // Читаем содержимое файла
-        $logs = File::get($logPath);
+        // Проверяем, существует ли файл логов
+        if (File::exists($logPath)) {
+            // Читаем содержимое файла
+            $logs = File::get($logPath);
 
-        // Разделяем содержимое файла по строкам
-        $logLines = explode(PHP_EOL, $logs);
+            // Разделяем содержимое файла по строкам
+            $logLines = explode(PHP_EOL, $logs);
 
-        // Убираем пустые строки
-        $logLines = array_filter($logLines);
+            // Убираем пустые строки
+            $logLines = array_filter($logLines);
 
-        // Переворачиваем строки для реверсного отображения
-        $logLines = array_reverse($logLines);
+            // Переворачиваем строки для реверсного отображения
+            $logLines = array_reverse($logLines);
 
-        // Преобразуем массив строк в коллекцию
-        $logsCollection = collect($logLines);
+            // Преобразуем массив строк в коллекцию
+            $logsCollection = collect($logLines);
 
-        // Пагинация
-        $perPage = 20; // Количество строк на одной странице
-        $currentPage = LengthAwarePaginator::resolveCurrentPage();
-        $currentPageLogs = $logsCollection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+            // Пагинация
+            $perPage = 20; // Количество строк на одной странице
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $currentPageLogs = $logsCollection->slice(($currentPage - 1) * $perPage, $perPage)->all();
 
-        // Создаем пагинацию
-        $paginatedLogs = new LengthAwarePaginator(
-            $currentPageLogs,
-            $logsCollection->count(),
-            $perPage,
-            $currentPage,
-            ['path' => LengthAwarePaginator::resolveCurrentPath()]
-        );
+            // Создаем пагинацию
+            $paginatedLogs = new LengthAwarePaginator(
+                $currentPageLogs,
+                $logsCollection->count(),
+                $perPage,
+                $currentPage,
+                ['path' => LengthAwarePaginator::resolveCurrentPath()]
+            );
 
-        return view('last-email-logs', ['logs' => $paginatedLogs]);
-    } else {
-        return view('last-email-logs', ['logs' => 'Log file not found.']);
+            return view('hello-email-logs', ['logs' => $paginatedLogs]);
+        } else {
+            return view('hello-email-logs', ['logs' => 'Log file not found.']);
+        }
     }
-}
 
+    // Метод для отображения логов AgainEmail
+    public function showAgainEmailLogs()
+    {
+        // Путь к файлу логов
+        $logPath = storage_path('logs/againemail.log');
+
+        // Проверяем, существует ли файл логов
+        if (File::exists($logPath)) {
+            // Читаем содержимое файла
+            $logs = File::get($logPath);
+
+            // Разделяем содержимое файла по строкам
+            $logLines = explode(PHP_EOL, $logs);
+
+            // Убираем пустые строки
+            $logLines = array_filter($logLines);
+
+            // Переворачиваем строки для реверсного отображения
+            $logLines = array_reverse($logLines);
+
+            // Преобразуем массив строк в коллекцию
+            $logsCollection = collect($logLines);
+
+            // Пагинация
+            $perPage = 20; // Количество строк на одной странице
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $currentPageLogs = $logsCollection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+
+            // Создаем пагинацию
+            $paginatedLogs = new LengthAwarePaginator(
+                $currentPageLogs,
+                $logsCollection->count(),
+                $perPage,
+                $currentPage,
+                ['path' => LengthAwarePaginator::resolveCurrentPath()]
+            );
+
+            return view('again-email-logs', ['logs' => $paginatedLogs]);
+        } else {
+            return view('again-email-logs', ['logs' => 'Log file not found.']);
+        }
+    }
+
+    // Метод для отображения логов LastEmail
+    public function showLastEmailLogs()
+    {
+        // Путь к файлу логов
+        $logPath = storage_path('logs/lastemail.log');
+
+        // Проверяем, существует ли файл логов
+        if (File::exists($logPath)) {
+            // Читаем содержимое файла
+            $logs = File::get($logPath);
+
+            // Разделяем содержимое файла по строкам
+            $logLines = explode(PHP_EOL, $logs);
+
+            // Убираем пустые строки
+            $logLines = array_filter($logLines);
+
+            // Переворачиваем строки для реверсного отображения
+            $logLines = array_reverse($logLines);
+
+            // Преобразуем массив строк в коллекцию
+            $logsCollection = collect($logLines);
+
+            // Пагинация
+            $perPage = 20; // Количество строк на одной странице
+            $currentPage = LengthAwarePaginator::resolveCurrentPage();
+            $currentPageLogs = $logsCollection->slice(($currentPage - 1) * $perPage, $perPage)->all();
+
+            // Создаем пагинацию
+            $paginatedLogs = new LengthAwarePaginator(
+                $currentPageLogs,
+                $logsCollection->count(),
+                $perPage,
+                $currentPage,
+                ['path' => LengthAwarePaginator::resolveCurrentPath()]
+            );
+
+            return view('last-email-logs', ['logs' => $paginatedLogs]);
+        } else {
+            return view('last-email-logs', ['logs' => 'Log file not found.']);
+        }
+    }
 }
