@@ -92,7 +92,7 @@ footer a:hover {
 }
 
 .logo-icon {
-    width: 50px;
+    width: 200px;
     height: auto;
     margin-right: 10px;
 }
@@ -425,7 +425,7 @@ input[type="date"], textarea {
         cursor: pointer;
         position: absolute;
         right: 20px;
-        top: 16px;
+        top: 28px;
     }
 
     nav {

@@ -1,10 +1,8 @@
 <header>
     <div class="header-content">
         <a href="/" class="logo-link" aria-label="Homepage">
-            <img src="{{ asset('images/visionary-software.svg') }}" alt="Visionary Software Logo" class="logo-icon">
-            <div class="logo-text">
-                GETWAB INC.<span class="tagline">Visionary Software</span>
-            </div>
+            <img src="{{ asset('images/GETWAB-logo-main-version-white.svg') }}" alt="GETWAB INC. - Visionary Software"
+                class="logo-icon" title="GETWAB INC. - Visionary Software">
         </a>
         <button class="menu-toggle" aria-label="Open menu">&#9776;</button>
         <nav>
