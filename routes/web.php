@@ -45,8 +45,8 @@ Route::get('terms-of-use', function () {
     return view('terms-of-use');
 });
 
-Route::get('/register', [RegisterController::class, 'index'])->name('register');
-Route::post('/register/store', [RegisterController::class, 'store']);
+// Route::get('/register', [RegisterController::class, 'index'])->name('register');
+// Route::post('/register/store', [RegisterController::class, 'store']);
 
 // -------------------- End Static Pages --------------------
 
