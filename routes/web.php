@@ -6,6 +6,7 @@ use App\Http\Controllers\EmailCompanyController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ImapController;
 use App\Http\Controllers\DashBoardController;
+use App\Http\Controllers\RegisterController;
 
 // -------------------- Static Pages --------------------
 
@@ -43,6 +44,9 @@ Route::get('cookie-policy', function () {
 Route::get('terms-of-use', function () {
     return view('terms-of-use');
 });
+
+Route::get('/register', [RegisterController::class, 'index'])->name('register');
+Route::post('/register/store', [RegisterController::class, 'store']);
 
 // -------------------- End Static Pages --------------------
 
