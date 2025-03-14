@@ -4,7 +4,7 @@
     @include('include.head')
     <title>GETWAB INC. - About Us</title>
     <meta name="description" content="Learn more about GETWAB INC., a dynamic and innovative IT development company dedicated to providing tailored software solutions.">
-    <link rel="canonical" href="https://www.getwabinc.com/about"/>
+    <link rel="canonical" href="https://www.getwab.com/about"/>
 </head>
 @include('include.header')
 <div class="container" id="main-container">
@@ -21,7 +21,7 @@
         <p>A dynamic team, individual approach, responsiveness, a wide range of IT services, and experience with various technologies.</p>
     </section>
     <section class="capability" id="capability-section">
-        <p><a href="https://www.getwabinc.com/capability-statement.pdf">Download Our Capability Statement</a></p>
+        <p><a href="https://www.getwab.com/capability-statement.pdf">Download Our Capability Statement</a></p>
     </section>
 </div>
 @include('include.footer')

@@ -4,7 +4,7 @@
     @include('include.head')
     <title>GETWAB INC. - Privacy Policy</title>
     <meta name="description" content="Read GETWAB INC.'s Privacy Policy to understand how we handle information on our website.">
-    <link rel="canonical" href="https://www.getwabinc.com/privacy-policy">
+    <link rel="canonical" href="https://www.getwab.com/privacy-policy">
 </head>
 <body>
 @include('include.header')

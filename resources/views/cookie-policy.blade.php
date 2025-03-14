@@ -4,7 +4,7 @@
     @include('include.head')
     <title>GETWAB INC. - Cookie Policy</title>
     <meta name="description" content="Review GETWAB INC.'s Cookie Policy to understand how cookies are used on our website to enhance and secure your browsing experience.">
-    <link rel="canonical" href="https://www.getwabinc.com/cookie-policy"/>
+    <link rel="canonical" href="https://www.getwab.com/cookie-policy"/>
 </head>
 <body>
 @include('include.header')

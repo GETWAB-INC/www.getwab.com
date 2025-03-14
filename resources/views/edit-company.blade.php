@@ -5,7 +5,7 @@
     <title>GETWAB INC. - Edit Company</title>
     <meta name="description" content="Edit a company on your dashboard at GETWAB INC.">
     <meta name="robots" content="noindex, nofollow">
-    <link rel="canonical" href="https://www.getwabinc.com/edit-company"/>
+    <link rel="canonical" href="https://www.getwab.com/edit-company"/>
 </head>
 <body>
     @include('include.header')

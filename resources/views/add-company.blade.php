@@ -6,7 +6,7 @@
     <title>GETWAB INC. - Add Campaign</title>
     <meta name="description" content="Add a new campaign to your dashboard at GETWAB INC.">
     <meta name="robots" content="noindex, nofollow">
-    <link rel="canonical" href="https://www.getwabinc.com/add-campaign" />
+    <link rel="canonical" href="https://www.getwab.com/add-campaign" />
     <style>
         /* Табы */
         .tabs {

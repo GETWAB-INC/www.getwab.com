@@ -4,7 +4,7 @@
     @include('include.head')
     <title>GETWAB INC. - Update Annual Report</title>
     <meta name="description" content="Instructions on how to update your Annual Report for GETWAB INC.">
-    <link rel="canonical" href="https://www.getwabinc.com/update-annual-report"/>
+    <link rel="canonical" href="https://www.getwab.com/update-annual-report"/>
         <style>
         .container, .header-content {
             max-width: 100%;

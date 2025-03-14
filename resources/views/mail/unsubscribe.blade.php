@@ -4,7 +4,7 @@
     @include('include.head')
     <title>GETWAB INC. - Unsubscribe</title>
     <meta name="description" content="You are being unsubscribed from GETWAB INC. notifications.">
-    <link rel="canonical" href="https://www.getwabinc.com/unsubscribe"/>
+    <link rel="canonical" href="https://www.getwab.com/unsubscribe"/>
     <meta name="robots" content="noindex, nofollow">
 </head>
 <body>

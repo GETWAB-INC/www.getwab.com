@@ -4,7 +4,7 @@
     @include('include.head')
     <title>GETWAB INC. - Premier Software Development & IT Consulting</title>
     <meta name="description" content="GETWAB INC. offers expert software development and IT consulting services to help businesses innovate and grow. Discover our solutions for web, mobile, and enterprise applications tailored to meet your unique needs.">
-    <link rel="canonical" href="https://www.getwabinc.com/">
+    <link rel="canonical" href="https://www.getwab.com/">
 </head>
 <body>
 @include('include.header')
@@ -48,7 +48,7 @@
         </div>
     </section>
     <section class="capability" id="capability-section">
-        <p><a href="https://www.getwabinc.com/capability-statement.pdf">Download Our Capability Statement</a></p>
+        <p><a href="https://www.getwab.com/capability-statement.pdf">Download Our Capability Statement</a></p>
     </section>
 
 </div>

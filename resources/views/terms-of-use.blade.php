@@ -4,7 +4,7 @@
     @include('include.head')
     <title>GETWAB INC. - Terms of Use</title>
     <meta name="description" content="Explore the Terms of Use for accessing and utilizing GETWAB INC.'s official website.">
-    <link rel="canonical" href="https://www.getwabinc.com/terms-of-use">
+    <link rel="canonical" href="https://www.getwab.com/terms-of-use">
 </head>
 <body>
 @include('include.header')
