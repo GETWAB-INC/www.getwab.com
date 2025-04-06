@@ -13,7 +13,7 @@
     <h1>Contact Us</h1>
     <p>If you have any questions or need further information, please don't hesitate to contact us through the following means:</p>
     <ul>
-        <li>Email: <a href="mailto:contact@getwab.com">contact@getwab.com</a></li>
+        <li>Email: <a href="mailto:ilia.oborin@getwab.com">ilia.oborin@getwab.com</a></li>
         <li>Phone: <a href="tel:+19414020472">+1 941-402-0472</a></li>
         <li>Mailing Address: 9602 4th Avenue, Apt. 5O, Brooklyn, NY 11209</li>
         <li>Physical Address: 4532 Parnell Dr, Sarasota, FL 34232-5340</li>

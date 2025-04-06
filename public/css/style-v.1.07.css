@@ -35,8 +35,7 @@ h1, h2, h3 {
 
 header {
     width: 100%;
-    background: #012169;
-    color: #fff;
+    background: #000;
 }
 
 footer {
@@ -175,7 +174,7 @@ nav a {
     position: relative;
     display: inline-block;
     padding: 10px 0;
-    color: #fff;
+    color: #B0D9C7;
     text-decoration: none;
     font-weight: bold;
     transition: color 0.3s ease;
@@ -188,7 +187,7 @@ nav a::before {
     left: 0;
     width: 0;
     height: 2px;
-    background: #fff;
+    background: #B0D9C7;
     transition: width 0.3s ease;
 }
 
@@ -199,7 +198,7 @@ nav a:hover::before {
 nav {
     display: flex;
     gap: 20px;
-    background: #012169;
+    background: #000;
 }
 
  /* login */
@@ -389,11 +388,11 @@ input[type="date"], textarea {
     }
 
     nav a {
-        color: #e0e0e0;
+        color: #B0D9C7;
     }
 
     nav a::before {
-        background: #e0e0e0;
+        background: #B0D9C7;
     }
 
     .capability {
@@ -425,7 +424,7 @@ input[type="date"], textarea {
         cursor: pointer;
         position: absolute;
         right: 20px;
-        top: 28px;
+        top: 10px;
     }
 
     nav {
