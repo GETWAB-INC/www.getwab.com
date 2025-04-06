@@ -2,7 +2,7 @@ body {
     font-family: 'OverusedGrotesk', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f0f4f8;
+    background-color: rgba(176,217,199, 0.2);
     color: #333;
     line-height: 1.6;
     display: flex;
@@ -35,12 +35,12 @@ h1, h2, h3 {
 
 header {
     width: 100%;
-    background: #000;
+    background: rgba(26, 67, 56)
 }
 
 footer {
     width: 100%;
-    background: #012169;
+    background: rgba(26, 67, 56);
     color: #fff;
     padding: 20px 0;
     display: flex;
@@ -53,7 +53,7 @@ footer p {
 }
 
 footer a {
-    color: #ffcc00;
+    color: #B0D9C7;
     text-decoration: none;
 }
 
@@ -129,7 +129,7 @@ footer a:hover {
 }
 
 .section h1 {
-    color: #004080;
+    color: #3B8F75;
     margin-top: 0;
 }
 
@@ -141,7 +141,7 @@ footer a:hover {
 }
 
 .service {
-    background: #e6f0ff;
+    background: #B0D9C7;
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -149,13 +149,13 @@ footer a:hover {
 
 .capability {
     text-align: center;
-    background: #012169;
+    background: #3B8F75;
     color: #fff;
     padding: 20px;
 }
 
 .capability a {
-    color: #ffcc00;
+    color: #FFF;
     text-decoration: none;
     font-weight: bold;
     font-size: 1.2em;
@@ -198,7 +198,7 @@ nav a:hover::before {
 nav {
     display: flex;
     gap: 20px;
-    background: #000;
+    background: rgba(26, 67, 56);
 }
 
  /* login */
@@ -245,7 +245,7 @@ input[type="date"], textarea {
 }
 
 .btn.btn-primary:hover {
-    background-color: #012169;
+    background-color: #3B8F75;
 }
 
 .add-company{
@@ -296,7 +296,7 @@ input[type="date"], textarea {
 }
 
 .banner-content {
-    color: #ffcc00;
+    color: #B0D9C7;
     text-align: center;
     max-width: 600px;
     z-index: 2;
@@ -337,7 +337,7 @@ input[type="date"], textarea {
 }
 
 .dot:hover, .active {
-    background-color: #012169;
+    background-color: #3B8F75;
 }
 
 .fade {
@@ -388,11 +388,11 @@ input[type="date"], textarea {
     }
 
     nav a {
-        color: #B0D9C7;
+        color: rgba(188, 216, 172);
     }
 
     nav a::before {
-        background: #B0D9C7;
+        background: rgba(188, 216, 172);
     }
 
     .capability {
@@ -401,11 +401,11 @@ input[type="date"], textarea {
     }
 
     .capability a {
-        color: #ffd700;
+        color: #B0D9C7;
     }
 
     footer a {
-        color: #ffd700;
+        color: #B0D9C7;
     }
 
     .menu-toggle, .menu-close {
