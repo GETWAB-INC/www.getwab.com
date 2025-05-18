@@ -46,7 +46,7 @@
 
         <p>We are confident that our participation as a subcontractor will enable your project to leverage advanced technology and ensure its successful implementation within set deadlines. We are ready to discuss collaboration terms and develop a detailed proposal tailored to the specifics of the upcoming contract.</p>
 
-        <p>I look forward to your response at <a href="mailto:contact@getwab.com">contact@getwabinc.com</a> or by phone at Phone: <a href="tel:+19414020472">+1 941-402-0472</a>.</p>
+        <p>I look forward to your response at <a href="mailto:ilia.oborin@getwab.com">ilia.oborin@getwab.com</a> or by phone at Phone: <a href="tel:+19414020472">+1 941-402-0472</a>.</p>
 
         <p>Sincerely,<br>
         <img src="https://www.getwab.com/images/me.webp" alt="Ilia Oborin" style="width: 50px; height: 50px; border-radius: 50%;"><br>
@@ -56,7 +56,7 @@
         {{-- 4532 Parnell Dr,<br>
         Sarasota, FL 34232<br> --}}
         Phone: <a href="tel:+19414020472">+1 941-402-0472</a><br>
-        Email: contact@getwabinc.com<br>
+        Email: ilia.oborin@getwab.com<br>
         Website: <a href="https://www.getwab.com">www.getwabinc.com</a><br>
         LinkedIn: <a href="https://www.linkedin.com/in/ioborin22/">click here</a><br>
         Capability Statement: <a href="https://www.getwab.com/capability-statement.pdf">https://www.getwab.com/capability-statement.pdf</a>

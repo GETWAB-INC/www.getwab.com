@@ -26,7 +26,7 @@
                 <li>Long-term maintenance and development cycles to ensure project success.</li>
             </ul>
 
-            <p>Otherwise, I look forward to hearing back from you whenever it is convenient to explore how GETWAB INC. can support your projects. Please feel free to reach out to me directly at <a href="mailto:contact@getwab.com">contact@getwabinc.com</a> or by phone at <a href="tel:+19414020472">+1 941-402-0472</a>.</p>
+            <p>Otherwise, I look forward to hearing back from you whenever it is convenient to explore how GETWAB INC. can support your projects. Please feel free to reach out to me directly at <a href="mailto:ilia.oborin@getwab.com">ilia.oborin@getwab.com</a> or by phone at <a href="tel:+19414020472">+1 941-402-0472</a>.</p>
 
             <p>Sincerely,</p>
             <p><img src="https://www.getwab.com/images/me.webp" alt="Ilia Oborin" style="width: 50px; height: 50px; border-radius: 50%;"><br>
@@ -36,7 +36,7 @@
             {{-- 4532 Parnell Dr,<br>
             Sarasota, FL 34232<br> --}}
             Phone: <a href="tel:+19414020472">+1 941-402-0472</a><br>
-            Email: contact@getwabinc.com<br>
+            Email: ilia.oborin@getwab.com<br>
             Website: <a href="https://www.getwab.com">www.getwabinc.com</a><br>
             LinkedIn: <a href="https://www.linkedin.com/in/ioborin22/">click here</a><br>
             Capability Statement: <a href="https://www.getwab.com/capability-statement.pdf">https://www.getwab.com/capability-statement.pdf</a>

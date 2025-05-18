@@ -48,7 +48,7 @@
 
             <p>We believe that a partnership with GETWAB INC. will bring innovative solutions to your projects, ensuring they not only meet but exceed expectations.</p>
 
-            <p>Please let me know if there is a convenient time for us to discuss this further. You can reach me directly at <a href="mailto:contact@getwab.com">contact@getwabinc.com</a> or by phone at <a href="tel:+19414020472">+1 941-402-0472</a>.</p>
+            <p>Please let me know if there is a convenient time for us to discuss this further. You can reach me directly at <a href="mailto:ilia.oborin@getwab.com">ilia.oborin@getwab.com</a> or by phone at <a href="tel:+19414020472">+1 941-402-0472</a>.</p>
 
             <p>Looking forward to the opportunity to collaborate,<p>
 
@@ -59,7 +59,7 @@
             {{-- 4532 Parnell Dr,<br>
             Sarasota, FL 34232<br> --}}
             Phone: <a href="tel:+19414020472">+1 941-402-0472</a><br>
-            Email: contact@getwabinc.com<br>
+            Email: ilia.oborin@getwab.com<br>
             Website: <a href="https://www.getwab.com">www.getwabinc.com</a><br>
             LinkedIn: <a href="https://www.linkedin.com/in/ioborin22/">click here</a><br>
             Capability Statement: <a href="https://www.getwab.com/capability-statement.pdf">https://www.getwab.com/capability-statement.pdf</a>
