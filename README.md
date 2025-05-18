@@ -13,5 +13,3 @@ GETWAB INC. builds analytics and automation tools based on federal procurement d
 ## Contact
 **Email:** ilia.oborin@getwab.com
 **Phone:** +1 941-402-0472
-
-Visit our website for more information: [www.getwab.com](https://www.getwab.com)
