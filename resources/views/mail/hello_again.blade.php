@@ -59,8 +59,8 @@
             {{-- 4532 Parnell Dr,<br>
             Sarasota, FL 34232<br> --}}
             Phone: <a href="tel:+19414020472">+1 941-402-0472</a><br>
-            Email: ilia.oborin@getwab.com<br>
-            Website: <a href="https://www.getwab.com">www.getwabinc.com</a><br>
+            Email: <a href="mailto:ilia.oborin@getwab.com">ilia.oborin@getwab.com</a><br>
+            Website: <a href="https://www.getwab.com">www.getwab.com</a><br>
             LinkedIn: <a href="https://www.linkedin.com/in/ioborin22/">click here</a><br>
             Capability Statement: <a href="https://www.getwab.com/capability-statement.pdf">https://www.getwab.com/capability-statement.pdf</a>
             </p>
