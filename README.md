@@ -1,16 +1,17 @@
 # GETWAB INC.
 
-**Website:** [www.getwabinc.com](https://www.getwabinc.com)
+**Website:** [www.getwab.com](https://www.getwab.com)
 
-GETWAB INC. specializes in custom software development and IT consulting, delivering scalable and secure solutions for government and private sector projects. Our expertise covers the entire software development lifecycle, from planning and design to deployment and ongoing support.
+GETWAB INC. builds analytics and automation tools based on federal procurement data. We focus on government-facing solutions, combining data engineering, cybersecurity, and API-driven architectures.
 
-## Key Services
-- Custom Software Development
-- Web & Mobile Application Development
-- IT Consulting Services
+## Core Areas
+- FPDS-based contract analytics
+- Custom dashboards and reporting systems
+- Process automation and monitoring
+- Data consulting and security
 
 ## Contact
-**Email:** contact@getwabinc.com
+**Email:** ilia.oborin@getwab.com
 **Phone:** +1 941-402-0472
 
-Visit our website for more information: [www.getwabinc.com](https://www.getwabinc.com)
+Visit our website for more information: [www.getwab.com](https://www.getwab.com)
