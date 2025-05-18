@@ -26,27 +26,26 @@
     </div>
 </section>
 
-    <section class="section">
-        <h1>About Us</h1>
-        <p>GETWAB INC. specializes in comprehensive software development, including custom software solutions, web and mobile application development, and IT consulting services. Our team is dedicated to delivering scalable, secure, and high-performance software tailored to meet the specific needs of businesses across various industries, with a strong focus on e-commerce, financial technology, and healthcare applications.</p>
-    </section>
+<section class="section">
+    <h1>About Us</h1>
+    <p>GETWAB INC. focuses on data analytics, process automation, and cybersecurity solutions, primarily serving government agencies and businesses operating in regulated environments. We specialize in building scalable platforms for contract analysis, public procurement monitoring, and secure data integration. Our mission is to empower organizations with tools that provide transparency, efficiency, and actionable intelligence.</p>
+</section>
 
+<section class="services">
+    <div class="service">
+        <h3>Data Analytics & Visualization</h3>
+        <p>We build powerful data platforms and dashboards that help clients gain insights from large-scale procurement and operational datasets.</p>
+    </div>
+    <div class="service">
+        <h3>Process Automation</h3>
+        <p>Our team automates workflows and data pipelines to improve decision-making, reduce manual effort, and increase system reliability.</p>
+    </div>
+    <div class="service">
+        <h3>Cybersecurity & Compliance</h3>
+        <p>We provide consulting and tools to ensure data integrity, secure infrastructure, and compliance with federal IT standards.</p>
+    </div>
+</section>
 
-
-    <section class="services">
-        <div class="service">
-            <h3>Custom Software Development</h3>
-            <p>We create tailored software solutions that align with your business objectives, ensuring seamless integration and maximum efficiency.</p>
-        </div>
-        <div class="service">
-            <h3>Web & Mobile Application Development</h3>
-            <p>Our team develops responsive and user-friendly web and mobile applications designed to provide an optimal user experience.</p>
-        </div>
-        <div class="service">
-            <h3>IT Consulting Services</h3>
-            <p>We offer expert IT consulting services to help you make informed decisions and stay ahead of technological trends.</p>
-        </div>
-    </section>
     <section class="capability" id="capability-section">
         <p><a href="https://www.getwab.com/capability-statement.pdf">Download Our Capability Statement</a></p>
     </section>

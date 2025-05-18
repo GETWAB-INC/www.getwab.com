@@ -1,7 +1,7 @@
 <header>
     <div class="header-content">
         <a href="/" class="logo-link" aria-label="Homepage">
-            <img src="{{ asset('images/GetWab/Logo-icone-5.png') }}" alt="GETWAB INC. - Visionary Software"
+            <img src="{{ asset('images/GetWab/Logo_icone-7.png') }}" alt="GETWAB INC. - Visionary Software"
                 class="logo-icon" title="GETWAB INC. - Visionary Software">
         </a>
         <button class="menu-toggle" aria-label="Open menu">&#9776;</button>
