@@ -10,7 +10,7 @@
     <a href="/about">About Us</a>
     <a href="/services">Services</a>
     <a href="/contact">Contact</a>
-    <a href="https://webmail.getwabinc.com/">Mail</a>
+    <a href="https://webmail.getwab.com/">Mail</a>
 
     @auth
         <a href="{{ route('dashboard') }}">
