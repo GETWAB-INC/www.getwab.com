@@ -2,13 +2,22 @@
     <div class="header-content">
         <nav class="main-nav">
         <div class="nav-left">
-    <a href="/about">
-        About Us @include('include.icons.arrow')
-    </a>
-    <a href="/services">
-        Services @include('include.icons.arrow')
-    </a>
-</div>
+
+        <div class="drop">
+            <a href="/products" class="drop-toggle">Products @include('include.icons.arrow')</a>
+            <div class="dropdown-menu">
+                <a href="/fpds/query">FPDS Query</a>
+                <a href="/fpds/charts">FPDS Charts</a>
+            </div>
+        </div>
+
+        <div class="drop">
+            <a href="/services" class="drop-toggle">Services @include('include.icons.arrow')</a>
+            <div class="dropdown-menu">
+                <a href="/consalting">Consalting</a>
+            </div>
+        </div>
+    </div>
 
 
             <div class="nav-center">
@@ -19,8 +28,16 @@
             </div>
 
             <div class="nav-right">
-                <a href="/contact">Contact @include('include.icons.arrow')</a>
-                <a href="https://webmail.getwab.com/">Mail @include('include.icons.arrow')</a>
+
+            <div class="drop">
+            <a href="/about" class="drop-toggle">About @include('include.icons.arrow')</a>
+            <div class="dropdown-menu">
+                <a href="/about">About GETWAB</a>
+                <a target="_blank" href="https://www.getwab.com/capability-statement.pdf">Capability Statement</a>
+                <a href="/contact">Contacts</a>
+            </div>
+        </div>
+            
 
                 @auth
                     <a href="{{ route('dashboard') }}">Dashboard</a>

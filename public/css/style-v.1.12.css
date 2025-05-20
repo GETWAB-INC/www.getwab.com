@@ -218,7 +218,7 @@ footer a:hover {
 }
 
 nav a {
-    padding: 10px 0;
+    padding: 6px 12px;
     color: #FFF;
     text-decoration: none;
     display: inline-flex;
@@ -226,13 +226,56 @@ nav a {
     gap: 6px;
     text-decoration: none;
 }
+
 nav a svg {
     display: block;
 }
+
 nav {
     display: flex;
     gap: 20px;
     background: rgba(0, 0, 0);
+}
+
+nav a:hover {
+    background-color: #4A4A4A;
+    border-radius: 6px;
+}
+
+/* Position drop relative */
+.drop {
+    position: relative;
+}
+
+.drop:hover .dropdown-menu {
+    display: block;
+}
+
+.drop:hover .drop-toggle svg {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #4A4A4A;
+    padding: 6px 0;
+    border-radius: 6px;
+    z-index: 1000;
+    min-width: 180px;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 8px 16px;
+    color: #fff;
+    text-decoration: none;
+    transition: background 0.2s;
+    border-radius: 0;
+}
+
+.dropdown-menu a:hover {
+    background-color: #2D2D2D;
 }
 
  /* login */
