@@ -1,10 +1,15 @@
 <header>
     <div class="header-content">
         <nav class="main-nav">
-            <div class="nav-left">
-                <a href="/about">About Us</a>
-                <a href="/services">Services</a>
-            </div>
+        <div class="nav-left">
+    <a href="/about">
+        About Us @include('include.icons.arrow')
+    </a>
+    <a href="/services">
+        Services @include('include.icons.arrow')
+    </a>
+</div>
+
 
             <div class="nav-center">
                 <a href="/" class="logo-link" aria-label="Homepage">
@@ -14,8 +19,8 @@
             </div>
 
             <div class="nav-right">
-                <a href="/contact">Contact</a>
-                <a href="https://webmail.getwab.com/">Mail</a>
+                <a href="/contact">Contact @include('include.icons.arrow')</a>
+                <a href="https://webmail.getwab.com/">Mail @include('include.icons.arrow')</a>
 
                 @auth
                     <a href="{{ route('dashboard') }}">Dashboard</a>

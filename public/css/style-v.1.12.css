@@ -218,30 +218,17 @@ footer a:hover {
 }
 
 nav a {
-    position: relative;
-    display: inline-block;
     padding: 10px 0;
     color: #FFF;
     text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
 }
-
-nav a::before {
-    content: '';
-    position: absolute;
-    bottom: 2px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: #FFF;
-    transition: width 0.3s ease;
+nav a svg {
+    display: block;
 }
-
-nav a:hover::before {
-    width: 100%;
-}
-
 nav {
     display: flex;
     gap: 20px;
