@@ -30,6 +30,5 @@
         <a href="/login">Login</a>
     @endguest
 </nav>
-
     </div>
 </header>
