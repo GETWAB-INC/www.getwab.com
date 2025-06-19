@@ -19,7 +19,6 @@
     <li><strong>Process Automation & Monitoring:</strong> Implementing automated systems for tracking, reporting, and anomaly detection in high-volume environments.</li>
     <li><strong>Custom Tools for Government and Business:</strong> Developing secure, purpose-built applications that support operations in regulated and mission-critical domains.</li>
 </ul>
-
     </section>
         <section class="capability" id="capability-section">
         <p><a href="https://www.getwab.com/capability-statement.pdf">Download Our Capability Statement</a></p>
