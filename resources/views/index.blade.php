@@ -1,143 +1,576 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    @include('include.head')
-    <title>GETWAB INC. - Premier Software Development & IT Consulting</title>
-    <meta name="description" content="GETWAB INC. offers expert software development and IT consulting services to help businesses innovate and grow. Discover our solutions for web, mobile, and enterprise applications tailored to meet your unique needs.">
-    <link rel="canonical" href="https://www.getwab.com/">
-</head>
-<body>
-@include('include.header')
-<div class="container" id="main-container">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Getwab</title>
 
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
 
-<section class="banner">
-    <div class="banner-content">
-        <h2 id="banner-title"></h2>
-        <p id="banner-text"></p>
+  <body>
+    <div class="background-video-container">
+      <!-- Видеофон -->
+      <video autoplay muted loop playsinline class="background-video">
+        <source src="background.mp4" type="video/mp4" />
+      </video>
+
+      <div class="video-overlay"></div>
+
+      <header class="website-header">
+        <div class="header-container">
+          <nav class="header-left-menu">
+            <div class="menu-item-wrapper">
+              <div class="menu-item">
+                <span class="menu-text">Analytics</span>
+                <img class="menu-arrow" src="img/ico/arrow.svg" alt="arrow" />
+              </div>
+              <div class="dropdown-menu">
+                <a href="#" class="dropdown-item">Data Analysis Services</a>
+                <a href="#" class="dropdown-item">Automation Solutions</a>
+                <a href="#" class="dropdown-item"
+                  >Custom Software Development</a
+                >
+                <a href="#" class="dropdown-item">Order a Report</a>
+              </div>
+            </div>
+
+            <div class="menu-item-wrapper">
+              <div class="menu-item">
+                <span class="menu-text">Dashboards</span>
+                <img class="menu-arrow" src="img/ico/arrow.svg" alt="arrow" />
+              </div>
+              <div class="dropdown-menu">
+                <a href="#" class="dropdown-item">FPDS Dashboards</a>
+                <a href="#" class="dropdown-item"
+                  >Government Market Analytics</a
+                >
+                <a href="#" class="dropdown-item">Custom Reports</a>
+                <a href="#" class="dropdown-item">Build Your Dashboard</a>
+              </div>
+            </div>
+          </nav>
+
+          <div class="header-logo-container">
+            <a href="/" class="header-logo">
+              <img src="img/header/Logo.png" alt="Company Logo" />
+            </a>
+          </div>
+
+          <nav class="header-right-menu">
+            <div class="menu-item-wrapper">
+              <div class="menu-item">
+                <span class="menu-text">Consulting</span>
+                <img class="menu-arrow" src="img/ico/arrow.svg" alt="arrow" />
+              </div>
+              <div class="dropdown-menu">
+                <a href="#" class="dropdown-item">Request a Consultation</a>
+                <a href="#" class="dropdown-item">Data Strategy Consulting</a>
+                <a href="#" class="dropdown-item"
+                  >Government Contracting Advisory</a
+                >
+                <a href="#" class="dropdown-item"
+                  >Custom Solutions Consulting</a
+                >
+              </div>
+            </div>
+
+            <div class="menu-item-wrapper">
+              <div class="menu-item">
+                <span class="menu-text">About</span>
+                <img class="menu-arrow" src="img/ico/arrow.svg" alt="arrow" />
+              </div>
+              <div class="dropdown-menu">
+                <a href="#" class="dropdown-item">Company</a>
+                <a href="#" class="dropdown-item">Capability Statement</a>
+                <a href="#" class="dropdown-item">Mission</a>
+                <a href="#" class="dropdown-item">Contact</a>
+              </div>
+            </div>
+
+            <div class="header-login">
+              <a href="#" class="login-text">Log In</a>
+            </div>
+          </nav>
+        </div>
+        <div class="header-bottom-line"></div>
+      </header>
+
+      <section class="hero-section">
+        <div class="hero-content">
+          <div class="hero-text-container">
+            <h1 class="hero-title">
+              Smart Data Solutions for Government and Business
+            </h1>
+            <p class="hero-subtitle">Analytics. Automation. Cybersecurity.</p>
+          </div>
+          <a href="#" class="hero-button">Explore the Platform</a>
+        </div>
+      </section>
     </div>
-    <div class="image-dots">
-        <span class="dot" onclick="currentSlide(1)"></span>
-        <span class="dot" onclick="currentSlide(2)"></span>
-        <span class="dot" onclick="currentSlide(3)"></span>
-        <span class="dot" onclick="currentSlide(4)"></span>
-        <span class="dot" onclick="currentSlide(5)"></span>
-        <span class="dot" onclick="currentSlide(6)"></span>
-    </div>
-</section>
 
-<section class="section">
-    <h1>About Us</h1>
-    <p>GETWAB INC. focuses on data analytics, process automation, and cybersecurity solutions, primarily serving government agencies and businesses operating in regulated environments. We specialize in building scalable platforms for contract analysis, public procurement monitoring, and secure data integration. Our mission is to empower organizations with tools that provide transparency, efficiency, and actionable intelligence.</p>
-</section>
+    <header class="fixed-header">
+      <div class="header-container">
+        <nav class="header-left-menu">
+          <div class="menu-item-wrapper">
+            <div class="menu-item-fixed">
+              <span class="menu-text">Analytics</span>
+              <img class="menu-arrow" src="img/ico/arrow.svg" alt="arrow" />
+            </div>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item">Data Analysis Services</a>
+              <a href="#" class="dropdown-item">Automation Solutions</a>
+              <a href="#" class="dropdown-item">Custom Software Development</a>
+              <a href="#" class="dropdown-item">Order a Report</a>
+            </div>
+          </div>
 
-<section class="services">
-    <div class="service">
-        <h3>Data Analytics & Visualization</h3>
-        <p>We build powerful data platforms and dashboards that help clients gain insights from large-scale procurement and operational datasets.</p>
-    </div>
-    <div class="service">
-        <h3>Process Automation</h3>
-        <p>Our team automates workflows and data pipelines to improve decision-making, reduce manual effort, and increase system reliability.</p>
-    </div>
-    <div class="service">
-        <h3>Cybersecurity & Compliance</h3>
-        <p>We provide consulting and tools to ensure data integrity, secure infrastructure, and compliance with federal IT standards.</p>
-    </div>
-</section>
+          <div class="menu-item-wrapper">
+            <div class="menu-item-fixed">
+              <span class="menu-text">Dashboards</span>
+              <img class="menu-arrow" src="img/ico/arrow.svg" alt="arrow" />
+            </div>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item">FPDS Dashboards</a>
+              <a href="#" class="dropdown-item">Government Market Analytics</a>
+              <a href="#" class="dropdown-item">Custom Reports</a>
+              <a href="#" class="dropdown-item">Build Your Dashboard</a>
+            </div>
+          </div>
+        </nav>
 
-    <section class="capability" id="capability-section">
-        <p><a href="https://www.getwab.com/capability-statement.pdf">Download Our Capability Statement</a></p>
-    </section>
+        <div class="header-logo-container">
+          <a href="/" class="header-logo">
+            <img src="img/header/Logofix.png" alt="Getwab Logo" />
+          </a>
+        </div>
 
-</div>
-@include('include.footer')
-<script src="{{ asset('js/menu.js') }}" defer></script>
-<script>
-    /* banner */
-let slideIndex = 0;
-const baseUrl = "{{ asset('') }}";
-const slides = [
-    {
-        title: "Healthcare",
-        text: "Transforming Healthcare Through Technology",
-        image: baseUrl + "images/banner/healthcare.webp"
-    },
-    {
-        title: "Education",
-        text: "Empowering the Future of Education",
-        image: baseUrl + "images/banner/education.webp"
-    },
-    {
-        title: "Transportation and Infrastructure",
-        text: "Smart Cities Start with Smart Solutions",
-        image: baseUrl + "images/banner/transportation.webp"
-    },
-    {
-        title: "Energy and Environment",
-        text: "Powering a Clean, Digital Future",
-        image: baseUrl + "images/banner/energy.webp"
-    },
-    {
-        title: "Public Safety and Law Enforcement",
-        text: "Digital Security for a Safer World",
-        image: baseUrl + "images/banner/law.webp"
-    },
-    {
-        title: "Finance and Accounting",
-        text: "Automating Government Finances",
-        image: baseUrl + "images/banner/finance.webp"
-    }
-];
+        <nav class="header-right-menu">
+          <div class="menu-item-wrapper">
+            <div class="menu-item-fixed">
+              <span class="menu-text">Consulting</span>
+              <img class="menu-arrow" src="img/ico/arrow.svg" alt="arrow" />
+            </div>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item">Request a Consultation</a>
+              <a href="#" class="dropdown-item">Data Strategy Consulting</a>
+              <a href="#" class="dropdown-item"
+                >Government Contracting Advisory</a
+              >
+              <a href="#" class="dropdown-item">Custom Solutions Consulting</a>
+            </div>
+          </div>
 
-const banner = document.querySelector('.banner');
-const title = document.getElementById('banner-title');
-const text = document.getElementById('banner-text');
+          <div class="menu-item-wrapper">
+            <div class="menu-item-fixed">
+              <span class="menu-text">About</span>
+              <img class="menu-arrow" src="img/ico/arrow.svg" alt="arrow" />
+            </div>
+            <div class="dropdown-menu">
+              <a href="#" class="dropdown-item">Company</a>
+              <a href="#" class="dropdown-item">Capability Statement</a>
+              <a href="#" class="dropdown-item">Mission</a>
+              <a href="#" class="dropdown-item">Contact</a>
+            </div>
+          </div>
 
-slides.forEach((slide, index) => {
-    const bgDiv = document.createElement('div');
-    bgDiv.classList.add('fade');
-    bgDiv.style.backgroundImage = `url('${slide.image}')`;
-    if (index === 0) {
-        bgDiv.classList.add('active');
-    }
-    banner.append(bgDiv);
-});
+          <div class="header-login">
+            <a href="#" class="login-text">Log In</a>
+          </div>
+        </nav>
+      </div>
+      <div class="header-bottom-line"></div>
+    </header>
 
-function showSlides() {
-    const backgrounds = document.querySelectorAll('.fade');
+    <main>
+      <section class="about-section">
+        <div class="about-container">
+          <div class="about-content">
+            <div class="about-text-wrapper">
+              <div class="about-title-wrapper">
+                <h2 class="about-title">About GETWAB INC.</h2>
+              </div>
+              <p class="about-description">
+                <img
+                  class="about-decoration-1"
+                  src="img/ico/quotes-1.svg"
+                  alt=""
+                />
+                GETWAB INC. is a U.S.-based technology <br />
+                company delivering analytics, <br />
+                cybersecurity, and automation solutions. <br />
+                We help government agencies and private <br />
+                businesses make smarter decisions using <br />
+                real-time federal procurement data.
+                <img
+                  class="about-decoration-2"
+                  src="img/ico/quotes-2.svg"
+                  alt=""
+                />
+              </p>
+            </div>
 
-    backgrounds.forEach((bg, index) => {
-        bg.classList.remove('active');
-    });
+            <div class="about-link">
+              <a href="#" class="about-link-text">View Capability Statement</a>
+              <img src="img/ico/arrow-neon.svg" alt="" />
+            </div>
 
-    backgrounds[slideIndex].classList.add('active');
-    title.textContent = slides[slideIndex].title;
-    text.textContent = slides[slideIndex].text;
+            <div>
+              <img src="img/main/SectionImage.png" alt="" />
+            </div>
+          </div>
+        </div>
+      </section>
 
-    let dots = document.getElementsByClassName('dot');
-    for (let i = 0; i < dots.length; i++) {
-        dots[i].className = dots[i].className.replace(" active", "");
-    }
-    dots[slideIndex].className += " active";
+      <section class="products-section">
+        <div class="products-container">
+          <div class="products-header">
+            <h2 class="products-title">Our Products</h2>
+          </div>
 
-    slideIndex++;
-    if (slideIndex >= slides.length) { slideIndex = 0; }
-}
+          <div class="products-content">
+            <div class="product-row">
+              <div class="product-card">
+                <div class="product-info">
+                  <h3 class="product-name">FPDS Charts</h3>
+                  <p class="product-description">
+                    Explore federal spending with full access <br />
+                    to all contract variables. No data cuts <br />
+                    or simplifications — complete transparency.
+                  </p>
+                  <a href="#" class="product-button">
+                    <span class="button-text">Go to Charts</span>
+                  </a>
+                </div>
+              </div>
+              <img src="img/main/ProductImage.png" alt="" />
+            </div>
 
-function initSlider() {
-    slideIndex = 0;
-    showSlides();
-    setInterval(showSlides, 5000);
-}
+            <div class="product-row reverse">
+              <img src="img/main/ProductImage2.png" alt="" />
+              <div class="product-card">
+                <div class="product-info">
+                  <h3 class="product-name">FPDS Query</h3>
+                  <p class="product-description">
+                    Run powerful SQL-like queries on federal procurement data
+                    with unrestricted access to all fields. Get answers fast —
+                    no API limits or delays.
+                  </p>
+                  <a href="#" class="product-button">
+                    <span class="button-text">Go to Query</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-function currentSlide(n) {
-    slideIndex = n - 1;
-    showSlides();
-}
+      <section class="services-section">
+        <div class="services-container">
+          <div class="services-content">
+            <div class="services-header">
+              <h2 class="services-title">Our Services</h2>
+              <p class="services-description">
+                <img
+                  class="services-description-quotes-1"
+                  src="img/ico/quotes-1.svg"
+                  alt=""
+                />
+                Strategic consulting in analytics, <br />
+                cybersecurity, and automation. <br />
+                For both government and private clients.
+                <img
+                  class="services-description-quotes-2"
+                  src="img/ico/quotes-2.svg"
+                  alt=""
+                />
+              </p>
+              <a href="#" class="services-button">Request Consultation</a>
+            </div>
 
-initSlider();
+            <div class="services-scroll-container">
+              <div class="services-scroll-track">
+                <div class="service-card">
+                  <div class="service-card-content">
+                    <div class="service-icon-wrapper">
+                      <img
+                        src="img/main/Icon-5.png"
+                        alt="Data Analytics Consulting Icon"
+                        class="service-icon"
+                      />
+                    </div>
+                    <h3 class="service-title">Data Analytics Consulting</h3>
+                  </div>
+                </div>
 
-</script>
-</body>
+                <div class="service-card">
+                  <div class="service-card-content">
+                    <div class="service-icon-wrapper">
+                      <img
+                        src="img/main/Icon-1.png"
+                        alt="Automation Icon"
+                        class="service-icon"
+                      />
+                    </div>
+                    <h3 class="service-title">
+                      Automation & Workflow Optimization
+                    </h3>
+                  </div>
+                </div>
+
+                <div class="service-card">
+                  <div class="service-card-content">
+                    <div class="service-icon-wrapper">
+                      <img
+                        src="img/main/Icon-2.png"
+                        alt="Cybersecurity Icon"
+                        class="service-icon"
+                      />
+                    </div>
+                    <h3 class="service-title">Cybersecurity Advisory</h3>
+                  </div>
+                </div>
+
+                <div class="service-card">
+                  <div class="service-card-content">
+                    <div class="service-icon-wrapper">
+                      <img
+                        src="img/main/Icon-3.png"
+                        alt="Government Icon"
+                        class="service-icon"
+                      />
+                    </div>
+                    <h3 class="service-title">
+                      Government Contracting Support
+                    </h3>
+                  </div>
+                </div>
+
+                <div class="service-card">
+                  <div class="service-card-content">
+                    <div class="service-icon-wrapper">
+                      <img
+                        src="img/main/Icon-4.png"
+                        alt="Data Solutions Icon"
+                        class="service-icon"
+                      />
+                    </div>
+                    <h3 class="service-title">Custom Data Solutions</h3>
+                  </div>
+                </div>
+
+                <div class="service-card">
+                  <div class="service-card-content">
+                    <div class="service-icon-wrapper">
+                      <img
+                        src="img/main/Icon-5.png"
+                        alt="Data Analytics Consulting Icon"
+                        class="service-icon"
+                      />
+                    </div>
+                    <h3 class="service-title">Data Analytics Consulting</h3>
+                  </div>
+                </div>
+
+                <div class="service-card">
+                  <div class="service-card-content">
+                    <div class="service-icon-wrapper">
+                      <img
+                        src="img/main/Icon-1.png"
+                        alt="Automation Icon"
+                        class="service-icon"
+                      />
+                    </div>
+                    <h3 class="service-title">
+                      Automation & Workflow Optimization
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="clients-section">
+        <div class="clients-container">
+          <div class="clients-content">
+            <div class="clients-header">
+              <h2 class="clients-title">
+                Who <br />
+                We Serve
+              </h2>
+              <p class="clients-description">
+                <img
+                  class="clients-decoration-1"
+                  src="img/ico/quotes-1.svg"
+                  alt=""
+                />
+                Strategic consulting in analytics, <br />
+                cybersecurity, and automation. <br />
+                For both government and private clients.
+                <img
+                  class="clients-decoration-2"
+                  src="img/ico/quotes-2.svg"
+                  alt=""
+                />
+              </p>
+            </div>
+
+            <div class="clients-grid">
+              <div class="client-card client-card-government">
+                <div class="client-card-overlay"></div>
+                <h3 class="client-card-title">Government Agencies</h3>
+              </div>
+
+              <div class="client-card client-card-contractors">
+                <div class="client-card-overlay"></div>
+                <h3 class="client-card-title">Federal Contractors</h3>
+              </div>
+
+              <div class="client-card client-card-businesses">
+                <div class="client-card-overlay"></div>
+                <h3 class="client-card-title">Private Businesses</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="choose-getwab-section" id="why-choose-getwab">
+        <div class="choose-getwab-container">
+          <div class="choose-getwab-background">
+            <img
+              src="img/main/SectionImage2.png"
+              alt="Background image"
+              width="1920"
+              height="1000"
+            />
+            <div class="choose-getwab-overlay"></div>
+          </div>
+          <h2 class="choose-getwab-heading">Why Choose GETWAB?</h2>
+          <div class="choose-getwab-content-wrapper">
+            <div class="choose-getwab-main-content">
+              <div class="chart-container">
+                <svg
+                  class="chart"
+                  viewBox="0 0 100 100"
+                  xmlns="http://www.w3.org/2000/svg"
+                ></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="contract-data-section">
+        <div class="contract-data-container">
+          <div class="contract-data-content">
+            <div class="contract-data-text-wrapper">
+              <div class="contract-data-title-wrapper">
+                <h2 class="contract-data-title">
+                  Transform how <br />
+                  you work with <br />
+                  contract data.
+                </h2>
+              </div>
+              <p class="contract-data-description">
+                <img
+                  class="contract-data-quote-start"
+                  src="img/ico/quotes-1.svg"
+                  alt=""
+                />
+                Join GETWAB and gain access <br />
+                to smart tools, expert insights, <br />
+                and powerful analytics
+                <img
+                  class="contract-data-quote-end"
+                  src="img/ico/quotes-2.svg"
+                  alt=""
+                />
+              </p>
+            </div>
+
+            <div class="contract-data-cta">
+              <a href="#" class="contract-button">
+                <span class="contract-text">Explore the Platform</span>
+              </a>
+            </div>
+            <div>
+              <img src="img/main/SectionImage3.png" alt="" />
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-columns">
+          <div class="footer-column-logo">
+            <img src="img/footer/Footerlogo.png" alt="" />
+          </div>
+          <div class="footer-column">
+            <h3 class="footer-column-title">Analytics</h3>
+            <ul class="footer-links">
+              <li class="footer-link">Data Analysis Services</li>
+              <li class="footer-link">Automation Solutions</li>
+              <li class="footer-link">Custom Software Development</li>
+              <li class="footer-link">Order a Report</li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h3 class="footer-column-title">Dashboards</h3>
+            <ul class="footer-links">
+              <li class="footer-link">FPDS Dashboards</li>
+              <li class="footer-link">Government Market Analytics</li>
+              <li class="footer-link">Custom Reports</li>
+              <li class="footer-link">Build Your Dashboard</li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h3 class="footer-column-title">Consulting</h3>
+            <ul class="footer-links">
+              <li class="footer-link">Request a Consultation</li>
+              <li class="footer-link">Data Strategy Consulting</li>
+              <li class="footer-link">Government Contracting Advisory</li>
+              <li class="footer-link">Custom Solutions Consulting</li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h3 class="footer-column-title">About</h3>
+            <ul class="footer-links">
+              <li class="footer-link">Company</li>
+              <li class="footer-link">Capability Statement</li>
+              <li class="footer-link">Mission</li>
+              <li class="footer-link">Contact</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-divider">
+        <svg
+          width="1800"
+          height="7"
+          viewBox="0 0 1800 7"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M0.00354004 1L1800 6.00554" stroke="var(--White, white)" />
+        </svg>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-copyright">
+          Copyright © 2025. GETWAB.INC. All rights reserved.
+        </div>
+        <div class="footer-legal-links">
+          <a href="#" class="footer-legal-link">User terms & Conditions</a>
+          <a href="#" class="footer-legal-link">Privacy Policy</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
 </html>
