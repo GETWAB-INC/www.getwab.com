@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    @include('include.head')
     <title>404 Not Found - GETWAB INC.</title>
     <meta name="description" content="The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.">
-    <link rel="canonical" href="https://www.getwabinc.com/404">
 </head>
 <body>
-@include('include.header')
 <div class="container" id="main-container">
     <section class="section">
         <h1>404 - Page Not Found</h1>
@@ -15,7 +12,6 @@
         <a href="/" class="button">Return Home</a>
     </section>
 </div>
-@include('include.footer')
 <script src="{{ asset('js/menu.js') }}" defer></script>
 </body>
 </html>
