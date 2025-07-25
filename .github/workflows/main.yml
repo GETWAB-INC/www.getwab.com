@@ -3,7 +3,7 @@ name: Deploy PHP Project
 on:
   push:
     branches:
-      - main
+      - dev
 
 jobs:
   deploy:
@@ -19,7 +19,7 @@ jobs:
           username: 'root'
           password: ${{ secrets.SERVER_PASSWORD }}
           source: "."
-          target: "/home/userwww/web/getwab.com/public_html"
+          target: "/home/userwww/web/getwabinc.com/public_html"
           strip_components: 1
 
       - name: Final Setup on Server
@@ -31,14 +31,14 @@ jobs:
           command_timeout: 90m
           script: |
             # Remove .git and .github directories
-            sudo rm -rf /home/userwww/web/getwab.com/public_html/.git
-            sudo rm -rf /home/userwww/web/getwab.com/public_html/.github
-            sudo rm -rf /home/userwww/web/getwab.com/public_html/.DS_Store
+            sudo rm -rf /home/userwww/web/getwabinc.com/public_html/.git
+            sudo rm -rf /home/userwww/web/getwabinc.com/public_html/.github
+            sudo rm -rf /home/userwww/web/getwabinc.com/public_html/.DS_Store
             # Set permissions to the web directory
-            sudo chown -R www-data:www-data /home/userwww/web/getwab.com/public_html
-            sudo chmod -R 755 /home/userwww/web/getwab.com/public_html
+            sudo chown -R www-data:www-data /home/userwww/web/getwabinc.com/public_html
+            sudo chmod -R 755 /home/userwww/web/getwabinc.com/public_html
             # Clear and cache configurations
-            cd /home/userwww/web/getwab.com/public_html
+            cd /home/userwww/web/getwabinc.com/public_html
             php artisan config:clear
             php artisan config:cache
             # Clear and cache routes
