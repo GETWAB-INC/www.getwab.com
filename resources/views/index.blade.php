@@ -5,16 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Getwab</title>
 
-    <link rel="stylesheet" href="css/reset.css" />
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
   </head>
 
   <body>
     <div class="background-video-container">
       <!-- Видеофон -->
       <video autoplay muted loop playsinline class="background-video">
-        <source src="background.mp4" type="video/mp4" />
+        <source src="{{ asset('videos/background.mp4') }}" type="video/mp4" />
       </video>
+
 
       <div class="video-overlay"></div>
 
@@ -24,7 +26,7 @@
             <div class="menu-item-wrapper">
               <div class="menu-item">
                 <span class="menu-text">Analytics</span>
-                <img class="menu-arrow" src="img/ico/arrow.svg" alt="arrow" />
+                <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
               </div>
               <div class="dropdown-menu">
                 <a href="#" class="dropdown-item">Data Analysis Services</a>
@@ -39,7 +41,7 @@
             <div class="menu-item-wrapper">
               <div class="menu-item">
                 <span class="menu-text">Dashboards</span>
-                <img class="menu-arrow" src="img/ico/arrow.svg" alt="arrow" />
+                <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
               </div>
               <div class="dropdown-menu">
                 <a href="#" class="dropdown-item">FPDS Dashboards</a>
@@ -54,7 +56,7 @@
 
           <div class="header-logo-container">
             <a href="/" class="header-logo">
-              <img src="img/header/Logo.png" alt="Company Logo" />
+              <img src="{{ asset('img/header/Logo.png') }}" alt="Company Logo" />
             </a>
           </div>
 
@@ -62,7 +64,7 @@
             <div class="menu-item-wrapper">
               <div class="menu-item">
                 <span class="menu-text">Consulting</span>
-                <img class="menu-arrow" src="img/ico/arrow.svg" alt="arrow" />
+                <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
               </div>
               <div class="dropdown-menu">
                 <a href="#" class="dropdown-item">Request a Consultation</a>
@@ -79,7 +81,7 @@
             <div class="menu-item-wrapper">
               <div class="menu-item">
                 <span class="menu-text">About</span>
-                <img class="menu-arrow" src="img/ico/arrow.svg" alt="arrow" />
+                <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
               </div>
               <div class="dropdown-menu">
                 <a href="#" class="dropdown-item">Company</a>
@@ -116,7 +118,7 @@
           <div class="menu-item-wrapper">
             <div class="menu-item-fixed">
               <span class="menu-text">Analytics</span>
-              <img class="menu-arrow" src="img/ico/arrow.svg" alt="arrow" />
+              <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
             </div>
             <div class="dropdown-menu">
               <a href="#" class="dropdown-item">Data Analysis Services</a>
@@ -129,7 +131,7 @@
           <div class="menu-item-wrapper">
             <div class="menu-item-fixed">
               <span class="menu-text">Dashboards</span>
-              <img class="menu-arrow" src="img/ico/arrow.svg" alt="arrow" />
+              <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
             </div>
             <div class="dropdown-menu">
               <a href="#" class="dropdown-item">FPDS Dashboards</a>
@@ -142,7 +144,7 @@
 
         <div class="header-logo-container">
           <a href="/" class="header-logo">
-            <img src="img/header/Logofix.png" alt="Getwab Logo" />
+            <img src="{{ asset('img/header/Logofix.png') }}" alt="Getwab Logo" />
           </a>
         </div>
 
@@ -165,7 +167,7 @@
           <div class="menu-item-wrapper">
             <div class="menu-item-fixed">
               <span class="menu-text">About</span>
-              <img class="menu-arrow" src="img/ico/arrow.svg" alt="arrow" />
+              <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
             </div>
             <div class="dropdown-menu">
               <a href="#" class="dropdown-item">Company</a>
@@ -192,32 +194,24 @@
                 <h2 class="about-title">About GETWAB INC.</h2>
               </div>
               <p class="about-description">
-                <img
-                  class="about-decoration-1"
-                  src="img/ico/quotes-1.svg"
-                  alt=""
-                />
+                <img class="about-decoration-1" src="{{ asset('img/ico/quotes-1.svg') }}" alt="">
                 GETWAB INC. is a U.S.-based technology <br />
                 company delivering analytics, <br />
                 cybersecurity, and automation solutions. <br />
                 We help government agencies and private <br />
                 businesses make smarter decisions using <br />
                 real-time federal procurement data.
-                <img
-                  class="about-decoration-2"
-                  src="img/ico/quotes-2.svg"
-                  alt=""
-                />
+                <img class="about-decoration-2" src="{{ asset('img/ico/quotes-2.svg') }}" alt="">
               </p>
             </div>
 
             <div class="about-link">
               <a href="#" class="about-link-text">View Capability Statement</a>
-              <img src="img/ico/arrow-neon.svg" alt="" />
+              <img src="{{ asset('img/ico/arrow-neon.svg') }}" alt="">
             </div>
 
             <div>
-              <img src="img/main/SectionImage.png" alt="" />
+              <img src="{{ asset('img/main/SectionImage.png') }}" alt="">
             </div>
           </div>
         </div>
@@ -244,11 +238,11 @@
                   </a>
                 </div>
               </div>
-              <img src="img/main/ProductImage.png" alt="" />
+              <img src="{{ asset('img/main/ProductImage.png') }}" alt="">
             </div>
 
             <div class="product-row reverse">
-              <img src="img/main/ProductImage2.png" alt="" />
+              <img src="{{ asset('img/main/ProductImage2.png') }}" alt="">
               <div class="product-card">
                 <div class="product-info">
                   <h3 class="product-name">FPDS Query</h3>
@@ -273,19 +267,11 @@
             <div class="services-header">
               <h2 class="services-title">Our Services</h2>
               <p class="services-description">
-                <img
-                  class="services-description-quotes-1"
-                  src="img/ico/quotes-1.svg"
-                  alt=""
-                />
+                <img class="services-description-quotes-1" src="{{ asset('img/ico/quotes-1.svg') }}" alt="" />
                 Strategic consulting in analytics, <br />
                 cybersecurity, and automation. <br />
                 For both government and private clients.
-                <img
-                  class="services-description-quotes-2"
-                  src="img/ico/quotes-2.svg"
-                  alt=""
-                />
+                <img class="services-description-quotes-2" src="{{ asset('img/ico/quotes-2.svg') }}" alt="" />
               </p>
               <a href="#" class="services-button">Request Consultation</a>
             </div>
@@ -295,11 +281,7 @@
                 <div class="service-card">
                   <div class="service-card-content">
                     <div class="service-icon-wrapper">
-                      <img
-                        src="img/main/Icon-5.png"
-                        alt="Data Analytics Consulting Icon"
-                        class="service-icon"
-                      />
+                      <img src="{{ asset('img/main/Icon-5.png') }}" alt="Data Analytics Consulting Icon" class="service-icon" />
                     </div>
                     <h3 class="service-title">Data Analytics Consulting</h3>
                   </div>
@@ -308,11 +290,7 @@
                 <div class="service-card">
                   <div class="service-card-content">
                     <div class="service-icon-wrapper">
-                      <img
-                        src="img/main/Icon-1.png"
-                        alt="Automation Icon"
-                        class="service-icon"
-                      />
+                      <img src="{{ asset('img/main/Icon-1.png') }}" alt="Automation Icon" class="service-icon" />
                     </div>
                     <h3 class="service-title">
                       Automation & Workflow Optimization
@@ -323,11 +301,7 @@
                 <div class="service-card">
                   <div class="service-card-content">
                     <div class="service-icon-wrapper">
-                      <img
-                        src="img/main/Icon-2.png"
-                        alt="Cybersecurity Icon"
-                        class="service-icon"
-                      />
+                      <img src="{{ asset('img/main/Icon-2.png') }}" alt="Cybersecurity Icon" class="service-icon" />
                     </div>
                     <h3 class="service-title">Cybersecurity Advisory</h3>
                   </div>
@@ -336,11 +310,7 @@
                 <div class="service-card">
                   <div class="service-card-content">
                     <div class="service-icon-wrapper">
-                      <img
-                        src="img/main/Icon-3.png"
-                        alt="Government Icon"
-                        class="service-icon"
-                      />
+                      <img src="{{ asset('img/main/Icon-3.png') }}" alt="Government Icon" class="service-icon" />
                     </div>
                     <h3 class="service-title">
                       Government Contracting Support
@@ -351,11 +321,7 @@
                 <div class="service-card">
                   <div class="service-card-content">
                     <div class="service-icon-wrapper">
-                      <img
-                        src="img/main/Icon-4.png"
-                        alt="Data Solutions Icon"
-                        class="service-icon"
-                      />
+                      <img src="{{ asset('img/main/Icon-4.png') }}" alt="Data Solutions Icon" class="service-icon" />
                     </div>
                     <h3 class="service-title">Custom Data Solutions</h3>
                   </div>
@@ -364,11 +330,7 @@
                 <div class="service-card">
                   <div class="service-card-content">
                     <div class="service-icon-wrapper">
-                      <img
-                        src="img/main/Icon-5.png"
-                        alt="Data Analytics Consulting Icon"
-                        class="service-icon"
-                      />
+                      <img src="{{ asset('img/main/Icon-5.png') }}" alt="Data Analytics Consulting Icon" class="service-icon" />
                     </div>
                     <h3 class="service-title">Data Analytics Consulting</h3>
                   </div>
@@ -377,11 +339,7 @@
                 <div class="service-card">
                   <div class="service-card-content">
                     <div class="service-icon-wrapper">
-                      <img
-                        src="img/main/Icon-1.png"
-                        alt="Automation Icon"
-                        class="service-icon"
-                      />
+                      <img src="{{ asset('img/main/Icon-1.png') }}" alt="Automation Icon" class="service-icon" />
                     </div>
                     <h3 class="service-title">
                       Automation & Workflow Optimization
@@ -402,19 +360,11 @@
                 We Serve
               </h2>
               <p class="clients-description">
-                <img
-                  class="clients-decoration-1"
-                  src="img/ico/quotes-1.svg"
-                  alt=""
-                />
+                <img src="{{ asset('img/ico/quotes-1.svg') }}" alt="" class="clients-decoration-1" />
                 Strategic consulting in analytics, <br />
                 cybersecurity, and automation. <br />
                 For both government and private clients.
-                <img
-                  class="clients-decoration-2"
-                  src="img/ico/quotes-2.svg"
-                  alt=""
-                />
+                <img src="{{ asset('img/ico/quotes-2.svg') }}" alt="" class="clients-decoration-2" />
               </p>
             </div>
 
@@ -441,12 +391,7 @@
       <section class="choose-getwab-section" id="why-choose-getwab">
         <div class="choose-getwab-container">
           <div class="choose-getwab-background">
-            <img
-              src="img/main/SectionImage2.png"
-              alt="Background image"
-              width="1920"
-              height="1000"
-            />
+            <img src="{{ asset('img/main/SectionImage2.png') }}" alt="Background image" width="1920" height="1000" />
             <div class="choose-getwab-overlay"></div>
           </div>
           <h2 class="choose-getwab-heading">Why Choose GETWAB?</h2>
@@ -476,19 +421,11 @@
                 </h2>
               </div>
               <p class="contract-data-description">
-                <img
-                  class="contract-data-quote-start"
-                  src="img/ico/quotes-1.svg"
-                  alt=""
-                />
+                <img class="contract-data-quote-start" src="{{ asset('img/ico/quotes-1.svg') }}" alt="" />
                 Join GETWAB and gain access <br />
                 to smart tools, expert insights, <br />
                 and powerful analytics
-                <img
-                  class="contract-data-quote-end"
-                  src="img/ico/quotes-2.svg"
-                  alt=""
-                />
+                <img class="contract-data-quote-end" src="{{ asset('img/ico/quotes-2.svg') }}" alt="" />
               </p>
             </div>
 
@@ -498,7 +435,7 @@
               </a>
             </div>
             <div>
-              <img src="img/main/SectionImage3.png" alt="" />
+              <img src="{{ asset('img/main/SectionImage3.png') }}" alt="" />
             </div>
           </div>
         </div>
@@ -509,7 +446,7 @@
       <div class="footer-content">
         <div class="footer-columns">
           <div class="footer-column-logo">
-            <img src="img/footer/Footerlogo.png" alt="" />
+            <img src="{{ asset('img/footer/Footerlogo.png') }}" alt="" />
           </div>
           <div class="footer-column">
             <h3 class="footer-column-title">Analytics</h3>
@@ -571,6 +508,6 @@
       </div>
     </footer>
 
-    <script src="app.js"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
   </body>
 </html>
