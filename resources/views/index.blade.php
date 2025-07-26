@@ -15,6 +15,7 @@
       <video autoplay muted loop playsinline class="background-video">
         <source src="{{ asset('videos/background.mp4') }}" type="video/mp4" />
       </video>
+
       <div class="video-overlay"></div>
      @include('include.header')
     <main>
