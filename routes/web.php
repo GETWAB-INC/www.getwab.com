@@ -22,14 +22,52 @@ Route::get('article', function () {
     return view('article');
 });
 
-// checkout page
-Route::get('checkout', function () {
-    return view('checkout');
-});
 // account page
 Route::get('account', function () {
     return view('account');
 });
+
+// reports page
+Route::get('reports', function () {
+    return view('reports');
+});
+
+// reports/SFPR-GEO-EL-1 page
+Route::get('/reports/SFPR-GEO-EL-1', function () {
+    return view('reports.SFPR-GEO-EL-1');
+})->name('report');
+
+// Продукты: базовые страницы
+Route::get('/products/fpds-query', function () {
+    return view('products.fpds-query');
+});
+
+Route::get('/products/fpds-reports', function () {
+    return view('products.fpds-reports');
+});
+
+Route::get('/products/fpds-charts', function () {
+    return view('products.fpds-charts');
+});
+
+// Продукты: страницы обзора
+Route::get('/products/fpds-query/overview', function () {
+    return view('products.fpds-query-overview');
+});
+
+Route::get('/products/fpds-reports/overview', function () {
+    return view('products.fpds-reports-overview');
+});
+
+Route::get('/products/fpds-charts/overview', function () {
+    return view('products.fpds-charts-overview');
+});
+
+// checkout page
+Route::get('checkout', function () {
+    return view('checkout');
+});
+
 
 // account page
 Route::get('account', function () {
