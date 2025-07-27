@@ -63,9 +63,10 @@
 <aside>
   <h2 id="account-overview" class="active" style="cursor: pointer;">My Account</h2>
 
-  <a href="#" data-section="reports">📄 Reports & Orders</a>
-  <a href="#" data-section="subscription">📦 Subscription</a>
+  <a href="#" data-section="reports">📄 My Reports</a>
   <a href="#" data-section="packages">📚 Report Packages</a>
+  <a href="#" data-section="subscription">📦 Subscription</a>
+  
   <a href="#" data-section="payment">💳 Payment Methods</a>
   <a href="#" data-section="profile">👤 Profile</a>
   <a href="#" data-section="logout">🚪 Logout</a>
@@ -96,18 +97,18 @@
 
 
 <div style="border: 1px solid #ccc; border-radius: 6px; padding: 20px; width: 200px; height: 200px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between;">
-      <h2>📄 Reports & Orders</h2>
+      <h2>📄 My Reports</h2>
       <p>View, download and manage your report history.</p>
-    </div>
-
-<div style="border: 1px solid #ccc; border-radius: 6px; padding: 20px; width: 200px; height: 200px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between;">
-      <h2>📦 Subscription</h2>
-      <p>See your current plan and manage access to FPDS tools.</p>
     </div>
 <div style="border: 1px solid #ccc; border-radius: 6px; padding: 20px; width: 200px; height: 200px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between;">
   <h2>📚 Report Packages</h2>
   <p>Track and manage your prepaid report bundles.</p>
 </div>
+<div style="border: 1px solid #ccc; border-radius: 6px; padding: 20px; width: 200px; height: 200px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between;">
+      <h2>📦 Subscription</h2>
+      <p>See your current plan and manage access to FPDS tools.</p>
+    </div>
+
 
 <div style="border: 1px solid #ccc; border-radius: 6px; padding: 20px; width: 200px; height: 200px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between;">
       <h2>💳 Payment Methods</h2>
@@ -128,7 +129,7 @@
 </div>
 
 <div id="reports" class="content-section active">
-  <h1>📄 Reports & Orders</h1>
+  <h1>📄 My Reports</h1>
 
   <p>Here you can find all your purchased or generated reports.</p>
 
