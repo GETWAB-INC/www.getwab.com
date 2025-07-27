@@ -229,10 +229,17 @@
       <label for="elementary-select" style="font-weight: bold;">Select Package:</label>
       <select id="elementary-select" onchange="updateElemPrice()" style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px;">
         <option value="1">1 Report</option>
+        <option value="5">5 Reports</option>
         <option value="10">10 Reports</option>
+        <option value="25">25 Reports</option>
+        <option value="50">50 Reports</option>
+        <option value="75">75 Reports</option>
+        <option value="100">100 Reports</option>
       </select>
 
-      <p><strong>Total Price:</strong> <span id="elem-price">$49</span></p>
+      <p><strong>Total:</strong> <span id="elem-price">$49.00</span></p>
+
+
 
       <button style="padding: 10px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
         Buy Elementary Package
@@ -248,11 +255,17 @@
 
       <label for="composite-select" style="font-weight: bold;">Select Package:</label>
       <select id="composite-select" onchange="updateCompPrice()" style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px;">
-        <option value="1">1 Report</option>
-        <option value="5">5 Reports</option>
+         <option value="1">1 Report</option>
+          <option value="5">5 Reports</option>
+          <option value="10">10 Reports</option>
+          <option value="25">25 Reports</option>
+          <option value="50">50 Reports</option>
+          <option value="75">75 Reports</option>
+          <option value="100">100 Reports</option>
       </select>
 
-      <p><strong>Total Price:</strong> <span id="comp-price">$149</span></p>
+<p><strong>Total:</strong> <span id="comp-price">$149.00</span></p>
+
 
       <button style="padding: 10px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
         Buy Composite Package
@@ -530,23 +543,48 @@
   function updateElemPrice() {
     const select = document.getElementById("elementary-select");
     const priceDisplay = document.getElementById("elem-price");
-    const prices = {
-      1: "$49",
-      10: "$449"
-    };
-    priceDisplay.textContent = prices[select.value];
+    const qty = parseInt(select.value);
+
+    if (qty < 1 || qty > 100) {
+      priceDisplay.textContent = "Invalid quantity";
+      return;
+    }
+
+    const base = 49.00;
+    const floor = 10.99;
+    const unitPrice = base - (base - floor) * (qty - 1) / 99;
+    const total = unitPrice * qty;
+
+    if (qty === 1) {
+      priceDisplay.textContent = `$${total.toFixed(2)}`;
+    } else {
+      priceDisplay.textContent = `$${total.toFixed(2)} — $${unitPrice.toFixed(2)} per report`;
+    }
   }
 
   function updateCompPrice() {
     const select = document.getElementById("composite-select");
     const priceDisplay = document.getElementById("comp-price");
-    const prices = {
-      1: "$149",
-      5: "$699"
-    };
-    priceDisplay.textContent = prices[select.value];
+    const qty = parseInt(select.value);
+
+    if (qty < 1 || qty > 100) {
+      priceDisplay.textContent = "Invalid quantity";
+      return;
+    }
+
+    const base = 149.00;
+    const floor = 29.90;
+    const unitPrice = base - (base - floor) * (qty - 1) / 99;
+    const total = unitPrice * qty;
+
+    if (qty === 1) {
+      priceDisplay.textContent = `$${total.toFixed(2)}`;
+    } else {
+      priceDisplay.textContent = `$${total.toFixed(2)} — $${unitPrice.toFixed(2)} per report`;
+    }
   }
 </script>
+
 
 </body>
 </html>

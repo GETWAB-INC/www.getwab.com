@@ -172,7 +172,8 @@
         <div class="pricing-box">
             <h3>🔁 Unlimited Access</h3>
             <p>From <strong>$799/month</strong></p>
-            <p>Monthly report generation.</p>
+              <p>Generate <strong>unlimited reports</strong> from our full FPDS report library — anytime, with no limits.</p>
+
             <a href="{{ route('checkout') }}" class="button-primary">Subscribe Now</a>
         </div>
     </div>
