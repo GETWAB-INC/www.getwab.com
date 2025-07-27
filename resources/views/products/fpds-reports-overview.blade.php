@@ -159,21 +159,21 @@
             <h3>🟢 Elementary Package</h3>
             <p><strong>$449</strong> for 10 reports</p>
             <p>For frequent buyers of basic reports.</p>
-            <a href="/contact" class="button-primary">Request Package</a>
+            <a href="{{ route('account') }}" class="button-primary">Request Package</a>
         </div>
 
         <div class="pricing-box">
             <h3>🔵 Composite Package</h3>
             <p><strong>$699</strong> for 5 reports</p>
             <p>For in-depth analytical projects.</p>
-            <a href="/contact" class="button-primary">Request Package</a>
+            <a href="{{ route('account') }}" class="button-primary">Request Package</a>
         </div>
 
         <div class="pricing-box">
             <h3>🔁 Unlimited Access</h3>
             <p>From <strong>$799/month</strong></p>
             <p>Monthly report generation.</p>
-            <a href="/subscribe" class="button-primary">Subscribe Now</a>
+            <a href="{{ route('checkout') }}" class="button-primary">Subscribe Now</a>
         </div>
     </div>
 </div>

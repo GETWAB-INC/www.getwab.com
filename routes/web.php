@@ -5,7 +5,7 @@
 // Home page
 Route::get('/', function () {
     return view('index');
-});
+})->name('/');
 
 // login page
 Route::get('login', function () {
@@ -15,22 +15,22 @@ Route::get('login', function () {
 // register page
 Route::get('register', function () {
     return view('register');
-});
+})->name('register');
 
 // article page
 Route::get('article', function () {
     return view('article');
-});
+})->name('article');
 
 // account page
 Route::get('account', function () {
     return view('account');
-});
+})->name('account');
 
 // reports page
 Route::get('reports', function () {
     return view('reports');
-});
+})->name('reports');
 
 // reports/SFPR-GEO-EL-1 page
 Route::get('/reports/SFPR-GEO-EL-1', function () {
@@ -66,13 +66,7 @@ Route::get('/products/fpds-charts/overview', function () {
 // checkout page
 Route::get('checkout', function () {
     return view('checkout');
-});
-
-
-// account page
-Route::get('account', function () {
-    return view('account');
-});
+})->name('checkout');
 
 // thank-you page
 Route::get('thank-you', function () {

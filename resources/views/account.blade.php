@@ -146,7 +146,7 @@
     <tbody>
       <tr>
         <td style="padding: 8px;">RPT-20250719-1145</td>
-        <td style="padding: 8px;"><a href="#">SFPR-GEO-EL-1</a></td>
+        <td style="padding: 8px;"><a href="{{ route('report') }}">SFPR-GEO-EL-1</a></td>
 
         <td style="padding: 8px;">Spending by U.S. State (2020–2024)</td>
         <td style="padding: 8px;">July 19, 2025</td>
@@ -155,7 +155,7 @@
       </tr>
       <tr>
         <td style="padding: 8px;">RPT-20250721-1423</td>
-        <td style="padding: 8px;"><a href="#">SFPR-DEPT-COLL-2</a></td>
+        <td style="padding: 8px;"><a href="{{ route('report') }}">SFPR-DEPT-COLL-2</a></td>
         <td style="padding: 8px;">Dept-Level Trends for California</td>
         <td style="padding: 8px;">July 21, 2025</td>
         <td style="padding: 8px;">🟡 Processing</td>
