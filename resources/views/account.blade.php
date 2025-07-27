@@ -63,7 +63,7 @@
 <aside>
   <h2 id="account-overview" class="active" style="cursor: pointer;">My Account</h2>
 
-  <a href="#" data-section="reports">📄 My Reports</a>
+  <a href="#" data-section="reports">📄 Reports</a>
   <a href="#" data-section="packages">📚 Report Packages</a>
   <a href="#" data-section="subscription">📦 Subscription</a>
   
@@ -97,7 +97,7 @@
 
 
 <div style="border: 1px solid #ccc; border-radius: 6px; padding: 20px; width: 200px; height: 200px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between;">
-      <h2>📄 My Reports</h2>
+      <h2>📄 Reports</h2>
       <p>View, download and manage your report history.</p>
     </div>
 <div style="border: 1px solid #ccc; border-radius: 6px; padding: 20px; width: 200px; height: 200px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between;">
@@ -129,9 +129,9 @@
 </div>
 
 <div id="reports" class="content-section active">
-  <h1>📄 My Reports</h1>
+  <h1>📄 Your Reports</h1>
 
-  <p>Here you can find all your purchased or generated reports.</p>
+  <p>All reports you’ve generated or purchased.</p>
 
   <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
     <thead>
