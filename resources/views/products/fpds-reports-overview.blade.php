@@ -63,49 +63,123 @@
     </style>
 </head>
 <body>
+
+
 <div class="container">
     <h1>📊 FPDS Reports — Benefits & Pricing</h1>
-    <p>Explore our structured, high-value federal procurement reports powered by raw FPDS data. Designed for government analysts, contractors, researchers, and journalists.</p>
+<h2>Why Choose FPDS Reports?</h2>
+    <p>See how our standardized PDF reports compare with BI tools and consulting firms.</p>
+
 
     <div class="section">
-        <h2>✅ Why FPDS Reports?</h2>
-        <div class="card">🎯 Direct from the source — raw, structured data (110M+ contracts) with no distortion.</div>
-        <div class="card">📈 Deep insights, clear visualizations, and smart commentary powered by AI.</div>
-        <div class="card">🧩 Standard and custom formats: tailored by agency, vendor, contract type, region, or timeframe.</div>
-        <div class="card">⏱ Delivered fast in PDF — ready for use in presentations, reports, and decision-making.</div>
+
+    <div style="overflow-x:auto; margin-top: 20px;">
+
+    
+        <table style="width:100%; border-collapse:collapse; text-align:left; background:#fff;">
+  <thead>
+    <tr style="background:#0057b7; color:#fff;">
+      <th style="padding:12px;">Feature</th>
+      <th style="padding:12px;">FPDS Reports</th>
+      <th style="padding:12px;">Big Firms / Freelancers</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">Instant Access</td>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">✅ Available immediately</td>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">❌ Requires time to build</td>
+    </tr>
+    <tr>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">Consistent Structure</td>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">✅ Standardized layout</td>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">❌ Varies every time</td>
+    </tr>
+    <tr>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">User Friendly</td>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">✅ No skills needed</td>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">❌ Requires BI or SQL knowledge</td>
+    </tr>
+    <tr>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">Low Cost</td>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">✅ $49–149 per report</td>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">❌ Expensive custom work</td>
+    </tr>
+    <tr>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">AI Commentary</td>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">✅ Included insights</td>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">⚠️ Manual interpretation</td>
+    </tr>
+    <tr>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">PDF Format</td>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">✅ Ready to share</td>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">❌ Needs export/design</td>
+    </tr>
+    <tr>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">Verified Source</td>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">✅ Based on FPDS</td>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">⚠️ May require manual sourcing</td>
+    </tr>
+    <tr>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">Legally Neutral Format</td>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">✅ Official-style format</td>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">⚠️ Not always compliant</td>
+    </tr>
+    <tr>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">Scalable Logic</td>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">✅ Reusable for any state/year</td>
+      <td style="padding:12px; border-bottom:1px solid #ddd;">❌ Built from scratch each time</td>
+    </tr>
+    <tr>
+      <td style="padding:12px;">Easy Repeat Orders</td>
+      <td style="padding:12px;">✅ Just change filters</td>
+      <td style="padding:12px;">❌ Requires new instructions</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
     </div>
+</div>
 
-    <div class="section">
-        <h2>💰 Pricing Plans</h2>
-        <div class="pricing-grid">
-            <div class="pricing-box">
-                <h3>📄 Single Report</h3>
-                <p>Perfect for quick insights.</p>
-                <p><strong>$149</strong> per report</p>
-                <a href="/reports" class="button-primary">Browse Reports</a>
-            </div>
-            <div class="pricing-box">
-                <h3>📦 10-Report Package</h3>
-                <p>Best for researchers and teams.</p>
-                <p><strong>$500</strong> total</p>
-                <a href="/contact" class="button-primary">Request Package</a>
-            </div>
-            <div class="pricing-box">
-                <h3>🔁 Unlimited Access</h3>
-                <p>Monthly report generation.</p>
-                <p>From <strong>$99/month</strong></p>
-                <a href="/subscribe" class="button-primary">Subscribe Now</a>
-            </div>
-            <div class="pricing-box">
-                <h3>⚙️ Custom Analytics</h3>
-                <p>Tailored solutions for agencies, vendors, and journalists.</p>
-                <p><strong>$1000+</strong></p>
-                <a href="/contact" class="button-primary">Contact Us</a>
-            </div>
+
+<div class="section">
+    <h2>Choose your plan</h2>
+    <div class="pricing-grid">
+
+        <div class="pricing-box">
+            <h3>📄 Single Report</h3>
+            <p><strong>$49–149</strong> per report</p>
+            <p>Perfect for quick insights.</p>
+            <a href="/reports" class="button-primary">Browse Reports</a>
+        </div>
+
+        <div class="pricing-box">
+            <h3>🟢 Elementary Package</h3>
+            <p><strong>$449</strong> for 10 reports</p>
+            <p>For frequent buyers of basic reports.</p>
+            <a href="/contact" class="button-primary">Request Package</a>
+        </div>
+
+        <div class="pricing-box">
+            <h3>🔵 Composite Package</h3>
+            <p><strong>$699</strong> for 5 reports</p>
+            <p>For in-depth analytical projects.</p>
+            <a href="/contact" class="button-primary">Request Package</a>
+        </div>
+
+        <div class="pricing-box">
+            <h3>🔁 Unlimited Access</h3>
+            <p>From <strong>$799/month</strong></p>
+            <p>Monthly report generation.</p>
+            <a href="/subscribe" class="button-primary">Subscribe Now</a>
         </div>
     </div>
+</div>
 
-    <div class="section">
+
+    <!-- <div class="section">
     <h2>📥 Explore Sample Reports</h2>
     <p>We offer two types of standardized reports to fit your analytical needs:</p>
 
@@ -123,32 +197,11 @@
             <h3 style="text-align:center;">📊 Composite Report</h3>
             <iframe src="{{ asset('pdf/SFPR-GEO-COLL-1__expl.pdf') }}" width="100%" height="420px" style="border: 1px solid #ccc; border-radius: 6px;"></iframe>
         </div>
-    </div>
+    </div> -->
 
-    <p style="margin-top: 30px;">
-        Want to see more? Visit our <a href="/reports" style="color:#0057b7; text-decoration:underline;">📚 Report Library</a> to browse all available templates, descriptions, and generate reports instantly.
-    </p>
 </div>
 
 
-    <div class="section">
-    <h2>🙋 Still Have Questions?</h2>
-    <p>Let us help you choose the right plan or build something custom for your needs.</p>
-
-    <form method="POST" action="/contact/send" style="max-width: 500px; margin-top: 20px;">
-        @csrf
-        <label for="name" style="display:block; margin-bottom:8px;">Name</label>
-        <input type="text" id="name" name="name" required style="width:100%; padding:10px; margin-bottom:15px; border:1px solid #ccc; border-radius:4px;">
-
-        <label for="email" style="display:block; margin-bottom:8px;">Email</label>
-        <input type="email" id="email" name="email" required style="width:100%; padding:10px; margin-bottom:15px; border:1px solid #ccc; border-radius:4px;">
-
-        <label for="message" style="display:block; margin-bottom:8px;">Your Question</label>
-        <textarea id="message" name="message" rows="4" required style="width:100%; padding:10px; margin-bottom:20px; border:1px solid #ccc; border-radius:4px;"></textarea>
-
-        <button type="submit" class="button-primary">Send Message</button>
-    </form>
-</div>
 
 </div>
 </body>

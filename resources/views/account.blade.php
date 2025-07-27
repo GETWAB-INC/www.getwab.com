@@ -215,30 +215,53 @@
 
 <div id="packages" class="content-section">
   <h1>📚 Report Packages</h1>
-  <p>You have an active package with remaining reports.</p>
+  <p>You have active packages with remaining reports.</p>
 
-  <div style="border: 1px solid #ccc; border-radius: 6px; padding: 20px; background-color: #fdfdfd; max-width: 500px;">
-    <h3 style="margin-top: 0;">Current Usage</h3>
-    <p><strong>Reports Remaining:</strong> <span id="reports-remaining">17</span></p>
+  <div style="display: flex; flex-direction: column; gap: 30px; margin-top: 20px; max-width: 600px;">
 
-    <hr style="margin: 20px 0;">
+    <!-- Elementary Reports Package -->
+    <div style="border: 1px solid #ccc; border-radius: 6px; padding: 20px; background-color: #fdfdfd;">
+      <h2>🟢 Elementary Reports</h2>
+      <p><strong>Reports Remaining:</strong> <span id="elementary-remaining">17</span></p>
 
-    <h3 style="margin-bottom: 10px;">Buy More Reports</h3>
+      <hr style="margin: 20px 0;">
 
-    <label for="package-select" style="font-weight: bold;">Select Package:</label>
-    <select id="package-select" onchange="updatePrice()" style="width: 100%; padding: 10px; margin-top: 6px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 4px;">
-      <option value="10">10 Reports</option>
-      <option value="50">50 Reports</option>
-      <option value="100">100 Reports</option>
-    </select>
+      <label for="elementary-select" style="font-weight: bold;">Select Package:</label>
+      <select id="elementary-select" onchange="updateElemPrice()" style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px;">
+        <option value="1">1 Report</option>
+        <option value="10">10 Reports</option>
+      </select>
 
-    <p style="margin-bottom: 16px;"><strong>Total Price:</strong> <span id="package-price">$99</span></p>
+      <p><strong>Total Price:</strong> <span id="elem-price">$49</span></p>
 
-    <button style="padding: 10px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
-      Proceed to Checkout
-    </button>
+      <button style="padding: 10px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+        Buy Elementary Package
+      </button>
+    </div>
+
+    <!-- Composite Reports Package -->
+    <div style="border: 1px solid #ccc; border-radius: 6px; padding: 20px; background-color: #fdfdfd;">
+      <h2>🔵 Composite Reports</h2>
+      <p><strong>Reports Remaining:</strong> <span id="composite-remaining">4</span></p>
+
+      <hr style="margin: 20px 0;">
+
+      <label for="composite-select" style="font-weight: bold;">Select Package:</label>
+      <select id="composite-select" onchange="updateCompPrice()" style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px;">
+        <option value="1">1 Report</option>
+        <option value="5">5 Reports</option>
+      </select>
+
+      <p><strong>Total Price:</strong> <span id="comp-price">$149</span></p>
+
+      <button style="padding: 10px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+        Buy Composite Package
+      </button>
+    </div>
+
   </div>
 </div>
+
 
 
 
@@ -504,16 +527,26 @@
   }
 </script>
 <script>
-  function updatePrice() {
-    const select = document.getElementById("package-select");
-    const priceDisplay = document.getElementById("package-price");
+  function updateElemPrice() {
+    const select = document.getElementById("elementary-select");
+    const priceDisplay = document.getElementById("elem-price");
     const prices = {
-      10: "$99",
-      50: "$449",
-      100: "$799"
+      1: "$49",
+      10: "$449"
+    };
+    priceDisplay.textContent = prices[select.value];
+  }
+
+  function updateCompPrice() {
+    const select = document.getElementById("composite-select");
+    const priceDisplay = document.getElementById("comp-price");
+    const prices = {
+      1: "$149",
+      5: "$699"
     };
     priceDisplay.textContent = prices[select.value];
   }
 </script>
+
 </body>
 </html>
