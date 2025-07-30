@@ -126,21 +126,41 @@
   <div class="section">
     <h2>💳 Payment</h2>
 
-<form method="POST" action="https://testsecureacceptance.merchant-services.bankofamerica.com/silent/pay">
-    @foreach($fields as $name => $value)
-        <input type="hidden" name="{{ $name }}" value="{{ $value }}">
-    @endforeach
+<form method="POST" action="/checkout/pay">
 
-    <label>Card Number</label>
-    <input type="text" name="card_number" required>
 
-    <label>Expiry Date (MM-YYYY)</label>
-    <input type="text" name="card_expiry_date" required>
+  <label>Card Number</label>
+  <input type="text" name="card_number" placeholder="1234 5678 9012 3456" required>
 
-    <label>CVV</label>
-    <input type="text" name="card_cvn" required>
+  <div class="flex-row">
+    <div>
+      <label>Expiry Month</label>
+      <select name="exp_month" required>
+        @for ($i = 1; $i <= 12; $i++)
+          <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}</option>
+        @endfor
+      </select>
+    </div>
+    <div>
+      <label>Expiry Year</label>
+      <select name="exp_year" required>
+        @for ($y = now()->year; $y <= now()->year + 10; $y++)
+          <option value="{{ $y }}">{{ $y }}</option>
+        @endfor
+      </select>
+    </div>
+    <div class="cvv">
+      <label>CVV</label>
+      <input type="text" name="cvv" maxlength="4" placeholder="123" required>
+    </div>
+  </div>
 
-    <button type="submit">Pay Now</button>
+  <label>Name on Card</label>
+  <input type="text" name="cardholder_name" placeholder="John Doe" required>
+
+  <input type="hidden" name="amount" value="109">
+
+  <button type="submit">Proceed to Payment</button>
 </form>
 
   </div>
