@@ -6,7 +6,7 @@
 </head>
 <body style="font-family: sans-serif; padding: 50px; background: #f4f4f4;">
 
-    <h2>🚀 Тестовый платёж через Bank of America</h2>
+    <h2>test</h2>
 
     <form action="{{ route('checkout.test') }}" method="GET">
         <button type="submit" style="
@@ -17,7 +17,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;">
-            Отправить тестовый платёж $5.00
+            test
         </button>
     </form>
 
