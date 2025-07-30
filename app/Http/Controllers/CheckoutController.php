@@ -152,7 +152,7 @@ class CheckoutController extends Controller
             'amount' => '5.00',
             'currency' => 'USD',
             'payment_method' => 'card',
-            'card_type' => '001', // Visa
+            'card_type' => '001',
             'card_number' => '4111111111111111',
             'card_expiry_date' => '12-2025',
             'card_cvn' => '123',
