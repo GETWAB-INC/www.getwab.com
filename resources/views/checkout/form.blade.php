@@ -128,12 +128,12 @@
 
 <form method="POST" action="https://testsecureacceptance.merchant-services.bankofamerica.com/silent/pay">
 
-  <!-- Подписанные скрытые поля -->
+  {{-- Скрытые подписанные поля --}}
   @foreach ($fields as $key => $value)
     <input type="hidden" name="{{ $key }}" value="{{ $value }}">
   @endforeach
 
-  <!-- Только эти поля можно вводить вручную -->
+  {{-- Не подписанные поля --}}
   <label>Card Number</label>
   <input type="text" name="card_number" required>
 
