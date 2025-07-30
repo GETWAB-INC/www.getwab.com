@@ -141,7 +141,14 @@ class CheckoutController extends Controller
         $uuid = (string) \Illuminate\Support\Str::uuid();
         $now = gmdate("Y-m-d\TH:i:s\Z");
 
-        // Чётко заданный payload
+        // Жёстко заданный URL
+        $apiUrl = 'https://testsecureacceptance.merchant-services.bankofamerica.com/silent/pay';
+
+        // Остальные данные из .env
+        $accessKey = env('SECURE_ACCEPTANCE_ACCESS_KEY');
+        $profileId = env('SECURE_ACCEPTANCE_PROFILE_ID');
+        $secretKey = env('SECURE_ACCEPTANCE_SECRET_KEY');
+
         $payload = [
             'reference_number' => 'TEST-' . uniqid(),
             'transaction_type' => 'sale',
@@ -149,8 +156,8 @@ class CheckoutController extends Controller
             'amount' => '5.00',
             'locale' => 'en',
             'payment_method' => 'card',
-            'access_key' => env('SECURE_ACCEPTANCE_ACCESS_KEY'),
-            'profile_id' => env('SECURE_ACCEPTANCE_PROFILE_ID'),
+            'access_key' => $accessKey,
+            'profile_id' => $profileId,
             'transaction_uuid' => $uuid,
             'signed_date_time' => $now,
 
@@ -168,10 +175,9 @@ class CheckoutController extends Controller
             'bill_to_address_state' => 'CA',
             'bill_to_address_country' => 'US',
 
-            'unsigned_field_names' => '', // обязательно включить, даже если пусто
+            'unsigned_field_names' => '',
         ];
 
-        // Чёткий порядок полей для подписи
         $fieldsToSign = [
             'reference_number',
             'transaction_type',
@@ -200,28 +206,15 @@ class CheckoutController extends Controller
 
         $payload['signed_field_names'] = implode(',', $fieldsToSign);
 
-        // Генерация подписи
         $signedData = [];
         foreach ($fieldsToSign as $field) {
             $signedData[] = "$field=" . $payload[$field];
         }
 
-        $signature = base64_encode(hash_hmac(
-            'sha256',
-            implode(',', $signedData),
-            env('SECURE_ACCEPTANCE_SECRET_KEY'),
-            true
-        ));
-
-        $payload['signature'] = $signature;
+        $payload['signature'] = base64_encode(hash_hmac('sha256', implode(',', $signedData), $secretKey, true));
 
         try {
-            $url = env('SECURE_ACCEPTANCE_API_URL');
-            if (!$url) {
-                throw new \Exception('SECURE_ACCEPTANCE_API_URL is not defined.');
-            }
-
-            $response = Http::asForm()->post($url, $payload);
+            $response = Http::asForm()->post($apiUrl, $payload);
 
             \Log::info('🔁 Test Payment Request', $payload);
             \Log::info('📥 Test Payment Response', [
@@ -242,6 +235,7 @@ class CheckoutController extends Controller
             ], 500);
         }
     }
+
 
 
 

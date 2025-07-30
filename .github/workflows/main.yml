@@ -35,8 +35,10 @@ jobs:
             sudo rm -rf /home/userwww/web/getwab.com/public_html/.github
             sudo rm -rf /home/userwww/web/getwab.com/public_html/.DS_Store
             # Set permissions to the web directory
-            sudo chown -R www-data:www-data /home/userwww/web/getwab.com/public_html
-            sudo chmod -R 755 /home/userwww/web/getwab.com/public_html
+            sudo chmod -R 775 /home/userwww/web/getwab.com/public_html/storage
+            sudo chmod -R 775 /home/userwww/web/getwab.com/public_html/bootstrap/cache
+            sudo chown -R userwww:www-data /home/userwww/web/getwab.com/public_html/storage
+            sudo chown -R userwww:www-data /home/userwww/web/getwab.com/public_html/bootstrap/cache
             # Clear and cache configurations
             cd /home/userwww/web/getwab.com/public_html
             php artisan config:clear
