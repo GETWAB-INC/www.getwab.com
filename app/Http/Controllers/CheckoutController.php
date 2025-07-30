@@ -137,107 +137,100 @@ class CheckoutController extends Controller
     }
 
     public function test()
-    {
+{
+    $apiUrl = 'https://testsecureacceptance.merchant-services.bankofamerica.com/silent/pay';
+    $accessKey = 'abd7db4aaf5a318ebbc44297b3528a0c';
+    $profileId = '069E822B-906F-43F1-B7D1-57DE588E9AEF';
+    $secretKey = 'a10e614ffbc24c49a26f761f331e856d796f7a33d1814829b67a144b2b0858972882a25998ae4d5886061fa692e64dffec8d356da72f4372915322e7c9ca63cd7d0c55b8455e40c19bd345bee8d515367d0206524eae4beea274ec96ce477f373dcf82515cbf417daf8697523e593b7763e2a38c6fff4b2ba210c3412e3774d9';
 
-        $apiUrl = 'https://apitest.cybersource.com/pts/v2/payments';
-        $accessKey = 'abd7db4aaf5a318ebbc44297b3528a0c';
-        $profileId = '069E822B-906F-43F1-B7D1-57DE588E9AEF';
-        $secretKey = 'a10e614ffbc24c49a26f761f331e856d796f7a33d1814829b67a144b2b0858972882a25998ae4d5886061fa692e64dffec8d356da72f4372915322e7c9ca63cd7d0c55b8455e40c19bd345bee8d515367d0206524eae4beea274ec96ce477f373dcf82515cbf417daf8697523e593b7763e2a38c6fff4b2ba210c3412e3774d9';
+    $uuid = (string) Str::uuid();
+    $now = gmdate("Y-m-d\TH:i:s\Z");
 
-        $uuid = (string) \Illuminate\Support\Str::uuid();
-        $now = gmdate("Y-m-d\TH:i:s\Z");
+    $payload = [
+        'access_key' => $accessKey,
+        'profile_id' => $profileId,
+        'transaction_uuid' => $uuid,
+        'signed_date_time' => $now,
+        'locale' => 'en',
+        'transaction_type' => 'sale',
+        'reference_number' => 'TEST-' . uniqid(),
+        'amount' => '5.00',
+        'currency' => 'USD',
+        'payment_method' => 'card',
+        'card_type' => '001',
+        'card_number' => '4111111111111111',
+        'card_expiry_date' => '12-2025',
+        'card_cvn' => '123',
+        'bill_to_forename' => 'John',
+        'bill_to_surname' => 'Doe',
+        'bill_to_email' => 'john.doe@example.com',
+        'bill_to_address_line1' => '1 Market St',
+        'bill_to_address_city' => 'San Francisco',
+        'bill_to_address_postal_code' => '94105',
+        'bill_to_address_state' => 'CA',
+        'bill_to_address_country' => 'US',
+        'unsigned_field_names' => '',
+    ];
 
-        $payload = [
-            'reference_number' => 'TEST-' . uniqid(),
-            'transaction_type' => 'sale',
-            'currency' => 'USD',
-            'amount' => '5.00',
-            'locale' => 'en',
-            'payment_method' => 'card',
-            'access_key' => $accessKey,
-            'profile_id' => $profileId,
-            'transaction_uuid' => $uuid,
-            'signed_date_time' => $now,
+    $fieldsToSign = [
+        'access_key',
+        'profile_id',
+        'transaction_uuid',
+        'signed_date_time',
+        'locale',
+        'transaction_type',
+        'reference_number',
+        'amount',
+        'currency',
+        'payment_method',
+        'card_type',
+        'card_number',
+        'card_expiry_date',
+        'card_cvn',
+        'bill_to_forename',
+        'bill_to_surname',
+        'bill_to_email',
+        'bill_to_address_line1',
+        'bill_to_address_city',
+        'bill_to_address_postal_code',
+        'bill_to_address_state',
+        'bill_to_address_country',
+        'unsigned_field_names',
+    ];
 
-            'card_type' => '001',
-            'card_number' => '4111111111111111',
-            'card_expiry_date' => '12-2025',
-            'card_cvn' => '123',
+    $payload['signed_field_names'] = implode(',', $fieldsToSign);
 
-            'bill_to_forename' => 'John',
-            'bill_to_surname' => 'Doe',
-            'bill_to_email' => 'john.doe@example.com',
-            'bill_to_address_line1' => '1 Market St',
-            'bill_to_address_city' => 'San Francisco',
-            'bill_to_address_postal_code' => '94105',
-            'bill_to_address_state' => 'CA',
-            'bill_to_address_country' => 'US',
-
-            'unsigned_field_names' => '',
-        ];
-
-        $fieldsToSign = [
-            'reference_number',
-            'transaction_type',
-            'currency',
-            'amount',
-            'locale',
-            'payment_method',
-            'access_key',
-            'profile_id',
-            'transaction_uuid',
-            'signed_date_time',
-            'card_type',
-            'card_number',
-            'card_expiry_date',
-            'card_cvn',
-            'bill_to_forename',
-            'bill_to_surname',
-            'bill_to_email',
-            'bill_to_address_line1',
-            'bill_to_address_city',
-            'bill_to_address_postal_code',
-            'bill_to_address_state',
-            'bill_to_address_country',
-            'unsigned_field_names',
-        ];
-
-        $payload['signed_field_names'] = implode(',', $fieldsToSign);
-
-        $signedData = [];
-        foreach ($fieldsToSign as $field) {
-            $signedData[] = "$field=" . $payload[$field];
-        }
-
-        $payload['signature'] = base64_encode(hash_hmac(
-            'sha256',
-            implode(',', $signedData),
-            $secretKey,
-            true
-        ));
-
-        try {
-            $response = Http::asForm()->post($apiUrl, $payload);
-
-            \Log::info('🔁 Test Payment Request', $payload);
-            \Log::info('📥 Test Payment Response', [
-                'status' => $response->status(),
-                'body' => $response->body(),
-            ]);
-
-            return response()->json([
-                'payload' => $payload,
-                'status' => $response->status(),
-                'body' => $response->body(),
-            ]);
-        } catch (\Exception $e) {
-            \Log::error('❌ Payment Request Failed', ['error' => $e->getMessage()]);
-            return response()->json([
-                'error' => $e->getMessage(),
-                'payload' => $payload,
-            ], 500);
-        }
+    $signedData = [];
+    foreach ($fieldsToSign as $field) {
+        $signedData[] = "$field=" . $payload[$field];
     }
+
+    $payload['signature'] = base64_encode(
+        hash_hmac('sha256', implode(',', $signedData), $secretKey, true)
+    );
+
+    try {
+        $response = Http::asForm()->post($apiUrl, $payload);
+
+        \Log::info('🔁 Test Payment Request', $payload);
+        \Log::info('📥 Test Payment Response', [
+            'status' => $response->status(),
+            'body' => $response->body(),
+        ]);
+
+        return response()->json([
+            'payload' => $payload,
+            'status' => $response->status(),
+            'body' => $response->body(),
+        ]);
+    } catch (\Exception $e) {
+        \Log::error('❌ Payment Request Failed', ['error' => $e->getMessage()]);
+        return response()->json([
+            'error' => $e->getMessage(),
+            'payload' => $payload,
+        ], 500);
+    }
+}
 
 
 }
