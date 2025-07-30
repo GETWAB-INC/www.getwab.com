@@ -206,7 +206,7 @@ class CheckoutController extends Controller
 
         // Отправляем POST-запрос
         $response = Http::asForm()->post(env('SECURE_ACCEPTANCE_API_URL'), $payload);
-
+        
         // Логируем
         \Log::info('🔁 Test Payment Request', $payload);
         \Log::info('📥 Test Payment Response', [
@@ -215,6 +215,8 @@ class CheckoutController extends Controller
             'body' => $response->body(),
         ]);
 
+        dd($payload);
+        
         return response()->json([
             'status' => $response->status(),
             'body' => $response->json(),
