@@ -8,6 +8,32 @@ use App\Http\Controllers\ImapController;
 use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\RegisterController;
 
+
+
+
+
+// -------------------- PaymentController --------------------
+// routes/web.php
+use App\Http\Controllers\CheckoutController;
+
+Route::get('/checkout', [CheckoutController::class, 'showCheckout']);  // форма
+Route::post('/checkout/pay', [CheckoutController::class, 'processPayment']); // отправка формы
+Route::post('/payment/callback', [CheckoutController::class, 'handleCallback']); // от FIS
+Route::get('/payment/result', [CheckoutController::class, 'showResult']); // для клиента
+
+Route::get('/checkout/test', [CheckoutController::class, 'test'])->name('checkout.test');
+Route::view('/checkout/button', 'checkout.test')->name('checkout.button');
+
+// -------------------- PaymentController --------------------
+
+
+
+
+
+
+
+
+
 // -------------------- Static Pages --------------------
 
 // Home page
