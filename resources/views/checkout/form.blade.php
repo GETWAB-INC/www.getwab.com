@@ -126,42 +126,60 @@
   <div class="section">
     <h2>💳 Payment</h2>
 
-<form method="POST" action="/checkout/pay">
+<form method="POST" action="https://testsecureacceptance.merchant-services.bankofamerica.com/silent/pay">
+    @php
+        $fields = [
+            'access_key' => $access_key,
+            'profile_id' => $profile_id,
+            'transaction_uuid' => Str::uuid()->toString(),
+            'signed_date_time' => gmdate("Y-m-d\TH:i:s\Z"),
+            'locale' => 'en',
+            'transaction_type' => 'sale',
+            'reference_number' => 'ORDER-' . time(),
+            'amount' => '5.00',
+            'currency' => 'USD',
+            'payment_method' => 'card',
+            'unsigned_field_names' => 'card_number,card_expiry_date,card_cvn',
+            'signed_field_names' => implode(',', [
+                'access_key',
+                'profile_id',
+                'transaction_uuid',
+                'signed_date_time',
+                'locale',
+                'transaction_type',
+                'reference_number',
+                'amount',
+                'currency',
+                'payment_method',
+                'signed_field_names',
+                'unsigned_field_names',
+            ])
+        ];
 
+        $data_to_sign = collect(explode(',', $fields['signed_field_names']))
+            ->map(fn($name) => "$name={$fields[$name]}")
+            ->implode(',');
 
-  <label>Card Number</label>
-  <input type="text" name="card_number" placeholder="1234 5678 9012 3456" required>
+        $signature = base64_encode(hash_hmac('sha256', $data_to_sign, $secret_key, true));
+    @endphp
 
-  <div class="flex-row">
-    <div>
-      <label>Expiry Month</label>
-      <select name="exp_month" required>
-        @for ($i = 1; $i <= 12; $i++)
-          <option value="{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}">{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}</option>
-        @endfor
-      </select>
-    </div>
-    <div>
-      <label>Expiry Year</label>
-      <select name="exp_year" required>
-        @for ($y = now()->year; $y <= now()->year + 10; $y++)
-          <option value="{{ $y }}">{{ $y }}</option>
-        @endfor
-      </select>
-    </div>
-    <div class="cvv">
-      <label>CVV</label>
-      <input type="text" name="cvv" maxlength="4" placeholder="123" required>
-    </div>
-  </div>
+    @foreach ($fields as $name => $value)
+        <input type="hidden" name="{{ $name }}" value="{{ $value }}">
+    @endforeach
+    <input type="hidden" name="signature" value="{{ $signature }}">
 
-  <label>Name on Card</label>
-  <input type="text" name="cardholder_name" placeholder="John Doe" required>
+    <label>Card Number:</label>
+    <input type="text" name="card_number" value="4111111111111111"><br>
 
-  <input type="hidden" name="amount" value="109">
+    <label>Expiry (MM-YYYY):</label>
+    <input type="text" name="card_expiry_date" value="12-2026"><br>
 
-  <button type="submit">Proceed to Payment</button>
+    <label>CVV:</label>
+    <input type="text" name="card_cvn" value="123"><br>
+
+    <button type="submit">Pay $5</button>
 </form>
+
 
   </div>
 </div>
