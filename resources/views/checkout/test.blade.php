@@ -3,6 +3,7 @@
 <html>
 <head>
     <title>Test Payment</title>
+    <meta name="robots" content="noindex, nofollow">
 </head>
 <body style="font-family: sans-serif; padding: 50px; background: #f4f4f4;">
 
