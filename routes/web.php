@@ -21,13 +21,6 @@ Route::post('/checkout/pay', [CheckoutController::class, 'processPayment']); // 
 Route::post('/payment/callback', [CheckoutController::class, 'handleCallback']); // от FIS
 Route::get('/payment/result', [CheckoutController::class, 'showResult']); // для клиента
 
-Route::get('/checkout/test', [CheckoutController::class, 'test'])->name('checkout.test');
-
-Route::get('/checkout/button', function () {
-    Log::info('🔥 Я живой!');
-    return view('checkout.test');
-})->name('checkout.button');
-
 // -------------------- PaymentController --------------------
 
 
