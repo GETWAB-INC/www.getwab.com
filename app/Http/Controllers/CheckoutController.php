@@ -207,15 +207,28 @@ class CheckoutController extends Controller
         // Отправляем POST-запрос
         $response = Http::asForm()->post(env('SECURE_ACCEPTANCE_API_URL'), $payload);
         
-        // Логируем
-        \Log::info('🔁 Test Payment Request', $payload);
-        \Log::info('📥 Test Payment Response', [
-            'status' => $response->status(),
-            'headers' => $response->headers(),
-            'body' => $response->body(),
-        ]);
+        try {
+            $response = Http::asForm()->post(env('SECURE_ACCEPTANCE_API_URL'), $payload);
 
-        dd($payload);
+            \Log::info('🔁 Test Payment Request', $payload);
+            \Log::info('📥 Test Payment Response', [
+                'status' => $response->status(),
+                'body' => $response->body(),
+            ]);
+
+            dd([
+                'payload' => $payload,
+                'response_status' => $response->status(),
+                'response_body' => $response->body()
+            ]);
+
+        } catch (\Exception $e) {
+            dd([
+                'payload' => $payload,
+                'error' => $e->getMessage()
+            ]);
+        }
+
         
         return response()->json([
             'status' => $response->status(),
