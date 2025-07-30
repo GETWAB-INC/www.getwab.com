@@ -127,25 +127,21 @@
     <h2>💳 Payment</h2>
 
 <form method="POST" action="https://testsecureacceptance.merchant-services.bankofamerica.com/silent/pay">
+    @foreach($fields as $name => $value)
+        <input type="hidden" name="{{ $name }}" value="{{ $value }}">
+    @endforeach
 
-  {{-- Скрытые подписанные поля --}}
-  @foreach ($fields as $key => $value)
-    <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-  @endforeach
+    <label>Card Number</label>
+    <input type="text" name="card_number" required>
 
-  {{-- Не подписанные поля --}}
-  <label>Card Number</label>
-  <input type="text" name="card_number" required>
+    <label>Expiry Date (MM-YYYY)</label>
+    <input type="text" name="card_expiry_date" required>
 
-  <label>Expiry Date (MM-YYYY)</label>
-  <input type="text" name="card_expiry_date" value="12-2026" required>
+    <label>CVV</label>
+    <input type="text" name="card_cvn" required>
 
-  <label>CVV</label>
-  <input type="text" name="card_cvn" value="123" required>
-
-  <button type="submit">Pay Now</button>
+    <button type="submit">Pay Now</button>
 </form>
-
 
   </div>
 </div>
