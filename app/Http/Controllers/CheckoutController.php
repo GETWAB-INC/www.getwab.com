@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CheckoutController extends Controller
 {
@@ -17,6 +19,23 @@ class CheckoutController extends Controller
             'profile_id' => $profileId,
             'secret_key' => $secretKey,
         ]);
+    }
+
+    public function handleResponse(Request $request)
+    {
+        // Получаем все поля
+        $data = $request->all();
+
+        // Логируем в storage/logs/laravel.log
+        Log::info('BoA Transaction Response', $data);
+
+        // Для отладки — выводим на экран (временно, не оставляй в продакшене)
+        echo "<pre>";
+        print_r($data);
+        echo "</pre>";
+
+        // Можно вернуть простой ответ
+        return response('OK');
     }
 }
 

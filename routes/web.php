@@ -19,7 +19,8 @@ use App\Http\Controllers\CheckoutController;
 Route::get('/checkout', [CheckoutController::class, 'showCheckout']);  // форма
 Route::post('/checkout/pay', [CheckoutController::class, 'processPayment']); // отправка формы
 Route::post('/payment/callback', [CheckoutController::class, 'handleCallback']); // от FIS
-Route::get('/payment/result', [CheckoutController::class, 'showResult']); // для клиента
+Route::post('/payment/result', [CheckoutController::class, 'handleResponse']);
+
 
 Route::get('/checkout/test', [CheckoutController::class, 'test'])->name('checkout.test');
 
