@@ -22,7 +22,11 @@ Route::post('/payment/callback', [CheckoutController::class, 'handleCallback']);
 Route::get('/payment/result', [CheckoutController::class, 'showResult']); // для клиента
 
 Route::get('/checkout/test', [CheckoutController::class, 'test'])->name('checkout.test');
-Route::view('/checkout/button', 'checkout.test')->name('checkout.button');
+
+Route::get('/checkout/button', function () {
+    Log::info('🔥 Я живой!');
+    return view('checkout.test');
+})->name('checkout.button');
 
 // -------------------- PaymentController --------------------
 
