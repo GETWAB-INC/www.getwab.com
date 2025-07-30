@@ -138,6 +138,7 @@ class CheckoutController extends Controller
 
     public function test()
     {
+        \Log::info('🔥 Я живой!');
         $uuid = (string) \Illuminate\Support\Str::uuid();
         $now = gmdate("Y-m-d\TH:i:s\Z");
 
