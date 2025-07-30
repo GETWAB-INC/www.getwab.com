@@ -137,104 +137,76 @@ class CheckoutController extends Controller
     }
 
     public function test()
-    {
-        \Log::info('🔥 Я живой!');
-        $uuid = (string) \Illuminate\Support\Str::uuid();
-        $now = gmdate("Y-m-d\TH:i:s\Z");
+{
+    $uuid = (string) \Illuminate\Support\Str::uuid();
+    $now = gmdate("Y-m-d\TH:i:s\Z");
 
-        $payload = [
-            'access_key' => env('SECURE_ACCEPTANCE_ACCESS_KEY'),
-            'profile_id' => env('SECURE_ACCEPTANCE_PROFILE_ID'),
-            'transaction_uuid' => $uuid,
-            'signed_date_time' => $now,
-            'locale' => 'en',
-            'transaction_type' => 'sale',
-            'reference_number' => 'TEST-' . uniqid(),
-            'amount' => '5.00',
-            'currency' => 'USD',
-            'payment_method' => 'card',
-            'card_type' => '001',
-            'card_number' => '4111111111111111',
-            'card_expiry_date' => '12-2025',
-            'card_cvn' => '123',
-            'bill_to_forename' => 'John',
-            'bill_to_surname' => 'Doe',
-            'bill_to_email' => 'john.doe@example.com',
-            'bill_to_address_line1' => '1 Market St',
-            'bill_to_address_city' => 'San Francisco',
-            'bill_to_address_postal_code' => '94105',
-            'bill_to_address_state' => 'CA',
-            'bill_to_address_country' => 'US',
-            'unsigned_field_names' => '',
-        ];
+    $payload = [
+        'access_key' => env('SECURE_ACCEPTANCE_ACCESS_KEY'),
+        'profile_id' => env('SECURE_ACCEPTANCE_PROFILE_ID'),
+        'transaction_uuid' => $uuid,
+        'signed_date_time' => $now,
+        'locale' => 'en',
+        'transaction_type' => 'sale',
+        'reference_number' => 'TEST-' . uniqid(),
+        'amount' => '5.00',
+        'currency' => 'USD',
+        'payment_method' => 'card',
+        'card_type' => '001',
+        'card_number' => '4111111111111111',
+        'card_expiry_date' => '12-2025',
+        'card_cvn' => '123',
+        'bill_to_forename' => 'John',
+        'bill_to_surname' => 'Doe',
+        'bill_to_email' => 'john.doe@example.com',
+        'bill_to_address_line1' => '1 Market St',
+        'bill_to_address_city' => 'San Francisco',
+        'bill_to_address_postal_code' => '94105',
+        'bill_to_address_state' => 'CA',
+        'bill_to_address_country' => 'US',
+        'unsigned_field_names' => '',
+    ];
 
-        $fieldsToSign = [
-            'access_key',
-            'profile_id',
-            'transaction_uuid',
-            'signed_date_time',
-            'locale',
-            'transaction_type',
-            'reference_number',
-            'amount',
-            'currency',
-            'payment_method',
-            'card_type',
-            'card_number',
-            'card_expiry_date',
-            'card_cvn',
-            'bill_to_forename',
-            'bill_to_surname',
-            'bill_to_email',
-            'bill_to_address_line1',
-            'bill_to_address_city',
-            'bill_to_address_postal_code',
-            'bill_to_address_state',
-            'bill_to_address_country',
-            'signed_field_names',
-            'unsigned_field_names',
-        ];
+    // Шаг 1: создаём список полей без signed/unsigned
+    $fieldsToSign = array_keys($payload);
 
-        $payload['signed_field_names'] = implode(',', $fieldsToSign);
+    // Шаг 2: добавляем signed_field_names и unsigned_field_names
+    $payload['signed_field_names'] = implode(',', $fieldsToSign);
+    $fieldsToSign[] = 'signed_field_names';
+    $fieldsToSign[] = 'unsigned_field_names';
 
-        $dataToSign = [];
-        foreach ($fieldsToSign as $field) {
-            $dataToSign[] = "$field=" . $payload[$field];
-        }
-
-        $signature = base64_encode(hash_hmac('sha256', implode(',', $dataToSign), env('SECURE_ACCEPTANCE_SECRET_KEY'), true));
-        $payload['signature'] = $signature;
-
-        // Отправляем POST-запрос
-        $response = Http::asForm()->post(env('SECURE_ACCEPTANCE_API_URL'), $payload);
-        
-        try {
-            $response = Http::asForm()->post(env('SECURE_ACCEPTANCE_API_URL'), $payload);
-
-            \Log::info('🔁 Test Payment Request', $payload);
-            \Log::info('📥 Test Payment Response', [
-                'status' => $response->status(),
-                'body' => $response->body(),
-            ]);
-
-            dd([
-                'payload' => $payload,
-                'response_status' => $response->status(),
-                'response_body' => $response->body()
-            ]);
-
-        } catch (\Exception $e) {
-            dd([
-                'payload' => $payload,
-                'error' => $e->getMessage()
-            ]);
-        }
-
-        
-        return response()->json([
-            'status' => $response->status(),
-            'body' => $response->json(),
-        ]);
+    // Шаг 3: генерируем строку подписи
+    $signedData = [];
+    foreach ($fieldsToSign as $field) {
+        $signedData[] = $field . "=" . $payload[$field];
     }
+
+    $signature = base64_encode(hash_hmac('sha256', implode(',', $signedData), env('SECURE_ACCEPTANCE_SECRET_KEY'), true));
+    $payload['signature'] = $signature;
+
+    // Отправка запроса
+    try {
+        $response = Http::asForm()->post(env('SECURE_ACCEPTANCE_API_URL'), $payload);
+
+        \Log::info('🔁 Test Payment Request', $payload);
+        \Log::info('📥 Test Payment Response', [
+            'status' => $response->status(),
+            'body' => $response->body(),
+        ]);
+
+        return response()->json([
+            'payload' => $payload,
+            'status' => $response->status(),
+            'body' => $response->body(),
+        ]);
+    } catch (\Exception $e) {
+        \Log::error('❌ Payment Request Failed', ['error' => $e->getMessage()]);
+        return response()->json([
+            'error' => $e->getMessage(),
+            'payload' => $payload,
+        ], 500);
+    }
+}
+
 
 }
