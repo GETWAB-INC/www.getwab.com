@@ -7,7 +7,6 @@
 <body style="font-family: sans-serif; padding: 50px; background: #f4f4f4;">
 
     <h2>test</h2>
-
     <form action="{{ route('checkout.test') }}" method="GET">
         <button type="submit" style="
             padding: 12px 20px;
