@@ -138,8 +138,8 @@ class CheckoutController extends Controller
 
     public function test()
     {
-        // Жестко заданные ключи
-        $apiUrl = 'https://testsecureacceptance.merchant-services.bankofamerica.com/silent/pay';
+
+        $apiUrl = 'https://apitest.cybersource.com/pts/v2/payments';
         $accessKey = 'abd7db4aaf5a318ebbc44297b3528a0c';
         $profileId = '069E822B-906F-43F1-B7D1-57DE588E9AEF';
         $secretKey = 'a10e614ffbc24c49a26f761f331e856d796f7a33d1814829b67a144b2b0858972882a25998ae4d5886061fa692e64dffec8d356da72f4372915322e7c9ca63cd7d0c55b8455e40c19bd345bee8d515367d0206524eae4beea274ec96ce477f373dcf82515cbf417daf8697523e593b7763e2a38c6fff4b2ba210c3412e3774d9';
