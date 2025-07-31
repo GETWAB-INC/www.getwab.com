@@ -142,9 +142,9 @@
             'bill_to_forename' => 'Ilia',
             'bill_to_surname' => 'Oborin',
             'bill_to_email' => 'ilia@getwab.com',
-            'bill_address1' => '4532 Parnell Dr',
-            'bill_city' => 'Sarasota',
-            'bill_country' => 'US',
+            'bill_to_address_line1' => '4532 Parnell Dr',
+            'bill_to_city' => 'Sarasota',
+            'bill_to_country' => 'US',
             'card_type' => '001',
             'unsigned_field_names' => 'card_number,card_expiry_date,card_cvn',
         ];
@@ -163,9 +163,9 @@
             'bill_to_forename',
             'bill_to_surname',
             'bill_to_email',
-            'bill_address1',
-            'bill_city',
-            'bill_country',
+            'bill_to_address_line1',
+            'bill_to_city',
+            'bill_to_country',
             'card_type',
             'signed_field_names',
             'unsigned_field_names',
@@ -186,17 +186,16 @@
 
     {{-- Видимые поля для ввода карты --}}
     <label>Card Number:</label>
-    <input type="text" name="card_number" value="{{ old('card_number', '4111111111111111') }}"><br>
+    <input type="text" name="card_number" value="{{ old('card_number', '4400665010828869') }}"><br>
 
     <label>Expiry (MM-YYYY):</label>
-    <input type="text" name="card_expiry_date" value="{{ old('card_expiry_date', '12-2030') }}"><br>
+    <input type="text" name="card_expiry_date" value="{{ old('card_expiry_date', '11-2027') }}"><br>
 
     <label>CVV:</label>
-    <input type="text" name="card_cvn" value="{{ old('card_cvn', '123') }}"><br>
+    <input type="text" name="card_cvn" value="{{ old('card_cvn', '') }}"><br>
 
     <button type="submit">Pay $1</button>
 </form>
-
 
 
 
