@@ -125,8 +125,7 @@
 
   <div class="section">
     <h2>💳 Payment</h2>
-   <form method="POST" action="https://testsecureacceptance.merchant-services.bankofamerica.com/silent/pay"> 
-<!-- <form method="POST" action="https://secureacceptance.merchant-services.bankofamerica.com/silent/pay"> -->
+   <form method="POST" action="{{ $apiUrl }}"> 
     @php
         use Illuminate\Support\Str;
 
