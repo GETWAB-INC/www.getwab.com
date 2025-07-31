@@ -126,17 +126,17 @@
   <div class="section">
     <h2>💳 Payment</h2>
 
-<form method="POST" action="https://testsecureacceptance.merchant-services.bankofamerica.com/silent/pay">
+<form method="POST" action="https://secureacceptance.merchant-services.bankofamerica.com/silent/pay">
     @php
         $fields = [
-            'access_key' => $access_key,
-            'profile_id' => $profile_id,
+            'access_key' => $access_key, // ← из .env или config
+            'profile_id' => $profile_id, // ← из .env или config
             'transaction_uuid' => Str::uuid()->toString(),
             'signed_date_time' => gmdate("Y-m-d\TH:i:s\Z"),
             'locale' => 'en',
-            'transaction_type' => 'sale',
+            'transaction_type' => 'sale', // либо 'authorization'
             'reference_number' => 'ORDER-' . time(),
-            'amount' => '5.00',
+            'amount' => '1.00',
             'currency' => 'USD',
             'payment_method' => 'card',
             'unsigned_field_names' => 'card_number,card_expiry_date,card_cvn',
@@ -169,16 +169,17 @@
     <input type="hidden" name="signature" value="{{ $signature }}">
 
     <label>Card Number:</label>
-    <input type="text" name="card_number" value="4111111111111111"><br>
+    <input type="text" name="card_number" value=""><br>
 
     <label>Expiry (MM-YYYY):</label>
-    <input type="text" name="card_expiry_date" value="12-2026"><br>
+    <input type="text" name="card_expiry_date" value=""><br>
 
     <label>CVV:</label>
-    <input type="text" name="card_cvn" value="123"><br>
+    <input type="text" name="card_cvn" value=""><br>
 
-    <button type="submit">Pay $5</button>
+    <button type="submit">Pay $1</button>
 </form>
+
 
 
   </div>
