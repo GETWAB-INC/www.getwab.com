@@ -139,17 +139,37 @@
             'amount' => '1.00',
             'currency' => 'USD',
             'payment_method' => 'card',
-            'bill_to_forename' => old('bill_to_forename', 'Ilia'),
-            'bill_to_surname' => old('bill_to_surname', 'Oborin'),
-            'bill_to_email' => old('bill_to_email', 'ilia@getwab.com'),
-            'bill_to_address_line1' => old('bill_to_address_line1', '4532 Parnell Dr'),
-            'bill_to_city' => old('bill_to_city', 'Sarasota'),
-            'bill_to_country' => old('bill_to_country', 'US'),
-            'card_type' => '001', // Visa
+            'bill_to_forename' => 'Ilia',
+            'bill_to_surname' => 'Oborin',
+            'bill_to_email' => 'ilia@getwab.com',
+            'bill_address1' => '4532 Parnell Dr',
+            'bill_city' => 'Sarasota',
+            'bill_country' => 'US',
+            'card_type' => '001',
             'unsigned_field_names' => 'card_number,card_expiry_date,card_cvn',
         ];
 
-        $fields['signed_field_names'] = implode(',', array_keys($fields));
+        $fields['signed_field_names'] = implode(',', [
+            'access_key',
+            'profile_id',
+            'transaction_uuid',
+            'signed_date_time',
+            'locale',
+            'transaction_type',
+            'reference_number',
+            'amount',
+            'currency',
+            'payment_method',
+            'bill_to_forename',
+            'bill_to_surname',
+            'bill_to_email',
+            'bill_address1',
+            'bill_city',
+            'bill_country',
+            'card_type',
+            'signed_field_names',
+            'unsigned_field_names',
+        ]);
 
         $data_to_sign = collect(explode(',', $fields['signed_field_names']))
             ->map(fn($name) => "$name={$fields[$name]}")
@@ -158,27 +178,25 @@
         $signature = base64_encode(hash_hmac('sha256', $data_to_sign, $secret_key, true));
     @endphp
 
-    @csrf
-
+    {{-- Поля, отправляемые на сервер --}}
     @foreach ($fields as $name => $value)
-        <label for="{{ $name }}">{{ $name }}:</label>
-        <input type="text" name="{{ $name }}" id="{{ $name }}" value="{{ $value }}"><br>
+        <input type="hidden" name="{{ $name }}" value="{{ $value }}">
     @endforeach
+    <input type="hidden" name="signature" value="{{ $signature }}">
 
-    <label for="card_number">card_number:</label>
+    {{-- Видимые поля для ввода карты --}}
+    <label>Card Number:</label>
     <input type="text" name="card_number" value="{{ old('card_number', '4111111111111111') }}"><br>
 
-    <label for="card_expiry_date">card_expiry_date (MM-YYYY):</label>
+    <label>Expiry (MM-YYYY):</label>
     <input type="text" name="card_expiry_date" value="{{ old('card_expiry_date', '12-2030') }}"><br>
 
-    <label for="card_cvn">card_cvn:</label>
+    <label>CVV:</label>
     <input type="text" name="card_cvn" value="{{ old('card_cvn', '123') }}"><br>
-
-    <label for="signature">signature:</label>
-    <input type="text" name="signature" id="signature" value="{{ $signature }}"><br>
 
     <button type="submit">Pay $1</button>
 </form>
+
 
 
 
