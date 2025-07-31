@@ -21,6 +21,13 @@ Route::post('/checkout/pay', [CheckoutController::class, 'processPayment']); // 
 Route::match(['get', 'post'], '/checkout/callback', [CheckoutController::class, 'handleCallback']); // от FIS
 
 Route::match(['get', 'post'], '/payment/result', function (Request $request) {
+    // 📋 Логируем метод запроса
+    $method = $request->method();
+    Log::info("🔔 /payment/result — Method: {$method}");
+
+    // 📋 Логируем все входящие данные
+    Log::info('🔔 /payment/result — Payload:', $request->all());
+
     $decision = $request->get('decision');
 
     if ($decision === 'ACCEPT') {

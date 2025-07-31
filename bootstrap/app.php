@@ -21,6 +21,8 @@ return Application::configure(basePath: dirname(__DIR__))
         // ❗ CSRF: отключаем проверку для /checkout/callback
         $middleware->validateCsrfTokens(except: [
             '/checkout/callback',
+            '/payment/result',
+
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
