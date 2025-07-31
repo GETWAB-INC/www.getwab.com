@@ -20,33 +20,8 @@ Route::get('/checkout', [CheckoutController::class, 'showCheckout']);  // фор
 Route::post('/checkout/pay', [CheckoutController::class, 'processPayment']); // отправка формы
 Route::match(['get', 'post'], '/checkout/callback', [CheckoutController::class, 'handleCallback']); // от FIS
 
-Route::match(['get', 'post'], '/payment/result', function (Request $request) {
-    // 📋 Логируем метод запроса
-    $method = $request->method();
-    Log::info("🔔 /payment/result — Method: {$method}");
+Route::match(['get', 'post'], '/payment/result', [CheckoutController::class, 'paymentResult']);
 
-    // 📋 Логируем все входящие данные
-    Log::info('🔔 /payment/result — Payload:', $request->all());
-
-    $decision = $request->get('decision');
-
-    if ($decision === 'ACCEPT') {
-        return view('checkout.result', [
-            'status' => 'success',
-            'message' => '✅ Payment was successful!',
-        ]);
-    } elseif ($decision === 'REJECT') {
-        return view('checkout.result', [
-            'status' => 'failed',
-            'message' => '❌ Payment was declined. Please try another card.',
-        ]);
-    } else {
-        return view('checkout.result', [
-            'status' => 'unknown',
-            'message' => '⚠️ Unable to determine payment result.',
-        ]);
-    }
-});
 
 Route::get('/checkout/test', [CheckoutController::class, 'test'])->name('checkout.test');
 
