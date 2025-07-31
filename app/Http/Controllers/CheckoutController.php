@@ -21,21 +21,23 @@ class CheckoutController extends Controller
         ]);
     }
 
-    public function handleResponse(Request $request)
+    public function handleCallback(Request $request)
     {
-        // Получаем все поля
         $data = $request->all();
 
-        // Логируем в storage/logs/laravel.log
-        Log::info('BoA Transaction Response', $data);
+        \Log::info('🔔 Silent POST от BoA', [
+            'ip' => $request->ip(),
+            'raw' => file_get_contents('php://input'),
+            'parsed' => $data,
+        ]);
 
-        // Для отладки — выводим на экран (временно, не оставляй в продакшене)
-        echo "<pre>";
+        // Временно вывести (удалить в продакшене)
+        echo "<h1>Silent POST от BoA</h1><pre>";
         print_r($data);
         echo "</pre>";
 
-        // Можно вернуть простой ответ
         return response('OK');
     }
+
 }
 
