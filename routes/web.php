@@ -7,19 +7,19 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ImapController;
 use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\RegisterController;
-
-
-
-
-
-// -------------------- PaymentController --------------------
-// routes/web.php
 use App\Http\Controllers\CheckoutController;
+
+
+
+
+// -------------------- CheckoutController --------------------
+// routes/web.php
+
 
 Route::get('/checkout', [CheckoutController::class, 'showCheckout']);  // форма
 Route::post('/checkout/pay', [CheckoutController::class, 'processPayment']); // отправка формы
 Route::post('/payment/callback', [CheckoutController::class, 'handleCallback']); // от FIS
-Route::match(['get', 'post'], '/payment/result', [PaymentController::class, 'handleResponse']);
+Route::match(['get', 'post'], '/payment/result', [CheckoutController::class, 'handleResponse']);
 
 
 
