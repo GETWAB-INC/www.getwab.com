@@ -135,7 +135,7 @@
             'transaction_uuid' => Str::uuid()->toString(),
             'signed_date_time' => gmdate("Y-m-d\TH:i:s\Z"),
             'locale' => 'en',
-            'transaction_type' => 'create_payment_token', // или 'sale' если не используешь токены
+            'transaction_type' => 'sale', // или 'sale' если не используешь токены
             'reference_number' => 'ORDER-' . time(),
             'amount' => '1.00',
             'currency' => 'USD',
