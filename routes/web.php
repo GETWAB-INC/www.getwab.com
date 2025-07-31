@@ -19,16 +19,7 @@ use Illuminate\Http\Request;
 Route::get('/checkout', [CheckoutController::class, 'showCheckout']);  // форма
 Route::post('/checkout/pay', [CheckoutController::class, 'processPayment']); // отправка формы
 Route::match(['get', 'post'], '/checkout/callback', [CheckoutController::class, 'handleCallback']); // от FIS
-
 Route::match(['get', 'post'], '/payment/result', [CheckoutController::class, 'paymentResult']);
-
-
-Route::get('/checkout/test', [CheckoutController::class, 'test'])->name('checkout.test');
-
-Route::get('/checkout/button', function () {
-
-    return view('checkout.test');
-})->name('checkout.button');
 
 // -------------------- CheckoutController --------------------
 

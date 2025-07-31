@@ -58,7 +58,7 @@ class CheckoutController extends Controller
             'auth_time' => $request->input('auth_time'),
         ];
 
-        return view('payment.result', compact('data'));
+        return view('checkout.result', compact('data'));
     }
 
 
