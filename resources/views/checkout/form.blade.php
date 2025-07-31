@@ -125,9 +125,10 @@
 
   <div class="section">
     <h2>💳 Payment</h2>
-
 <form method="POST" action="https://secureacceptance.merchant-services.bankofamerica.com/silent/pay">
     @php
+        use Illuminate\Support\Str;
+
         $fields = [
             'access_key' => $access_key,
             'profile_id' => $profile_id,
@@ -143,8 +144,11 @@
             'bill_to_surname' => 'Oborin',
             'bill_to_email' => 'ilia@getwab.com',
             'bill_to_address_line1' => '4532 Parnell Dr',
-            'bill_to_city' => 'Sarasota',
-            'bill_to_country' => 'US',
+
+            // ✅ исправленные поля (они обязательны)
+            'bill_city' => 'Sarasota',
+            'bill_country' => 'US',
+
             'card_type' => '001',
             'unsigned_field_names' => 'card_number,card_expiry_date,card_cvn',
         ];
@@ -164,8 +168,8 @@
             'bill_to_surname',
             'bill_to_email',
             'bill_to_address_line1',
-            'bill_to_city',
-            'bill_to_country',
+            'bill_city',
+            'bill_country',
             'card_type',
             'signed_field_names',
             'unsigned_field_names',
@@ -178,24 +182,28 @@
         $signature = base64_encode(hash_hmac('sha256', $data_to_sign, $secret_key, true));
     @endphp
 
-    {{-- Поля, отправляемые на сервер --}}
+    {{-- Отправляемые поля (все покажем как input для отладки) --}}
     @foreach ($fields as $name => $value)
-        <input type="hidden" name="{{ $name }}" value="{{ $value }}">
+        <label>{{ $name }}:</label>
+        <input type="text" name="{{ $name }}" value="{{ $value }}"><br>
     @endforeach
-    <input type="hidden" name="signature" value="{{ $signature }}">
 
-    {{-- Видимые поля для ввода карты --}}
+    <label>signature:</label>
+    <input type="text" name="signature" value="{{ $signature }}"><br>
+
+    {{-- Поля ввода карты (unsigned) --}}
     <label>Card Number:</label>
-    <input type="text" name="card_number" value="{{ old('card_number', '4400665010828869') }}"><br>
+    <input type="text" name="card_number" value="{{ old('card_number', '4111111111111111') }}"><br>
 
     <label>Expiry (MM-YYYY):</label>
-    <input type="text" name="card_expiry_date" value="{{ old('card_expiry_date', '11-2027') }}"><br>
+    <input type="text" name="card_expiry_date" value="{{ old('card_expiry_date', '12-2030') }}"><br>
 
     <label>CVV:</label>
-    <input type="text" name="card_cvn" value="{{ old('card_cvn', '') }}"><br>
+    <input type="text" name="card_cvn" value="{{ old('card_cvn', '123') }}"><br>
 
     <button type="submit">Pay $1</button>
 </form>
+
 
 
 
