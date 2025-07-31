@@ -31,17 +31,17 @@ Route::match(['get', 'post'], '/payment/result', function (Request $request) {
     $decision = $request->get('decision');
 
     if ($decision === 'ACCEPT') {
-        return view('payment.result', [
+        return view('checkout.result', [
             'status' => 'success',
             'message' => '✅ Payment was successful!',
         ]);
     } elseif ($decision === 'REJECT') {
-        return view('payment.result', [
+        return view('checkout.result', [
             'status' => 'failed',
             'message' => '❌ Payment was declined. Please try another card.',
         ]);
     } else {
-        return view('payment.result', [
+        return view('checkout.result', [
             'status' => 'unknown',
             'message' => '⚠️ Unable to determine payment result.',
         ]);
