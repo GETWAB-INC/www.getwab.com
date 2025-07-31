@@ -20,7 +20,7 @@ Route::get('/checkout', [CheckoutController::class, 'showCheckout']);  // фор
 Route::post('/checkout/pay', [CheckoutController::class, 'processPayment']); // отправка формы
 Route::match(['get', 'post'], '/checkout/callback', [CheckoutController::class, 'handleCallback']); // от FIS
 
-Route::get('/payment/result', function (Request $request) {
+Route::match(['get', 'post'], '/payment/result', function (Request $request) {
     $decision = $request->get('decision');
 
     if ($decision === 'ACCEPT') {
