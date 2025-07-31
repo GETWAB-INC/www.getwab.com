@@ -135,21 +135,24 @@
             'transaction_uuid' => Str::uuid()->toString(),
             'signed_date_time' => gmdate("Y-m-d\TH:i:s\Z"),
             'locale' => 'en',
-            'transaction_type' => 'sale',
+            'transaction_type' => 'create_payment_token', // или 'sale' если не используешь токены
             'reference_number' => 'ORDER-' . time(),
             'amount' => '1.00',
             'currency' => 'USD',
             'payment_method' => 'card',
+
+            // Billing Info
             'bill_to_forename' => 'Ilia',
             'bill_to_surname' => 'Oborin',
             'bill_to_email' => 'ilia@getwab.com',
             'bill_to_address_line1' => '4532 Parnell Dr',
+            'bill_to_address_city' => 'Sarasota',
+            'bill_to_address_postal_code' => '34232',
+            'bill_to_address_state' => 'FL',
+            'bill_to_address_country' => 'US',
 
-            // ✅ исправленные поля (они обязательны)
-            'bill_city' => 'Sarasota',
-            'bill_country' => 'US',
-
-            'card_type' => '001',
+            // Card Info (unsigned)
+            'card_type' => '001', // Visa
             'unsigned_field_names' => 'card_number,card_expiry_date,card_cvn',
         ];
 
@@ -168,8 +171,10 @@
             'bill_to_surname',
             'bill_to_email',
             'bill_to_address_line1',
-            'bill_city',
-            'bill_country',
+            'bill_to_address_city',
+            'bill_to_address_postal_code',
+            'bill_to_address_state',
+            'bill_to_address_country',
             'card_type',
             'signed_field_names',
             'unsigned_field_names',
@@ -182,7 +187,7 @@
         $signature = base64_encode(hash_hmac('sha256', $data_to_sign, $secret_key, true));
     @endphp
 
-    {{-- Отправляемые поля (все покажем как input для отладки) --}}
+    {{-- Все отправляемые поля — видимые для отладки --}}
     @foreach ($fields as $name => $value)
         <label>{{ $name }}:</label>
         <input type="text" name="{{ $name }}" value="{{ $value }}"><br>
@@ -191,7 +196,7 @@
     <label>signature:</label>
     <input type="text" name="signature" value="{{ $signature }}"><br>
 
-    {{-- Поля ввода карты (unsigned) --}}
+    {{-- Поля карты --}}
     <label>Card Number:</label>
     <input type="text" name="card_number" value="{{ old('card_number', '4111111111111111') }}"><br>
 
