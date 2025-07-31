@@ -39,27 +39,27 @@ class CheckoutController extends Controller
 
     public function paymentResult(Request $request)
     {
+        Log::info("🔔 /payment/result — Method: " . $request->method());
+        Log::info('🔔 /payment/result — Payload:', $request->all());
+
         $data = [
-            'status' => $request->input('decision'), // ACCEPT, REJECT, etc.
-            'message' => $request->input('message'), // "Request was processed successfully."
-
-            'amount' => $request->input('auth_amount'), // 1.00
-            'currency' => $request->input('req_currency'), // USD
-            'card_type' => $request->input('card_type_name'), // Visa
-
-            'name' => $request->input('req_bill_to_forename') . ' ' . $request->input('req_bill_to_surname'),
-            'city' => $request->input('req_bill_to_address_city'),
-            'state' => $request->input('req_bill_to_address_state'),
-            'postal_code' => $request->input('req_bill_to_address_postal_code'),
-
-            'transaction_id' => $request->input('transaction_id'),
-            'order_number' => $request->input('req_reference_number'),
-            'auth_code' => $request->input('auth_code'),
-            'auth_time' => $request->input('auth_time'),
+            'status' => $request->get('decision'),
+            'amount' => $request->get('auth_amount'),
+            'currency' => $request->get('req_currency'),
+            'card_type' => $request->get('card_type_name'),
+            'name' => trim($request->get('req_bill_to_forename') . ' ' . $request->get('req_bill_to_surname')),
+            'city' => $request->get('req_bill_to_address_city'),
+            'state' => $request->get('req_bill_to_address_state'),
+            'zip' => $request->get('req_bill_to_address_postal_code'),
+            'transaction_id' => $request->get('transaction_id'),
+            'order_number' => $request->get('req_reference_number'),
+            'auth_code' => $request->get('auth_code'),
+            'auth_time' => $request->get('auth_time'),
         ];
 
         return view('checkout.result', compact('data'));
     }
+
 
 
 }
