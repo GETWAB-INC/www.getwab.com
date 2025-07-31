@@ -8,7 +8,7 @@ use App\Http\Controllers\ImapController;
 use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\CheckoutController;
-
+use Illuminate\Http\Request;
 
 
 
@@ -20,7 +20,26 @@ Route::get('/checkout', [CheckoutController::class, 'showCheckout']);  // фор
 Route::post('/checkout/pay', [CheckoutController::class, 'processPayment']); // отправка формы
 Route::match(['get', 'post'], '/checkout/callback', [CheckoutController::class, 'handleCallback']); // от FIS
 
-Route::post('/payment/result', [CheckoutController::class, 'handleResponse']);
+Route::get('/payment/result', function (Request $request) {
+    $decision = $request->get('decision');
+
+    if ($decision === 'ACCEPT') {
+        return view('payment.result', [
+            'status' => 'success',
+            'message' => '✅ Payment was successful!',
+        ]);
+    } elseif ($decision === 'REJECT') {
+        return view('payment.result', [
+            'status' => 'failed',
+            'message' => '❌ Payment was declined. Please try another card.',
+        ]);
+    } else {
+        return view('payment.result', [
+            'status' => 'unknown',
+            'message' => '⚠️ Unable to determine payment result.',
+        ]);
+    }
+});
 
 Route::get('/checkout/test', [CheckoutController::class, 'test'])->name('checkout.test');
 

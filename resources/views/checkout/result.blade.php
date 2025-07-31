@@ -1,2 +1,12 @@
-<h2>✅ Thank you for your payment!</h2>
-<p>You will receive a confirmation shortly.</p>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Result</title>
+</head>
+<body>
+    <h1>Payment Status: {{ strtoupper($status) }}</h1>
+    <p>{{ $message }}</p>
+    <a href="/">Return to Home</a>
+</body>
+</html>
