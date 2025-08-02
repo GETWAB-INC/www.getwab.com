@@ -67,7 +67,7 @@
   <a href="#" data-section="packages">📚 Report Packages</a>
   <a href="#" data-section="subscription">📦 Subscription</a>
   
-  <a href="#" data-section="payment">💳 Payment Methods</a>
+  <a href="#" data-section="payment">💳 Billing Information</a>
   <a href="#" data-section="profile">👤 Profile</a>
   <a href="#" data-section="logout">🚪 Logout</a>
 </aside>
@@ -111,8 +111,8 @@
 
 
 <div style="border: 1px solid #ccc; border-radius: 6px; padding: 20px; width: 200px; height: 200px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between;">
-      <h2>💳 Payment Methods</h2>
-      <p>Manage saved cards and view transaction history.</p>
+      <h2>💳 Billing Information</h2>
+      <p>Update your billing address and manage saved cards (without storing full card details).</p>
     </div>
 
 <div style="border: 1px solid #ccc; border-radius: 6px; padding: 20px; width: 200px; height: 200px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between;">
@@ -280,67 +280,49 @@
 
 
 <div id="payment" class="content-section">
-  <h1>💳 Payment Methods</h1>
-  <p>Manage your saved cards and view recent transactions.</p>
+  <h1>💳 Billing Information</h1>
+  <p>We store only billing address and secure payment tokens. No full card data is stored.</p>
 
-<!-- Saved Card -->
-<div style="margin-top: 20px; border: 1px solid #ccc; border-radius: 6px; padding: 20px; background-color: #f9f9f9; max-width: 600px;">
-  <h2 style="margin-top: 0;">Saved Card</h2>
+  <!-- Saved Cards -->
+  <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 20px; max-width: 600px;">
 
-  <div id="card-view">
-    <p><strong>Card:</strong> **** **** **** 1234</p>
-    <p><strong>Type:</strong> Visa</p>
-    <p><strong>Expires:</strong> 06/27</p>
-    <p><strong>CVV:</strong> ***</p>
-    <button onclick="editCard()" style="padding: 8px 14px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
-      Update Payment Method
-    </button>
+    <!-- Card 1 -->
+    <div style="border: 1px solid #ccc; border-radius: 6px; padding: 20px; background-color: #f9f9f9;">
+      <h3 style="margin: 0 0 10px 0;">💳 Visa •••• 1111</h3>
+      <p><strong>Expires:</strong> 12/30</p>
+      <button style="padding: 8px 14px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">
+        ❌ Delete Payment Method
+      </button>
+    </div>
+
+    <!-- Card 2 -->
+    <div style="border: 1px solid #ccc; border-radius: 6px; padding: 20px; background-color: #f9f9f9;">
+      <h3 style="margin: 0 0 10px 0;">💳 MasterCard •••• 2222</h3>
+      <p><strong>Expires:</strong> 08/26</p>
+      <button style="padding: 8px 14px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">
+        ❌ Delete Payment Method
+      </button>
+    </div>
+
+    <!-- Card 3 -->
+    <div style="border: 1px solid #ccc; border-radius: 6px; padding: 20px; background-color: #f9f9f9;">
+      <h3 style="margin: 0 0 10px 0;">💳 Amex •••• 3456</h3>
+      <p><strong>Expires:</strong> 03/28</p>
+      <button style="padding: 8px 14px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">
+        ❌ Delete Payment Method
+      </button>
+    </div>
   </div>
-
-  <div id="card-edit" style="display: none;">
-    <label>Card Number</label>
-    <input type="text" placeholder="1234 5678 9012 3456" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;" />
-
-    <label>Card Type</label>
-    <select style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px;">
-      <option value="Visa">Visa</option>
-      <option value="MasterCard">MasterCard</option>
-      <option value="Amex">American Express</option>
-      <option value="Discover">Discover</option>
-    </select>
-
-      <label>Expiry Date</label>
-  <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-    <select style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
-      <option value="01">01</option>
-      <option value="02">02</option>
-      <option value="03">03</option>
-    </select>
-    <select style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
-      <option value="25">25</option>
-      <option value="26">26</option>
-      <option value="27">27</option>
-    </select>
-  </div>
-
-    <label>CVV</label>
-    <input type="text" placeholder="e.g. 123" maxlength="4" style="width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 4px;" />
-
-    <button onclick="saveCard()" style="padding: 8px 14px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">
-      Save Changes
-    </button>
-  </div>
-</div>
-
 
   <!-- Recent Transactions -->
-  <div style="margin-top: 30px; max-width: 700px;">
+  <div style="margin-top: 40px; max-width: 800px;">
     <h2>Recent Transactions</h2>
     <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
       <thead>
         <tr style="background-color: #f0f0f0;">
           <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ccc;">Date</th>
           <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ccc;">Description</th>
+          <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ccc;">Card</th>
           <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ccc;">Amount</th>
           <th style="text-align: left; padding: 8px; border-bottom: 1px solid #ccc;">Status</th>
         </tr>
@@ -349,25 +331,36 @@
         <tr>
           <td style="padding: 8px;">July 23, 2025</td>
           <td style="padding: 8px;">FPDS Query Monthly Subscription</td>
+          <td style="padding: 8px;">Visa •••• 1111</td>
           <td style="padding: 8px;">$199.00</td>
           <td style="padding: 8px;">✅ Paid</td>
         </tr>
         <tr>
           <td style="padding: 8px;">July 18, 2025</td>
           <td style="padding: 8px;">One-time Report: SFPR-DEPT-EL-3</td>
+          <td style="padding: 8px;">MasterCard •••• 2222</td>
           <td style="padding: 8px;">$149.00</td>
           <td style="padding: 8px;">✅ Paid</td>
         </tr>
         <tr>
           <td style="padding: 8px;">July 10, 2025</td>
           <td style="padding: 8px;">FPDS Reports Trial Activation</td>
+          <td style="padding: 8px;">Amex •••• 3456</td>
           <td style="padding: 8px;">$0.00</td>
           <td style="padding: 8px;">🟡 Trial</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px;">August 1, 2025</td>
+          <td style="padding: 8px;">Attempted Payment: FPDS Query Renewal</td>
+          <td style="padding: 8px;">Visa •••• 1111</td>
+          <td style="padding: 8px;">$199.00</td>
+          <td style="padding: 8px; color: red;">❌ Declined</td>
         </tr>
       </tbody>
     </table>
   </div>
 </div>
+
 
 
 <div id="profile" class="content-section">
@@ -525,21 +518,7 @@
     window.location.href = "/logout"; // или другая логика
   }
 </script>
-<script>
-  function editCard() {
-    document.getElementById("card-view").style.display = "none";
-    document.getElementById("card-edit").style.display = "block";
-  }
 
-  function saveCard() {
-    // Здесь может быть реальный запрос сохранения
-    alert("Card information saved (demo).");
-
-    // Вернуть отображение назад
-    document.getElementById("card-view").style.display = "block";
-    document.getElementById("card-edit").style.display = "none";
-  }
-</script>
 <script>
   function updateElemPrice() {
     const select = document.getElementById("elementary-select");
