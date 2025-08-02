@@ -159,30 +159,29 @@
         Use it to understand regional procurement trends and inform strategic analysis.
       </p>
 
-      <form method="post" action="/order">
-        @csrf
-        <input type="hidden" name="report_id" value="SFPR-GEO-EL-1">
+<form id="redirect-form">
+  <label>Start Year:
+    <select id="start_year">
+      <option value="">-- Select Year --</option>
+      @for ($y = 2010; $y <= 2025; $y++)
+        <option value="{{ $y }}">{{ $y }}</option>
+      @endfor
+    </select>
+  </label>
 
-        <label>Start Year:
-          <select name="start_year" required>
-            <option value="">-- Select Year --</option>
-            @for ($y = 2010; $y <= 2025; $y++)
-              <option value="{{ $y }}">{{ $y }}</option>
-            @endfor
-          </select>
-        </label>
+  <label>End Year:
+    <select id="end_year">
+      <option value="">-- Select Year --</option>
+      @for ($y = 2010; $y <= 2025; $y++)
+        <option value="{{ $y }}">{{ $y }}</option>
+      @endfor
+    </select>
+  </label>
 
-        <label>End Year:
-          <select name="end_year" required>
-            <option value="">-- Select Year --</option>
-            @for ($y = 2010; $y <= 2025; $y++)
-              <option value="{{ $y }}">{{ $y }}</option>
-            @endfor
-          </select>
-        </label>
-
-        <button type="submit" class="buy-button">📄 Generate Report</button>
-      </form>
+  <button type="button" class="buy-button" onclick="redirectToCheckout()">
+    📄 Generate Report
+  </button>
+</form>
     </div>
   </div>
 
@@ -203,3 +202,18 @@
 
 </body>
 </html>
+<script>
+  function redirectToCheckout() {
+    const start = document.getElementById('start_year').value;
+    const end = document.getElementById('end_year').value;
+    const reportId = 'SFPR-GEO-EL-1';
+
+    const params = new URLSearchParams({
+      report_id: reportId,
+      start_year: start,
+      end_year: end
+    });
+
+    window.location.href = `/checkout?${params.toString()}`;
+  }
+</script>
