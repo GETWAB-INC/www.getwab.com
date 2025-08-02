@@ -455,20 +455,15 @@
   const sections = document.querySelectorAll(".content-section");
   const accountOverview = document.getElementById("account-overview");
 
-  // Универсальный метод активации секции
   function activateSection(sectionId) {
-    // Скрыть все секции
     sections.forEach(s => s.classList.remove("active"));
 
-    // Убрать активность со всех ссылок и заголовка
     document.querySelectorAll("aside a").forEach(a => a.classList.remove("active"));
     accountOverview.classList.remove("active");
 
-    // Показать нужную секцию
     const section = document.getElementById(sectionId);
     if (section) section.classList.add("active");
 
-    // Подсветить ссылку или заголовок
     const activeLink = document.querySelector(`aside a[data-section="${sectionId}"]`);
     if (activeLink) {
       activeLink.classList.add("active");
@@ -477,7 +472,6 @@
     }
   }
 
-  // При клике по пунктам меню
   links.forEach(link => {
     link.addEventListener("click", e => {
       e.preventDefault();
@@ -485,17 +479,14 @@
     });
   });
 
-  // При клике по заголовку "My Account"
   accountOverview.addEventListener("click", () => {
     activateSection("overview");
   });
 
-  // Кнопки "Go to..." в обзоре
   function navigateTo(sectionId) {
     activateSection(sectionId);
   }
 
-  // ✅ Установить overview как активную секцию по умолчанию при загрузке
   document.addEventListener("DOMContentLoaded", () => {
     activateSection("overview");
   });
@@ -503,7 +494,6 @@
 
 
 <script>
-  // перехват клика по пункту меню "Logout"
   document.querySelector("a[data-section='logout']").addEventListener("click", function(e) {
     e.preventDefault();
     document.getElementById("logout-modal").style.display = "flex";
@@ -514,8 +504,7 @@
   }
 
   function confirmLogout() {
-    // здесь можно вызвать настоящий logout
-    window.location.href = "/logout"; // или другая логика
+    window.location.href = "/logout";
   }
 </script>
 
