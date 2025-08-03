@@ -55,7 +55,7 @@
 
   <p>
     For full access to our analytics tools, visit 
-    <a href="https://getwab.com/products/fpds-query">FPDS Query</a> and explore interactive dashboards.
+    <a href="https://dev.getwab.com/products/fpds-query">FPDS Query</a> and explore interactive dashboards.
   </p>
 
   <p>
