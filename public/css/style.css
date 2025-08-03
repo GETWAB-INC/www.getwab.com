@@ -806,7 +806,6 @@
     width: 100%;
   }
   
-  /* Медиа-запросы для адаптации без изменения структуры */
   @media (max-width: 1800px) {
     .about-text-wrapper {
       gap: 200px;
@@ -1106,7 +1105,6 @@
     );
   }
   
-  /* Дорожка для анимации */
   .services-scroll-track {
     display: flex;
     width: max-content;
@@ -1114,7 +1112,6 @@
     will-change: transform;
   }
   
-  /* Анимация прокрутки */
   @keyframes scroll {
     0% {
       transform: translateX(0);
@@ -1614,7 +1611,6 @@
     opacity: 1;
   }
   
-  /* Медиа-запросы для адаптации без изменения структуры */
   @media (max-width: 1800px) {
     .contract-data-text-wrapper {
       gap: 200px;
