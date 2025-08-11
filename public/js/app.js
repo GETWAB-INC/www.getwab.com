@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     },
     {
-      iconPath: "/img/ico/icon.png",
+      iconPath: "/img/ico/Icon.png",
       text: "No-code dashboards",
       position: {
         angle: 430,

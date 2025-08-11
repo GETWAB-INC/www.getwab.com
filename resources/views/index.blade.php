@@ -307,7 +307,7 @@
                   </div>
                   <div class="sector-info" data-index="3">
                     <img
-                      src="{{ asset('/img/ico/icon.png') }}"
+                      src="{{ asset('/img/ico/Icon.png') }}"
                       alt="No-code dashboards"
                       class="sector-icon"
                     />
