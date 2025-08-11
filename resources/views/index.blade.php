@@ -281,7 +281,7 @@
                 <div class="sectors-info">
                   <div class="sector-info" data-index="0">
                     <img
-                      src="{{ asset('/img/ico/icon-2.png') }}"
+                      src="{{ asset('/img/ico/Icon-2.png') }}"
                       alt="Real-time FPDS data sync"
                       class="sector-icon"
                     />
@@ -289,7 +289,7 @@
                   </div>
                   <div class="sector-info" data-index="1">
                     <img
-                      src="{{ asset('/img/ico/icon-3.png') }}"
+                      src="{{ asset('/img/ico/Icon-3.png') }}"
                       alt="Secure & scalable architecture"
                       class="sector-icon"
                     />
@@ -299,7 +299,7 @@
                   </div>
                   <div class="sector-info" data-index="2">
                     <img
-                      src="{{ asset('/img/ico/icon-4.png') }}"
+                      src="{{ asset('/img/ico/Icon-4.png') }}"
                       alt="Real-time FPDS data sync"
                       class="sector-icon"
                     />
@@ -315,7 +315,7 @@
                   </div>
                   <div class="sector-info" data-index="4">
                     <img
-                      src="{{ asset('/img/ico/icon-1.png') }}"
+                      src="{{ asset('/img/ico/Icon-1.png') }}"
                       alt="High-speed backend"
                       class="sector-icon"
                     />

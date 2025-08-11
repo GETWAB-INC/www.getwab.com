@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const iconsConfig = [
     {
-      iconPath: "/img/ico/icon-2.png",
+      iconPath: "/img/ico/Icon-2.png",
       text: "Real-time FPDS data sync",
       position: {
         angle: 220,
@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     },
     {
-      iconPath: "/img/ico/icon-3.png",
+      iconPath: "/img/ico/Icon-3.png",
       text: "Secure & scalable architecture",
       position: {
         angle: 295,
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     },
     {
-      iconPath: "/img/ico/icon-4.png",
+      iconPath: "/img/ico/Icon-4.png",
       text: "Real-time FPDS data sync",
       position: {
         angle: 360,
@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     },
     {
-      iconPath: "/img/ico/icon-1.png",
+      iconPath: "/img/ico/Icon-1.png",
       text: "High-speed backend",
       position: {
         angle: 495,
