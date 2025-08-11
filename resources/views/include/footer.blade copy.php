@@ -1,8 +1,8 @@
-    <footer class="footer">
+<footer class="footer">
       <div class="footer-content">
         <div class="footer-columns">
           <div class="footer-column-logo">
-            <img src="img/footer/Footerlogo.png" alt="" />
+            <img src="{{ asset('img/footer/Footerlogo.png') }}" alt="" />
           </div>
           <div class="footer-column">
             <h3 class="footer-column-title">Analytics</h3>
