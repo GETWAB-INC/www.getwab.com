@@ -8,31 +8,25 @@
             </div>
             <div class="menu-item-wrapper">
               <div class="menu-item">
-                <span class="menu-text">Analytics</span>
+                <span class="menu-text">Products</span>
                 <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
               </div>
               <div class="dropdown-menu">
-                <a href="#" class="dropdown-item">Data Analysis Services</a>
-                <a href="#" class="dropdown-item">Automation Solutions</a>
-                <a href="#" class="dropdown-item"
-                  >Custom Software Development</a
-                >
-                <a href="#" class="dropdown-item">Order a Report</a>
+                <a href="#" class="dropdown-item">FPDS Query</a>
+                <a href="#" class="dropdown-item">FPDS Reports</a>
               </div>
             </div>
 
             <div class="menu-item-wrapper">
               <div class="menu-item">
-                <span class="menu-text">Dashboards</span>
+                <span class="menu-text">Services</span>
                 <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
               </div>
               <div class="dropdown-menu">
-                <a href="#" class="dropdown-item">FPDS Dashboards</a>
-                <a href="#" class="dropdown-item"
-                  >Government Market Analytics</a
-                >
-                <a href="#" class="dropdown-item">Custom Reports</a>
-                <a href="#" class="dropdown-item">Build Your Dashboard</a>
+                <a href="#" class="dropdown-item">Consulting & Advisory</a>
+                <a href="#" class="dropdown-item">Gov Contracting</a>
+                <a href="#" class="dropdown-item">Custom Analytics</a>
+                <a href="#" class="dropdown-item">Data Automation</a>
               </div>
             </div>
           </nav>
@@ -42,24 +36,6 @@
               <img src="img/header/Logo.png" alt="Company Logo" />
             </a>
           </div>
-
-          <nav class="header-right-menu">
-            <div class="menu-item-wrapper">
-              <div class="menu-item">
-                <span class="menu-text">Consulting</span>
-                <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
-              </div>
-              <div class="dropdown-menu">
-                <a href="#" class="dropdown-item">Request a Consultation</a>
-                <a href="#" class="dropdown-item">Data Strategy Consulting</a>
-                <a href="#" class="dropdown-item"
-                  >Government Contracting Advisory</a
-                >
-                <a href="#" class="dropdown-item"
-                  >Custom Solutions Consulting</a
-                >
-              </div>
-            </div>
 
             <div class="menu-item-wrapper">
               <div class="menu-item">
@@ -88,7 +64,7 @@
         </div>
         <div class="mobile-menu-container">
           <div class="mobile-menu-item">
-            <span>Analytics</span>
+            <span>Products</span>
             <img
               class="mobile-menu-arrow"
               src="{{ asset('img/ico/arrow.svg') }}"
@@ -96,16 +72,12 @@
             />
           </div>
           <div class="mobile-submenu">
-            <a href="#" class="mobile-submenu-item">Data Analysis Services</a>
-            <a href="#" class="mobile-submenu-item">Automation Solutions</a>
-            <a href="#" class="mobile-submenu-item"
-              >Custom Software Development</a
-            >
-            <a href="#" class="mobile-submenu-item">Order a Report</a>
+            <a href="#" class="mobile-submenu-item">FPDS Query</a>
+            <a href="#" class="mobile-submenu-item">FPDS Reports</a>
           </div>
 
           <div class="mobile-menu-item">
-            <span>Dashboards</span>
+            <span>Services</span>
             <img
               class="mobile-menu-arrow"
               src="{{ asset('img/ico/arrow.svg') }}"
@@ -113,31 +85,10 @@
             />
           </div>
           <div class="mobile-submenu">
-            <a href="#" class="mobile-submenu-item">FPDS Dashboards</a>
-            <a href="#" class="mobile-submenu-item"
-              >Government Market Analytics</a
-            >
-            <a href="#" class="mobile-submenu-item">Custom Reports</a>
-            <a href="#" class="mobile-submenu-item">Build Your Dashboard</a>
-          </div>
-
-          <div class="mobile-menu-item">
-            <span>Consulting</span>
-            <img
-              class="mobile-menu-arrow"
-              src="{{ asset('img/ico/arrow.svg') }}"
-              alt="arrow"
-            />
-          </div>
-          <div class="mobile-submenu">
-            <a href="#" class="mobile-submenu-item">Request a Consultation</a>
-            <a href="#" class="mobile-submenu-item">Data Strategy Consulting</a>
-            <a href="#" class="mobile-submenu-item"
-              >Government Contracting Advisory</a
-            >
-            <a href="#" class="mobile-submenu-item"
-              >Custom Solutions Consulting</a
-            >
+            <a href="#" class="mobile-submenu-item">Consulting & Advisory</a>
+            <a href="#" class="mobile-submenu-item">Gov Contracting</a>
+            <a href="#" class="mobile-submenu-item">Custom Analytics</a>
+            <a href="#" class="mobile-submenu-item">Data Automation</a>
           </div>
 
           <div class="mobile-menu-item">
@@ -177,27 +128,25 @@
         <nav class="header-left-menu">
           <div class="menu-item-wrapper">
             <div class="menu-item-fixed">
-              <span class="menu-text">Analytics</span>
+              <span class="menu-text">Products</span>
               <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
             </div>
             <div class="dropdown-menu">
-              <a href="#" class="dropdown-item">Data Analysis Services</a>
-              <a href="#" class="dropdown-item">Automation Solutions</a>
-              <a href="#" class="dropdown-item">Custom Software Development</a>
-              <a href="#" class="dropdown-item">Order a Report</a>
+              <a href="#" class="dropdown-item">FPDS Query</a>
+              <a href="#" class="dropdown-item">FPDS Reports</a>
             </div>
           </div>
 
           <div class="menu-item-wrapper">
             <div class="menu-item-fixed">
-              <span class="menu-text">Dashboards</span>
+              <span class="menu-text">Services</span>
               <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
             </div>
             <div class="dropdown-menu">
-              <a href="#" class="dropdown-item">FPDS Dashboards</a>
-              <a href="#" class="dropdown-item">Government Market Analytics</a>
-              <a href="#" class="dropdown-item">Custom Reports</a>
-              <a href="#" class="dropdown-item">Build Your Dashboard</a>
+              <a href="#" class="dropdown-item">Consulting & Advisory</a>
+              <a href="#" class="dropdown-item">Gov Contracting</a>
+              <a href="#" class="dropdown-item">Custom Analytics</a>
+              <a href="#" class="dropdown-item">Data Automation</a>
             </div>
           </div>
         </nav>
@@ -207,22 +156,6 @@
             <img src="img/header/Logofix.png" alt="Getwab Logo" />
           </a>
         </div>
-
-        <nav class="header-right-menu">
-          <div class="menu-item-wrapper">
-            <div class="menu-item-fixed">
-              <span class="menu-text">Consulting</span>
-              <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
-            </div>
-            <div class="dropdown-menu">
-              <a href="#" class="dropdown-item">Request a Consultation</a>
-              <a href="#" class="dropdown-item">Data Strategy Consulting</a>
-              <a href="#" class="dropdown-item"
-                >Government Contracting Advisory</a
-              >
-              <a href="#" class="dropdown-item">Custom Solutions Consulting</a>
-            </div>
-          </div>
 
           <div class="menu-item-wrapper">
             <div class="menu-item-fixed">
