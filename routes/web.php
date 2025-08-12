@@ -40,11 +40,11 @@ Route::get('/reports/SFPR-GEO-EL-1', function () {
 // Продукты: базовые страницы
 Route::get('/products/fpds-query', function () {
     return view('products.fpds-query');
-});
+})->name('products.fpds-query');
 
 Route::get('/products/fpds-reports', function () {
     return view('products.fpds-reports');
-});
+})->name('products.fpds-reports');
 
 Route::get('/products/fpds-charts', function () {
     return view('products.fpds-charts');

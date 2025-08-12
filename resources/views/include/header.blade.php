@@ -12,8 +12,8 @@
                 <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
               </div>
               <div class="dropdown-menu">
-                <a href="#" class="dropdown-item">FPDS Query</a>
-                <a href="#" class="dropdown-item">FPDS Reports</a>
+                <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>
+                <a href="{{ route('products.fpds-reports')}}" class="dropdown-item">FPDS Reports</a>
               </div>
             </div>
 
@@ -72,8 +72,8 @@
             />
           </div>
           <div class="mobile-submenu">
-            <a href="#" class="mobile-submenu-item">FPDS Query</a>
-            <a href="#" class="mobile-submenu-item">FPDS Reports</a>
+            <a href="{{ route('products.fpds-query')}}" class="mobile-submenu-item">FPDS Query</a>
+            <a href="{{ route('products.fpds-reports')}}" class="mobile-submenu-item">FPDS Reports</a>
           </div>
 
           <div class="mobile-menu-item">
@@ -132,8 +132,8 @@
               <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
             </div>
             <div class="dropdown-menu">
-              <a href="#" class="dropdown-item">FPDS Query</a>
-              <a href="#" class="dropdown-item">FPDS Reports</a>
+              <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>
+              <a href="{{ route('products.fpds-reports')}}" class="dropdown-item">FPDS Reports</a>
             </div>
           </div>
 
