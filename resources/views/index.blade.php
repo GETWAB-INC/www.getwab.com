@@ -11,6 +11,21 @@
   </head>
 
   <body>
+
+
+
+@include('include.header')
+
+
+
+
+
+
+    <main>
+
+
+
+
     <div class="background-video-container">
       <!-- Video Background -->
       <video autoplay muted loop playsinline class="background-video">
@@ -19,10 +34,20 @@
 
       <div class="video-overlay"></div>
 
-@include('include.header')
+            <section class="hero-section">
+        <div class="hero-content">
+          <div class="hero-text-container">
+            <h1 class="hero-title">
+              Smart Data Solutions for Government and Business
+            </h1>
+            <p class="hero-subtitle">Analytics. Automation. Cybersecurity.</p>
+          </div>
+          <a href="#" class="hero-button">Explore the Platform</a>
+        </div>
+      </section>
+    </div>
 
 
-    <main>
       <section class="about-section">
         <div class="about-container">
           <div class="about-content">
@@ -206,7 +231,7 @@
                   </div>
                 </div>
 
-                
+
               </div>
             </div>
             <a href="#" class="services-button-mobile">Request Consultation</a>

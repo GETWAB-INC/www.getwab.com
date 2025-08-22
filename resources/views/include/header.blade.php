@@ -9,7 +9,7 @@
             <div class="menu-item-wrapper">
               <div class="menu-item">
                 <span class="menu-text">Products</span>
-                <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
+                <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
               </div>
               <div class="dropdown-menu">
                 <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>
@@ -20,7 +20,7 @@
             <div class="menu-item-wrapper">
               <div class="menu-item">
                 <span class="menu-text">Services</span>
-                <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
+                <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
               </div>
               <div class="dropdown-menu">
                 <a href="#" class="dropdown-item">Consulting & Advisory</a>
@@ -33,14 +33,14 @@
 
           <div class="header-logo-container">
             <a href="/" class="header-logo">
-              <img src="img/header/Logo.png" alt="Company Logo" />
+              <img src="/img/header/Logo.png" alt="Company Logo" />
             </a>
           </div>
 
             <div class="menu-item-wrapper">
               <div class="menu-item">
                 <span class="menu-text">About</span>
-                <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
+                <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
               </div>
               <div class="dropdown-menu">
                 <a href="#" class="dropdown-item">Company</a>
@@ -67,7 +67,7 @@
             <span>Products</span>
             <img
               class="mobile-menu-arrow"
-              src="{{ asset('img/ico/arrow.svg') }}"
+              src="{{ asset('/img/ico/arrow.svg') }}"
               alt="arrow"
             />
           </div>
@@ -80,7 +80,7 @@
             <span>Services</span>
             <img
               class="mobile-menu-arrow"
-              src="{{ asset('img/ico/arrow.svg') }}"
+              src="{{ asset('/img/ico/arrow.svg') }}"
               alt="arrow"
             />
           </div>
@@ -95,7 +95,7 @@
             <span>About</span>
             <img
               class="mobile-menu-arrow"
-              src="{{ asset('img/ico/arrow.svg') }}"
+              src="{{ asset('/img/ico/arrow.svg') }}"
               alt="arrow"
             />
           </div>
@@ -110,18 +110,7 @@
         </div>
       </div>
 
-      <section class="hero-section">
-        <div class="hero-content">
-          <div class="hero-text-container">
-            <h1 class="hero-title">
-              Smart Data Solutions for Government and Business
-            </h1>
-            <p class="hero-subtitle">Analytics. Automation. Cybersecurity.</p>
-          </div>
-          <a href="#" class="hero-button">Explore the Platform</a>
-        </div>
-      </section>
-    </div>
+
 
     <header class="fixed-header">
       <div class="header-container">
@@ -129,7 +118,7 @@
           <div class="menu-item-wrapper">
             <div class="menu-item-fixed">
               <span class="menu-text">Products</span>
-              <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
+              <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
             </div>
             <div class="dropdown-menu">
               <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>
@@ -140,7 +129,7 @@
           <div class="menu-item-wrapper">
             <div class="menu-item-fixed">
               <span class="menu-text">Services</span>
-              <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
+              <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
             </div>
             <div class="dropdown-menu">
               <a href="#" class="dropdown-item">Consulting & Advisory</a>
@@ -153,14 +142,14 @@
 
         <div class="header-logo-container">
           <a href="/" class="header-logo">
-            <img src="img/header/Logofix.png" alt="Getwab Logo" />
+            <img src="/img/header/Logofix.png" alt="Getwab Logo" />
           </a>
         </div>
 
           <div class="menu-item-wrapper">
             <div class="menu-item-fixed">
               <span class="menu-text">About</span>
-              <img class="menu-arrow" src="{{ asset('img/ico/arrow.svg') }}" alt="arrow" />
+              <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
             </div>
             <div class="dropdown-menu">
               <a href="#" class="dropdown-item">Company</a>
