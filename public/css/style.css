@@ -3478,7 +3478,7 @@ body {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 60px;
+    gap: 120px;
     flex: 2;
 }
 
