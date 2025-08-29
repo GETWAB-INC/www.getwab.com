@@ -27,7 +27,7 @@
                     <h3>Unlock the full power of FPDS Query</h3>
                     <p>
                         <img class="hero__quotes-1" src="{{ asset('img/ico/quotes-1.svg') }}" alt="">
-                        Why FPDS Query is better <br>than FPDS Atom Feed
+                        Why FPDS Query is better than FPDS Atom Feed
                         <img class="hero__quotes-2" src="{{ asset('img/ico/quotes-2.svg') }}" alt="">
                     </p>
                 </div>

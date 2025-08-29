@@ -3232,6 +3232,7 @@ body {
 }
 
 .hero__features-block p {
+    width: 300px;
     color: white;
     font-size: 24px;
     font-weight: 400;
@@ -3239,12 +3240,11 @@ body {
     word-wrap: break-word;
     margin: 0;
     position: relative;
-    padding: 0 30px;
 }
 
 .hero__quotes-1 {
     position: absolute;
-    left: 0;
+    left: -20px;
     top: -15px;
     width: 20px;
     height: 20px;
@@ -3265,7 +3265,7 @@ body {
 @media (max-width: 1200px) {
     .hero__container {
         width: 100%;
-        padding: 30px 15px;
+        padding: 30px 0px;
         gap: 48px;
         flex-direction: column;
     }
@@ -3281,34 +3281,43 @@ body {
     }
 
     .hero__features-block p {
+        width: 230px;
         font-size: 16px;
         line-height: 20px;
     }
 }
 
 @media (max-width: 768px) {
+    .hero {
+        margin-bottom: 0px;
+    }
+
+    .hero__quotes-2,
+    .hero__quotes-1 {
+        width: 10px;
+        height: 10px;
+    }
+
+    .hero__quotes-1 {
+        top: -10px;
+        left: -10px;
+    }
+
+    .hero__quotes-2 {
+        top: 40px;
+        right: 100px;
+    }
+
     .fpds-query-main {
         margin-left: 20px;
         margin-right: 20px;
-    }
-    .hero__quotes-2 {
-        right: 60px;
     }
 }
 
 @media (max-width: 390px) {
     .hero__quotes-2 {
-        right: 60px;
-    }
-}
-
-@media (max-width: 330px) {
-    .hero__quotes-2 {
-        right: 50px;
-    }
-
-    .fpds-query-main {
-        margin: 0px;
+        top: 40px;
+        right: 100px;
     }
 }
 
@@ -3490,7 +3499,8 @@ body {
     padding: 40px;
     background: #333333;
     border-radius: 7px;
-    outline: 1px #b5d9a7 solid;
+    border: 1px solid;
+    border-image: linear-gradient(105deg, #b5d9a7, #00aa89) 1;
     outline-offset: -1px;
     display: flex;
     flex-direction: column;
