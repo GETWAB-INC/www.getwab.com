@@ -53,20 +53,39 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-window.addEventListener("scroll", function () {
-  const fixedHeader = document.querySelector(".fixed-header");
-  const scrollPosition = window.scrollY;
 
-  if (scrollPosition > 800) {
-    fixedHeader.classList.add("active");
+document.addEventListener('DOMContentLoaded', function() {
+  // Проверяем, что мы на главной странице
+  const isHomePage = window.location.pathname === '/' ||
+                     window.location.pathname === '/index.blade.php';
+
+  if (isHomePage) {
+    const fixedHeader = document.querySelector(".fixed-header");
+
+    if (fixedHeader) {
+      window.addEventListener("scroll", function () {
+        const scrollPosition = window.scrollY;
+
+        if (scrollPosition > 800) {
+          fixedHeader.classList.add("active");
+        } else {
+          fixedHeader.classList.remove("active");
+        }
+      });
+    }
   } else {
-    fixedHeader.classList.remove("active");
+    // На других страницах скрываем fixed-header полностью
+    const fixedHeader = document.querySelector(".fixed-header");
+    if (fixedHeader) {
+      fixedHeader.style.display = "none";
+    }
+  }
+
+  function isMobileDevice() {
+    return window.innerWidth <= 768;
   }
 });
 
-function isMobileDevice() {
-  return window.innerWidth <= 768;
-}
 
 document.addEventListener("DOMContentLoaded", function () {
   const section = document.getElementById("why-choose-getwab");
