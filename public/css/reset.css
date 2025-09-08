@@ -144,7 +144,6 @@ a {
 }
 
 /* Make images and embedded objects responsive */
-img,
 embed,
 object,
 video {
@@ -233,7 +232,7 @@ body {
   html:focus-within {
     scroll-behavior: auto;
   }
-  
+
   *,
   *::before,
   *::after {

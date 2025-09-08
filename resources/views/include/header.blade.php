@@ -114,54 +114,39 @@
 
     <header class="fixed-header">
   <div class="header-container">
-    <!-- Левое меню: Analytics и Dashboards -->
     <nav class="header-left-menu">
       <div class="menu-item-wrapper-fixed">
         <div class="menu-item-fixed">
-          <span class="menu-text">Analytics</span>
+          <span class="menu-text">Products</span>
           <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
         </div>
         <div class="dropdown-menu">
-          <a href="#" class="dropdown-item">Analytics Subitem 1</a>
-          <a href="#" class="dropdown-item">Analytics Subitem 2</a>
-          <a href="#" class="dropdown-item">Analytics Subitem 3</a>
+          <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>
+          <a href="{{ route('products.fpds-reports')}}" class="dropdown-item">FPDS Reports</a>
         </div>
       </div>
 
       <div class="menu-item-wrapper-fixed">
         <div class="menu-item-fixed">
-          <span class="menu-text">Dashboards</span>
+          <span class="menu-text">Services</span>
           <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
         </div>
         <div class="dropdown-menu">
-          <a href="#" class="dropdown-item">Dashboards Subitem 1</a>
-          <a href="#" class="dropdown-item">Dashboards Subitem 2</a>
-          <a href="#" class="dropdown-item">Dashboards Subitem 3</a>
+          <a href="#" class="dropdown-item">Consulting & Advisory</a>
+          <a href="#" class="dropdown-item">Gov Contracting</a>
+          <a href="#" class="dropdown-item">Custom Analytics</a>
+          <a href="#" class="dropdown-item">Data Automation</a>
         </div>
       </div>
     </nav>
 
-    <!-- Центр: Логотип -->
     <div class="header-logo-container">
       <a href="/" class="header-logo">
         <img src="/img/header/Logofix.png" alt="Getwab Logo" />
       </a>
     </div>
 
-    <!-- Правое меню: Consulting, About и Log In -->
     <nav class="header-right-menu">
-      <div class="menu-item-wrapper-fixed">
-        <div class="menu-item-fixed">
-          <span class="menu-text">Consulting</span>
-          <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
-        </div>
-        <div class="dropdown-menu">
-          <a href="#" class="dropdown-item">Consulting Subitem 1</a>
-          <a href="#" class="dropdown-item">Consulting Subitem 2</a>
-          <a href="#" class="dropdown-item">Consulting Subitem 3</a>
-        </div>
-      </div>
-
       <div class="menu-item-wrapper-fixed">
         <div class="menu-item-fixed">
           <span class="menu-text">About</span>
