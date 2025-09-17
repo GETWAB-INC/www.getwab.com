@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 
-<body>
+<body  class="is-home-page">
 
 
 
@@ -277,76 +277,91 @@
             </div>
         </section>
 
-        <section class="choose-getwab-section" id="why-choose-getwab">
-            <div class="choose-getwab-container">
-                <div class="choose-getwab-background">
-                    <img src="{{ asset('img/main/SectionImage2.png') }}" alt="Background image" width="1920" height="1000" />
-                    <div class="choose-getwab-overlay"></div>
-                </div>
-                <h2 class="choose-getwab-heading">Why Choose GETWAB?</h2>
-                <div class="choose-getwab-content-wrapper">
-                    <!-- Container for desktop animation -->
-                    <div class="desktop-animation">
-                        <div class="choose-getwab-main-content">
-                            <div class="chart-container">
-                                <svg
-                                    class="chart"
-                                    viewBox="0 0 100 100"
-                                    xmlns="http://www.w3.org/2000/svg"></svg>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Mobile animation container -->
-                    <div class="mobile-animation">
-                        <div class="wheel-container" id="wheelContainer">
-                            <canvas id="wheel" width="450" height="450"></canvas>
 
-                            <!-- Containers for sector information -->
-                            <div class="sectors-info">
-                                <div class="sector-info" data-index="0">
-                                    <img
-                                        src="{{ asset('/img/ico/Icon-2.png') }}"
-                                        alt="Real-time FPDS data sync"
-                                        class="sector-icon" />
-                                    <div class="sector-text">Real-time FPDS data sync</div>
-                                </div>
-                                <div class="sector-info" data-index="1">
-                                    <img
-                                        src="{{ asset('/img/ico/Icon-3.png') }}"
-                                        alt="Secure & scalable architecture"
-                                        class="sector-icon" />
-                                    <div class="sector-text">
-                                        Secure & scalable architecture
-                                    </div>
-                                </div>
-                                <div class="sector-info" data-index="2">
-                                    <img
-                                        src="{{ asset('/img/ico/Icon-4.png') }}"
-                                        alt="Real-time FPDS data sync"
-                                        class="sector-icon" />
-                                    <div class="sector-text">Real-time FPDS data sync</div>
-                                </div>
-                                <div class="sector-info" data-index="3">
-                                    <img
-                                        src="{{ asset('/img/ico/Icon.png') }}"
-                                        alt="No-code dashboards"
-                                        class="sector-icon" />
-                                    <div class="sector-text">No-code dashboards</div>
-                                </div>
-                                <div class="sector-info" data-index="4">
-                                    <img
-                                        src="{{ asset('/img/ico/Icon-1.png') }}"
-                                        alt="High-speed backend"
-                                        class="sector-icon" />
-                                    <div class="sector-text">High-speed backend</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
+  <section class="choose-getwab-section" id="why-choose-getwab">
+        <div class="choose-getwab-container">
+          <div class="choose-getwab-background">
+            <img
+              src="img/main/SectionImage2.png"
+              alt="Background image"
+              width="1920"
+              height="1000"
+            />
+            <div class="choose-getwab-overlay"></div>
+          </div>
+          <h2 class="choose-getwab-heading">Why Choose GETWAB?</h2>
+          <div class="choose-getwab-content-wrapper">
+            <!-- Контейнер для десктопной анимации -->
+            <div class="desktop-animation">
+              <div class="choose-getwab-main-content">
+                <div class="chart-container">
+                  <svg
+                    class="chart"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  ></svg>
                 </div>
+              </div>
             </div>
-        </section>
+
+            <!-- Контейнер для мобильной анимации -->
+            <div class="mobile-animation">
+              <div class="wheel-container" id="wheelContainer">
+                <canvas id="wheel" width="450" height="450"></canvas>
+
+                <!-- Контейнеры для информации о секторах -->
+                <div class="sectors-info">
+                  <div class="sector-info" data-index="0">
+                    <img
+                      src="/img/ico/icon-2.png"
+                      alt="Real-time FPDS data sync"
+                      class="sector-icon"
+                    />
+                    <div class="sector-text">Real-time FPDS data sync</div>
+                  </div>
+                  <div class="sector-info" data-index="1">
+                    <img
+                      src="/img/ico/icon-3.png"
+                      alt="Secure & scalable architecture"
+                      class="sector-icon"
+                    />
+                    <div class="sector-text">
+                      Secure & scalable architecture
+                    </div>
+                  </div>
+                  <div class="sector-info" data-index="2">
+                    <img
+                      src="/img/ico/icon-4.png"
+                      alt="Real-time FPDS data sync"
+                      class="sector-icon"
+                    />
+                    <div class="sector-text">Real-time FPDS data sync</div>
+                  </div>
+                  <div class="sector-info" data-index="3">
+                    <img
+                      src="/img/ico/icon.png"
+                      alt="No-code dashboards"
+                      class="sector-icon"
+                    />
+                    <div class="sector-text">No-code dashboards</div>
+                  </div>
+                  <div class="sector-info" data-index="4">
+                    <img
+                      src="/img/ico/icon-1.png"
+                      alt="High-speed backend"
+                      class="sector-icon"
+                    />
+                    <div class="sector-text">High-speed backend</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
 
         <section class="contract-data-section">
             <div class="contract-data-container">

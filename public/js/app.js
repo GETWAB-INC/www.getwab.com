@@ -1,96 +1,126 @@
+
 document.addEventListener("DOMContentLoaded", function () {
+  console.log("DOM loaded - initializing scripts");
+
+
   const burgerMenu = document.querySelector(".burger-menu");
   const mobileMenu = document.querySelector(".mobile-menu");
-
-  burgerMenu.addEventListener("click", function () {
-    mobileMenu.classList.add("active");
-    document.body.style.overflow = "hidden";
-  });
-
   const closeMenu = document.querySelector(".close-mobile-menu");
-  closeMenu.addEventListener("click", function () {
-    mobileMenu.classList.remove("active");
-    document.body.style.overflow = "";
-  });
+
+  if (burgerMenu && mobileMenu) {
+    burgerMenu.addEventListener("click", function () {
+      mobileMenu.classList.add("active");
+      document.body.style.overflow = "hidden";
+    });
+  } else {
+    console.warn("Burger menu or mobile menu elements not found");
+  }
+
+  if (closeMenu && mobileMenu) {
+    closeMenu.addEventListener("click", function () {
+      mobileMenu.classList.remove("active");
+      document.body.style.overflow = "";
+    });
+  }
+
 
   const menuItems = document.querySelectorAll(".mobile-menu-item");
-  menuItems.forEach((item) => {
-    item.addEventListener("click", function (e) {
-      if (window.innerWidth <= 768) {
-        e.preventDefault();
+  if (menuItems.length > 0) {
+    menuItems.forEach((item) => {
+      item.addEventListener("click", function (e) {
+        if (window.innerWidth <= 768) {
+          e.preventDefault();
 
-        menuItems.forEach((otherItem) => {
-          if (otherItem !== item) {
-            otherItem.classList.remove("active");
-            otherItem.nextElementSibling.style.display = "none";
+          menuItems.forEach((otherItem) => {
+            if (otherItem !== item) {
+              otherItem.classList.remove("active");
+              const otherSubmenu = otherItem.nextElementSibling;
+              if (otherSubmenu && otherSubmenu.classList.contains("mobile-submenu")) {
+                otherSubmenu.style.display = "none";
+              }
+            }
+          });
+
+          this.classList.toggle("active");
+          const submenu = this.nextElementSibling;
+          if (submenu && submenu.classList.contains("mobile-submenu")) {
+            if (this.classList.contains("active")) {
+              submenu.style.display = "flex";
+            } else {
+              submenu.style.display = "none";
+            }
           }
-        });
-
-        this.classList.toggle("active");
-        const submenu = this.nextElementSibling;
-        if (this.classList.contains("active")) {
-          submenu.style.display = "flex";
-        } else {
-          submenu.style.display = "none";
-        }
-      }
-    });
-  });
-
-  const mobileSubmenuItems = document.querySelectorAll(".mobile-submenu-item");
-  mobileSubmenuItems.forEach((item) => {
-    item.addEventListener("click", function () {
-      mobileMenu.classList.remove("active");
-      document.body.style.overflow = "";
-    });
-  });
-
-  mobileMenu.addEventListener("click", function (e) {
-    if (e.target === mobileMenu) {
-      mobileMenu.classList.remove("active");
-      document.body.style.overflow = "";
-    }
-  });
-});
-
-
-document.addEventListener('DOMContentLoaded', function() {
-  // Проверяем, что мы на главной странице
-  const isHomePage = window.location.pathname === '/' ||
-                     window.location.pathname === '/index.blade.php';
-
-  if (isHomePage) {
-    const fixedHeader = document.querySelector(".fixed-header");
-
-    if (fixedHeader) {
-      window.addEventListener("scroll", function () {
-        const scrollPosition = window.scrollY;
-
-        if (scrollPosition > 800) {
-          fixedHeader.classList.add("active");
-        } else {
-          fixedHeader.classList.remove("active");
         }
       });
-    }
-  } else {
-    // На других страницах скрываем fixed-header полностью
-    const fixedHeader = document.querySelector(".fixed-header");
-    if (fixedHeader) {
-      fixedHeader.style.display = "none";
-    }
+    });
   }
 
-  function isMobileDevice() {
-    return window.innerWidth <= 768;
+
+  const mobileSubmenuItems = document.querySelectorAll(".mobile-submenu-item");
+  if (mobileSubmenuItems.length > 0) {
+    mobileSubmenuItems.forEach((item) => {
+      item.addEventListener("click", function () {
+        if (mobileMenu) {
+          mobileMenu.classList.remove("active");
+          document.body.style.overflow = "";
+        }
+      });
+    });
   }
+
+  if (mobileMenu) {
+    mobileMenu.addEventListener("click", function (e) {
+      if (e.target === mobileMenu) {
+        mobileMenu.classList.remove("active");
+        document.body.style.overflow = "";
+      }
+    });
+  }
+
+
+  // ===== FIXED HEADER =====
+  window.addEventListener("scroll", function () {
+    if (!document.body.classList.contains('is-home-page')) {
+      return;
+    }
+
+    const fixedHeader = document.querySelector(".fixed-header");
+    if (!fixedHeader) return;
+
+    const scrollPosition = window.scrollY;
+    if (scrollPosition > 800) {
+      fixedHeader.classList.add("active");
+    } else {
+      fixedHeader.classList.remove("active");
+    }
+  });
+
+
+  if (isMobileDevice()) {
+    initMobileAnimation();
+  } else {
+    initDesktopAnimation();
+  }
+
+
+  initCardsSlider();
 });
 
 
-document.addEventListener("DOMContentLoaded", function () {
+function isMobileDevice() {
+  return window.innerWidth <= 768;
+}
+
+function initDesktopAnimation() {
   const section = document.getElementById("why-choose-getwab");
   const svg = document.querySelector(".chart");
   const chartContainer = document.querySelector(".chart-container");
+
+
+  if (!section || !svg || !chartContainer) {
+    console.warn("Desktop animation elements not found");
+    return;
+  }
 
   const centerX = 50;
   const centerY = 50;
@@ -102,7 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const iconsConfig = [
     {
-      iconPath: "/img/ico/Icon-2.png",
+      iconPath: "/img/ico/icon-2.png",
       text: "Real-time FPDS data sync",
       position: {
         angle: 220,
@@ -120,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     },
     {
-      iconPath: "/img/ico/Icon-3.png",
+      iconPath: "/img/ico/icon-3.png",
       text: "Secure & scalable architecture",
       position: {
         angle: 295,
@@ -138,7 +168,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     },
     {
-      iconPath: "/img/ico/Icon-4.png",
+      iconPath: "/img/ico/icon-4.png",
       text: "Real-time FPDS data sync",
       position: {
         angle: 360,
@@ -156,7 +186,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     },
     {
-      iconPath: "/img/ico/Icon.png",
+      iconPath: "/img/ico/icon.png",
       text: "No-code dashboards",
       position: {
         angle: 430,
@@ -174,7 +204,7 @@ document.addEventListener("DOMContentLoaded", function () {
       },
     },
     {
-      iconPath: "/img/ico/Icon-1.png",
+      iconPath: "/img/ico/icon-1.png",
       text: "High-speed backend",
       position: {
         angle: 495,
@@ -357,9 +387,25 @@ document.addEventListener("DOMContentLoaded", function () {
   );
 
   observer.observe(section);
-});
+}
 
 function initMobileAnimation() {
+  const canvas = document.getElementById("wheel");
+  if (!canvas) {
+    console.warn("Mobile animation canvas not found");
+    return;
+  }
+
+  const ctx = canvas.getContext("2d");
+  const wheelContainer = document.getElementById("wheelContainer");
+  const sectorsInfo = document.querySelector(".sectors-info");
+
+
+  if (!ctx || !wheelContainer || !sectorsInfo) {
+    console.warn("Mobile animation elements not found");
+    return;
+  }
+
   function lerp(a, b, t) {
     return a + (b - a) * t;
   }
@@ -367,11 +413,6 @@ function initMobileAnimation() {
   function easeInOutCubic(t) {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   }
-
-  const canvas = document.getElementById("wheel");
-  const ctx = canvas.getContext("2d");
-  const wheelContainer = document.getElementById("wheelContainer");
-  const sectorsInfo = document.querySelector(".sectors-info");
 
   const CONFIG = {
     segments: 5,
@@ -469,7 +510,6 @@ function initMobileAnimation() {
       const segmentMidAngle = segmentAngle * i + segmentAngle / 2;
       ctx.rotate(segmentMidAngle + currentRotation);
       ctx.scale(scale * CONFIG.widthStretch, scale);
-
 
       ctx.beginPath();
       const startAngle = -segmentAngle / 2 + CONFIG.gapAngle / 2;
@@ -637,36 +677,131 @@ function initMobileAnimation() {
   requestAnimationFrame(animate);
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  if (isMobileDevice()) {
-    initMobileAnimation();
-  } else {
-    initDesktopAnimation();
+
+function initCardsSlider() {
+  const cardsWrapper = document.querySelector('.fpds-mobile-slider-cards-wrapper');
+  const cards = document.querySelectorAll('.fpds-mobile-slider-card');
+
+
+  if (!cardsWrapper || cards.length === 0) {
+    console.warn("Cards slider elements not found");
+    return;
   }
-});
+
+  let currentIndex = 0;
+  let startX = 0;
+  let currentX = 0;
+  let isDragging = false;
+
+
+  function setCardsWrapperWidth() {
+    const cardWidth = cards[0].offsetWidth + 16;
+    cardsWrapper.style.width = `${cardWidth * cards.length}px`;
+  }
+
+
+  function updateSliderPosition() {
+    const cardWidth = cards[0].offsetWidth + 16;
+    cardsWrapper.style.transform = `translateX(-${currentIndex * cardWidth}px)`;
+    cardsWrapper.style.transition = 'transform 0.3s ease';
+  }
+
+
+  function nextSlide() {
+    if (currentIndex < cards.length - 1) {
+      currentIndex++;
+      updateSliderPosition();
+    }
+  }
+
+
+  function prevSlide() {
+    if (currentIndex > 0) {
+      currentIndex--;
+      updateSliderPosition();
+    }
+  }
+
+
+  cardsWrapper.addEventListener('mousedown', handleStart);
+  cardsWrapper.addEventListener('touchstart', handleStart, { passive: true });
+
+  cardsWrapper.addEventListener('mousemove', handleMove);
+  cardsWrapper.addEventListener('touchmove', handleMove, { passive: true });
+
+  cardsWrapper.addEventListener('mouseup', handleEnd);
+  cardsWrapper.addEventListener('touchend', handleEnd);
+  cardsWrapper.addEventListener('mouseleave', handleEnd);
+
+  function handleStart(e) {
+    isDragging = true;
+    startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+    cardsWrapper.style.transition = 'none';
+  }
+
+  function handleMove(e) {
+    if (!isDragging) return;
+
+    currentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+    const diffX = currentX - startX;
+
+
+    const cardWidth = cards[0].offsetWidth + 16;
+    const resistance = 0.5;
+    const translateX = -currentIndex * cardWidth + diffX * resistance;
+
+    cardsWrapper.style.transform = `translateX(${translateX}px)`;
+  }
+
+  function handleEnd() {
+    if (!isDragging) return;
+
+    isDragging = false;
+    cardsWrapper.style.transition = 'transform 0.3s ease';
+
+    const diffX = currentX - startX;
+    const cardWidth = cards[0].offsetWidth + 16;
+    const threshold = cardWidth * 0.2;
+
+    if (Math.abs(diffX) > threshold) {
+      if (diffX > 0) {
+
+        prevSlide();
+      } else {
+
+        nextSlide();
+      }
+    } else {
+
+      updateSliderPosition();
+    }
+  }
+
+
+  setCardsWrapperWidth();
+  window.addEventListener('resize', setCardsWrapperWidth);
+
+
+  updateSliderPosition();
+}
+
+
+
+
+  setCardsWrapperWidth();
+  window.addEventListener('resize', setCardsWrapperWidth);
+
+
 
 window.addEventListener("resize", function () {
-  const section = document.getElementById("why-choose-getwab");
   const desktopContent = document.querySelector(".desktop-animation");
   const mobileContent = document.querySelector(".mobile-animation");
 
-  desktopContent.innerHTML = `
-    <div class="choose-getwab-main-content">
-      <div class="chart-container">
-        <svg class="chart" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"></svg>
-      </div>
-    </div>
-  `;
-
-  mobileContent.innerHTML = `
-    <div class="wheel-container" id="wheelContainer">
-      <canvas id="wheel" width="450" height="450"></canvas>
-    </div>
-  `;
-
   if (isMobileDevice()) {
+    if (desktopContent) desktopContent.innerHTML = '';
     initMobileAnimation();
   } else {
+    if (mobileContent) mobileContent.innerHTML = '';
     initDesktopAnimation();
   }
 });
