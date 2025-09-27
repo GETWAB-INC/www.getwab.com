@@ -23,7 +23,7 @@
                 <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
               </div>
               <div class="dropdown-menu">
-                <a href="#" class="dropdown-item">Consulting & Advisory</a>
+                <a href="{{ route('report') }}" class="dropdown-item">Consulting & Advisory</a>
                 <a href="#" class="dropdown-item">Gov Contracting</a>
                 <a href="#" class="dropdown-item">Custom Analytics</a>
                 <a href="#" class="dropdown-item">Data Automation</a>
