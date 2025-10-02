@@ -24,7 +24,7 @@
               </div>
               <div class="dropdown-menu">
                 <a href="{{ route('report') }}" class="dropdown-item">Consulting & Advisory</a>
-                <a href="#" class="dropdown-item">Gov Contracting</a>
+                <a href="{{ route('article') }}" class="dropdown-item">Gov Contracting</a>
                 <a href="#" class="dropdown-item">Custom Analytics</a>
                 <a href="#" class="dropdown-item">Data Automation</a>
               </div>
@@ -51,7 +51,7 @@
             </div>
 
             <div class="header-login">
-              <a href="#" class="login-text">Log In</a>
+              <a href="{{ route('login') }}" class="login-text">Log In</a>
             </div>
           </nav>
         </div>

@@ -94,7 +94,10 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             fixedHeader.classList.remove("active");
         }
+
     });
+
+
 
     if (isMobileDevice()) {
         initMobileAnimation();
@@ -858,3 +861,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+
+
+
