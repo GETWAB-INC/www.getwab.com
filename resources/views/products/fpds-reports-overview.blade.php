@@ -1,209 +1,534 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>FPDS Reports — Benefits & Pricing</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f9f9f9;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
-        .container {
-            width: 90%;
-            max-width: 960px;
-            margin: auto;
-            background: #fff;
-            padding: 40px;
-        }
-        h1, h2 {
-            color: #003366;
-        }
-        .section {
-            margin-top: 40px;
-        }
-        .card {
-            background: #f0f0f0;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 15px 0;
-        }
-        .pricing-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .pricing-box {
-            flex: 1;
-            min-width: 220px;
-            background: #fefefe;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            padding: 20px;
-            text-align: center;
-        }
-        .pricing-box h3 {
-            margin-top: 0;
-            color: #0057b7;
-        }
-        .pricing-box p {
-            margin-bottom: 10px;
-        }
-        .button-primary {
-            display: inline-block;
-            background-color: #0057b7;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 4px;
-            margin-top: 10px;
-        }
-    </style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Getwab</title>
+    <link rel="stylesheet" href="{{ asset('css/reset.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+  </head>
 
+  <body>
+    @include('include.header')
 
-<div class="container">
-    <h1>📊 FPDS Reports — Benefits & Pricing</h1>
-<h2>Why Choose FPDS Reports?</h2>
-    <p>See how our standardized PDF reports compare with BI tools and consulting firms.</p>
+    <main class="fpds-reports-main">
+      <section class="reports-hero">
+        <div class="reports-hero__container">
+          <div class="reports-hero__title-block">
+            <h1>FPDS Reports — Benefits & Pricing</h1>
+          </div>
 
+          <div class="reports-hero__benefits-block">
+            <h3>Why Choose FPDS Reports?</h3>
+            <p>
+              <img
+                class="decorative-square-1"
+                src="{{ asset('img/ico/quotes-1.svg') }}"
+                alt=""
+              />
 
-    <div class="section">
-
-    <div style="overflow-x:auto; margin-top: 20px;">
-
-    
-        <table style="width:100%; border-collapse:collapse; text-align:left; background:#fff;">
-  <thead>
-    <tr style="background:#0057b7; color:#fff;">
-      <th style="padding:12px;">Feature</th>
-      <th style="padding:12px;">FPDS Reports</th>
-      <th style="padding:12px;">Big Firms / Freelancers</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">Instant Access</td>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">✅ Available immediately</td>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">❌ Requires time to build</td>
-    </tr>
-    <tr>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">Consistent Structure</td>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">✅ Standardized layout</td>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">❌ Varies every time</td>
-    </tr>
-    <tr>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">User Friendly</td>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">✅ No skills needed</td>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">❌ Requires BI or SQL knowledge</td>
-    </tr>
-    <tr>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">Low Cost</td>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">✅ $49–149 per report</td>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">❌ Expensive custom work</td>
-    </tr>
-    <tr>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">AI Commentary</td>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">✅ Included insights</td>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">⚠️ Manual interpretation</td>
-    </tr>
-    <tr>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">PDF Format</td>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">✅ Ready to share</td>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">❌ Needs export/design</td>
-    </tr>
-    <tr>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">Verified Source</td>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">✅ Based on FPDS</td>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">⚠️ May require manual sourcing</td>
-    </tr>
-    <tr>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">Legally Neutral Format</td>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">✅ Official-style format</td>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">⚠️ Not always compliant</td>
-    </tr>
-    <tr>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">Scalable Logic</td>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">✅ Reusable for any state/year</td>
-      <td style="padding:12px; border-bottom:1px solid #ddd;">❌ Built from scratch each time</td>
-    </tr>
-    <tr>
-      <td style="padding:12px;">Easy Repeat Orders</td>
-      <td style="padding:12px;">✅ Just change filters</td>
-      <td style="padding:12px;">❌ Requires new instructions</td>
-    </tr>
-  </tbody>
-</table>
-
-
-
-    </div>
-</div>
-
-
-<div class="section">
-    <h2>Choose your plan</h2>
-    <div class="pricing-grid">
-
-        <div class="pricing-box">
-            <h3>📄 Single Report</h3>
-            <p><strong>$49–149</strong> per report</p>
-            <p>Perfect for quick insights.</p>
-            <a href="/reports" class="button-primary">Browse Reports</a>
+              See how our standardized PDF reports compare with BI tools and
+              consulting firms.
+              <img
+                class="decorative-square-2"
+                src="{{ asset('img/ico/quotes-2.svg') }}"
+                alt=""
+              />
+            </p>
+          </div>
         </div>
+      </section>
 
-        <div class="pricing-box">
-            <h3>🟢 Elementary Package</h3>
-            <p><strong>$449</strong> for 10 reports</p>
-            <p>For frequent buyers of basic reports.</p>
-            <a href="{{ route('account') }}" class="button-primary">Request Package</a>
+      <section class="reports-comparison">
+        <div class="reports-comparison__container">
+          <h2 id="comparison-heading" class="visually-hidden">
+            Feature Comparison: FPDS Reports vs Big Firms/Freelancers
+          </h2>
+
+          <div class="reports-comparison__table-container">
+            <table
+              class="reports-comparison__table"
+              aria-labelledby="comparison-heading"
+            >
+              <thead>
+                <tr>
+                  <th scope="col">Feature</th>
+                  <th scope="col">FPDS Reports</th>
+                  <th scope="col">Big Firms / Freelancers</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">Instant Access</th>
+                  <td>
+                    <div class="status-cell">
+                      <img src="/img/ico/check.svg" alt="Supported" />
+                      <span>Available immediately</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="status-cell">
+                      <img src="/img/ico/cross.svg" alt="Not supported" />
+                      <span>Requires time to build</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Consistent Structure</th>
+                  <td>
+                    <div class="status-cell">
+                      <img src="/img/ico/check.svg" alt="Supported" />
+                      <span>Standardized layout</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="status-cell">
+                      <img src="/img/ico/cross.svg" alt="Not supported" />
+                      <span>Varies every time</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">User Friendly</th>
+                  <td>
+                    <div class="status-cell">
+                      <img src="/img/ico/check.svg" alt="Supported" />
+                      <span>No skills needed</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="status-cell">
+                      <img src="/img/ico/cross.svg" alt="Not supported" />
+                      <span>Requires BI or SQL knowledge</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Low Cost</th>
+                  <td>
+                    <div class="status-cell">
+                      <img src="/img/ico/check.svg" alt="Supported" />
+                      <span>$49–149 per report</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="status-cell">
+                      <img src="/img/ico/cross.svg" alt="Not supported" />
+                      <span>Expensive custom work</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">AI Commentary</th>
+                  <td>
+                    <div class="status-cell">
+                      <img src="/img/ico/check.svg" alt="Supported" />
+                      <span>Included insights</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="status-cell">
+                      <img src="/img/ico/warning.svg" alt="Not supported" />
+                      <span>Manual interpretation</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">PDF Format</th>
+                  <td>
+                    <div class="status-cell">
+                      <img src="/img/ico/check.svg" alt="Supported" />
+                      <span>Ready to share</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="status-cell">
+                      <img src="/img/ico/cross.svg" alt="Not supported" />
+                      <span>Needs export/design</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Verified Source</th>
+                  <td>
+                    <div class="status-cell">
+                      <img src="/img/ico/check.svg" alt="Supported" />
+                      <span>Based on FPDS</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="status-cell">
+                      <img src="/img/ico/warning.svg" alt="Not supported" />
+                      <span>May require manual sourcing</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Legally Neutral Format</th>
+                  <td>
+                    <div class="status-cell">
+                      <img src="/img/ico/check.svg" alt="Supported" />
+                      <span>Official-style format</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="status-cell">
+                      <img src="/img/ico/warning.svg" alt="Not supported" />
+                      <span>Not always compliant</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Scalable Logic</th>
+                  <td>
+                    <div class="status-cell">
+                      <img src="/img/ico/check.svg" alt="Supported" />
+                      <span>Reusable for any state/year</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="status-cell">
+                      <img src="/img/ico/cross.svg" alt="Not supported" />
+                      <span>Built from scratch each time</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Easy Repeat Orders</th>
+                  <td>
+                    <div class="status-cell">
+                      <img src="/img/ico/check.svg" alt="Supported" />
+                      <span>Just change filters</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="status-cell">
+                      <img src="/img/ico/cross.svg" alt="Not supported" />
+                      <span>Requires new instructions</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div
+            class="reports-comparison__table-wrapper"
+            role="region"
+            aria-labelledby="comparison-heading"
+          >
+            <div class="comparison-row">
+              <div class="comparison-header">
+                <div>FPDS Reports</div>
+              </div>
+              <div class="comparison-header">
+                <div>Big Firms / Freelancers</div>
+              </div>
+            </div>
+
+            <div class="feature-cell">
+              <div>Feature</div>
+            </div>
+
+            <div class="feature-row">
+              <div>Instant Access</div>
+            </div>
+            <div class="comparison-row">
+              <div class="value-cell">
+                <div class="status-icon-mobile status-approve">
+                  <img src="/img/ico/check.svg" alt="Supported" />
+                </div>
+                <div>Available immediately</div>
+              </div>
+              <div class="value-cell">
+                <div class="status-icon-mobile status-cancel">
+                  <img src="/img/ico/cross.svg" alt="Not supported" />
+                </div>
+                <div>Requires time to build</div>
+              </div>
+            </div>
+
+            <div class="feature-row">
+              <div>Consistent Structure</div>
+            </div>
+            <div class="comparison-row">
+              <div class="value-cell">
+                <div class="status-icon-mobile status-approve">
+                  <img src="/img/ico/check.svg" alt="Supported" />
+                </div>
+                <div>Standardized layout</div>
+              </div>
+              <div class="value-cell">
+                <div class="status-icon-mobile status-cancel">
+                  <img src="/img/ico/cross.svg" alt="Not supported" />
+                </div>
+                <div>Varies every time</div>
+              </div>
+            </div>
+
+            <div class="feature-row">
+              <div>User Friendly</div>
+            </div>
+            <div class="comparison-row">
+              <div class="value-cell">
+                <div class="status-icon-mobile status-approve">
+                  <img src="/img/ico/check.svg" alt="Supported" />
+                </div>
+                <div>No skills needed</div>
+              </div>
+              <div class="value-cell">
+                <div class="status-icon-mobile status-cancel">
+                  <img src="/img/ico/cross.svg" alt="Not supported" />
+                </div>
+                <div>Requires BI or SQL knowledge</div>
+              </div>
+            </div>
+
+            <div class="feature-row">
+              <div>Low Cost</div>
+            </div>
+            <div class="comparison-row">
+              <div class="value-cell">
+                <div class="status-icon-mobile status-approve">
+                  <img src="/img/ico/check.svg" alt="Supported" />
+                </div>
+                <div>$49–149 per report</div>
+              </div>
+              <div class="value-cell">
+                <div class="status-icon-mobile status-cancel">
+                  <img src="/img/ico/cross.svg" alt="Not supported" />
+                </div>
+                <div>Expensive custom work</div>
+              </div>
+            </div>
+
+            <div class="feature-row">
+              <div>AI Commentary</div>
+            </div>
+            <div class="comparison-row">
+              <div class="value-cell">
+                <div class="status-icon-mobile status-approve">
+                  <img src="/img/ico/check.svg" alt="Supported" />
+                </div>
+                <div>Included insights</div>
+              </div>
+              <div class="value-cell">
+                <div class="status-icon-mobile status-warning">
+                  <img src="/img/ico/warning.svg" alt="Supported" />
+                </div>
+                <div>Manual interpretation</div>
+              </div>
+            </div>
+
+            <div class="feature-row">
+              <div>PDF Format</div>
+            </div>
+            <div class="comparison-row">
+              <div class="value-cell">
+                <div class="status-icon-mobile status-approve">
+                  <img src="/img/ico/check.svg" alt="Supported" />
+                </div>
+                <div>Ready to share</div>
+              </div>
+              <div class="value-cell">
+                <div class="status-icon-mobile status-cancel">
+                  <img src="/img/ico/cross.svg" alt="Not supported" />
+                </div>
+                <div>Needs export/design</div>
+              </div>
+            </div>
+
+            <div class="feature-row">
+              <div>Verified Source</div>
+            </div>
+            <div class="comparison-row">
+              <div class="value-cell">
+                <div class="status-icon-mobile status-approve">
+                  <img src="/img/ico/check.svg" alt="Supported" />
+                </div>
+                <div>Based on FPDS</div>
+              </div>
+              <div class="value-cell">
+                <div class="status-icon-mobile status-warning">
+                  <img src="/img/ico/warning.svg" alt="Supported" />
+                </div>
+                <div>May require manual sourcing</div>
+              </div>
+            </div>
+
+            <div class="feature-row">
+              <div>Legally Neutral Format</div>
+            </div>
+            <div class="comparison-row">
+              <div class="value-cell">
+                <div class="status-icon-mobile status-approve">
+                  <img src="/img/ico/check.svg" alt="Supported" />
+                </div>
+                <div>Official-style format</div>
+              </div>
+              <div class="value-cell">
+                <div class="status-icon-mobile status-warning">
+                  <img src="/img/ico/warning.svg" alt="Supported" />
+                </div>
+                <div>Not always compliant</div>
+              </div>
+            </div>
+
+            <div class="feature-row">
+              <div>Scalable Logic</div>
+            </div>
+            <div class="comparison-row">
+              <div class="value-cell">
+                <div class="status-icon-mobile status-approve">
+                  <img src="/img/ico/check.svg" alt="Supported" />
+                </div>
+                <div>Reusable for any state/year</div>
+              </div>
+              <div class="value-cell">
+                <div class="status-icon-mobile status-cancel">
+                  <img src="/img/ico/cross.svg" alt="Not supported" />
+                </div>
+                <div>Built from scratch each time</div>
+              </div>
+            </div>
+
+            <div class="feature-row">
+              <div>Easy Repeat Orders</div>
+            </div>
+            <div class="comparison-row">
+              <div class="value-cell">
+                <div class="status-icon-mobile status-approve">
+                  <img src="/img/ico/check.svg" alt="Supported" />
+                </div>
+                <div>Just change filters</div>
+              </div>
+              <div class="value-cell">
+                <div class="status-icon-mobile status-cancel">
+                  <img src="/img/ico/cross.svg" alt="Not supported" />
+                </div>
+                <div>Requires new instructions</div>
+              </div>
+            </div>
+          </div>
         </div>
+      </section>
 
-        <div class="pricing-box">
-            <h3>🔵 Composite Package</h3>
-            <p><strong>$699</strong> for 5 reports</p>
-            <p>For in-depth analytical projects.</p>
-            <a href="{{ route('account') }}" class="button-primary">Request Package</a>
+      <section class="reports-pricing">
+        <div class="reports-pricing__container">
+          <div class="reports-pricing__content">
+            <header class="reports-pricing__header">
+              <h2 class="reports-pricing__title">
+                Choose <br />
+                your plan
+              </h2>
+            </header>
+
+            <div class="reports-pricing__cards">
+              <div class="reports-pricing__cards-row top-row">
+                <article class="reports-pricing__card standard">
+                  <div class="reports-pricing__card-content">
+                    <header class="reports-pricing__card-header">
+                      <h3 class="reports-pricing__plan-name">Single Report</h3>
+                      <div class="reports-pricing__price">
+                        <span class="reports-pricing__price-amount"
+                          >$49–149</span
+                        >
+                        <span class="reports-pricing__price-period">
+                          for report</span
+                        >
+                      </div>
+                      <div class="reports-pricing__features">
+                        <p class="reports-pricing__feature">
+                          Perfect for quick insights
+                        </p>
+                      </div>
+                    </header>
+                    <a href="#" class="reports-pricing__btn">Browse Reports</a>
+                  </div>
+                </article>
+
+                <article class="reports-pricing__card standard">
+                  <div class="reports-pricing__card-content">
+                    <header class="reports-pricing__card-header">
+                      <h3 class="reports-pricing__plan-name">
+                        Elementary Package
+                      </h3>
+                      <div class="reports-pricing__price">
+                        <span class="reports-pricing__price-amount">$449</span>
+                        <span class="reports-pricing__price-period"
+                          >for 10 reports</span
+                        >
+                      </div>
+                      <div class="reports-pricing__features">
+                        <p class="reports-pricing__feature">
+                          For frequent buyers of basic reports
+                        </p>
+                      </div>
+                    </header>
+                    <a href="#" class="reports-pricing__btn">Request Package</a>
+                  </div>
+                </article>
+
+                <article class="reports-pricing__card standard">
+                  <div class="reports-pricing__card-content">
+                    <header class="reports-pricing__card-header">
+                      <h3 class="reports-pricing__plan-name">
+                        Composite Package
+                      </h3>
+                      <div class="reports-pricing__price">
+                        <span class="reports-pricing__price-amount">$699</span>
+                        <span class="reports-pricing__price-period"
+                          >for 5 reports</span
+                        >
+                      </div>
+                      <div class="reports-pricing__features">
+                        <p class="reports-pricing__feature">
+                          For in-depth analytical projects
+                        </p>
+                      </div>
+                    </header>
+                    <a href="#" class="reports-pricing__btn">Request Package</a>
+                  </div>
+                </article>
+              </div>
+
+              <div class="reports-pricing__cards-row bottom-row">
+                <article class="reports-pricing__card wide">
+                  <div class="reports-pricing__card-content">
+                    <header class="reports-pricing__card-header">
+                      <h3 class="reports-pricing__plan-name">
+                        Unlimited Access
+                      </h3>
+                      <div class="reports-pricing__price">
+                        <span class="reports-pricing__price-amount">
+                          <span class="reports-pricing__price-period">
+                            from
+                          </span>
+                          $799
+                        </span>
+                        <span class="reports-pricing__price-period"
+                          >/ month</span
+                        >
+                      </div>
+                      <div class="reports-pricing__features">
+                        <p class="reports-pricing__feature">
+                          Generate <strong> unlimited </strong> reports from our
+                          full FPDS report library — anytime, with no limits
+                        </p>
+                      </div>
+                    </header>
+                    <a href="#" class="reports-pricing__btn">Subscribe Now</a>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
         </div>
+      </section>
+    </main>
 
-        <div class="pricing-box">
-            <h3>🔁 Unlimited Access</h3>
-            <p>From <strong>$799/month</strong></p>
-              <p>Generate <strong>unlimited reports</strong> from our full FPDS report library — anytime, with no limits.</p>
+    @include('include.footer')
 
-            <a href="{{ route('checkout') }}" class="button-primary">Subscribe Now</a>
-        </div>
-    </div>
-</div>
-
-
-    <!-- <div class="section">
-    <h2>📥 Explore Sample Reports</h2>
-    <p>We offer two types of standardized reports to fit your analytical needs:</p>
-
-    <ul style="margin-bottom: 30px;">
-        <li><strong>Elementari Reports</strong> — single-query reports for clear and focused insights.</li>
-        <li><strong>Composite Reports</strong> — multi-layered analysis with comparisons, trends, and AI-generated commentary.</li>
-    </ul>
-
-    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-        <div style="flex: 1; min-width: 300px;">
-            <h3 style="text-align:center;">🧾 Elementari Report</h3>
-            <iframe src="{{ asset('pdf/SFPR-GEO-EL-1__expl.pdf') }}" width="100%" height="420px" style="border: 1px solid #ccc; border-radius: 6px;"></iframe>
-        </div>
-        <div style="flex: 1; min-width: 300px;">
-            <h3 style="text-align:center;">📊 Composite Report</h3>
-            <iframe src="{{ asset('pdf/SFPR-GEO-COLL-1__expl.pdf') }}" width="100%" height="420px" style="border: 1px solid #ccc; border-radius: 6px;"></iframe>
-        </div>
-    </div> -->
-
-</div>
-
-
-
-</div>
-</body>
+    <script src="{{ asset('js/app.js') }}"></script>
+  </body>
 </html>
