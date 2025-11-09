@@ -1,274 +1,494 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Checkout - Cart View</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 40px;
-      display: flex;
-      justify-content: center;
-    }
-    .container {
-      max-width: 800px;
-      width: 100%;
-      background-color: #fff;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-    }
-    h1 { margin-top: 0; }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-    th, td {
-      text-align: left;
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
-    }
-    .remove {
-      color: red;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .total {
-      text-align: right;
-      margin-top: 20px;
-    }
-    .total p { margin: 5px 0; }
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-    button {
-      padding: 12px 18px;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      margin-top: 10px;
-    }
-    .section { margin-top: 40px; }
-    .flex-row {
-      display: flex;
-      gap: 10px;
-    }
-    .flex-row > div {
-      flex: 1;
-    }
-    .radio-group-inline {
-      display: flex;
-      gap: 20px;
-      margin-bottom: 10px;
-      align-items: center;
-    }
-    .radio-group-inline label {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .radio-group-inline img {
-      height: 24px;
-    }
-  </style>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Getwab</title>
+
+    <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
 </head>
+
 <body>
 
-<div class="container">
-  <h1>🧾 Checkout</h1>
+    @include('include.header')
 
-  <table>
-    <thead>
-      <tr>
-        <th>Item</th>
-        <th>Type</th>
-        <th>Billing</th>
-        <th>Price</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody id="cart-body">
-      <tr>
-        <td>FPDS Query</td>
-        <td>Subscription</td>
-        <td>Monthly</td>
-        <td>$199.00</td>
-        <td><span class="remove" onclick="removeRow(this)">✕</span></td>
-      </tr>
-      <tr>
-        <td>FPDS Reports</td>
-        <td>Subscription</td>
-        <td>Annual</td>
-        <td>$499.00</td>
-        <td><span class="remove" onclick="removeRow(this)">✕</span></td>
-      </tr>
-      <tr>
-        <td>FPDS Charts</td>
-        <td>Subscription</td>
-        <td>Annual</td>
-        <td>$299.00</td>
-        <td><span class="remove" onclick="removeRow(this)">✕</span></td>
-      </tr>
-      <tr>
-        <td>One-Time Report</td>
-        <td>Report</td>
-        <td>One-Time</td>
-        <td>$149.00</td>
-        <td><span class="remove" onclick="removeRow(this)">✕</span></td>
-      </tr>
-      <tr>
-        <td>10 Report Package</td>
-        <td>Report Package</td>
-        <td>One-Time</td>
-        <td>$399.00</td>
-        <td><span class="remove" onclick="removeRow(this)">✕</span></td>
-      </tr>
-    </tbody>
-  </table>
 
-  <div class="total" id="totals">
-    <p><strong>Subtotal:</strong> $1,545.00</p>
-    <p><strong>Sales Tax (8.5%):</strong> $131.33</p>
-    <p><strong>Total Due:</strong> <span id="total-due">$1,676.33</span></p>
-  </div>
 
-  <div class="section">
-    <form>
-      <h3>📋 Billing Information</h3>
+    </head>
 
-      <label>First Name:</label>
-      <input type="text">
+    <body>
 
-      <label>Last Name:</label>
-      <input type="text">
+        <div class="checkout-page">
+            <div class="checkout-header">
+                <h1 class="checkout-title">Checkout</h1>
 
-      <label>Country:</label>
-      <select>
-        <option value="US" selected>United States</option>
-      </select>
+                <div class="checkout-progress-container">
+                    <div class="checkout-progress-indicator">
+                        <div class="checkout-progress-line"></div>
+                        <div class="checkout-progress-step checkout-active-step"></div>
+                        <div class="checkout-progress-step"></div>
+                        <div class="checkout-progress-step"></div>
+                    </div>
 
-      <label>State:</label>
-      <select>
-        <option value="NY">New York</option>
-        <option value="CA">California</option>
-        <option value="FL">Florida</option>
-        <option value="TX">Texas</option>
-        <option value="IL">Illinois</option>
-        <option value="PA">Pennsylvania</option>
-        <option value="OH">Ohio</option>
-      </select>
+                    <div class="checkout-step-content">
+                        <div class="checkout-step-item checkout-active">
+                            <span class="checkout-step-number">Step 1</span>
+                            <h2 class="checkout-step-title">Your Order</h2>
+                        </div>
+                        <div class="checkout-step-item">
+                            <span class="checkout-step-number">Step 2</span>
+                            <span class="checkout-step-title">Billing Information</span>
+                        </div>
+                        <div class="checkout-step-item">
+                            <span class="checkout-step-number">Step 3</span>
+                            <span class="checkout-step-title">Payment Information</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-      <label>City:</label>
-      <input type="text">
+            <div class="checkout-order-review-container">
+                <div class="checkout-order-section">
+                    <!-- ORDER ITEM 1 -->
+                    <div class="checkout-order-item-card">
+                        <div class="checkout-order-item-details">
+                            <h1 class="checkout-product-name">FPDS Query</h1>
+                            <p class="checkout-product-type">Subscription</p>
+                            <p class="checkout-product-frequency">Monthly</p>
+                        </div>
+                        <div class="checkout-order-item-pricing">
+                            <h1 class="checkout-product-price">$199.00</h1>
+                            <div class="checkout-order-item-actions">
+                                <button class="checkout-action-button checkout-edit-button">
+                                    <img class="checkout-decoration" src="{{ asset('img/ico/Pencil.svg') }}" alt="Edit Item">
+                                </button>
+                                <button class="checkout-action-button checkout-delete-button">
+                                    <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}" alt="Delete Item">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-      <label>Address Line 1:</label>
-      <input type="text">
+                    <!-- ORDER ITEM 2 -->
+                    <div class="checkout-order-item-card">
+                        <div class="checkout-order-item-details">
+                            <h1 class="checkout-product-name">FPDS Reports</h1>
+                            <p class="checkout-product-type">Subscription </p>
+                            <p class="checkout-product-frequency">Annual</p>
+                        </div>
+                        <div class="checkout-order-item-pricing">
+                            <h1 class="checkout-product-price">$499.00</h1>
+                            <div class="checkout-order-item-actions">
+                                <button class="checkout-action-button checkout-edit-button">
+                                    <img class="checkout-decoration" src="{{ asset('img/ico/Pencil.svg') }}" alt="Edit Item">
+                                </button>
+                                <button class="checkout-action-button checkout-delete-button">
+                                    <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}" alt="Delete Item">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-      <label>Address Line 2 <small>(optional)</small>:</label>
-      <input type="text">
+                    <!-- ORDER ITEM 3 -->
+                    <div class="checkout-order-item-card">
+                        <div class="checkout-order-item-details">
+                            <h1 class="checkout-product-name">FPDS Charts</h1>
+                            <p class="checkout-product-type">Subscription</p>
+                            <p class="checkout-product-frequency">Annual</p>
+                        </div>
+                        <div class="checkout-order-item-pricing">
+                            <h1 class="checkout-product-price">$299.00</h1>
+                            <div class="checkout-order-item-actions">
+                                <button class="checkout-action-button checkout-edit-button">
+                                    <img class="checkout-decoration" src="{{ asset('img/ico/Pencil.svg') }}" alt="Edit Item">
+                                </button>
+                                <button class="checkout-action-button checkout-delete-button">
+                                    <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}" alt="Delete Item">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-      <label>ZIP Code:</label>
-      <input type="text">
+                    <!-- ORDER ITEM 4 -->
+                    <div class="checkout-order-item-card">
+                        <div class="checkout-order-item-details">
+                            <h1 class="checkout-product-name">One-Time Report</h1>
+                            <p class="checkout-product-type">Report </p>
+                            <p class="checkout-product-frequency">One-Time</p>
+                        </div>
+                        <div class="checkout-order-item-pricing">
+                            <h1 class="checkout-product-price">$149.00</h1>
+                            <div class="checkout-order-item-actions">
+                                <button class="checkout-action-button checkout-edit-button">
+                                    <img class="checkout-decoration" src="{{ asset('img/ico/Pencil.svg') }}" alt="Edit Item">
+                                </button>
+                                <button class="checkout-action-button checkout-delete-button">
+                                    <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}" alt="Delete Item">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-      <h3>💳 Payment Information</h3>
+                    <!-- ORDER ITEM 5 -->
+                    <div class="checkout-order-item-card">
+                        <div class="checkout-order-item-details">
+                            <h1 class="checkout-product-name">10 Report Package</h1>
+                            <p class="checkout-product-type">Report Package</p>
+                            <p class="checkout-product-frequency">One-Time</p>
+                        </div>
+                        <div class="checkout-order-item-pricing">
+                            <h1 class="checkout-product-price">$399.00</h1>
+                            <div class="checkout-order-item-actions">
+                                <button class="checkout-action-button checkout-edit-button">
+                                    <img class="checkout-decoration" src="{{ asset('img/ico/Pencil.svg') }}" alt="Edit Item">
+                                </button>
+                                <button class="checkout-action-button checkout-delete-button">
+                                    <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}" alt="Delete Item">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-      <div class="radio-group-inline">
-        <label><input type="radio" name="card_type"><img src="https://img.icons8.com/color/48/000000/visa.png"> Visa</label>
-        <label><input type="radio" name="card_type"><img src="https://img.icons8.com/color/48/000000/mastercard-logo.png"> MasterCard</label>
-        <label><input type="radio" name="card_type"><img src="https://img.icons8.com/color/48/000000/amex.png"> AmEx</label>
-        <label><input type="radio" name="card_type"><img src="https://img.icons8.com/color/48/000000/discover.png"> Discover</label>
-      </div>
+                <div class="checkout-payment-breakdown">
+                    <div class="checkout-payment-calculations">
+                        <div class="checkout-cost-line-item">
+                            <h2 class="checkout-cost-label">Subtotal:</h2>
+                            <p class="checkout-cost-amount">$1545.00</p>
+                            <div class="checkout-cost-divider"></div>
+                        </div>
 
-      <label>Card Number:</label>
-      <input type="text">
+                        <div class="checkout-cost-line-item">
+                            <h2 class="checkout-cost-label">Sales Tax (8.5%):</h2>
+                            <p class="checkout-cost-amount">$131.33</p>
+                            <div class="checkout-cost-divider"></div>
+                        </div>
 
-      <label>Expiry Date:</label>
-      <div class="flex-row">
-        <select>
-          <option value="01">01</option><option value="02">02</option><option value="03">03</option>
-          <option value="04">04</option><option value="05">05</option><option value="06">06</option>
-          <option value="07">07</option><option value="08">08</option><option value="09">09</option>
-          <option value="10">10</option><option value="11">11</option><option value="12">12</option>
-        </select>
-        <select>
-          <option value="2025">2025</option>
-          <option value="2026">2026</option>
-          <option value="2027">2027</option>
-        </select>
-      </div>
-
-      <label>CVV:</label>
-      <input type="text">
-
-      <label style="margin-top: 10px; display: flex; align-items: center; gap: 6px;">
-        <input type="checkbox" style="width: 16px; height: 16px; flex-shrink: 0;">
-        💾 Save this card for future purchases
-      </label>
-
-      <div style="margin-top: 20px; display: flex; align-items: flex-start; gap: 10px;">
-        <div style="display: flex; gap: 8px; flex-shrink: 0; margin-top: 2px;">
-          <img src="https://img.icons8.com/fluency/24/lock.png" alt="SSL Secure" title="SSL Secure">
-          <img src="https://img.icons8.com/color/24/security-checked.png" alt="PCI DSS" title="PCI DSS">
-          <img src="https://img.icons8.com/color/24/bank-card-back-side.png" alt="Secure" title="Secure">
-          <img src="https://img.icons8.com/color/24/bank-of-america.png" alt="Bank of America" title="Bank of America">
+                        <div class="checkout-total-summary">
+                            <h1 class="checkout-total-label">Total Due:</h1>
+                            <h1 class="checkout-total-amount">$1676.33</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <p style="font-size: 13px; color: #666; margin: 0;">
-          We do not store full card numbers or CVV. All transactions are securely processed through Bank of America’s Secure Acceptance platform using encrypted and PCI-compliant technology. Only encrypted tokens are saved to enable future payments.
-        </p>
-      </div>
 
-      <button type="button" onclick="window.location.href='/thank-you'">
-  Complete Payment — $1,676.33
-</button>
 
-    </form>
-  </div>
 
-  <p style="font-size: 12px; color: #555; margin-top: 30px;">
-    By proceeding, you agree to our <a href="/terms" target="_blank">Terms of Service</a> and <a href="/privacy" target="_blank">Privacy Policy</a>.
-  </p>
-</div>
+        <div class="form-item">
+            <div class="active-step-2-header">
+                <div class="active-step-2-progress-container">
+                    <div class="active-step-2-progress-indicator">
+                        <div class="active-step-2-progress-line"></div>
+                        <div class="active-step-2-progress-step"></div>
+                        <div class="active-step-2-progress-step active-step-2-active-progress-step"></div>
+                        <div class="active-step-2-progress-step"></div>
+                    </div>
 
-<script>
-  function removeRow(el) {
-    const row = el.closest('tr');
-    row.remove();
-    recalculateTotals();
-  }
+                    <div class="active-step-2-step-content">
+                        <div class="active-step-2-step-item">
+                            <span class="active-step-2-step-number">Step 1</span>
+                            <h2 class="active-step-2-step-title">Your Order</h2>
+                        </div>
+                        <div class="active-step-2-step-item active-step-2-active-item">
+                            <span class="active-step-2-step-number">Step 2</span>
+                            <span class="active-step-2-step-title">Billing Information</span>
+                        </div>
+                        <div class="active-step-2-step-item">
+                            <span class="active-step-2-step-number">Step 3</span>
+                            <span class="active-step-2-step-title">Payment Information</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-  function recalculateTotals() {
-    const rows = document.querySelectorAll('#cart-body tr');
-    let subtotal = 0;
-    rows.forEach(row => {
-      const priceText = row.cells[3].textContent.replace('$','');
-      subtotal += parseFloat(priceText);
-    });
-    subtotal = parseFloat(subtotal.toFixed(2));
-    const tax = parseFloat((subtotal * 0.085).toFixed(2));
-    const total = parseFloat((subtotal + tax).toFixed(2));
-    document.querySelector('#totals').innerHTML = `
-      <p><strong>Subtotal:</strong> $${subtotal.toFixed(2)}</p>
-      <p><strong>Sales Tax (8.5%):</strong> $${tax.toFixed(2)}</p>
-      <p><strong>Total Due:</strong> <span id="total-due">$${total.toFixed(2)}</span></p>
-    `;
-    document.querySelector('button').textContent = `Complete Payment — $${total.toFixed(2)}`;
-  }
 
-  window.addEventListener('DOMContentLoaded', () => {
-    recalculateTotals();
-  });
-</script>
+            <form class="form-container">
+                <div class="form-fields">
 
-</body>
+
+                    <div class="form-group">
+                        <label class="form-label" for="first-name">First Name</label>
+                        <input type="text" id="first-name" name="first-name" class="input-box" placeholder="Enter your first name" value="Ilia">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="form-label" for="last-name">Last Name</label>
+                        <input type="text" id="last-name" name="last-name" class="input-box" placeholder="Enter your last name" value="Oborin">
+                    </div>
+
+
+
+
+                    <div class="form-group">
+                        <label class="form-label" for="country">Country</label>
+                        <div class="select-wrapper custom">
+                            <div class="select-box" id="country-select-trigger">
+                                <span class="select-text">United States</span>
+                                <div class="arrow-container">
+                                    <img class="arrow-down" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
+                                </div>
+                            </div>
+                            <div class="custom-dropdown" id="country-dropdown">
+                                <div class="dropdown-option selected" data-value="United States">United States</div>
+                                <div class="dropdown-option" data-value="Canada">Canada</div>
+                                <div class="dropdown-option" data-value="United Kingdom">United Kingdom</div>
+                                <div class="dropdown-option" data-value="Germany">Germany</div>
+                                <div class="dropdown-option" data-value="France">France</div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="form-label" for="state">State</label>
+                        <div class="select-wrapper custom">
+                            <div class="select-box" id="state-select-trigger">
+                                <span class="select-text">New York</span>
+                                <div class="arrow-container">
+                                    <img class="arrow-down" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
+                                </div>
+                            </div>
+                            <div class="custom-dropdown" id="state-dropdown">
+                                <div class="dropdown-option selected" data-value="New York">New York</div>
+                                <div class="dropdown-option" data-value="California">California</div>
+                                <div class="dropdown-option" data-value="Florida">Florida</div>
+                                <div class="dropdown-option" data-value="Texas">Texas</div>
+                                <div class="dropdown-option" data-value="Illinois">Illinois</div>
+                                <div class="dropdown-option" data-value="Pennsylvania">Pennsylvania</div>
+                                <div class="dropdown-option" data-value="Ohio">Ohio</div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label class="form-label" for="city">City</label>
+                        <input type="text" id="city" name="city" class="input-box" placeholder="Enter your city">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="form-label" for="address1">Address Line 1</label>
+                        <input type="text" id="address1" name="address1" class="input-box" placeholder="Street address">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="form-label" for="address2">
+                            Address Line 2 <span class="optional">(optional)</span>
+                        </label>
+                        <input type="text" id="address2" name="address2" class="input-box" placeholder="Apartment, suite, etc.">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="form-label" for="zip">ZIP Code</label>
+                        <input type="text" id="zip" name="zip" class="input-box" placeholder="ZIP Code">
+                    </div>
+
+                </div>
+            </form>
+
+
+
+
+        </div>
+
+
+        <div class="payment-container">
+            <div class="step-3-header">
+                <div class="step-3-progress-container">
+                    <div class="step-3-progress-indicator">
+                        <div class="step-3-progress-line"></div>
+                        <div class="step-3-progress-step"></div>
+                        <div class="step-3-progress-step"></div>
+                        <div class="step-3-progress-step step-3-active-progress-step"></div>
+                    </div>
+
+                    <div class="step-3-step-content">
+                        <div class="step-3-step-item">
+                            <span class="step-3-step-number">Step 1</span>
+                            <h2 class="step-3-step-title">Your Order</h2>
+                        </div>
+                        <div class="step-3-step-item">
+                            <span class="step-3-step-number">Step 2</span>
+                            <span class="step-3-step-title">Billing Information</span>
+                        </div>
+                        <div class="step-3-step-item step-3-active-item">
+                            <span class="step-3-step-number">Step 3</span>
+                            <span class="step-3-step-title">Payment Information</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-3-payment-form-container">
+                <div class="step-3-payment-form-section">
+                    <div class="step-3-payment-form-card">
+                        <div class="step-3-card-form-content">
+
+                            <div class="step-3-card-brand-selector">
+                                <div class="step-3-custom-select">
+                                    <div class="step-3-select-trigger">
+                                        <img src="{{ asset('img/ico/visa-ico.png') }}" alt="Edit Item">
+                                        <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
+                                    </div>
+
+                                    <div class="step-3-select-options">
+
+                                        <button class="step-3-select-option" data-value="visa">
+
+
+                                            <img src="{{ asset('img/ico/visa-ico.png') }}" alt="Edit Item">
+                                        </button>
+
+                                        <button class="step-3-select-option" data-value="mastercard">
+
+                                            <img src="{{ asset('img/ico/mastercard-ico.png') }}" alt="Edit Item">
+                                        </button>
+
+                                        <button class="step-3-select-option" data-value="amex">
+
+                                            <img src="{{ asset('img/ico/amex-ico.png') }}" alt="Edit Item">
+                                        </button>
+
+                                        <button class="step-3-select-option" data-value="discover">
+
+                                            <img src="{{ asset('img/ico/discover-ico.png') }}" alt="Edit Item">
+                                        </button>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="step-3-form-field step-3-card-number-field">
+                                <label class="step-3-field-label">Card Number</label>
+                                <div class="step-3-input-field step-3-card-number-field-input">
+                                    <input type="text" class="step-3-form-input-field step-3-card-number-input" placeholder="0000 0000 0000 0000" maxlength="19">
+                                </div>
+                            </div>
+
+                            <div class="step-3-form-fields-row">
+                                <div class="step-3-form-field step-3-expiry-date-field">
+                                    <label class="step-3-field-label">Expiry Date</label>
+                                    <div class="step-3-date-fields">
+                                        <div class="step-3-custom-select step-3-month-select-field">
+                                            <div class="step-3-select-trigger">
+                                                <span class="step-3-selected-option-text">01</span>
+                                                <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
+                                            </div>
+                                            <div class="step-3-select-options">
+                                                <button class="step-3-select-option step-3-selected" data-value="01">01</button>
+                                                <button class="step-3-select-option" data-value="02">02</button>
+                                                <button class="step-3-select-option" data-value="03">03</button>
+                                                <button class="step-3-select-option" data-value="04">04</button>
+                                                <button class="step-3-select-option" data-value="05">05</button>
+                                                <button class="step-3-select-option" data-value="06">06</button>
+                                                <button class="step-3-select-option" data-value="07">07</button>
+                                                <button class="step-3-select-option" data-value="08">08</button>
+                                                <button class="step-3-select-option" data-value="09">09</button>
+                                                <button class="step-3-select-option" data-value="10">10</button>
+                                                <button class="step-3-select-option" data-value="11">11</button>
+                                                <button class="step-3-select-option" data-value="12">12</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="step-3-custom-select step-3-year-select-field">
+                                            <div class="step-3-select-trigger">
+                                                <span class="step-3-selected-option-text">2025</span>
+                                                <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
+                                            </div>
+                                            <div class="step-3-select-options">
+                                                <button class="step-3-select-option" data-value="2024">2024</button>
+                                                <button class="step-3-select-option step-3-selected" data-value="2025">2025</button>
+                                                <button class="step-3-select-option" data-value="2026">2026</button>
+                                                <button class="step-3-select-option" data-value="2027">2027</button>
+                                                <button class="step-3-select-option" data-value="2028">2028</button>
+                                                <button class="step-3-select-option" data-value="2029">2029</button>
+                                                <button class="step-3-select-option" data-value="2030">2030</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="step-3-form-field step-3-cvv-code-field">
+                                    <label class="step-3-field-label">CVV</label>
+                                    <div class="step-3-input-field step-3-cvv-field-input">
+                                        <input type="password" class="step-3-form-input-field step-3-cvv-code-input" placeholder="000" maxlength="3">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="step-3-save-card-option">
+                                <input type="checkbox" id="step-3-saveCardOption" class="step-3-option-checkbox" checked>
+                                <label for="step-3-saveCardOption" class="step-3-checkbox-text">Save this card for future purchases</label>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="step-3-security-info-section">
+                        <div class="step-3-payment-methods-icons">
+                            <div class="step-3-payment-method-icon">
+                                <img src="{{ asset('img/ico/lock-ico.svg') }}" alt="Edit Item">
+                            </div>
+                            <div class="step-3-payment-method-icon">
+                                <img src="{{ asset('img/ico/protection-ico.svg') }}" alt="Edit Item">
+                            </div>
+                            <div class="step-3-payment-method-icon">
+                                <img src="{{ asset('img/ico/card-ico.svg') }}" alt="Edit Item">
+                            </div>
+                            <div class="step-3-payment-method-icon">
+                                <img src="{{ asset('img/ico/logo-ico.svg') }}" alt="Edit Item">
+                            </div>
+
+                        </div>
+
+                        <div class="step-3-security-content">
+                            <p class="step-3-security-description">
+                                We do not store full card numbers or CVV. All transactions are securely processed through Bank of America's Secure Acceptance platform using encrypted and PCI-compliant technology. Only encrypted tokens are saved to enable future payments.
+                            </p>
+                            <div class="step-3-legal-terms">
+                                <span>By proceeding, you agree to our </span>
+                                <a href="#" class="step-3-terms-link">Terms of Service</a>
+                                <span>and</span>
+                                <a href="#" class="step-3-terms-link">Privacy Policy.</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-3-payment-submit-section">
+                    <button class="step-3-submit-payment-btn">
+                        Complete Payment
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+
+
+
+
+
+        @include('include.footer')
+
+        <script src="{{ asset('js/app.js') }}"></script>
+        <script src="{{ asset('js/chekout.js') }}"></script>
+        
+    </body>
+
 </html>
