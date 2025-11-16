@@ -1,95 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Payment Declined – GETWAB</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      color: #111827;
-      margin: 0;
-      padding: 40px 20px;
-    }
 
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      border-radius: 8px;
-      padding: 30px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      text-align: center;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    h1.failed {
-      font-size: 32px;
-      color: #dc2626;
-    }
+    <title>Getwab</title>
 
-    p {
-      font-size: 18px;
-      margin-top: 12px;
-    }
+    <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
-    table {
-      width: 100%;
-      margin-top: 20px;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      text-align: left;
-      padding: 8px;
-    }
-
-    tr:nth-child(even) {
-      background: #f9f9f9;
-    }
-
-    .note {
-      margin-top: 30px;
-      font-size: 16px;
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .button {
-      display: inline-block;
-      padding: 10px 20px;
-      background: #2563eb;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-    }
-
-    .button.secondary {
-      background: #6b7280;
-    }
-  </style>
 </head>
+
 <body>
-  <div class="container">
-    <h1 class="failed">❌ Payment Declined</h1>
-    <p><strong>Reason:</strong> Decline for CVV2 failure</p>
 
-    <table>
-      <tr><th>Amount</th><td>$1.00 USD</td></tr>
-      <tr><th>Card Type</th><td>Visa ending in 8869</td></tr>
-      <tr><th>Name</th><td>Ilia Oborin</td></tr>
-      <tr><th>Location</th><td>4532 Parnell Dr, Sarasota, FL 34232</td></tr>
-      <tr><th>Order Number</th><td>ORDER-1754147204</td></tr>
-      <tr><th>Transaction ID</th><td>7541472296866474203252</td></tr>
-    </table>
+    @include('include.header')
 
-    <div class="note">
-      <a class="button" href="/checkout">🔁 Try Again</a>
-      <a class="button secondary" href="/">← Return to Home</a>
-    </div>
-  </div>
-</body>
+
+
+    </head>
+
+    <body>
+
+
+<main class="cancelled-container">
+    <section class="cancelled-content">
+        <header class="cancelled-header">
+            <div class="cancelled-icon">
+                <div class="cancelled-icon-inner"></div>
+            </div>
+
+            <div class="cancelled-title-section">
+                <h1 class="cancelled-title">Payment Declined</h1>
+                <p class="cancelled-reason">Reason: Decline for CVV2 failure</p>
+            </div>
+
+            <table class="cancelled-details">
+                <tr class="cancelled-detail-row">
+                    <td class="cancelled-detail-label">Amount</td>
+                    <td class="cancelled-detail-value">$1.00 USD</td>
+                </tr>
+                <tr class="cancelled-detail-row">
+                    <td class="cancelled-detail-label">Card Type</td>
+                    <td class="cancelled-detail-value">Visa ending in 8869</td>
+                </tr>
+                <tr class="cancelled-detail-row">
+                    <td class="cancelled-detail-label">Name</td>
+                    <td class="cancelled-detail-value">Ilia Oborin</td>
+                </tr>
+                <tr class="cancelled-detail-row">
+                    <td class="cancelled-detail-label">Location</td>
+                    <td class="cancelled-detail-value">4532 Parnell Dr, Sarasota, FL 34232</td>
+                </tr>
+                <tr class="cancelled-detail-row">
+                    <td class="cancelled-detail-label">Order Number</td>
+                    <td class="cancelled-detail-value">ORDER-1754147204</td>
+                </tr>
+                <tr class="cancelled-detail-row">
+                    <td class="cancelled-detail-label">Transaction ID</td>
+                    <td class="cancelled-detail-value">7541472296866474203252</td>
+                </tr>
+            </table>
+        </header>
+
+        <footer class="cancelled-actions">
+            <button class="cancelled-button cancelled-button-primary">Try Again</button>
+            <button class="cancelled-button cancelled-button-secondary">Return to Home</button>
+        </footer>
+    </section>
+</main>
+
+
+
+        @include('include.footer')
+
+        <script src="{{ asset('js/app.js') }}"></script>
+
+    </body>
+
 </html>

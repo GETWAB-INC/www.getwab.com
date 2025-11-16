@@ -1,97 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Thank You – GETWAB</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      color: #111827;
-      margin: 0;
-      padding: 40px 20px;
-    }
 
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      border-radius: 8px;
-      padding: 30px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      text-align: center;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    h1.success { 
-      font-size: 32px;
-      color: #22c55e;
-    }
+    <title>Getwab</title>
 
-    h1.failed {
-      color: red;
-    }
+    <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
-    table {
-      width: 100%;
-      margin-top: 20px;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      text-align: left;
-      padding: 8px;
-    }
-
-    tr:nth-child(even) {
-      background: #f9f9f9;
-    }
-
-    .note {
-      margin-top: 30px;
-      font-size: 16px;
-      color: #333;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .button {
-      display: inline-block;
-      padding: 10px 20px;
-      background: #2563eb;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-    }
-
-    .button.secondary {
-      background: #6b7280;
-    }
-  </style>
 </head>
+
 <body>
-  <div class="container" id="receipt">
-    <h1 class="success">✅ Payment Successful</h1>
 
-    <table>
-      <tbody>
-        <tr><th>Amount</th><td>$1.00 USD</td></tr>
-        <tr><th>Card Type</th><td>Visa</td></tr>
-        <tr><th>Name</th><td>Ilia Oborin</td></tr>
-        <tr><th>Location</th><td>Sarasota, FL 34232</td></tr>
-        <tr><th>Order Number</th><td>ORDER-1753979763</td></tr>
-        <tr><th>Transaction ID</th><td>7539797800096715203616</td></tr>
-        <tr><th>Authorization Code</th><td>08434C</td></tr>
-        <tr><th>Authorized Time</th><td>2025-07-31T163620Z</td></tr>
-      </tbody>
-    </table>
+    @include('include.header')
 
-    <div class="note">
-      <a class="button" href="/">← Return to Home</a>
-      <a class="button secondary" href="#" onclick="window.print()">🧾 Print or Save Receipt</a>
-    </div>
-  </div>
-</body>
+
+
+    </head>
+
+    <body>
+
+
+
+
+
+        <main class="thank-you-container">
+            <section class="thank-you-content">
+                <header class="thank-you-header">
+                    <div class="thank-you-icon">
+                        <div class="thank-you-icon-inner"></div>
+                    </div>
+                    <h1 class="thank-you-title">Payment Successful</h1>
+
+                    <table class="thank-you-details">
+                        <tr class="thank-you-detail-row">
+                            <td class="thank-you-detail-label">Amount</td>
+                            <td class="thank-you-detail-value">$1.00 USD</td>
+                        </tr>
+                        <tr class="thank-you-detail-row">
+                            <td class="thank-you-detail-label">Card Type</td>
+                            <td class="thank-you-detail-value">Visa</td>
+                        </tr>
+                        <tr class="thank-you-detail-row">
+                            <td class="thank-you-detail-label">Name</td>
+                            <td class="thank-you-detail-value">Ilia Oborin</td>
+                        </tr>
+                        <tr class="thank-you-detail-row">
+                            <td class="thank-you-detail-label">Location</td>
+                            <td class="thank-you-detail-value">Sarasota, FL 34232</td>
+                        </tr>
+                        <tr class="thank-you-detail-row">
+                            <td class="thank-you-detail-label">Order Number</td>
+                            <td class="thank-you-detail-value">ORDER-1753979763</td>
+                        </tr>
+                        <tr class="thank-you-detail-row">
+                            <td class="thank-you-detail-label">Transaction ID</td>
+                            <td class="thank-you-detail-value">7539797800096715203616</td>
+                        </tr>
+                        <tr class="thank-you-detail-row">
+                            <td class="thank-you-detail-label">Authorization Code</td>
+                            <td class="thank-you-detail-value">08434C</td>
+                        </tr>
+                        <tr class="thank-you-detail-row">
+                            <td class="thank-you-detail-label">Authorized Time</td>
+                            <td class="thank-you-detail-value">2025-07-31T163620Z</td>
+                        </tr>
+                    </table>
+                </header>
+
+                <footer class="thank-you-actions">
+                    <button class="thank-you-button thank-you-button-primary">Return to Home</button>
+                    <button class="thank-you-button thank-you-button-secondary">Print or Save Receipt</button>
+                </footer>
+            </section>
+        </main>
+
+
+
+
+        @include('include.footer')
+
+        <script src="{{ asset('js/app.js') }}"></script>
+
+    </body>
+
 </html>
