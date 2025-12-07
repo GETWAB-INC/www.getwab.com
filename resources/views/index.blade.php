@@ -5,28 +5,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Getwab</title>
+    <title>GETWAB INC.</title>
 
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 
 <body  class="is-home-page">
-
-
-
     @include('include.header')
-
-
-
-
-
-
     <main>
-
-
-
-
         <div class="background-video-container">
             <!-- Video Background -->
             <video autoplay muted loop playsinline class="background-video">
@@ -43,7 +30,9 @@
                         </h1>
                         <p class="hero-subtitle">Analytics. Automation. Cybersecurity.</p>
                     </div>
-                    <a href="#" class="hero-button">Explore the Platform</a>
+                    <a href="{{ route('register') }}" class="hero-button">
+                        Explore the Platform
+                    </a>
                 </div>
             </section>
         </div>
@@ -88,14 +77,14 @@
                     <div class="product-row">
                         <div class="product-card">
                             <div class="product-info">
-                                <h3 class="product-name">FPDS Charts</h3>
+                                <h3 class="product-name">FPDS Query</h3>
                                 <p class="product-description">
-                                    Explore federal spending with full access <br />
-                                    to all contract variables. No data cuts <br />
-                                    or simplifications — complete transparency.
+                                    Run powerful SQL-like queries on federal procurement data
+                                    with unrestricted access to all fields. Get answers fast —
+                                    no API limits or delays.
                                 </p>
-                                <a href="#" class="product-button">
-                                    <span class="button-text">Go to Charts</span>
+                                <a href="{{ route('products.fpds-query') }}" class="product-button">
+                                    <span class="button-text">Go to Query</span>
                                 </a>
                             </div>
                         </div>
@@ -106,14 +95,14 @@
                         <img src="{{ asset('img/main/ProductImage2.png') }}" alt="">
                         <div class="product-card">
                             <div class="product-info">
-                                <h3 class="product-name">FPDS Query</h3>
+                                <h3 class="product-name">FPDS Reports</h3>
                                 <p class="product-description">
                                     Run powerful SQL-like queries on federal procurement data
                                     with unrestricted access to all fields. Get answers fast —
                                     no API limits or delays.
                                 </p>
-                                <a href="#" class="product-button product-button-2">
-                                    <span class="button-text">Go to Query</span>
+                                <a href="{{ route('products.fpds-reports') }}" class="product-button product-button-2">
+                                    <span class="button-text">Go to Library</span>
                                 </a>
                             </div>
                         </div>
@@ -137,7 +126,7 @@
                                 For both government and private clients.
                                 <img class="services-description-quotes-2" src="{{ asset('img/ico/quotes-2.svg') }}" alt="" />
                             </p>
-                            <a href="#" class="services-button">Request Consultation</a>
+                            <a href="{{ route('contact') }}" class="services-button">Request Consultation</a>
                         </div>
                     </div>
 
@@ -293,7 +282,7 @@
           </div>
           <h2 class="choose-getwab-heading">Why Choose GETWAB?</h2>
           <div class="choose-getwab-content-wrapper">
-            <!-- Контейнер для десктопной анимации -->
+            <!-- Container for desktop animation -->
             <div class="desktop-animation">
               <div class="choose-getwab-main-content">
                 <div class="chart-container">
@@ -306,12 +295,12 @@
               </div>
             </div>
 
-            <!-- Контейнер для мобильной анимации -->
+            <!-- Container for mobile animation -->
             <div class="mobile-animation">
               <div class="wheel-container" id="wheelContainer">
                 <canvas id="wheel" width="450" height="450"></canvas>
 
-                <!-- Контейнеры для информации о секторах -->
+                <!-- Containers for sector information -->
                 <div class="sectors-info">
                   <div class="sector-info" data-index="0">
                     <img
@@ -391,7 +380,7 @@
                     </div>
 
                     <div class="contract-data-cta">
-                        <a href="#" class="contract-button">
+                        <a href="{{ route('register') }}" class="contract-button">
                             <span class="contract-text">Explore the Platform</span>
                         </a>
                     </div>

@@ -27,6 +27,9 @@ Route::get('account', function () {
     return view('account');
 })->name('account');
 
+// contact page
+Route::get('contact', function () {return view('contact');})->name('contact');
+
 // reports page
 Route::get('reports', function () {
     return view('reports');
@@ -53,7 +56,7 @@ Route::get('/products/fpds-charts', function () {
 // Продукты: страницы обзора
 Route::get('/products/fpds-query/overview', function () {
     return view('products.fpds-query-overview');
-});
+})->name('products.fpds-query-overview');;
 
 Route::get('/products/fpds-reports/overview', function () {
     return view('products.fpds-reports-overview');

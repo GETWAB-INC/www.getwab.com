@@ -64,7 +64,7 @@
             </div>
         </div>
         <div class="reports-grid">
-            <div class="reports-card">
+            <div class="reports-card" onclick="window.location.href = '{{ route('report') }}';" style="cursor: pointer;">
                 <div class="reports-card-content">
                     <div class="reports-card-header">
                         <div class="reports-card-info">
@@ -81,7 +81,7 @@
                     </div>
                 </div>
             </div>
-            <div class="reports-card">
+            <div class="reports-card" onclick="window.location.href = '{{ route('report') }}';" style="cursor: pointer;">
                 <div class="reports-card-content">
                     <div class="reports-card-header">
                         <div class="reports-card-info">
@@ -98,7 +98,7 @@
                     </div>
                 </div>
             </div>
-            <div class="reports-card">
+            <div class="reports-card" onclick="window.location.href = '{{ route('report') }}';" style="cursor: pointer;">
                 <div class="reports-card-content">
                     <div class="reports-card-header">
                         <div class="reports-card-info">

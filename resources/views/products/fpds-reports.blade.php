@@ -17,8 +17,6 @@
 
     @include('include.header')
 
-
-
 <section>
         <div class="fpds-report-hero">
         <div class="fpds-report-container">
@@ -50,9 +48,6 @@
     </div>
 </section>
 
-
-
-
 <section>
      <div class="why-choose-us-container">
         <div class="why-choose-us-header">
@@ -62,7 +57,7 @@
         </div>
 
         <div class="features-container">
-            <!-- Добавляем разделители как отдельные элементы -->
+            <!-- Add separators as separate elements -->
             <div class="divider divider-1"></div>
             <div class="divider divider-2"></div>
             <div class="divider divider-3"></div>
@@ -123,9 +118,17 @@
             <div class="explore-library-header">
                 <div class="explore-library-left">
                     <div class="explore-library-title">Explore Our FPDS Report Library</div>
+
                     <div class="browse-all-button">
-                        <div class="browse-all-text">Browse All Templates</div>
+                        <div class="browse-all-text">
+                        <a href="{{ route('reports') }}">
+                            Browse All Templates
+                        </a>    
                     </div>
+
+                    </div>
+
+                    
                 </div>
                 <div class="explore-library-right">
                     <!-- Geographic Spending Analysis -->
@@ -259,9 +262,6 @@
             </div>
         </div>
     </div>
-
-
-
 
 <div class="fpds-mobile-slider-container">
         <div class="fpds-mobile-slider-component">
@@ -455,27 +455,7 @@
         </div>
     </div>
 
-
-
-
-
-
-
-
-
-
-
-
 </section>
-
-
-
-
-
-
-
-
-
 
 <section>
       <div class="sample-report-container">
@@ -499,28 +479,6 @@
         </div>
     </div>
 </section>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
  <section>
         <div class="custom-report-container">
@@ -574,16 +532,6 @@
         </div>
     </section>
 
-
-
-
-
-
-
-
-
-
-
 <section>
      <div class="plans-pricing">
         <div class="plans-container">
@@ -609,7 +557,9 @@
 
                                 </div>
                                 <div class="plan-button">
-                                    <div class="button-text">Order</div>
+                                    <a href="{{ route('checkout') }}" class="button-text">
+                                        Order
+                                    </a>
                                 </div>
                             </div>
 
@@ -633,7 +583,9 @@
                                      <img src="{{ asset('/img/ico/UnlimitedSubscription.png') }}" alt="" />
                                 </div>
                                 <div class="plan-button">
-                                    <div class="button-text">Order</div>
+                                    <a href="{{ route('checkout') }}" class="button-text">
+                                        Order
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -643,11 +595,6 @@
         </div>
     </div>
 </section>
-
-
-
-
-
 
 
     <section>
@@ -723,14 +670,14 @@
                 const question = item.querySelector('.faq-question');
 
                 question.addEventListener('click', () => {
-                    // Закрываем все другие открытые FAQ
+                    // Close all other open FAQs
                     faqItems.forEach(otherItem => {
                         if (otherItem !== item && otherItem.classList.contains('active')) {
                             otherItem.classList.remove('active');
                         }
                     });
 
-                    // Переключаем текущий FAQ
+                    // Switch the current FAQ
                     item.classList.toggle('active');
                 });
             });
@@ -743,17 +690,13 @@
         <div class="fpds-container">
             <div class="fpds-heading">Ready to get your FPDS Report?</div>
             <div class="fpds-button">
-                <div class="fpds-button-text">Order Now</div>
+                <a href="{{ route('checkout') }}" class="button-text">
+                    Order
+                </a>
             </div>
         </div>
     </div>
 </section>
-
-
-
-
-
-
     @include('include.footer')
 <script src="{{ asset('js/app.js') }}"></script>
 </body>

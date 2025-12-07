@@ -149,7 +149,7 @@
                                     <div class="feature">Full access, unlimited queries</div>
                                     <div class="feature">CSV export, SQL interface</div>
                                 </div>
-                                <a href="" class="select-btn">
+                                <a href="{{ route('checkout') }}" class="select-btn">
                                     Select Monthly
                                 </a>
                             </div>
@@ -168,7 +168,7 @@
                                     <div class="feature">CSV export, SQL interface</div>
                                     <div class="feature">Priority support</div>
                                 </div>
-                                <a href="#" class="select-btn">
+                                <a href="{{ route('checkout') }}" class="select-btn">
                                     Select Yearly
                                 </a>
                             </div>
@@ -184,12 +184,6 @@
                 </div>
             </div>
         </section>
-
-
-
-
-
-
 
     </main>
 

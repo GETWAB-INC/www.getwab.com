@@ -123,8 +123,12 @@
                             </fieldset>
                         </form>
                     </div>
-                    <button class="sfpr-geo-el-1-generate-btn select-btn">Generate Report</button>
-
+                    <button 
+                        class="sfpr-geo-el-1-generate-btn select-btn"
+                        onclick="window.location.href = '{{ route('account') }}';"
+                    >
+                    Generate Report
+                    </button>
 
                     <div class="usage-section">
                         <h1 class="usage-title">Usage</h1>

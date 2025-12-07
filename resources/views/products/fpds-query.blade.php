@@ -31,7 +31,13 @@
                     <div class="fpds-query-subtitle-container-mobile">
                         <p class="fpds-query-subtitle">High-speed FPDS analytics engine.Direct access to raw federal contract data</p>
                     </div>
-                    <button class="fpds-query-btn">Launch FPDS Query Demo</button>
+                    <button 
+                        class="fpds-query-btn"
+                        onclick="window.location.href = 'https://fpds.getwab.com/query';"
+                    >
+                    Launch FPDS Query Demo
+                    </button>
+
                     <div class="fpds-query-line"></div>
                 </div>
             </div>
@@ -177,8 +183,20 @@
             <div class="preview-content">
                 <img src="{{ asset('/img/main/ProductImage.png') }}" alt="" class="preview-image">
                 <div class="preview-actions">
-                    <button class="btn-primary">Launch FPDS Query Demo</button>
-                    <button class="btn-secondary">View Pricing Plans</button>
+                    <button 
+                        class="btn-primary"
+                        onclick="window.location.href = 'https://fpds.getwab.com/query';"
+                    >
+                    Launch FPDS Query Demo
+                    </button>
+
+                    <button 
+                        class="btn-secondary"
+                        onclick="window.location.href = '{{ route('products.fpds-query-overview') }}';"
+                    >
+                    View Pricing Plans
+                    </button>
+
                 </div>
             </div>
         </div>
