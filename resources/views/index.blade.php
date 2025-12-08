@@ -56,7 +56,7 @@
                     </div>
 
                     <div class="about-link">
-                        <a href="#" class="about-link-text">View Capability Statement</a>
+                        <a href="https://www.getwab.com/capability-statement.pdf" class="about-link-text">View Capability Statement</a>
                         <img src="{{ asset('img/ico/arrow-neon.svg') }}" alt="">
                     </div>
 

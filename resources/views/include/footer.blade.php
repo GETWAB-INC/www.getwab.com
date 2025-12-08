@@ -60,8 +60,8 @@
           Copyright © 2025. GETWAB.INC. All rights reserved.
         </div>
         <div class="footer-legal-links">
-          <a href="#" class="footer-legal-link">User terms & Conditions</a>
-          <a href="#" class="footer-legal-link">Privacy Policy</a>
+          <a href="{{ route('user-terms-conditions') }}" class="footer-legal-link">User terms & Conditions</a>
+          <a href="{{ route('privacy-policy') }}" class="footer-legal-link">Privacy Policy</a>
         </div>
       </div>
     </footer>
