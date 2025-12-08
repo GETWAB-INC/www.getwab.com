@@ -195,7 +195,7 @@
                         onclick="window.location.href = '{{ route('products.fpds-query-overview') }}';"
                     >
                     View Pricing Plans
-                    </button>
+                </button>
 
                 </div>
             </div>

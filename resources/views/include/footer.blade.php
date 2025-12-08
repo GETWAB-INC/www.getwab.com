@@ -5,39 +5,41 @@
             <img src="/img/footer/Footerlogo.png" alt="" />
           </div>
           <div class="footer-column">
-            <h3 class="footer-column-title">Analytics</h3>
+            <h3 class="footer-column-title">Products</h3>
             <ul class="footer-links">
-              <li class="footer-link">Data Analysis Services</li>
-              <li class="footer-link">Automation Solutions</li>
-              <li class="footer-link">Custom Software Development</li>
-              <li class="footer-link">Order a Report</li>
+              <li class="footer-link"><a href="{{ route('products.fpds-query') }}">FPDS Query</a></li>
+              <li class="footer-link"><a href="{{ route('products.fpds-query-overview') }}">FPDS Query Overview</a></li>
+              <li class="footer-link"><a href="{{ route('products.fpds-reports') }}">FPDS Reports</a></li>
+              <li class="footer-link"><a href="{{ route('products.fpds-reports-overview') }}">FPDS Reports Overview</a></li>
+              <li class="footer-link"><a href="{{ route('reports') }}">FPDS Reports Library</a></li>
             </ul>
           </div>
           <div class="footer-column">
-            <h3 class="footer-column-title">Dashboards</h3>
+            <h3 class="footer-column-title">Services</h3>
             <ul class="footer-links">
-              <li class="footer-link">FPDS Dashboards</li>
-              <li class="footer-link">Government Market Analytics</li>
-              <li class="footer-link">Custom Reports</li>
-              <li class="footer-link">Build Your Dashboard</li>
+              <li class="footer-link"><a href="{{ route('services.consulting-advisory') }}">Consulting & Advisory</a></li>
+              <li class="footer-link"><a href="{{ route('services.custom-analytics') }}">Custom Analytics</a></li>
+              <li class="footer-link"><a href="{{ route('services.data-automation') }}">Data Automation</a></li>
+              <li class="footer-link"><a href="{{ route('services.gov-contracting') }}">Gov Contracting</a></li>
             </ul>
           </div>
-          <div class="footer-column">
-            <h3 class="footer-column-title">Consulting</h3>
-            <ul class="footer-links">
-              <li class="footer-link">Request a Consultation</li>
-              <li class="footer-link">Data Strategy Consulting</li>
-              <li class="footer-link">Government Contracting Advisory</li>
-              <li class="footer-link">Custom Solutions Consulting</li>
-            </ul>
-          </div>
+
           <div class="footer-column">
             <h3 class="footer-column-title">About</h3>
             <ul class="footer-links">
-              <li class="footer-link">Company</li>
-              <li class="footer-link">Capability Statement</li>
-              <li class="footer-link">Mission</li>
-              <li class="footer-link">Contact</li>
+              <li class="footer-link"><a href="{{ route('company') }}">Company</a></li>
+              <li class="footer-link"><a href="https://www.getwab.com/capability-statement.pdf">Capability Statement</a></li>
+              <li class="footer-link"><a href="{{ route('mission') }}">Mission</a></li>
+              <li class="footer-link"><a href="{{ route('contact-us') }}">Contact Us</a></li>
+            </ul>
+          </div>
+          <div class="footer-column">
+            <h3 class="footer-column-title">Profile</h3>
+            <ul class="footer-links">
+              <li class="footer-link"><a href="{{ route('login') }}">Log In</a></li>
+              <li class="footer-link"><a href="{{ route('register') }}">Register</a></li>
+              <li class="footer-link"><a href="{{ route('account') }}">Account</a></li>
+              <li class="footer-link"><a href="/logout">Logout</a></li>
             </ul>
           </div>
         </div>

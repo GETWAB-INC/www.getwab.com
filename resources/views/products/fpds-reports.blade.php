@@ -21,7 +21,7 @@
         <div class="fpds-report-hero">
         <div class="fpds-report-container">
             <div class="fpds-report-content">
-                <div class="fpds-report-title">FPDS Report <br>by GETWAB INC.</div>
+                <div class="fpds-report-title">FPDS Reports</div>
                 <div class="fpds-report-subtitle">High-Performance Federal Contract Reports Powered <br>by Raw FPDS Data</div>
                 <div class="fpds-report-line"></div>
             </div>
@@ -690,8 +690,8 @@
         <div class="fpds-container">
             <div class="fpds-heading">Ready to get your FPDS Report?</div>
             <div class="fpds-button">
-                <a href="{{ route('checkout') }}" class="button-text">
-                    Order
+                <a href="{{ route('reports') }}" class="button-text">
+                    Explore Our FPDS Report Library
                 </a>
             </div>
         </div>

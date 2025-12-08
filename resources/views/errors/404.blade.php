@@ -34,7 +34,7 @@
             </div>
         </div>
         <button class="home-button">
-            <div class="button-text">Return Home</div>
+            <div class="button-text"><a href="/">Return Home</a></div>
         </button>
     </div>
 

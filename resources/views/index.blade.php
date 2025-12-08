@@ -102,7 +102,7 @@
                                     no API limits or delays.
                                 </p>
                                 <a href="{{ route('products.fpds-reports') }}" class="product-button product-button-2">
-                                    <span class="button-text">Go to Library</span>
+                                    <span class="button-text">Explore</span>
                                 </a>
                             </div>
                         </div>
@@ -126,7 +126,7 @@
                                 For both government and private clients.
                                 <img class="services-description-quotes-2" src="{{ asset('img/ico/quotes-2.svg') }}" alt="" />
                             </p>
-                            <a href="{{ route('contact') }}" class="services-button">Request Consultation</a>
+                            <a href="{{ route('contact-us') }}" class="services-button">Request Consultation</a>
                         </div>
                     </div>
 

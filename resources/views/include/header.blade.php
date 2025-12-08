@@ -23,10 +23,10 @@
                 <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
               </div>
               <div class="dropdown-menu">
-                <a href="{{ route('report') }}" class="dropdown-item">Consulting & Advisory</a>
-                <a href="{{ route('article') }}" class="dropdown-item">Gov Contracting</a>
-                <a href="#" class="dropdown-item">Custom Analytics</a>
-                <a href="#" class="dropdown-item">Data Automation</a>
+                <a href="{{ route('services.consulting-advisory') }}" class="dropdown-item">Consulting & Advisory</a>
+                <a href="{{ route('services.custom-analytics') }}" class="dropdown-item">Custom Analytics</a>
+                <a href="{{ route('services.data-automation') }}" class="dropdown-item">Data Automation</a>
+                <a href="{{ route('services.gov-contracting') }}" class="dropdown-item">Gov Contracting</a>
               </div>
             </div>
           </nav>
@@ -43,10 +43,10 @@
                 <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
               </div>
               <div class="dropdown-menu">
-                <a href="#" class="dropdown-item">Company</a>
-                <a href="#" class="dropdown-item">Capability Statement</a>
-                <a href="#" class="dropdown-item">Mission</a>
-                <a href="#" class="dropdown-item">Contact</a>
+                <a href="{{ route('company') }}" class="dropdown-item">Company</a>
+                <a href="https://www.getwab.com/capability-statement.pdf" class="dropdown-item">Capability Statement</a>
+                <a href="{{ route('mission') }}" class="dropdown-item">Mission</a>
+                <a href="{{ route('contact-us') }}" class="dropdown-item">Contact Us</a>
               </div>
             </div>
 
@@ -85,10 +85,10 @@
             />
           </div>
           <div class="mobile-submenu">
-            <a href="#" class="mobile-submenu-item">Consulting & Advisory</a>
-            <a href="#" class="mobile-submenu-item">Gov Contracting</a>
-            <a href="#" class="mobile-submenu-item">Custom Analytics</a>
-            <a href="#" class="mobile-submenu-item">Data Automation</a>
+            <a href="{{ route('services.consulting-advisory') }}" class="mobile-submenu-item">Consulting & Advisory</a>
+            <a href="{{ route('services.custom-analytics') }}" class="mobile-submenu-item">Custom Analytics</a>
+            <a href="{{ route('services.data-automation') }}" class="mobile-submenu-item">Data Automation</a>
+            <a href="{{ route('services.gov-contracting') }}" class="mobile-submenu-item">Gov Contracting</a>
           </div>
 
           <div class="mobile-menu-item">
@@ -100,13 +100,13 @@
             />
           </div>
           <div class="mobile-submenu">
-            <a href="#" class="mobile-submenu-item">Company</a>
-            <a href="#" class="mobile-submenu-item">Capability Statement</a>
-            <a href="#" class="mobile-submenu-item">Mission</a>
-            <a href="#" class="mobile-submenu-item">Contact</a>
+            <a href="{{ route('company') }}" class="mobile-submenu-item">Company</a>
+            <a href="https://www.getwab.com/capability-statement.pdf" class="mobile-submenu-item">Capability Statement</a>
+            <a href="{{ route('mission') }}" class="mobile-submenu-item">Mission</a>
+            <a href="{{ route('contact-us') }}" class="mobile-submenu-item">Contact Us</a>
           </div>
 
-          <a href="#" class="mobile-login-item">Log In</a>
+          <a href="{{ route('login') }}" class="mobile-login-item">Log In</a>
         </div>
       </div>
 
@@ -132,17 +132,17 @@
           <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
         </div>
         <div class="dropdown-menu">
-          <a href="#" class="dropdown-item">Consulting & Advisory</a>
-          <a href="#" class="dropdown-item">Gov Contracting</a>
-          <a href="#" class="dropdown-item">Custom Analytics</a>
-          <a href="#" class="dropdown-item">Data Automation</a>
+          <a href="{{ route('services.consulting-advisory') }}" class="dropdown-item">Consulting & Advisory</a>
+          <a href="{{ route('services.custom-analytics') }}" class="dropdown-item">Custom Analytics</a>
+          <a href="{{ route('services.data-automation') }}" class="dropdown-item">Data Automation</a>
+          <a href="{{ route('services.gov-contracting') }}" class="dropdown-item">Gov Contracting</a>
         </div>
       </div>
     </nav>
 
     <div class="header-logo-container">
       <a href="/" class="header-logo">
-        <img src="/img/header/Logofix.png" alt="Getwab Logo" />
+        <img src="/img/header/Logofix.png" alt="GETWAB INC. Logo" />
       </a>
     </div>
 
@@ -153,15 +153,15 @@
           <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
         </div>
         <div class="dropdown-menu">
-          <a href="#" class="dropdown-item">Company</a>
-          <a href="#" class="dropdown-item">Capability Statement</a>
-          <a href="#" class="dropdown-item">Mission</a>
-          <a href="#" class="dropdown-item">Contact</a>
+          <a href="{{ route('company') }}" class="dropdown-item">Company</a>
+          <a href="https://www.getwab.com/capability-statement.pdf" class="dropdown-item">Capability Statement</a>
+          <a href="{{ route('mission') }}" class="dropdown-item">Mission</a>
+          <a href="{{ route('contact-us') }}" class="dropdown-item">Contact Us</a>
         </div>
       </div>
 
       <div class="header-login">
-        <a href="#" class="login-text">Log In</a>
+        <a href="{{ route('login') }}" class="login-text">Log In</a>
       </div>
     </nav>
   </div>

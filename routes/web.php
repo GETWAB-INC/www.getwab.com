@@ -7,6 +7,14 @@ Route::get('/', function () {
     return view('index');
 })->name('/');
 
+Route::get('/company', function () {
+    return view('company');
+})->name('company');
+
+Route::get('/mission', function () {
+    return view('mission');
+})->name('mission');
+
 // login page
 Route::get('login', function () {
     return view('login');
@@ -28,7 +36,7 @@ Route::get('account', function () {
 })->name('account');
 
 // contact page
-Route::get('contact', function () {return view('contact');})->name('contact');
+Route::get('contact-us', function () {return view('contact-us');})->name('contact-us');
 
 // reports page
 Route::get('reports', function () {
@@ -56,15 +64,34 @@ Route::get('/products/fpds-charts', function () {
 // Продукты: страницы обзора
 Route::get('/products/fpds-query/overview', function () {
     return view('products.fpds-query-overview');
-})->name('products.fpds-query-overview');;
+})->name('products.fpds-query-overview');
 
 Route::get('/products/fpds-reports/overview', function () {
     return view('products.fpds-reports-overview');
-});
+})->name('products.fpds-reports-overview');
 
 Route::get('/products/fpds-charts/overview', function () {
     return view('products.fpds-charts-overview');
 });
+
+// Services
+
+
+Route::get('/services/consulting-advisory', function () {
+    return view('services.consulting-advisory');
+})->name('services.consulting-advisory');
+
+Route::get('/services/custom-analytics', function () {
+    return view('services.custom-analytics');
+})->name('services.custom-analytics');
+
+Route::get('/services/data-automation', function () {
+    return view('services.data-automation');
+})->name('services.data-automation');
+
+Route::get('/services/gov-contracting', function () {
+    return view('services.gov-contracting');
+})->name('services.gov-contracting');
 
 // checkout page
 Route::get('checkout', function () {
