@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Login to GETWAB</title>
+    <title>Password Reset</title>
 
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -23,7 +23,7 @@
         <div class="login-card">
             <div class="login-content">
                 <div class="login-header">
-                    <h1 class="login-title">Login to GETWAB</h1>
+                    <h1 class="login-title">Change or reset your password</h1>
                 </div>
 
                 <form class="login-form">
@@ -33,23 +33,12 @@
                             <input type="email" class="form-input" placeholder="you@example.com">
                         </div>
                     </div>
-
-                    <div class="form-field">
-                        <label class="form-label">Password</label>
-                        <div class="input-wrapper">
-                            <input type="password" class="form-input" placeholder="*****">
-                        </div>
-                    </div>
                 </form>
 
                 <div class="login-footer">
                     <div class="register-prompt">
-                        <span class="register-text">Don't have an account?</span>
-                        <a href="{{ route('register') }}" class="register-link">Register</a>
-                    </div>
-                    <div class="register-prompt">
-                        <span class="register-text">Forgot password?</span>
-                        <a href="{{ route('forgot') }}" class="register-link">Reset</a>
+                        <span class="register-text">Already registered?</span>
+                        <a href="{{ route('login') }}" class="register-link">Log in</a>
                     </div>
 
                     <button class="login-button">

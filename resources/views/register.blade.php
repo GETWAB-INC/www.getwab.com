@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Getwab</title>
+    <title>Register on GETWAB</title>
 
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -56,7 +56,7 @@
                         <div class="register-footer">
                             <div class="login-prompt">
                                 <span class="login-text">Already registered?</span>
-                                <a class="login-link" href="/login">Log in</a>
+                                <a class="login-link" href="{{ route('login') }}">Log in</a>
                             </div>
                         </div>
                     </form>

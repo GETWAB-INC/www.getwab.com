@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Getwab</title>
+    <title>FPDS Reports</title>
 
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -23,6 +23,7 @@
             <div class="fpds-report-content">
                 <div class="fpds-report-title">FPDS Reports</div>
                 <div class="fpds-report-subtitle">High-Performance Federal Contract Reports Powered <br>by Raw FPDS Data</div>
+                
                 <div class="fpds-report-line"></div>
             </div>
         </div>
@@ -117,7 +118,7 @@
         <div class="explore-library-wrapper">
             <div class="explore-library-header">
                 <div class="explore-library-left">
-                    <div class="explore-library-title">Explore Our FPDS Report Library</div>
+                    <div class="explore-library-title">Explore Our FPDS Reports Library</div>
 
                     <div class="browse-all-button">
                         <div class="browse-all-text">
@@ -690,8 +691,8 @@
         <div class="fpds-container">
             <div class="fpds-heading">Ready to get your FPDS Report?</div>
             <div class="fpds-button">
-                <a href="{{ route('reports') }}" class="button-text">
-                    Explore Our FPDS Report Library
+                <a href="{{ route('products.fpds-reports-overview') }}" class="button-text">
+                    FPDS Reports — Benefits & Pricing
                 </a>
             </div>
         </div>
