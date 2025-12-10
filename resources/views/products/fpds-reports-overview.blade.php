@@ -445,7 +445,7 @@
                         </p>
                       </div>
                     </header>
-                    <a href="#" class="reports-pricing__btn">Browse Reports</a>
+                    <a href="{{ route('reports') }}" class="reports-pricing__btn">Browse Reports</a>
                   </div>
                 </article>
 
@@ -467,7 +467,7 @@
                         </p>
                       </div>
                     </header>
-                    <a href="#" class="reports-pricing__btn">Request Package</a>
+                    <a href="{{ route('checkout') }}" class="reports-pricing__btn">Request Package</a>
                   </div>
                 </article>
 
@@ -489,7 +489,7 @@
                         </p>
                       </div>
                     </header>
-                    <a href="#" class="reports-pricing__btn">Request Package</a>
+                    <a href="{{ route('checkout') }}" class="reports-pricing__btn">Request Package</a>
                   </div>
                 </article>
               </div>
@@ -519,7 +519,7 @@
                         </p>
                       </div>
                     </header>
-                    <a href="#" class="reports-pricing__btn">Subscribe Now</a>
+                    <a href="{{ route('checkout') }}" class="reports-pricing__btn">Subscribe Now</a>
                   </div>
                 </article>
               </div>

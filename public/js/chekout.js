@@ -45,13 +45,13 @@ document.querySelectorAll(".step-3-custom-select").forEach((select) => {
 
 document.addEventListener("DOMContentLoaded", function () {
     const countryTrigger = document.getElementById("country-select-trigger");
-    const countryText = countryTrigger.querySelector(".select-text"); // Только текст!
+    const countryText = countryTrigger.querySelector(".select-text"); // text only!
     const countryDropdown = document.getElementById("country-dropdown");
     const countryOptions = countryDropdown.querySelectorAll(".dropdown-option");
     const countryWrapper = countryTrigger.closest(".select-wrapper.custom");
 
     const stateTrigger = document.getElementById("state-select-trigger");
-    const stateText = stateTrigger.querySelector(".select-text"); // Только текст!
+    const stateText = stateTrigger.querySelector(".select-text"); // text only!
     const stateDropdown = document.getElementById("state-dropdown");
     const stateOptions = stateDropdown.querySelectorAll(".dropdown-option");
     const stateWrapper = stateTrigger.closest(".select-wrapper.custom");

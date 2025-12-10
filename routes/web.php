@@ -1,24 +1,45 @@
 <?php
-
+use App\Http\Controllers\LoginController;
 // -------------------- Static Pages --------------------
 
 // Home page
 Route::get('/', function () { return view('index'); })->name('/');
 
 // login page
-Route::get('/login', function () { return view('login'); })->name('login');
+Route::get('/login', function () {
+    if (auth()->check()) {
+        return redirect()->route('account');
+    }
+    return view('login');
+})->name('login');
+
+// Login Process
+Route::post('/login-process', [LoginController::class, 'login'])->name('login-process');
+// Logout
+Route::post('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('login');
+})->name('logout');
 
 // register page
-Route::get('/register', function () { return view('register'); })->name('register');
+Route::get('/register', function () {
+    if (auth()->check()) {
+        return redirect()->route('account');
+    }
+    return view('register');
+})->name('register');
+
 
 // forgot
 Route::get('/forgot', function () { return view('forgot'); })->name('forgot');
 
 // article page
-Route::get('/article', function () { return view('article'); })->name('article');
+Route::get('/article', function () { return view('article'); })->name('article')->middleware('auth');
 
 // account page
-Route::get('/account', function () { return view('account'); })->name('account');
+Route::get('/account', function () { return view('account'); })->name('account')->middleware('auth');
 
 // contact page
 Route::get('/contact-us', function () {return view('contact-us');})->name('contact-us');
@@ -52,8 +73,8 @@ Route::get('/company', function () { return view('company'); })->name('company')
 Route::get('/mission', function () { return view('mission'); })->name('mission');
 
 // checkout page
-Route::get('/checkout', function () { return view('checkout'); })->name('checkout');
+Route::get('/checkout', function () { return view('checkout'); })->name('checkout')->middleware('auth');
 // thank-you page
-Route::get('/thank-you', function () { return view('thank-you'); });
+Route::get('/thank-you', function () { return view('thank-you'); })->middleware('auth');
 // cancelled page
-Route::get('/cancelled', function () { return view('cancelled'); });
+Route::get('/cancelled', function () { return view('cancelled'); })->middleware('auth');

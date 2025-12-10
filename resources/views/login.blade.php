@@ -26,21 +26,29 @@
                     <h1 class="login-title">Login to GETWAB</h1>
                 </div>
 
-                <form class="login-form">
+                <form class="login-form" action="{{ route('login-process') }}" method="post">
+                    @csrf
+                    @if($errors->any())
+                    <div class="alert alert-danger">
+                        @foreach($errors->all() as $error)
+                        <p>{{ $error }}</p>
+                        @endforeach
+                    </div>
+                    @endif
                     <div class="form-field">
                         <label class="form-label">Email address</label>
                         <div class="input-wrapper">
-                            <input type="email" class="form-input" placeholder="you@example.com">
+                            <input type="email" id="email" name="email" class="form-input" placeholder="you@example.com">
                         </div>
                     </div>
 
                     <div class="form-field">
                         <label class="form-label">Password</label>
                         <div class="input-wrapper">
-                            <input type="password" class="form-input" placeholder="*****">
+                            <input type="password" id="password" name="password" class="form-input" placeholder="*****">
                         </div>
                     </div>
-                </form>
+                
 
                 <div class="login-footer">
                     <div class="register-prompt">
@@ -56,6 +64,7 @@
                         <span class="button-text">Log In</span>
                     </button>
                 </div>
+                </form>
             </div>
         </div>
     </div>

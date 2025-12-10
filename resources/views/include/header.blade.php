@@ -51,8 +51,16 @@
             </div>
 
             <div class="header-login">
+      @auth
+              <!-- If the user is authorized → show the profile icon -->
+              <a href="{{ route('account') }}" class="login-text">
+                <img src="{{ asset('/img/ico/Profile-ico.svg') }}" alt="Profile" />
+              </a>
+              @else
+              <!-- If not authorized → show login link -->
               <a href="{{ route('login') }}" class="login-text">Log In</a>
-            </div>
+              @endauth
+      </div>
           </nav>
         </div>
         <div class="header-bottom-line"></div>
@@ -106,7 +114,18 @@
             <a href="{{ route('contact-us') }}" class="mobile-submenu-item">Contact Us</a>
           </div>
 
-          <a href="{{ route('login') }}" class="mobile-login-item">Log In</a>
+          <div class="header-login">
+              @auth
+              <!-- If the user is authorized → show the profile icon -->
+              <a href="{{ route('account') }}" class="login-text">
+                <img src="{{ asset('/img/ico/Profile-ico.svg') }}" alt="Profile" />
+              </a>
+              @else
+              <!-- If not authorized → show login link -->
+              <a href="{{ route('login') }}" class="login-text">Log In</a>
+              @endauth
+          </div>
+
         </div>
       </div>
 
@@ -161,8 +180,17 @@
       </div>
 
       <div class="header-login">
-        <a href="{{ route('login') }}" class="login-text">Log In</a>
+      @auth
+              <!-- If the user is authorized → show the profile icon -->
+              <a href="{{ route('account') }}" class="login-text">
+                <img src="{{ asset('/img/ico/Profile-ico.svg') }}" alt="Profile" />
+              </a>
+      @else
+              <!-- If not authorized → show login link -->
+              <a href="{{ route('login') }}" class="login-text">Log In</a>
+      @endauth
       </div>
+      
     </nav>
   </div>
   <div class="header-bottom-line"></div>
