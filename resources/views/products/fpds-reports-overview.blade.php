@@ -8,6 +8,750 @@
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
 
+    <style>
+      /* ============== 12 pages ========= */
+
+.fpds-reports-main {
+    margin-left: 100px;
+    margin-right: 100px;
+    margin-bottom: 30px;
+    margin-top: 10px;
+}
+
+/* start hero section */
+.reports-hero {
+    width: 100%;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.reports-hero__container {
+    display: flex;
+    gap: 257px;
+    margin: 0 auto;
+    position: relative;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.reports-hero__title-block {
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.reports-hero__title-block h1 {
+    color: white;
+    font-size: 48px;
+    font-weight: 400;
+    margin: 0;
+    width: 362px;
+    text-align: left;
+}
+
+.reports-hero__benefits-block {
+    display: flex;
+    flex-direction: column;
+    gap: 38px;
+}
+
+.reports-hero__benefits-block h3 {
+    width: 302px;
+    color: white;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 32px;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+.reports-hero__benefits-block p {
+    width: 305px;
+    color: #AFBCB8;
+    font-size: 24px;
+    font-weight: 400;
+    word-wrap: break-word;
+    margin: 0;
+    position: relative;
+}
+
+.decorative-square-1 {
+    position: absolute;
+    width: 17px;
+    height: 16px;
+    top: -3px;
+    left: -15px;
+}
+
+.decorative-square-2 {
+    position: absolute;
+    width: 17px;
+    height: 16px;
+    bottom: -6px;
+    right: 20px;
+}
+/* finish hero section */
+
+/* start comparison table */
+.reports-comparison {
+    margin: 10px 0;
+}
+
+.reports-comparison__container {
+    width: 100%;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.reports-comparison__table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.reports-comparison__table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+}
+
+.reports-comparison__table th {
+    background-color: #333333;
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    padding: 15px;
+    font-size: 32px;
+    border: 1px solid #b5d9a7;
+}
+
+.reports-comparison__table td {
+    font-size: 24px;
+    color: white;
+    padding: 12px 15px;
+    border: 1px solid #b5d9a7;
+}
+
+.reports-comparison__table td:first-child {
+    font-weight: 500;
+    padding-left: 20px;
+    border: 1px solid #b5d9a7;
+}
+
+.status-cell {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-left: 40px;
+}
+
+.status-cell img {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+}
+
+.status-cell span {
+    flex: 1;
+}
+
+.reports-comparison__table-wrapper {
+    display: none;
+    width: 100%;
+    border-radius: 4px;
+    outline: 1px #B5D9A7 solid;
+    outline-offset: -1px;
+    overflow: hidden;
+}
+
+.comparison-row {
+    display: flex;
+    width: 100%;
+}
+
+.comparison-header {
+    background: #333333;
+    border-left: 1px #B5D9A7 solid;
+    border-top: 1px #B5D9A7 solid;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.comparison-header div {
+    text-align: center;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 10px 12px;
+}
+
+.feature-cell {
+    background: #333333;
+    border-left: 1px #B5D9A7 solid;
+    border-top: 1px #B5D9A7 solid;
+    padding: 10px 12px;
+    width: 100%;
+}
+
+.feature-cell div {
+    text-align: center;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 16px;
+}
+
+.feature-row {
+    border-left: 1px #B5D9A7 solid;
+    border-top: 1px #B5D9A7 solid;
+    padding: 10px 12px;
+    width: 100%;
+}
+
+.feature-row div {
+    text-align: center;
+    color: white;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.value-cell {
+    flex: 1;
+    padding: 10px 12px;
+    border-left: 1px #5F5F5F solid;
+    border-top: 1px #5F5F5F solid;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.value-cell div {
+    color: white;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.status-icon-mobile {
+    width: 24px;
+    height: 24px;
+    border-radius: 5.25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.status-icon-mobile img {
+    width: 18px;
+    height: 18px;
+}
+
+.status-approve {
+    background: #B5D9A7;
+}
+
+.status-cancel {
+    background: #F2B8B5;
+}
+
+.status-warning {
+    background: #FFE5AE;
+}
+/* finish comparison table */
+
+/* start pricing section */
+.reports-pricing {
+    width: 100%;
+    padding: 60px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.reports-pricing__container {
+    width: 100%;
+    max-width: 1800px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.reports-pricing__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 125px;
+    width: 100%;
+}
+
+.reports-pricing__header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.reports-pricing__title {
+    color: white;
+    font-size: 48px;
+    font-weight: 400;
+    line-height: 1.2;
+    word-wrap: break-word;
+    width: 308px;
+    margin: 0;
+}
+
+.reports-pricing__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    max-width: 1368px;
+}
+
+.reports-pricing__cards-row {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+}
+
+.reports-pricing__cards-row.top-row {
+    justify-content: space-between;
+}
+
+.reports-pricing__cards-row.bottom-row {
+    justify-content: center;
+}
+
+.reports-pricing__card {
+    background: #333333;
+    border-radius: 7px;
+    outline: 1px #B5D9A7 solid;
+    outline-offset: -1px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 48px 32px;
+}
+
+.reports-pricing__card.standard {
+    width: 440px;
+}
+
+.reports-pricing__card.wide {
+    width: 1368px;
+}
+
+.reports-pricing__card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 64px;
+    width: 100%;
+}
+
+.reports-pricing__card-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 48px;
+    width: 100%;
+}
+
+.reports-pricing__plan-name {
+    text-align: center;
+    color: white;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 32px;
+    margin: 0;
+}
+
+.reports-pricing__price {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.reports-pricing__price-amount {
+    color: #B5D9A7;
+    font-size: 64px;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.reports-pricing__price-period {
+    color: #B5D9A7;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.reports-pricing__features {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 24px;
+    width: 100%;
+}
+
+.reports-pricing__feature {
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.reports-pricing__btn {
+    padding: 20px 35px;
+    background: linear-gradient(360deg, #00AD8C 0%, #00755F 51%);
+    border: none;
+    border-radius: 7px;
+    color: white;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.reports-pricing__btn:hover {
+    opacity: 0.9;
+}
+/* finish pricing section */
+
+/* start responsive styles */
+@media (max-width: 1200px) {
+    .fpds-reports-main {
+        margin-left: 60px;
+        margin-right: 60px;
+    }
+
+    .reports-hero__container {
+        gap: 100px;
+    }
+
+    .reports-hero__title-block h1 {
+        font-size: 42px;
+        width: 300px;
+    }
+
+    .reports-hero__benefits-block h3 {
+        font-size: 28px;
+        line-height: 28px;
+    }
+
+    .reports-hero__benefits-block p {
+        font-size: 20px;
+    }
+
+    .reports-comparison__table th {
+        font-size: 28px;
+    }
+
+    .reports-comparison__table td {
+        font-size: 20px;
+    }
+
+    .reports-pricing__content {
+        gap: 60px;
+    }
+
+    .reports-pricing__title {
+        font-size: 42px;
+    }
+
+    .reports-pricing__cards {
+        gap: 20px;
+    }
+
+    .reports-pricing__card {
+        width: 380px;
+        padding: 40px 28px;
+    }
+
+    .reports-pricing__plan-name {
+        font-size: 28px;
+    }
+
+    .reports-pricing__price-amount {
+        font-size: 56px;
+    }
+
+    .reports-pricing__price-period {
+        font-size: 28px;
+    }
+
+    .reports-pricing__feature {
+        font-size: 22px;
+    }
+
+    .reports-pricing__btn {
+        padding: 18px 30px;
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 991px) {
+    .reports-hero__container {
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    .reports-hero__title-block h1 {
+        width: 100%;
+        text-align: center;
+    }
+
+    .reports-hero__benefits-block {
+        align-items: center;
+        text-align: center;
+    }
+
+    .reports-pricing__content {
+        flex-direction: column;
+        gap: 40px;
+        align-items: center;
+    }
+
+    .reports-pricing__header {
+        justify-content: center;
+    }
+
+    .reports-pricing__title {
+        text-align: center;
+    }
+
+    .reports-pricing__cards {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .fpds-reports-main {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .reports-hero {
+        margin-top: 0px;
+        margin-bottom: 32px;
+    }
+
+    .reports-hero__container {
+        flex-direction: column;
+        gap: 24px;
+        align-items: flex-start;
+    }
+
+    .reports-hero__title-block h1 {
+        font-size: 24px;
+        line-height: 24px;
+        width: 100%;
+        text-align: left;
+        width: 200px;
+    }
+
+    .reports-hero__benefits-block {
+        gap: 24px;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .reports-hero__benefits-block h3 {
+        font-size: 16px;
+        line-height: 16px;
+        width: 186px;
+        text-align: left;
+        width: 150px;
+    }
+
+    .reports-hero__benefits-block p {
+        font-size: 16px;
+        line-height: 16px;
+        width: 186px;
+        text-align: left;
+    }
+
+    .decorative-square-1 {
+        width: 10px;
+        height: 10px;
+        top: -6px;
+        left: -8px;
+    }
+
+    .decorative-square-2 {
+        width: 10px;
+        height: 10px;
+        bottom: -8px;
+        right: 138px;
+    }
+
+    .reports-comparison {
+        margin: 0 0 32px 0;
+    }
+
+    .reports-comparison__table-container {
+        display: none;
+    }
+
+    .reports-comparison__table-wrapper {
+        display: block;
+    }
+
+    .reports-pricing {
+        padding: 0;
+    }
+
+    .reports-pricing__container {
+        max-width: none;
+    }
+
+    .reports-pricing__content {
+        flex-direction: column;
+        gap: 24px;
+        align-items: flex-start;
+    }
+
+    .reports-pricing__header {
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    .reports-pricing__title {
+        font-size: 24px;
+        line-height: 24px;
+        width: 100%;
+        text-align: left;
+    }
+
+    .reports-pricing__cards {
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+        align-items: center;
+    }
+
+    .reports-pricing__cards-row {
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+    }
+
+    .reports-pricing__card {
+        width: 100%;
+        max-width: 327px;
+        padding: 48px 32px;
+    }
+
+    .reports-pricing__card.standard,
+    .reports-pricing__card.wide {
+        width: 100%;
+        max-width: 327px;
+    }
+
+    .reports-pricing__card-content {
+        gap: 32px;
+    }
+
+    .reports-pricing__card-header {
+        gap: 32px;
+    }
+
+    .reports-pricing__plan-name {
+        font-size: 24px;
+        line-height: 24px;
+    }
+
+    .reports-pricing__price-amount {
+        font-size: 48px;
+    }
+
+    .reports-pricing__price-period {
+        font-size: 24px;
+    }
+
+    .reports-pricing__features {
+        gap: 24px;
+    }
+
+    .reports-pricing__feature {
+        font-size: 16px;
+        line-height: 16px;
+    }
+
+    .reports-pricing__btn {
+        font-size: 16px;
+        line-height: 16px;
+        padding: 20px 35px;
+    }
+}
+
+@media (max-width: 480px) {
+    .reports-hero__title-block h1 {
+        font-size: 24px;
+    }
+
+    .reports-hero__benefits-block h3 {
+        font-size: 20px;
+    }
+
+    .reports-hero__benefits-block p {
+        font-size: 16px;
+    }
+
+    .reports-pricing__title {
+        font-size: 24px;
+    }
+
+    .reports-pricing__card {
+        padding: 32px 20px;
+    }
+
+    .reports-pricing__plan-name {
+        font-size: 20px;
+    }
+
+    .reports-pricing__price-amount {
+        font-size: 40px;
+    }
+
+    .reports-pricing__price-period {
+        font-size: 20px;
+    }
+
+    .reports-pricing__feature {
+        font-size: 18px;
+    }
+
+    .reports-pricing__btn {
+        padding: 14px 20px;
+        font-size: 18px;
+    }
+}
+/* finish responsive styles */
+    </style>
   </head>
 
   <body>

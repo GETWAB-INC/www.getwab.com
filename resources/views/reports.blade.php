@@ -7,6 +7,406 @@
     <title>FPDS Reports Library</title>
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+    <style>
+        /*================= Page 10 ============== */
+.reports-container {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    padding: 20px;
+    box-sizing: border-box;
+    max-width: 1805px;
+    margin: 0 auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    width: 100%;
+}
+
+.reports-sidebar {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 64px;
+}
+
+.reports-filters {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 64px;
+    width: 100%;
+}
+
+.reports-filters-item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 461px;
+}
+
+.filters-row {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.reports-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    align-content: start;
+    width: 100%;
+}
+
+.reports-search {
+    width: 560px;
+    padding: 24px 32px;
+    border-radius: 7px;
+    outline: 1px white solid;
+    outline-offset: -1px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.reports-search-content {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 24px;
+}
+
+.reports-search-icon {
+    width: 24px;
+    height: 24px;
+    position: relative;
+}
+
+.reports-search-placeholder {
+    flex: 1;
+    color: #afbcb8;
+    font-size: 24px;
+    font-weight: 400;
+    border: none;
+    outline: none;
+    background: transparent;
+}
+
+.reports-search-placeholder::placeholder {
+    color: #afbcb8;
+}
+
+.reports-filter {
+    height: 63px;
+    padding: 16px;
+    background: #5f5f5f;
+    border-radius: 7px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.reports-filter:hover {
+    background: #6f6f6f;
+}
+
+.reports-filter-text {
+    color: white;
+    font-size: 16px;
+    font-weight: 400;
+    text-align: center;
+    word-wrap: break-word;
+}
+
+.reports-card-wrapper {
+  border-radius: 7px;
+  background: linear-gradient(to right, #b5d9a7, #00aa89);
+  padding: 1px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+}
+
+.reports-card {
+  width: 100%;
+  padding: 48px 32px;
+  background: #333333;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 10px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  min-height: 300px;
+  max-height: 400px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.reports-card-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 32px;
+}
+
+.reports-card-header {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 32px;
+}
+
+.reports-card-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.reports-card-code {
+    width: 100%;
+    color: #b5d9a7;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 32px;
+}
+
+.reports-card-type {
+    color: #afbcb8;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.reports-card-price {
+    color: #b5d9a7;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 32px;
+}
+
+.reports-card-body {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 95px;
+}
+
+.reports-card-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.reports-card-title {
+    width: 100%;
+    color: white;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.reports-card-description {
+    width: 100%;
+    color: white;
+    font-size: 24px;
+    font-weight: 400;
+}
+
+@media (max-width: 1805px) {
+    .reports-container {
+        max-width: calc(100% - 40px);
+        margin: 0 20px;
+    }
+
+    .reports-grid {
+        gap: 24px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .reports-container {
+        gap: 40px;
+        max-width: calc(100% - 40px);
+    }
+
+    .reports-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .reports-card {
+        min-height: 260px;
+        padding: 36px 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .reports-container {
+        flex-direction: column;
+        gap: 30px;
+        padding: 15px;
+        width: 100%;
+        box-sizing: border-box;
+        max-width: calc(100% - 30px);
+        margin: 0 15px;
+    }
+
+    .reports-sidebar {
+        width: 100%;
+        gap: 30px;
+        box-sizing: border-box;
+    }
+
+    .reports-filters {
+        width: 100%;
+        gap: 30px;
+        box-sizing: border-box;
+    }
+
+    .reports-search {
+        width: 100%;
+        padding: 16px 14px;
+        box-sizing: border-box;
+    }
+
+    .reports-search-placeholder {
+        font-size: 18px;
+    }
+
+    .reports-filters-item {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        overflow-y: hidden;
+        gap: 10px;
+        padding-bottom: 10px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scrollbar-color: #5f5f5f transparent;
+    }
+
+
+    .reports-filters-item::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .reports-filters-item::-webkit-scrollbar-track {
+        background: transparent;
+        border-radius: 3px;
+    }
+
+    .reports-filters-item::-webkit-scrollbar-thumb {
+        background: #5f5f5f;
+        border-radius: 3px;
+    }
+
+    .reports-filters-item::-webkit-scrollbar-thumb:hover {
+        background: #6f6f6f;
+    }
+
+    .filters-row {
+        display: contents;
+    }
+
+    .reports-filter {
+        flex: 0 0 auto;
+        min-width: 140px;
+        height: 63px;
+        padding: 12px 16px;
+    }
+
+    .reports-filter-text {
+        font-size: 16px;
+        white-space: nowrap;
+    }
+
+    .reports-grid {
+        width: 100%;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        box-sizing: border-box;
+    }
+
+    .reports-card {
+        width: 100%;
+        margin: 0;
+        min-height: 220px;
+        padding: 20px 16px;
+    }
+
+    .reports-card-code,
+    .reports-card-price {
+        font-size: 24px;
+    }
+
+    .reports-card-title,
+    .reports-card-description {
+        font-size: 16px;
+        white-space: normal;
+        word-wrap: break-word;
+    }
+}
+
+@media (max-width: 480px) {
+    .reports-container {
+        padding: 10px;
+        max-width: calc(100% - 20px);
+        margin: 0 10px;
+    }
+
+    .reports-card {
+        padding: 20px 16px;
+        min-height: 220px;
+    }
+
+    .reports-card-code,
+    .reports-card-price {
+        font-size: 20px;
+    }
+
+    .reports-card-title,
+    .reports-card-description {
+        font-size: 16px;
+    }
+
+    .reports-filter {
+        min-width: 120px;
+        height: 60px;
+        padding: 10px 12px;
+    }
+
+    .reports-filter-text {
+        font-size: 14px;
+    }
+
+    .reports-filters-item {
+        gap: 8px;
+    }
+}
+    </style>
 </head>
 
 <body>
@@ -60,6 +460,8 @@
             </div>
         </div>
         <div class="reports-grid">
+
+            <div class="reports-card-wrapper">
             <div class="reports-card" onclick="window.location.href = '{{ route('report') }}';" style="cursor: pointer;">
                 <div class="reports-card-content">
                     <div class="reports-card-header">
@@ -77,6 +479,9 @@
                     </div>
                 </div>
             </div>
+            </div>
+
+            <div class="reports-card-wrapper">
             <div class="reports-card" onclick="window.location.href = '{{ route('report') }}';" style="cursor: pointer;">
                 <div class="reports-card-content">
                     <div class="reports-card-header">
@@ -94,6 +499,9 @@
                     </div>
                 </div>
             </div>
+            </div>
+
+            <div class="reports-card-wrapper">
             <div class="reports-card" onclick="window.location.href = '{{ route('report') }}';" style="cursor: pointer;">
                 <div class="reports-card-content">
                     <div class="reports-card-header">
@@ -111,14 +519,11 @@
                     </div>
                 </div>
             </div>
+            </div>
+
         </div>
     </div>
-
-
-
-
-
-
+    
     <script src="{{ asset('js/app.js') }}"></script>
 
     @include('include.footer')
