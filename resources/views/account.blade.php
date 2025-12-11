@@ -4,16 +4,178 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Account</title>
+    <title>Getwab</title>
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
 </head>
 
 <body>
     <!-- Header -->
-    @include('include.header')
+    <header class="website-header">
+        <div class="header-container">
+            <nav class="header-left-menu">
+                <div class="burger-menu">
+                    <div class="burger-line"></div>
+                    <div class="burger-line"></div>
+                    <div class="burger-line"></div>
+                </div>
+                <div class="menu-item-wrapper">
+                    <div class="menu-item">
+                        <span class="menu-text">Products</span>
+                        <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>
+                        <a href="{{ route('products.fpds-reports')}}" class="dropdown-item">FPDS Reports</a>
+                    </div>
+                </div>
+
+                <div class="menu-item-wrapper">
+                    <div class="menu-item">
+                        <span class="menu-text">Services</span>
+                        <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="{{ route('report') }}" class="dropdown-item">Consulting & Advisory</a>
+                        <a href="{{ route('article') }}" class="dropdown-item">Gov Contracting</a>
+                        <a href="#" class="dropdown-item">Custom Analytics</a>
+                        <a href="#" class="dropdown-item">Data Automation</a>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="header-logo-container">
+                <a href="/" class="header-logo">
+                    <img src="/img/header/Logo.png" alt="Company Logo" />
+                </a>
+            </div>
+
+            <div class="menu-item-wrapper">
+                <div class="menu-item">
+                    <span class="menu-text">About</span>
+                    <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
+                </div>
+                <div class="dropdown-menu">
+                    <a href="#" class="dropdown-item">Company</a>
+                    <a href="#" class="dropdown-item">Capability Statement</a>
+                    <a href="#" class="dropdown-item">Mission</a>
+                    <a href="#" class="dropdown-item">Contact</a>
+                </div>
+            </div>
+
+            <div class="header-login">
+                <a href="#" class="login-text" onclick="openProfilePopup(event)">
+                    <img src="{{ asset('/img/ico/Profile-ico.svg') }}" alt="Profile" />
+                </a>
+            </div>
+        </div>
+        <div class="header-bottom-line"></div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+        <div class="close-mobile-menu">
+            <div class="close-line"></div>
+            <div class="close-line"></div>
+        </div>
+        <div class="mobile-menu-container">
+            <div class="mobile-menu-item">
+                <span>Products</span>
+                <img class="mobile-menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
+            </div>
+            <div class="mobile-submenu">
+                <a href="{{ route('products.fpds-query')}}" class="mobile-submenu-item">FPDS Query</a>
+                <a href="{{ route('products.fpds-reports')}}" class="mobile-submenu-item">FPDS Reports</a>
+            </div>
+
+            <div class="mobile-menu-item">
+                <span>Services</span>
+                <img class="mobile-menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
+            </div>
+            <div class="mobile-submenu">
+                <a href="#" class="mobile-submenu-item">Consulting & Advisory</a>
+                <a href="#" class="mobile-submenu-item">Gov Contracting</a>
+                <a href="#" class="mobile-submenu-item">Custom Analytics</a>
+                <a href="#" class="mobile-submenu-item">Data Automation</a>
+            </div>
+
+            <div class="mobile-menu-item">
+                <span>About</span>
+                <img class="mobile-menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
+            </div>
+            <div class="mobile-submenu">
+                <a href="#" class="mobile-submenu-item">Company</a>
+                <a href="#" class="mobile-submenu-item">Capability Statement</a>
+                <a href="#" class="mobile-submenu-item">Mission</a>
+                <a href="#" class="mobile-submenu-item">Contact</a>
+            </div>
+
+            <a href="#" class="mobile-login-item" onclick="openProfilePopup(event)">
+                <img src="{{ asset('/img/ico/Profile-ico.svg') }}" alt="Profile" />
+            </a>
+        </div>
+    </div>
+
+    <!-- Fixed Header -->
+    <header class="fixed-header">
+        <div class="header-container">
+            <nav class="header-left-menu">
+                <div class="menu-item-wrapper-fixed">
+                    <div class="menu-item-fixed">
+                        <span class="menu-text">Products</span>
+                        <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>
+                        <a href="{{ route('products.fpds-reports')}}" class="dropdown-item">FPDS Reports</a>
+                    </div>
+                </div>
+
+                <div class="menu-item-wrapper-fixed">
+                    <div class="menu-item-fixed">
+                        <span class="menu-text">Services</span>
+                        <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item">Consulting & Advisory</a>
+                        <a href="#" class="dropdown-item">Gov Contracting</a>
+                        <a href="#" class="dropdown-item">Custom Analytics</a>
+                        <a href="#" class="dropdown-item">Data Automation</a>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="header-logo-container">
+                <a href="/" class="header-logo">
+                    <img src="/img/header/Logofix.png" alt="Getwab Logo" />
+                </a>
+            </div>
+
+            <nav class="header-right-menu">
+                <div class="menu-item-wrapper-fixed">
+                    <div class="menu-item-fixed">
+                        <span class="menu-text">About</span>
+                        <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item">Company</a>
+                        <a href="#" class="dropdown-item">Capability Statement</a>
+                        <a href="#" class="dropdown-item">Mission</a>
+                        <a href="#" class="dropdown-item">Contact</a>
+                    </div>
+                </div>
+
+                <div class="header-login">
+                    <a href="#" class="login-text" onclick="openProfilePopup(event)">
+                        <img src="{{ asset('/img/ico/Profile-ico.svg') }}" alt="Profile" />
+                    </a>
+                </div>
+            </nav>
+        </div>
+        <div class="header-bottom-line"></div>
+    </header>
+
     <!-- Desktop Version -->
     <div class="dashboard-layout">
         <aside class="dashboard-sidebar">
@@ -1535,14 +1697,14 @@
             switchContent("reports");
 
 
-            // window.openProfilePopup = function(e) {
-            //     if (e) e.preventDefault();
-            //     const profilePopup = document.getElementById('profilePopup');
-            //     if (profilePopup) {
-            //         profilePopup.classList.add("active");
-            //         document.body.style.overflow = "hidden";
-            //     }
-            // };
+            window.openProfilePopup = function(e) {
+                if (e) e.preventDefault();
+                const profilePopup = document.getElementById('profilePopup');
+                if (profilePopup) {
+                    profilePopup.classList.add("active");
+                    document.body.style.overflow = "hidden";
+                }
+            };
 
             window.closeProfilePopup = function() {
                 const profilePopup = document.getElementById('profilePopup');
@@ -1566,49 +1728,45 @@
 
 
             window.openLogoutPopup = function() {
-                document.getElementById('logoutPopup').style.display = "flex";
-                document.querySelector('.logout-confirm-overlay').style.display = "block";
-                document.body.style.overflow = "hidden";
-            };
+    document.getElementById('logoutPopup').style.display = "flex";
+    document.querySelector('.logout-confirm-overlay').style.display = "block";
+    document.body.style.overflow = "hidden";
+};
 
-            window.closeLogoutPopup = function() {
-                document.getElementById('logoutPopup').style.display = "none";
-                document.querySelector('.logout-confirm-overlay').style.display = "none";
-                document.body.style.overflow = "auto";
-            };
+window.closeLogoutPopup = function() {
+    document.getElementById('logoutPopup').style.display = "none";
+    document.querySelector('.logout-confirm-overlay').style.display = "none";
+    document.body.style.overflow = "auto";
+};
 
-            window.performLogout = function() {
-            console.log("Logging out...");
+window.performLogout = function() {
+    console.log("Logging out...");
 
-            // Obtaining a CSRF token from a meta tag
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-            // Send a POST request to the logout route
-            fetch("{{ route('logout') }}", {
-              method: 'POST',
-              headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Content-Type': 'application/json'
-              },
-              credentials: 'same-origin'
-            })
-            .then(response => {
-            if (response.ok || response.redirected) {
-            // Successful logout → redirect to login
-              window.location.href = '/login';
-            } else {
-              console.error('Logout failed:', response.status);
-              alert('Ошибка при выходе. Попробуйте ещё раз.');
-            }
-            })
-            .catch(error => {
-              console.error('Network error:', error);
-              alert('Ошибка сети. Проверьте подключение и попробуйте снова.');
-            });
+    fetch("{{ route('logout') }}", {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': csrfToken,
+            'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => {
+        if (response.ok || response.redirected) {
+            window.location.href = '/';
+        } else {
+            console.error('Logout failed:', response.status);
+            alert('Error exiting.');
+        }
+    })
+    .catch(error => {
+        console.error('Network error:', error);
+        alert('Network error.');
+    });
 
-            // Close the pop-up immediately after sending the request
-            closeLogoutPopup();
-          };
+    closeLogoutPopup();
+};
 
         });
     </script>
