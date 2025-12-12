@@ -50,8 +50,7 @@
           height="7"
           viewBox="0 0 1800 7"
           fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+          xmlns="http://www.w3.org/2000/svg">
           <path d="M0.00354004 1L1800 6.00554" stroke="var(--White, white)" />
         </svg>
       </div>

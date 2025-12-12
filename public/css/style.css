@@ -1,7 +1,6 @@
 @font-face {
     font-family: "Overused Grotesk";
-    src: url("/fonts/OverusedGrotesk-VF.woff2")
-            format("woff2 supports variations"),
+    src: url("/fonts/OverusedGrotesk-VF.woff2") format("woff2 supports variations"),
         url("/fonts/OverusedGrotesk-VF.woff2") format("woff2-variations");
     font-weight: 300 900;
     font-style: normal;
@@ -25,40 +24,6 @@ body {
     --White: white;
     --Gray: #4a4a4a;
     --DarkGray: #2d2d2d;
-}
-
-/*HEADER START + BACKGROUND VIDEO*/
-
-.background-video-container {
-    position: relative;
-    min-height: 100vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-
-.background-video {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    z-index: -2;
-    object-fit: cover;
-}
-
-.video-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: calc(100% + 200px);
-    background-color: #282828;
-    opacity: 0.7;
-    z-index: -1;
 }
 
 .website-header {
@@ -233,105 +198,7 @@ body {
     max-width: 1810px;
 }
 
-/*HEADER FINIHS + BACKGROUND VIDEO*/
-
-/*HERO-SECTION START */
-.hero-section {
-    width: 100%;
-    max-width: 1920px;
-    min-height: 80vh;
-    padding: 60px;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    justify-content: center;
-    margin: 0 auto;
-    margin-top: 200px;
-    border-bottom: #00ad8c solid 1px;
-    position: relative;
-}
-
-.hero-content {
-    align-self: stretch;
-    height: 445px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 80px;
-}
-
-.hero-text-container {
-    align-self: stretch;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 48px;
-}
-
-.hero-title {
-    text-align: center;
-    color: white;
-    font-size: 96px;
-    font-family: "Overused Grotesk", sans-serif;
-    font-weight: 600;
-    line-height: 96px;
-    margin: 0;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-}
-
-.hero-subtitle {
-    text-align: center;
-    color: #afbcb8;
-    font-size: 48px;
-    font-family: "Overused Grotesk", sans-serif;
-    font-weight: 400;
-    line-height: 57.6px;
-    margin: 0;
-    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-}
-
-.hero-button {
-    position: relative;
-    padding: 20px 35px;
-    background: linear-gradient(360deg, #00ad8c 0%, #00755f 51%);
-    border-radius: 7px;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: white;
-    font-size: 24px;
-    font-family: "Overused Grotesk", sans-serif;
-    font-weight: 400;
-    line-height: 24px;
-    overflow: hidden;
-    z-index: 1;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.hero-button::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(360deg, #00624f 0%, #005d4b 97%);
-    opacity: 0;
-    z-index: -1;
-    transition: opacity 0.4s ease;
-}
-
-.hero-button:hover::before {
-    opacity: 1;
-}
-
-/*HERO-SECTION FINISG */
-
-/*HEADER FIXED START*/
+/*HEADER FINIHS*/
 
 /*HEADER FIXED START*/
 .fixed-header {
@@ -657,7 +524,7 @@ body {
         display: none;
     }
 
-    .mobile-menu-item.active + .mobile-submenu {
+    .mobile-menu-item.active+.mobile-submenu {
         display: flex;
         flex-direction: column;
         gap: 10px;
@@ -842,6 +709,7 @@ body {
 }
 
 @media (max-width: 1400px) {
+
     .fixed-header .header-left-menu,
     .fixed-header .header-right-menu {
         gap: 3vw;
@@ -942,9 +810,7 @@ body {
 
 /*ADAPTATION HEADER FINISH*/
 
-
-
-/* Footer Styles START */
+/* FOOTER START */
 
 .footer {
     background-color: #004437;
@@ -1086,9 +952,9 @@ body {
     text-decoration-color: white;
 }
 
-/* Footer Styles FINISH */
+/* FOOTER END */
 
-/* Footer Styles ADAPTATION START */
+/* FOOTER ADAPTATION START */
 
 @media (max-width: 1440px) {
     .footer {
@@ -1271,4 +1137,4 @@ body {
     }
 }
 
-/* Footer Styles ADAPTATION FIBISH */
+/* FOOTER ADAPTATION END */
