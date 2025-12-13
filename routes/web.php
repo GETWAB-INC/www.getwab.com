@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\AccountController;
 // -------------------- Static Pages --------------------
 
 // Home page
@@ -39,7 +40,8 @@ Route::get('/forgot', function () { return view('forgot'); })->name('forgot');
 Route::get('/article', function () { return view('article'); })->name('article')->middleware('auth');
 
 // account page
-Route::get('/account', function () { return view('account'); })->name('account')->middleware('auth');
+Route::get('/account', [AccountController::class, 'account'])->name('account')->middleware('auth');
+Route::post('/account-process', [AccountController::class, 'accountProcess'])->name('account.process');
 
 // contact page
 Route::get('/contact-us', function () {return view('contact-us');})->name('contact-us');

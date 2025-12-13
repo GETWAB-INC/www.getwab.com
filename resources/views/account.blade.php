@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Getwab</title>
+  <title>Account</title>
   <link rel="stylesheet" href="{{ asset('css/reset.css') }}" />
   <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -3816,7 +3816,7 @@
               <img src="{{ asset('/img/ico/Avatar.png') }}" alt="" />
             </div>
             <div class="user-full-name">
-              Francis Scott Key Fitzgerald Franci...
+              {{ $user->name ?? '' }} {{ $user->surname ?? '' }}
             </div>
           </div>
 
@@ -3932,7 +3932,6 @@
       </div>
     </div>
   </div>
-
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       const navItems = document.querySelectorAll(".nav-menu-item[data-section]");
@@ -4597,46 +4596,45 @@
         </div>
 
         <div class="profile-container">
-          <form class="profile-section" id="profileForm">
+          <form class="profile-section" id="profileForm" action="{{ route('account.process') }}" method="post">
+          @csrf
             <div class="profile-field">
               <label class="field-label required" for="firstName">First Name *</label>
-              <input type="text" id="firstName" class="field-input" value="Ilia" required />
+              <input type="text" id="firstName" name="firstName" class="field-input" value="{{ $user->name ?? '' }}" required />
             </div>
             <div class="profile-field">
               <label class="field-label" for="lastName">Last Name</label>
-              <input type="text" id="lastName" class="field-input" value="Oborin" />
+              <input type="text" id="lastName" name="lastName" class="field-input" value="{{ $user->surname ?? '' }}" />
             </div>
             <div class="profile-field">
               <label class="field-label" for="jobTitle">Job Title / Role</label>
-              <input type="text" id="jobTitle" class="field-input" value="Founder & CEO" />
+              <input type="text" id="jobTitle" name="jobTitle" class="field-input" value="{{ $user->job ?? '' }}" />
             </div>
             <div class="profile-field">
               <label class="field-label" for="organization">Organization / Agency</label>
-              <input type="text" id="organization" class="field-input" value="GETWAB INC." />
+              <input type="text" id="organization" name="organization" class="field-input" value="{{ $user->organization ?? '' }}" />
             </div>
             <div class="profile-field">
               <label class="field-label required" for="email">Business Email *</label>
-              <input type="email" id="email" class="field-input" value="ilia.oborin@getwab.com" required />
+              <input type="email" id="email" name="email" class="field-input" value="{{ $user->email ?? '' }}" required />
             </div>
             <div class="profile-field">
               <label class="field-label" for="phone">Business Phone</label>
-              <input type="tel" id="phone" class="field-input" value="+1 (941) 402-0472" />
+              <input type="tel" id="phone" name="phone" class="field-input" value="{{ $user->phome ?? '' }}" />
             </div>
-          </form>
 
-          <form class="password-section" id="passwordForm">
             <div class="section-title">Change Password</div>
             <div class="password-field">
               <label class="field-label" for="currentPassword">Current Password</label>
-              <input type="password" id="currentPassword" class="password-input" placeholder="Enter your current password" />
+              <input type="password" id="currentPassword" name="currentPassword" class="password-input" placeholder="Enter your current password" />
             </div>
             <div class="password-field">
               <label class="field-label" for="newPassword">New Password</label>
-              <input type="password" id="newPassword" class="password-input" placeholder="Enter your new password" />
+              <input type="password" id="newPassword" name="newPassword" class="password-input" placeholder="Enter your new password" />
             </div>
             <div class="password-field">
               <label class="field-label" for="confirmPassword">Confirm New Password</label>
-              <input type="password" id="confirmPassword" class="password-input" placeholder="Confirm your new password" />
+              <input type="password" id="confirmPassword" name="confirmPassword" class="password-input" placeholder="Confirm your new password" />
             </div>
             <button type="submit" class="save-button" id="passwordButton">Save Changes</button>
           </form>
@@ -5400,6 +5398,41 @@
 
     });
   </script>
+  <!-- Remember Tab section -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      function activateTab(sectionId) {
+        const tab = document.querySelector(`[data-section="${sectionId}"]`);
+        if (!tab) return;
+        tab.click();
+        tab.classList.add('active');
+      }
+      document.querySelectorAll('.nav-menu-item, .popup-menu-item').forEach(item => {
+        item.addEventListener('click', function() {
+          const sectionId = this.getAttribute('data-section');
+          if (sectionId) {
+            localStorage.setItem('activeTab', sectionId);
+          }
+        });
+      });
+
+      const savedTab = localStorage.getItem('activeTab');
+      if (savedTab) {
+        activateTab(savedTab);
+      }
+
+      const profilePopup = document.getElementById('profilePopup');
+      if (profilePopup) {
+        profilePopup.addEventListener('shown', () => {
+          const savedTabInPopup = localStorage.getItem('activeTab');
+          if (savedTabInPopup) {
+            activateTab(savedTabInPopup);
+          }
+        });
+      }
+    });
+  </script>
+  <!-- Remember Tab section END -->
 
   @include('include.footer')
 </body>

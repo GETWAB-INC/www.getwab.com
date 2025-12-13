@@ -20,7 +20,9 @@ class LoginController extends Controller
 
         if (RateLimiter::tooManyAttempts($throttleKey, 3)) {
             // Use Laravel's abort function to throw a 403 Forbidden exception
-            abort(403, 'Too many login attempts. Please try again in 5 minutes.');
+            return back()->withErrors([
+                'email' => 'Too many login attempts. Please try again in 5 minutes.'
+            ])->onlyInput('email');
         }
 
         if (Auth::attempt($credentials)) {
