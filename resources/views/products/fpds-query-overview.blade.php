@@ -13,6 +13,7 @@
 
     <style>
         /*========= Page 2 ==============*/
+
         .fpds-query-main {
             margin-left: 100px;
             margin-right: 100px;
@@ -92,70 +93,7 @@
 
         /* hero styles FINISH */
 
-        /* hero styles adaptation START */
-
-        @media (max-width: 1200px) {
-            .hero__container {
-                width: 100%;
-                padding: 30px 0px;
-                gap: 48px;
-                flex-direction: column;
-            }
-
-            .hero__title-block h1 {
-                font-size: 24px;
-            }
-
-            .hero__features-block h3 {
-                font-size: 16px;
-                line-height: 28px;
-                width: 100%;
-            }
-
-            .hero__features-block p {
-                width: 230px;
-                font-size: 16px;
-                line-height: 20px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hero {
-                margin-bottom: 0px;
-            }
-
-            .hero__quotes-2,
-            .hero__quotes-1 {
-                width: 10px;
-                height: 10px;
-            }
-
-            .hero__quotes-1 {
-                top: -10px;
-                left: -10px;
-            }
-
-            .hero__quotes-2 {
-                top: 40px;
-                right: 100px;
-            }
-
-            .fpds-query-main {
-                margin-left: 20px;
-                margin-right: 20px;
-            }
-        }
-
-        @media (max-width: 390px) {
-            .hero__quotes-2 {
-                top: 40px;
-                right: 100px;
-            }
-        }
-
-        /* hero styles adaptation FINISH */
-
-        /* comparison styles START */
+        /* Table styles START */
 
         .comparison {
             margin: 10px 0;
@@ -235,9 +173,72 @@
             font-weight: 500;
         }
 
-        /* comparison styles FINISH */
+        /*  Table styles FINISH */
 
-        /* comparison styles adaptation START */
+        /* hero styles adaptation START */
+
+        @media (max-width: 1200px) {
+            .hero__container {
+                width: 100%;
+                padding: 30px 0px;
+                gap: 48px;
+                flex-direction: column;
+            }
+
+            .hero__title-block h1 {
+                font-size: 24px;
+            }
+
+            .hero__features-block h3 {
+                font-size: 16px;
+                line-height: 28px;
+                width: 100%;
+            }
+
+            .hero__features-block p {
+                width: 230px;
+                font-size: 16px;
+                line-height: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                margin-bottom: 0px;
+            }
+
+            .hero__quotes-2,
+            .hero__quotes-1 {
+                width: 10px;
+                height: 10px;
+            }
+
+            .hero__quotes-1 {
+                top: -10px;
+                left: -10px;
+            }
+
+            .hero__quotes-2 {
+                top: 40px;
+                right: 100px;
+            }
+
+            .fpds-query-main {
+                margin-left: 20px;
+                margin-right: 20px;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .hero__quotes-2 {
+                top: 40px;
+                right: 100px;
+            }
+        }
+
+        /* hero styles adaptation FINISH */
+
+        /* Table styles adaptation START */
 
         @media (max-width: 1200px) {
             .comparison__table th {
@@ -268,7 +269,7 @@
             }
         }
 
-        /* comparison styles adaptation FINISH */
+        /* Table styles adaptation FINISH */
 
         /* Pricing styles START */
 
@@ -315,6 +316,7 @@
             max-width: 200px;
         }
 
+        /* Pricing Cards */
         .pricing-cards {
             display: flex;
             justify-content: flex-end;
@@ -323,7 +325,9 @@
             flex: 2;
         }
 
+        /* Card 1, 2 */
         .pricing-card {
+            position: relative;
             width: 100%;
             max-width: 458px;
             height: auto;
@@ -331,14 +335,23 @@
             padding: 40px;
             background: #333333;
             border-radius: 7px;
-            border: 1px solid;
-            border-image: linear-gradient(105deg, #b5d9a7, #00aa89) 1;
-            outline-offset: -1px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             gap: 20px;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: linear-gradient(105deg, #b5d9a7, #00aa89);
+            border-radius: 7px;
+            z-index: -1;
         }
 
         .yearly-card {
@@ -691,8 +704,8 @@
                 height: 300px;
                 padding: 32px;
                 background: #333333;
-                border-radius: 3.5px;
-                outline: 0.5px #b5d9a7 solid;
+                /* border-radius: 3.5px;
+                outline: 1px #b5d9a7 solid; */
                 outline-offset: -0.5px;
                 display: flex;
                 flex-direction: column;
@@ -977,12 +990,19 @@
         </section>
 
         <section class="pricing-section">
+
             <div class="pricing-container">
+
                 <div class="pricing-content">
+
                     <div class="pricing-header">
                         <h2 class="pricing-title">Choose your plan</h2>
                     </div>
+
+
+                    <!-- Pricing Cards -->
                     <div class="pricing-cards">
+                        <!-- Card 1 -->
                         <div class="pricing-card">
                             <div class="card-content">
                                 <div class="card-header">
@@ -1001,6 +1021,8 @@
                                 </a>
                             </div>
                         </div>
+
+                        <!-- Card 2 -->
                         <div class="pricing-card yearly-card">
                             <div class="card-content">
                                 <div class="card-header">
@@ -1020,9 +1042,13 @@
                                 </a>
                             </div>
                         </div>
+
                     </div>
+
                 </div>
             </div>
+
+            <!-- Discount Badge -->
             <div class="discount-badge">
                 <div class="badge-circle"></div>
                 <div class="badge-text">
@@ -1030,6 +1056,7 @@
                     <span class="discount-percent">32%</span>
                 </div>
             </div>
+
         </section>
 
     </main>

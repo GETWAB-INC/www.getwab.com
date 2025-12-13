@@ -1172,6 +1172,7 @@
 
           <div class="reports-pricing__cards">
             <div class="reports-pricing__cards-row top-row">
+
               <article class="reports-pricing__card standard">
                 <div class="reports-pricing__card-content">
                   <header class="reports-pricing__card-header">
@@ -1230,6 +1231,8 @@
                   <a href="{{ route('checkout') }}" class="reports-pricing__btn">Request Package</a>
                 </div>
               </article>
+
+
             </div>
 
             <div class="reports-pricing__cards-row bottom-row">
@@ -1259,7 +1262,9 @@
                 </div>
               </article>
             </div>
+
           </div>
+          
         </div>
       </div>
     </section>
