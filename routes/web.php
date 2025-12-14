@@ -42,6 +42,8 @@ Route::get('/article', function () { return view('article'); })->name('article')
 // account page
 Route::get('/account', [AccountController::class, 'account'])->name('account')->middleware('auth');
 Route::post('/account-process', [AccountController::class, 'accountProcess'])->name('account.process');
+Route::post('/account/upload-avatar', [AccountController::class, 'uploadAvatar'])->name('upload.avatar');
+Route::delete('/account/remove-avatar', [AccountController::class, 'removeAvatar'])->name('remove.avatar');
 
 // contact page
 Route::get('/contact-us', function () {return view('contact-us');})->name('contact-us');

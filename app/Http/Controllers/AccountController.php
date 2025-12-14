@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class AccountController extends Controller
 {
@@ -16,6 +19,119 @@ class AccountController extends Controller
 
     public function accountProcess(Request $request)
     {
-        dd($request->all());
+        // Валидация входных данных
+        $validated = $request->validate([
+            'firstName' => 'nullable|string|max:255',
+            'lastName' => 'nullable|string|max:255',
+            'jobTitle' => 'nullable|string|max:255',
+            'organization' => 'nullable|string|max:255',
+            'email' => 'nullable|email|max:255|unique:users,email,' . auth()->id(),
+            'phone' => 'nullable|string|max:20',
+            'currentPassword' => 'nullable|string',
+            'newPassword' => 'nullable|string|min:8|confirmed',
+            'confirmPassword' => 'nullable|same:newPassword',
+        ]);
+
+        $user = auth()->user();
+
+        // Обновление основных полей профиля
+        $user->name = $validated['firstName'] ?? $user->name;
+        $user->surname = $validated['lastName'] ?? $user->surname;
+        $user->job = $validated['jobTitle'] ?? $user->job;
+        $user->organization = $validated['organization'] ?? $user->organization;
+        $user->email = $validated['email'] ?? $user->email;
+        $user->phone = $validated['phone'] ?? $user->phone;
+
+        // Проверка и смена пароля (если указаны)
+        if ($validated['currentPassword'] && $validated['newPassword']) {
+            if (!Hash::check($validated['currentPassword'], $user->password)) {
+                return back()->withErrors(['currentPassword' => 'Текущий пароль неверен.']);
+            }
+
+            $user->password = Hash::make($validated['newPassword']);
+        }
+
+        // Сохранение изменений
+        try {
+            $user->save();
+            return redirect()->route('account')->with('success', 'Профиль успешно обновлён.');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Ошибка при сохранении: ' . $e->getMessage()]);
+        }
+    }
+
+
+    public function uploadAvatar(Request $request)
+    {
+        // Проверка: есть ли файл
+        if (!$request->hasFile('avatar')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No file selected'
+            ], 400);
+        }
+
+        $file = $request->file('avatar');
+
+        // Валидация: только изображения
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // до 2 МБ
+        ]);
+
+        $user = Auth::user();
+
+        // Генерируем уникальное имя файла
+        $filename = Str::uuid() . '.' . $file->extension();
+
+        // Сохраняем в storage/app/public/avatars
+        $path = $file->storeAs('avatars', $filename, 'public');
+
+        // Обновляем путь к аватару в модели пользователя
+        $user->avatar = $path;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Avatar uploaded',
+            'avatar_url' => Storage::url($path)
+        ]);
+    }
+
+    public function removeAvatar(Request $request)
+    {
+        $user = Auth::user();
+
+        // Проверяем, есть ли у пользователя аватар
+        if (!$user->avatar) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No avatar to remove'
+            ], 400);
+        }
+
+        // Получаем полный путь к файлу в хранилище
+        $filePath = storage_path('app/public/' . $user->avatar);
+
+        // Проверяем существование файла перед удалением
+        if (file_exists($filePath)) {
+            try {
+                // Удаляем файл из хранилища
+                unlink($filePath);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to delete file: ' . $e->getMessage()
+                ], 500);
+            }
+        }
+
+        // Очищаем поле avatar в базе данных
+        $user->avatar = null;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Avatar removed successfully'
+        ]);
     }
 }
