@@ -399,7 +399,7 @@
                         </div>
 
                         <div class="register-prompt">
-                            <span class="register-text">Forgot password?</span>
+                            <span class="register-text">Forgot a password?</span>
                             <a href="{{ route('forgot') }}" class="register-link">Reset</a>
                         </div>
 
