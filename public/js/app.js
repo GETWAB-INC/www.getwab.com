@@ -105,13 +105,14 @@ document.addEventListener("DOMContentLoaded", function () {
         initDesktopAnimation();
     }
 
-    initCardsSlider();
+    // initCardsSlider();
 });
 
 function isMobileDevice() {
     return window.innerWidth <= 768;
 }
 
+// Mobile wheel
 function initDesktopAnimation() {
     const section = document.getElementById("why-choose-getwab");
     const svg = document.querySelector(".chart");
@@ -689,176 +690,176 @@ function initMobileAnimation() {
     requestAnimationFrame(animate);
 }
 
-function initCardsSlider() {
-    const cardsWrapper = document.querySelector(
-        ".fpds-mobile-slider-cards-wrapper"
-    );
-    const cards = document.querySelectorAll(".fpds-mobile-slider-card");
+// function initCardsSlider() {
+//     const cardsWrapper = document.querySelector(
+//         ".fpds-mobile-slider-cards-wrapper"
+//     );
+//     const cards = document.querySelectorAll(".fpds-mobile-slider-card");
 
-    if (!cardsWrapper || cards.length === 0) {
-        console.warn("Cards slider elements not found");
-        return;
-    }
+//     if (!cardsWrapper || cards.length === 0) {
+//         console.warn("Cards slider elements not found");
+//         return;
+//     }
 
-    let currentIndex = 0;
-    let startX = 0;
-    let currentX = 0;
-    let isDragging = false;
+//     let currentIndex = 0;
+//     let startX = 0;
+//     let currentX = 0;
+//     let isDragging = false;
 
-    function setCardsWrapperWidth() {
-        const cardWidth = cards[0].offsetWidth + 16;
-        cardsWrapper.style.width = `${cardWidth * cards.length}px`;
-    }
+//     function setCardsWrapperWidth() {
+//         const cardWidth = cards[0].offsetWidth + 16;
+//         cardsWrapper.style.width = `${cardWidth * cards.length}px`;
+//     }
 
-    function updateSliderPosition() {
-        const cardWidth = cards[0].offsetWidth + 16;
-        cardsWrapper.style.transform = `translateX(-${
-            currentIndex * cardWidth
-        }px)`;
-        cardsWrapper.style.transition = "transform 0.3s ease";
-    }
+//     function updateSliderPosition() {
+//         const cardWidth = cards[0].offsetWidth + 16;
+//         cardsWrapper.style.transform = `translateX(-${
+//             currentIndex * cardWidth
+//         }px)`;
+//         cardsWrapper.style.transition = "transform 0.3s ease";
+//     }
 
-    function nextSlide() {
-        if (currentIndex < cards.length - 1) {
-            currentIndex++;
-            updateSliderPosition();
-        }
-    }
+//     function nextSlide() {
+//         if (currentIndex < cards.length - 1) {
+//             currentIndex++;
+//             updateSliderPosition();
+//         }
+//     }
 
-    function prevSlide() {
-        if (currentIndex > 0) {
-            currentIndex--;
-            updateSliderPosition();
-        }
-    }
+//     function prevSlide() {
+//         if (currentIndex > 0) {
+//             currentIndex--;
+//             updateSliderPosition();
+//         }
+//     }
 
-    cardsWrapper.addEventListener("mousedown", handleStart);
-    cardsWrapper.addEventListener("touchstart", handleStart, { passive: true });
+//     cardsWrapper.addEventListener("mousedown", handleStart);
+//     cardsWrapper.addEventListener("touchstart", handleStart, { passive: true });
 
-    cardsWrapper.addEventListener("mousemove", handleMove);
-    cardsWrapper.addEventListener("touchmove", handleMove, { passive: true });
+//     cardsWrapper.addEventListener("mousemove", handleMove);
+//     cardsWrapper.addEventListener("touchmove", handleMove, { passive: true });
 
-    cardsWrapper.addEventListener("mouseup", handleEnd);
-    cardsWrapper.addEventListener("touchend", handleEnd);
-    cardsWrapper.addEventListener("mouseleave", handleEnd);
+//     cardsWrapper.addEventListener("mouseup", handleEnd);
+//     cardsWrapper.addEventListener("touchend", handleEnd);
+//     cardsWrapper.addEventListener("mouseleave", handleEnd);
 
-    function handleStart(e) {
-        isDragging = true;
-        startX = e.type.includes("mouse") ? e.clientX : e.touches[0].clientX;
-        cardsWrapper.style.transition = "none";
-    }
+//     function handleStart(e) {
+//         isDragging = true;
+//         startX = e.type.includes("mouse") ? e.clientX : e.touches[0].clientX;
+//         cardsWrapper.style.transition = "none";
+//     }
 
-    function handleMove(e) {
-        if (!isDragging) return;
+//     function handleMove(e) {
+//         if (!isDragging) return;
 
-        currentX = e.type.includes("mouse") ? e.clientX : e.touches[0].clientX;
-        const diffX = currentX - startX;
+//         currentX = e.type.includes("mouse") ? e.clientX : e.touches[0].clientX;
+//         const diffX = currentX - startX;
 
-        const cardWidth = cards[0].offsetWidth + 16;
-        const resistance = 0.5;
-        const translateX = -currentIndex * cardWidth + diffX * resistance;
+//         const cardWidth = cards[0].offsetWidth + 16;
+//         const resistance = 0.5;
+//         const translateX = -currentIndex * cardWidth + diffX * resistance;
 
-        cardsWrapper.style.transform = `translateX(${translateX}px)`;
-    }
+//         cardsWrapper.style.transform = `translateX(${translateX}px)`;
+//     }
 
-    function handleEnd() {
-        if (!isDragging) return;
+//     function handleEnd() {
+//         if (!isDragging) return;
 
-        isDragging = false;
-        cardsWrapper.style.transition = "transform 0.3s ease";
+//         isDragging = false;
+//         cardsWrapper.style.transition = "transform 0.3s ease";
 
-        const diffX = currentX - startX;
-        const cardWidth = cards[0].offsetWidth + 16;
-        const threshold = cardWidth * 0.2;
+//         const diffX = currentX - startX;
+//         const cardWidth = cards[0].offsetWidth + 16;
+//         const threshold = cardWidth * 0.2;
 
-        if (Math.abs(diffX) > threshold) {
-            if (diffX > 0) {
-                prevSlide();
-            } else {
-                nextSlide();
-            }
-        } else {
-            updateSliderPosition();
-        }
-    }
+//         if (Math.abs(diffX) > threshold) {
+//             if (diffX > 0) {
+//                 prevSlide();
+//             } else {
+//                 nextSlide();
+//             }
+//         } else {
+//             updateSliderPosition();
+//         }
+//     }
 
-    setCardsWrapperWidth();
-    window.addEventListener("resize", setCardsWrapperWidth);
+//     setCardsWrapperWidth();
+//     window.addEventListener("resize", setCardsWrapperWidth);
 
-    updateSliderPosition();
-}
+//     updateSliderPosition();
+// }
 
-setCardsWrapperWidth();
-window.addEventListener("resize", setCardsWrapperWidth);
+// setCardsWrapperWidth();
+// window.addEventListener("resize", setCardsWrapperWidth);
 
-window.addEventListener("resize", function () {
-    const desktopContent = document.querySelector(".desktop-animation");
-    const mobileContent = document.querySelector(".mobile-animation");
+// window.addEventListener("resize", function () {
+//     const desktopContent = document.querySelector(".desktop-animation");
+//     const mobileContent = document.querySelector(".mobile-animation");
 
-    if (isMobileDevice()) {
-        if (desktopContent) desktopContent.innerHTML = "";
-        initMobileAnimation();
-    } else {
-        if (mobileContent) mobileContent.innerHTML = "";
-        initDesktopAnimation();
-    }
-});
+//     if (isMobileDevice()) {
+//         if (desktopContent) desktopContent.innerHTML = "";
+//         initMobileAnimation();
+//     } else {
+//         if (mobileContent) mobileContent.innerHTML = "";
+//         initDesktopAnimation();
+//     }
+// });
 
 
 
 // == SFPR-GEO-EL-1 INPUT === //
 
 
-document.addEventListener("DOMContentLoaded", function () {
-    const startYearInput = document.querySelector(".start-year-input");
-    const endYearInput = document.querySelector(".end-year-input");
+// document.addEventListener("DOMContentLoaded", function () {
+//     const startYearInput = document.querySelector(".start-year-input");
+//     const endYearInput = document.querySelector(".end-year-input");
 
-    createYearDropdown(startYearInput);
+//     createYearDropdown(startYearInput);
 
-    createYearDropdown(endYearInput);
+//     createYearDropdown(endYearInput);
 
-    function createYearDropdown(inputElement) {
-        const dropdown = document.createElement("div");
-        dropdown.className = "year-dropdown";
-        dropdown.style.display = "none";
+//     function createYearDropdown(inputElement) {
+//         const dropdown = document.createElement("div");
+//         dropdown.className = "year-dropdown";
+//         dropdown.style.display = "none";
 
-        const currentYear = new Date().getFullYear();
-        const startYear = 2000;
-        const endYear = currentYear + 5;
+//         const currentYear = new Date().getFullYear();
+//         const startYear = 2000;
+//         const endYear = currentYear + 5;
 
-        for (let year = endYear; year >= startYear; year--) {
-            const option = document.createElement("div");
-            option.className = "year-option";
-            option.textContent = year;
-            option.addEventListener("click", function () {
-                inputElement.value = year;
-                dropdown.style.display = "none";
-            });
-            dropdown.appendChild(option);
-        }
+//         for (let year = endYear; year >= startYear; year--) {
+//             const option = document.createElement("div");
+//             option.className = "year-option";
+//             option.textContent = year;
+//             option.addEventListener("click", function () {
+//                 inputElement.value = year;
+//                 dropdown.style.display = "none";
+//             });
+//             dropdown.appendChild(option);
+//         }
 
-        inputElement.parentNode.appendChild(dropdown);
+//         inputElement.parentNode.appendChild(dropdown);
 
-        inputElement.addEventListener("click", function (e) {
-            e.stopPropagation();
+//         inputElement.addEventListener("click", function (e) {
+//             e.stopPropagation();
 
-            document.querySelectorAll(".year-dropdown").forEach((dropdown) => {
-                if (
-                    dropdown !== this.parentNode.querySelector(".year-dropdown")
-                ) {
-                    dropdown.style.display = "none";
-                }
-            });
+//             document.querySelectorAll(".year-dropdown").forEach((dropdown) => {
+//                 if (
+//                     dropdown !== this.parentNode.querySelector(".year-dropdown")
+//                 ) {
+//                     dropdown.style.display = "none";
+//                 }
+//             });
 
-            dropdown.style.display =
-                dropdown.style.display === "none" ? "block" : "none";
-        });
+//             dropdown.style.display =
+//                 dropdown.style.display === "none" ? "block" : "none";
+//         });
 
-        document.addEventListener("click", function (e) {
-            if (!inputElement.parentNode.contains(e.target)) {
-                dropdown.style.display = "none";
-            }
-        });
-    }
-});
+//         document.addEventListener("click", function (e) {
+//             if (!inputElement.parentNode.contains(e.target)) {
+//                 dropdown.style.display = "none";
+//             }
+//         });
+//     }
+// });
 
