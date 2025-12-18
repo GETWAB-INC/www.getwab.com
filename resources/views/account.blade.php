@@ -1269,8 +1269,9 @@
 </head>
 
 <body>
+  @include('errors.success')
+  @include('errors.error')
   @include('include.header')
-
   <div class="dashboard-container">
 
     <aside class="dashboard-sidebar">
@@ -1861,8 +1862,8 @@
           <form class="profile-section" id="profileForm" action="{{ route('account.process') }}" method="post">
             @csrf
             <div class="profile-field">
-              <label class="field-label required" for="firstName">First Name *</label>
-              <input type="text" id="firstName" name="firstName" class="field-input" value="{{ $user->name ?? '' }}" required />
+              <label class="field-label" for="firstName">First Name *</label>
+              <input type="text" id="firstName" name="firstName" class="field-input" value="{{ $user->name ?? '' }}" />
             </div>
             <div class="profile-field">
               <label class="field-label" for="lastName">Last Name</label>
@@ -1877,8 +1878,8 @@
               <input type="text" id="organization" name="organization" class="field-input" value="{{ $user->organization ?? '' }}" />
             </div>
             <div class="profile-field">
-              <label class="field-label required" for="email">Business Email *</label>
-              <input type="email" id="email" name="email" class="field-input" value="{{ $user->email ?? '' }}" required />
+              <label class="field-label" for="email">Business Email *</label>
+              <input type="email" id="email" name="email" class="field-input" value="{{ $user->email ?? '' }}" />
             </div>
             <div class="profile-field">
               <label class="field-label" for="phone">Business Phone</label>
@@ -1907,7 +1908,6 @@
 
   </div>
 
-
   <!-- Logout Popup -->
   <div class="logout-confirm-overlay" onclick="closeLogoutPopup()"></div>
   <div class="logout-confirm-container" id="logoutPopup">
@@ -1930,11 +1930,13 @@
   </div>
 
   @include('include.footer')
+  <script src="{{ asset('js/alerts.js') }}"></script>
+  <script src="{{ asset('js/tabs.js') }}"></script>
 </body>
 
 </html>
-<!-- Avatar Upload -->
 <script>
+  // Avatar Upload
   document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('.user-avatar-circle');
     const uploadBtn = document.querySelector('.upload-avatar-btn');
@@ -2029,7 +2031,12 @@
               removeBtn.remove();
 
               const uploadBtn = document.querySelector('.upload-avatar-btn');
-              uploadBtn.style.display = 'flex';
+              if (uploadBtn) {
+                uploadBtn.style.display = 'flex';
+              } else {
+                console.warn('Upload button not found when trying to restore');
+              }
+
 
               container.setAttribute('data-has-avatar', 'false');
             } else {
@@ -2045,9 +2052,8 @@
 
     setupRemoveButton();
   });
-</script>
-<!-- Logout Popup -->
-<script>
+
+  // Logout Popup
   window.openLogoutPopup = function() {
     document.getElementById('logoutPopup').style.display = "flex";
     document.querySelector('.logout-confirm-overlay').style.display = "block";
@@ -2088,46 +2094,4 @@
 
     closeLogoutPopup();
   };
-</script>
-<!-- Tabs switching -->
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const menuLinks = document.querySelectorAll('.navigation-menu .nav-menu-item');
-    const sections = document.querySelectorAll('.content-section');
-
-    function switchTab(targetId) {
-
-      sections.forEach(section => section.classList.remove('active'));
-      menuLinks.forEach(link => link.classList.remove('active'));
-
-      const targetSection = document.getElementById(targetId);
-      const targetLink = document.querySelector(`.nav-menu-item[data-section="${targetId}"]`);
-
-      if (!targetSection || !targetLink) {
-        console.error('Section or link not found:', targetId);
-        return;
-      }
-
-      targetSection.classList.add('active');
-      targetLink.classList.add('active');
-
-      localStorage.setItem('activeTab', targetId);
-    }
-
-    menuLinks.forEach(link => {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('data-section');
-        switchTab(targetId);
-      });
-    });
-
-    const savedTabId = localStorage.getItem('activeTab');
-
-    if (savedTabId) {
-      switchTab(savedTabId);
-    } else {
-      switchTab('reports');
-    }
-  });
 </script>

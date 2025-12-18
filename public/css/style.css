@@ -6,6 +6,143 @@
     font-style: normal;
     font-display: swap;
 }
+/* Success START */
+.success-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    background-color: #DFF5E3;
+    border-radius: 8px;
+    padding: 16px 24px;
+    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.4s ease-out;
+}
+
+.success-box.show {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+}
+
+.success-box.hide {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+}
+
+.success-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.success-icon {
+    flex-shrink: 0;
+}
+
+.success-title {
+    color: #1B5E20;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.success-messages {
+    margin-top: 8px;
+}
+
+.success-messages p {
+    color: #1E4D2B;
+    font-size: 16px;
+    margin: 4px 0;
+    line-height: 1.4;
+    text-align: center;
+}
+/* Success END */
+
+/* Error START */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.error-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    background-color: #FDD3D0;
+    border-radius: 8px;
+    padding: 16px 24px;
+    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.4s ease-out;
+}
+
+.error-box.show {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+}
+
+.error-box.hide {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+}
+
+.error-header {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    gap: 8px;
+}
+
+.error-icon {
+    flex-shrink: 0;
+}
+
+.error-title {
+    color: #EC221F;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1;
+}
+
+.error-messages {
+    margin-top: 8px;
+}
+
+.error-messages p {
+    color: #282828;
+    font-size: 16px;
+    margin: 4px 0;
+    line-height: 1.4;
+    text-align: center;
+}
+/* Error END */
 
 html,
 body {

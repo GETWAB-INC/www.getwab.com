@@ -863,3 +863,20 @@ function initMobileAnimation() {
 //     }
 // });
 
+// Error
+document.addEventListener('DOMContentLoaded', function() {
+    const errorBox = document.querySelector('.error-box');
+
+    if (errorBox) {
+        errorBox.classList.add('show');
+
+        setTimeout(() => {
+            errorBox.classList.remove('show');
+            errorBox.classList.add('hide');
+
+            setTimeout(() => {
+                errorBox.remove();
+            }, 400);
+        }, 4000);
+    }
+});

@@ -21,11 +21,11 @@ class AccountController extends Controller
     {
         // Валидация входных данных
         $validated = $request->validate([
-            'firstName' => 'nullable|string|max:255',
+            'firstName' => 'required|string|max:255',
             'lastName' => 'nullable|string|max:255',
             'jobTitle' => 'nullable|string|max:255',
             'organization' => 'nullable|string|max:255',
-            'email' => 'nullable|email|max:255|unique:users,email,' . auth()->id(),
+            'email' => 'required|email|max:255|unique:users,email,' . auth()->id(),
             'phone' => 'nullable|string|max:20',
             'currentPassword' => 'nullable|string',
             'newPassword' => 'nullable|string|min:8|confirmed',
@@ -45,7 +45,7 @@ class AccountController extends Controller
         // Проверка и смена пароля (если указаны)
         if ($validated['currentPassword'] && $validated['newPassword']) {
             if (!Hash::check($validated['currentPassword'], $user->password)) {
-                return back()->withErrors(['currentPassword' => 'Текущий пароль неверен.']);
+                return back()->withErrors(['currentPassword' => 'The current password is incorrect.']);
             }
 
             $user->password = Hash::make($validated['newPassword']);
@@ -54,9 +54,9 @@ class AccountController extends Controller
         // Сохранение изменений
         try {
             $user->save();
-            return redirect()->route('account')->with('success', 'Профиль успешно обновлён.');
+            return redirect()->route('account')->with('success', 'Profile updated successfully.');
         } catch (\Exception $e) {
-            return back()->withErrors(['error' => 'Ошибка при сохранении: ' . $e->getMessage()]);
+            return back()->withErrors(['error' => 'Error saving: ' . $e->getMessage()]);
         }
     }
 

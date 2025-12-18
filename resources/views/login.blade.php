@@ -369,13 +369,9 @@
 
                 <form class="login-form" action="{{ route('login-process') }}" method="post">
                     @csrf
-                    @if($errors->any())
-                    <div class="alert alert-danger">
-                        @foreach($errors->all() as $error)
-                        <p>{{ $error }}</p>
-                        @endforeach
-                    </div>
-                    @endif
+
+                    @include('errors.error')
+
                     <div class="form-field">
                         <label class="form-label">Email address</label>
                         <div class="input-wrapper">
@@ -419,3 +415,4 @@
 </body>
 
 </html>
+
