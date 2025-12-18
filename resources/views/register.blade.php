@@ -383,43 +383,46 @@
 <body>
 
     @include('include.header')
+    @include('errors.error')
 
     <div class="register-container">
-
         <div class="register-card-wrapper">
             <div class="register-card">
                 <div class="register-content">
                     <div class="register-header">
                         <h2 class="register-title">Create Your Account</h2>
-                        <form class="register-form" method="POST" action="/register">
+
+                        <form class="register-form" method="POST" action="{{ route('register-process') }}">
+                            @csrf
+
                             <div class="form-field">
-                                <label class="form-label" for="first_name">First Name *</label>
+                                <label class="form-label" for="name">First Name *</label>
                                 <div class="input-wrapper">
-                                    <input class="form-input" type="text" id="first_name" name="first_name" required placeholder="John">
+                                    <input class="form-input" type="text" id="name" name="name" placeholder="John">
                                 </div>
                             </div>
                             <div class="form-field">
-                                <label class="form-label" for="last_name">Last Name</label>
+                                <label class="form-label" for="surname">Last Name</label>
                                 <div class="input-wrapper">
-                                    <input class="form-input" type="text" id="last_name" name="last_name" placeholder="Doe">
+                                    <input class="form-input" type="text" id="surname" name="surname" placeholder="Doe">
                                 </div>
                             </div>
                             <div class="form-field">
                                 <label class="form-label" for="email">Business Email *</label>
                                 <div class="input-wrapper">
-                                    <input class="form-input" type="email" id="email" name="email" required placeholder="you@company.com">
+                                    <input class="form-input" type="email" id="email" name="email" placeholder="you@company.com">
                                 </div>
                             </div>
                             <div class="form-field">
                                 <label class="form-label" for="password">Create Password</label>
                                 <div class="input-wrapper">
-                                    <input class="form-input" type="password" id="password" name="password" required placeholder="••••••••">
+                                    <input class="form-input" type="password" id="password" name="password" placeholder="••••••••">
                                 </div>
                             </div>
                             <div class="form-field">
                                 <label class="form-label" for="password_confirmation">Confirm Password</label>
                                 <div class="input-wrapper">
-                                    <input class="form-input" type="password" id="password_confirmation" name="password_confirmation" required placeholder="••••••••">
+                                    <input class="form-input" type="password" id="password_confirmation" name="password_confirmation" placeholder="••••••••">
                                 </div>
                             </div>
                             <div class="register-footer">
@@ -428,24 +431,24 @@
                                     <a class="login-link" href="{{ route('login') }}">Log in</a>
                                 </div>
                             </div>
-                        </form>
-                    </div>
 
-                    <div class="register-button-container">
-                        <button class="register-button" type="submit">
-                            <span class="button-text">Register</span>
-                        </button>
+                            <div class="register-button-container">
+                                <button class="register-button" type="submit">
+                                    <span class="button-text">Register</span>
+                                </button>
+                            </div>
+
+                        </form>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-
-
     @include('include.footer')
 
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/alerts.js') }}"></script>
+    
 </body>
-
 </html>

@@ -2010,7 +2010,6 @@
 
         @include('include.footer')
 
-        <script src="{{ asset('js/app.js') }}"></script>
         <script src="{{ asset('js/chekout.js') }}"></script>
 
     </body>

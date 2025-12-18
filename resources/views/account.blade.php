@@ -1109,6 +1109,17 @@
     /* profile END*/
 
     /* POPUP logout */
+    .logout-confirm-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      display: none;
+      z-index: 1000;
+    }
+
     .logout-confirm-container {
       width: 450px;
       position: fixed;
@@ -2081,7 +2092,7 @@
       })
       .then(response => {
         if (response.ok || response.redirected) {
-          window.location.href = '/';
+          window.location.href = '/login';
         } else {
           console.error('Logout failed:', response.status);
           alert('Error exiting.');

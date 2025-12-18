@@ -30,6 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 errorBox.remove();
             }, 400);
-        }, 4000);
+        }, 6000);
     }
 });

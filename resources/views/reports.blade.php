@@ -524,8 +524,6 @@
         </div>
     </div>
 
-    <script src="{{ asset('js/app.js') }}"></script>
-
     @include('include.footer')
 
 </body>

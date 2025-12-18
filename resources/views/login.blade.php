@@ -357,8 +357,7 @@
 <body>
 
     @include('include.header')
-
-
+    @include('errors.error')
 
     <div class="login-container">
         <div class="login-card">
@@ -369,8 +368,6 @@
 
                 <form class="login-form" action="{{ route('login-process') }}" method="post">
                     @csrf
-
-                    @include('errors.error')
 
                     <div class="form-field">
                         <label class="form-label">Email address</label>
