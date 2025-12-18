@@ -1333,7 +1333,7 @@
             Profile
           </a>
 
-          <a href="#" class="nav-menu-item" onclick="openLogoutPopup()">
+          <a href="#" class="nav-menu-item" data-section="logout" onclick="openLogoutPopup()">
             <img src="{{ asset('/img/ico/Logout-ico.svg') }}" alt="" />
             Logout
           </a>
