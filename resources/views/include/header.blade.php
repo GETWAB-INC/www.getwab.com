@@ -33,7 +33,7 @@
 
     <div class="header-logo-container">
       <a href="/" class="header-logo">
-        <img src="/img/header/Logo.png" alt="Company Logo" />
+        <img src="/img/header/Logo.png" alt="GETWAB Logo" />
       </a>
     </div>
 
@@ -52,12 +52,12 @@
 
     <div class="header-login">
       @auth
-      <!-- If the user is authorized → show the profile icon -->
+      <!-- authorized -->
       <a href="{{ route('account') }}" class="login-text" onclick="openProfilePopup(event)">
         <img src="{{ asset('/img/ico/Profile-ico.svg') }}" alt="Profile" />
       </a>
       @else
-      <!-- If not authorized → show login link -->
+      <!-- not authorized -->
       <a href="{{ route('login') }}" class="login-text">Log In</a>
       @endauth
     </div>
@@ -114,12 +114,12 @@
 
     <div class="header-login">
       @auth
-      <!-- If the user is authorized → show the profile icon -->
+      <!-- authorized -->
       <a href="{{ route('account') }}" class="login-text" onclick="openProfilePopup(event)">
         <img src="{{ asset('/img/ico/Profile-ico.svg') }}" alt="Profile" />
       </a>
       @else
-      <!-- If not authorized → show login link -->
+      <!-- not authorized -->
       <a href="{{ route('login') }}" class="login-text">Log In</a>
       @endauth
     </div>
@@ -179,12 +179,12 @@
 
       <div class="header-login">
         @auth
-        <!-- If the user is authorized → show the profile icon -->
+        <!-- authorized -->
         <a href="{{ route('account') }}" class="login-text">
           <img src="{{ asset('/img/ico/Profile-ico.svg') }}" alt="Profile" />
         </a>
         @else
-        <!-- If not authorized → show login link -->
+        <!-- not authorized -->
         <a href="{{ route('login') }}" class="login-text">Log In</a>
         @endauth
       </div>
