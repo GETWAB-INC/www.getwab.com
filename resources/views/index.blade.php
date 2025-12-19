@@ -59,10 +59,6 @@
             flex-direction: column;
             justify-content: center;
             margin: 0 auto;
-            /* margin-top: 200px; */
-            /* border-bottom: #00ad8c solid 1px;
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px; */
         }
 
         .hero-content {

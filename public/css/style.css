@@ -157,6 +157,20 @@ body {
     max-width: 1920px;
 }
 
+body.no-scroll,
+body.no-scroll * {
+    overscroll-behavior: contain;
+}
+
+body[style*="overflow: hidden"] {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+}
+
+
 :root {
     --White: white;
     --Gray: #4a4a4a;
@@ -615,6 +629,12 @@ body {
         transform: translateX(100%);
         transition: transform 0.3s ease;
         overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .mobile-menu::-webkit-scrollbar {
+        display: none;
     }
 
     .mobile-menu.active {
@@ -667,7 +687,7 @@ body {
     }
 
     .mobile-submenu-item {
-        color: #afbcb8;
+        color: white;
         font-size: 16px;
         text-decoration: none;
         padding: 10px 15px;
@@ -675,10 +695,7 @@ body {
         transition: background-color 0.2s ease;
     }
 
-    .mobile-submenu-item:hover {
-        color: white;
-        background-color: rgba(255, 255, 255, 0.1);
-    }
+
 
     .close-mobile-menu {
         position: absolute;

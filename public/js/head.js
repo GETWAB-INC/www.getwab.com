@@ -8,6 +8,8 @@ document.addEventListener("DOMContentLoaded", function () {
         burgerMenu.addEventListener("click", function () {
             mobileMenu.classList.add("active");
             document.body.style.overflow = "hidden";
+            document.body.style.position = "fixed";
+            document.body.style.width = "100%";
         });
     } else {
         console.warn("Burger menu or mobile menu elements not found");
@@ -17,6 +19,8 @@ document.addEventListener("DOMContentLoaded", function () {
         closeMenu.addEventListener("click", function () {
             mobileMenu.classList.remove("active");
             document.body.style.overflow = "";
+            document.body.style.position = "";
+            document.body.style.width = "";
         });
     }
 
