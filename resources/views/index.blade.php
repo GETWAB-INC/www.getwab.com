@@ -14,7 +14,7 @@
         /* Page 1 */
         /* Video START*/
         .background-video-container {
-            position: relative;
+            /* position: relative; */
             min-height: 100vh;
             overflow: hidden;
             display: flex;
@@ -48,14 +48,14 @@
         .hero-section {
             width: 100%;
             max-width: 1920px;
-            min-height: 80vh;
+            /* min-height: 80vh; */
             padding: 60px;
             display: flex;
             flex: 1;
             flex-direction: column;
             justify-content: center;
             margin: 0 auto;
-            margin-top: 200px;
+            /* margin-top: 200px; */
             border-bottom: #00ad8c solid 1px;
             position: relative;
         }
