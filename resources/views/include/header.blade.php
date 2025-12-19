@@ -67,10 +67,6 @@
 </header>
 <!-- Mobile -->
 <div class="mobile-menu">
-  <div class="close-mobile-menu">
-    <div class="close-line"></div>
-    <div class="close-line"></div>
-  </div>
   <div class="mobile-menu-container">
     <div class="mobile-menu-item">
       <span>Products</span>
@@ -111,19 +107,6 @@
       <a href="{{ route('mission') }}" class="mobile-submenu-item">Mission</a>
       <a href="{{ route('contact-us') }}" class="mobile-submenu-item">Contact Us</a>
     </div>
-
-    <div class="header-login">
-      @auth
-      <!-- authorized -->
-      <a href="{{ route('account') }}" class="login-text">
-        <img src="{{ asset('/img/ico/Profile-ico.svg') }}" alt="Profile" />
-      </a>
-      @else
-      <!-- not authorized -->
-      <a href="{{ route('login') }}" class="login-text">Log In</a>
-      @endauth
-    </div>
-
   </div>
 </div>
 
@@ -159,7 +142,7 @@
 
     <div class="header-logo-container">
       <a href="/" class="header-logo">
-        <img src="/img/header/Logofix.png" alt="GETWAB INC. Logo" />
+        <img src="{{ asset('/img/header/Logofix.png') }}" alt="GETWAB INC. Logo" />
       </a>
     </div>
 

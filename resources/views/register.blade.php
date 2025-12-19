@@ -179,7 +179,7 @@
             text-align: center;
         }
 
-        .login-text {
+        .login-text-registered {
             color: #afbcb8;
             font-size: 24px;
             font-family: Overused Grotesk;
@@ -220,7 +220,7 @@
 
             .form-label,
             .form-input,
-            .login-text,
+            .login-text-registered,
             .login-link,
             .button-text {
                 font-size: 20px;
@@ -267,7 +267,7 @@
 
             .form-label,
             .form-input,
-            .login-text,
+            .login-text-registered,
             .login-link,
             .button-text {
                 font-size: 18px;
@@ -331,7 +331,7 @@
 
             .form-label,
             .form-input,
-            .login-text,
+            .login-text-registered,
             .login-link,
             .button-text {
                 font-size: 16px;
@@ -427,7 +427,7 @@
                             </div>
                             <div class="register-footer">
                                 <div class="login-prompt">
-                                    <span class="login-text">Already registered?</span>
+                                    <span class="login-text-registered">Already registered?</span>
                                     <a class="login-link" href="{{ route('login') }}">Log in</a>
                                 </div>
                             </div>
