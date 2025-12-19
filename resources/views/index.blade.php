@@ -227,6 +227,16 @@
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
             }
+
+            .hero-title {
+                font-size: 40px;
+                line-height: 100%;
+            }
+
+            .hero-subtitle {
+                font-size: 20px;
+                line-height: 120%;
+            }
         }
 
         /* About END */
@@ -418,8 +428,6 @@
                 text-align: left;
             }
 
-
-
             .product-image {
                 width: 100% !important;
                 height: auto !important;
@@ -464,53 +472,6 @@
             display: flex;
             flex-direction: column;
             gap: 100px;
-        }
-
-        .services-header {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            padding-left: 60px;
-        }
-
-        .services-header-left {
-            width: 380px;
-        }
-
-        .services-header-right {
-            position: relative;
-            width: 632px;
-        }
-
-        .services-title {
-            color: var(--White, white);
-            font-size: 48px;
-            font-family: "Overused Grotesk", sans-serif;
-            font-weight: 400;
-            line-height: 57.6px;
-            margin: 0;
-        }
-
-        .services-description {
-            position: relative;
-            color: #afbcb8;
-            font-size: 24px;
-            font-family: "Overused Grotesk", sans-serif;
-            font-weight: 400;
-            line-height: 24px;
-            margin: 0 0 40px 0;
-        }
-
-        .services-description-quotes-1 {
-            position: absolute;
-            top: -10px;
-            left: -15px;
-        }
-
-        .services-description-quotes-2 {
-            position: absolute;
-            bottom: -10px;
-            right: 200px;
         }
 
         .services-scroll-container {
@@ -596,29 +557,6 @@
                 gap: 30px;
             }
 
-            .services-header {
-                margin: 20px;
-                flex-direction: column;
-                padding-left: 0;
-            }
-
-            .services-header-left,
-            .services-header-right {
-                width: 100%;
-            }
-
-            .services-title {
-                font-size: 32px;
-                line-height: 38px;
-                margin-bottom: 20px;
-            }
-
-            .services-description {
-                font-size: 18px;
-                line-height: 22px;
-                margin-bottom: 30px;
-            }
-
             .service-card {
                 width: 280px;
                 padding: 20px 30px;
@@ -634,25 +572,6 @@
                 width: 180px;
             }
 
-            .services-description-quotes-2 {
-                right: 100px;
-            }
-        }
-
-        @media (max-width: 375px) {
-            .services-description-quotes-2 {
-                right: 50px;
-            }
-        }
-
-        @media (max-width: 325px) {
-            .services-description {
-                width: 300px;
-            }
-
-            .services-description-quotes-2 {
-                right: 230px;
-            }
         }
 
         /* Services END */
@@ -871,26 +790,14 @@
             height: 100%;
         }
 
-        .icon-container {
-            position: absolute;
-            transition: all 0.8s ease;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        .icon-container.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .icon {
+        /* .icon {
             width: 40px;
             height: 40px;
             object-fit: contain;
             transition: all 0.5s ease;
             transform: scale(0.8);
             opacity: 0;
-        }
+        } */
 
         .icon.visible {
             transform: scale(1);
@@ -1494,7 +1401,7 @@
             <div class="choose-getwab-container">
                 <div class="choose-getwab-background">
                     <img
-                        src="img/main/SectionImage2.png"
+                        src="{{ asset('img/main/SectionImage2.png') }}"
                         alt="Background image"
                         width="1920"
                         height="1000" />
