@@ -262,10 +262,6 @@
 
         @media (max-width: 768px) {
 
-            .background-video-container {
-                min-height: 900px;
-            }
-
             .grid-3-columns {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
