@@ -33,8 +33,8 @@
             z-index: -2;
             object-fit: cover;
             border-bottom: #00ad8c solid 2px;
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px;
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
         }
 
         .video-overlay {
