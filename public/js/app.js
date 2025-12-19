@@ -32,7 +32,7 @@ function initDesktopAnimation() {
 
     const iconsConfig = [
         {
-            iconPath: window.location.origin + "/img/ico/icon-2.png",
+            iconPath: window.location.origin + "/img/ico/Icon-2.png",
             text: "Real-time FPDS data sync",
             position: {
                 angle: 220,
@@ -50,7 +50,7 @@ function initDesktopAnimation() {
             },
         },
         {
-            iconPath: window.location.origin + "/img/ico/icon-3.png",
+            iconPath: window.location.origin + "/img/ico/Icon-3.png",
             text: "Secure & scalable architecture",
             position: {
                 angle: 295,
@@ -68,7 +68,7 @@ function initDesktopAnimation() {
             },
         },
         {
-            iconPath: window.location.origin + "/img/ico/icon-4.png",
+            iconPath: window.location.origin + "/img/ico/Icon-4.png",
             text: "Real-time FPDS data sync",
             position: {
                 angle: 360,
@@ -86,7 +86,7 @@ function initDesktopAnimation() {
             },
         },
         {
-            iconPath: window.location.origin + "/img/ico/icon.png",
+            iconPath: window.location.origin + "/img/ico/Icon.png",
             text: "No-code dashboards",
             position: {
                 angle: 430,
@@ -104,7 +104,7 @@ function initDesktopAnimation() {
             },
         },
         {
-            iconPath: window.location.origin + "/img/ico/icon-1.png",
+            iconPath: window.location.origin + "/img/ico/Icon-1.png",
             text: "High-speed backend",
             position: {
                 angle: 495,
