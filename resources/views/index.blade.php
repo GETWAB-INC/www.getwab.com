@@ -223,7 +223,45 @@
             border-radius: 0.5rem;
         }
 
+
+        @media (max-width: 1400px) {
+            .hero-title {
+                font-size: 72px;
+                line-height: 72px;
+            }
+
+            .hero-subtitle {
+                font-size: 36px;
+                line-height: 43.2px;
+            }
+
+
+        }
+
+        @media (max-width: 992px) {
+            .hero-section {
+                height: auto;
+                padding: 60px 30px;
+            }
+
+            .hero-title {
+                font-size: 56px;
+                line-height: 56px;
+            }
+
+            .hero-subtitle {
+                font-size: 28px;
+                line-height: 33.6px;
+            }
+
+            .hero-button {
+                font-size: 20px;
+                padding: 16px 28px;
+            }
+        }
+
         @media (max-width: 768px) {
+
             .grid-3-columns {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
@@ -240,8 +278,66 @@
             }
 
             .section {
-                padding: 24px;
+                padding: 0px;
             }
+
+            .hero-content {
+                gap: 60px;
+            }
+
+            .hero-text-container {
+                gap: 32px;
+            }
+
+            .title {
+                font-size: 1.5rem;
+
+            }
+
+            .description {
+
+                font-size: 1rem;
+
+            }
+        }
+
+
+        @media (max-width: 576px) {
+            .hero-section {
+                padding: 40px 20px;
+                border-bottom-right-radius: 20px;
+                border-bottom-left-radius: 20px;
+            }
+
+            .hero-title {
+                font-size: 32px;
+                line-height: 36px;
+            }
+
+            .hero-subtitle {
+                font-size: 18px;
+                line-height: 22px;
+            }
+
+            .hero-button {
+                font-size: 18px;
+                padding: 14px 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .hero-title {
+                font-size: 28px;
+                line-height: 32px;
+            }
+
+            .hero-subtitle {
+                font-size: 16px;
+                line-height: 20px;
+            }
+
+
         }
 
         /* About END */
@@ -593,16 +689,16 @@
         }
 
         .client-card-government {
-            background-image: url("../img/main/ServiceImage.png");
+            background-image: url("{{ asset('img/main/ServiceImage.png') }}");
         }
 
         .client-card-contractors {
             width: 564px;
-            background-image: url("../img/main/ServiceImage2.png");
+            background-image: url("{{ asset('img/main/ServiceImage2.png') }}");
         }
 
         .client-card-businesses {
-            background-image: url("../img/main/ServiceImage3.png");
+            background-image: url("{{ asset('img/main/ServiceImage3.png') }}");
         }
 
         .client-card-overlay {
