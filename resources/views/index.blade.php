@@ -32,6 +32,9 @@
             height: auto;
             z-index: -2;
             object-fit: cover;
+            border-bottom: #00ad8c solid 2px;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
         }
 
         .video-overlay {
@@ -39,13 +42,14 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: calc(100% + 200px);
+            height: calc(100% + 350px);
             background-color: #282828;
             opacity: 0.7;
             z-index: -1;
         }
 
         .hero-section {
+            position: relative;
             width: 100%;
             max-width: 1920px;
             /* min-height: 80vh; */
@@ -56,8 +60,9 @@
             justify-content: center;
             margin: 0 auto;
             /* margin-top: 200px; */
-            border-bottom: #00ad8c solid 1px;
-            position: relative;
+            /* border-bottom: #00ad8c solid 1px;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px; */
         }
 
         .hero-content {
@@ -236,6 +241,10 @@
             .hero-subtitle {
                 font-size: 20px;
                 line-height: 120%;
+            }
+
+            .section {
+                padding: 24px;
             }
         }
 
