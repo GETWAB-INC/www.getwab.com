@@ -1275,6 +1275,17 @@
       .cancel-button .button-text {
         font-size: 14px;
       }
+
+      .nav-menu-item {
+        font-size: 16px;
+      }
+      .user-full-name {
+        font-size: 16px;
+      }
+      .user-avatar-circle {
+        height: 80px;
+        width: 80px;
+      }
     }
   </style>
 </head>

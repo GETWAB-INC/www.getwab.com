@@ -150,7 +150,6 @@
             width: 100%;
             max-width: 1920px;
             margin: 0 auto;
-            padding: 0 1rem;
         }
 
         .grid-3-columns {
@@ -211,6 +210,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            font-size: 24px;
         }
 
         .link:hover {
@@ -238,33 +238,13 @@
 
         }
 
-        @media (max-width: 992px) {
-            .hero-section {
-                height: auto;
-                padding: 60px 30px;
-            }
-
-            .hero-title {
-                font-size: 56px;
-                line-height: 56px;
-            }
-
-            .hero-subtitle {
-                font-size: 28px;
-                line-height: 33.6px;
-            }
-
-            .hero-button {
-                font-size: 20px;
-                padding: 16px 28px;
-            }
-        }
 
         @media (max-width: 768px) {
 
             .grid-3-columns {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
+                padding: 32px 24px;
             }
 
             .hero-title {
@@ -291,53 +271,20 @@
 
             .title {
                 font-size: 1.5rem;
-
             }
 
             .description {
-
                 font-size: 1rem;
-
-            }
-        }
-
-
-        @media (max-width: 576px) {
-            .hero-section {
-                padding: 40px 20px;
-                border-bottom-right-radius: 20px;
-                border-bottom-left-radius: 20px;
             }
 
-            .hero-title {
-                font-size: 32px;
-                line-height: 36px;
-            }
-
-            .hero-subtitle {
-                font-size: 18px;
-                line-height: 22px;
+            .link {
+                font-size: 20px;
             }
 
             .hero-button {
-                font-size: 18px;
-                padding: 14px 24px;
+                font-size: 20px;
+                padding: 16px 28px;
             }
-        }
-
-        @media (max-width: 480px) {
-
-            .hero-title {
-                font-size: 28px;
-                line-height: 32px;
-            }
-
-            .hero-subtitle {
-                font-size: 16px;
-                line-height: 20px;
-            }
-
-
         }
 
         /* About END */
@@ -485,8 +432,8 @@
             }
 
             .products-title {
-                font-size: 32px;
-                line-height: 38.4px;
+                font-size: 24px;
+                line-height: 100%;
                 text-align: left;
             }
 
@@ -517,8 +464,8 @@
             }
 
             .product-name {
-                font-size: 24px;
-                line-height: 24px;
+                font-size: 16px;
+                line-height: 100%;
                 text-align: left;
             }
 
@@ -1273,7 +1220,7 @@
                             government agencies and private businesses make smarter
                             decisions using real-time federal procurement data.
                         </p>
-                        <a href="https://www.getwab.com/capability-statement.pdf" class="link" style="font-size: 24px;">
+                        <a href="https://www.getwab.com/capability-statement.pdf" class="link">
                             View Capability Statement <img src="{{ asset('img/ico/arrow-neon.svg') }}" alt="">
                         </a>
                     </div>
@@ -1343,6 +1290,9 @@
                             cybersecurity, and automation.<br />
                             For both government and private clients.
                         </p>
+                    </div>
+                    <div class="grid-item">
+                        <!-- empty -->
                     </div>
                 </div>
             </div>
@@ -1464,6 +1414,9 @@
                             cybersecurity, and automation. <br />
                             For both government and private clients.
                         </p>
+                    </div>
+                    <div class="grid-item">
+                        <!-- empty -->
                     </div>
                 </div>
             </div>
