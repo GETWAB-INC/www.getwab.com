@@ -41,4 +41,47 @@ document.addEventListener('DOMContentLoaded', function () {
   } else {
     switchTab('reports');
   }
+
+});
+
+// Mobile tabs
+document.addEventListener('DOMContentLoaded', function () {
+  const menuLinks = document.querySelectorAll('.nav-menu-item[data-section]');
+  const sidebar = document.querySelector('.dashboard-sidebar');
+  const desktopSections = document.querySelectorAll('.content-section');
+  const mobileSections = document.querySelectorAll('.mobile-your-profile-container');
+
+  function showDesktopSection(sectionId) {
+    desktopSections.forEach(section => {
+      section.classList.toggle('active', section.id === sectionId);
+    });
+  }
+
+  function showMobileSection(sectionId) {
+    mobileSections.forEach(section => {
+      section.style.display = 'none';
+    });
+    const targetSection = document.getElementById(`mobile-${sectionId}`);
+    if (targetSection) {
+      targetSection.style.display = 'block';
+    }
+  }
+
+  function handleLinkClick(e) {
+    e.preventDefault();
+
+    const sectionId = this.getAttribute('data-section');
+
+    if (window.innerWidth > 768) {
+      showDesktopSection(sectionId);
+      return;
+    }
+
+    sidebar.style.display = 'none';
+    showMobileSection(sectionId);
+  }
+
+  menuLinks.forEach(link => {
+    link.addEventListener('click', handleLinkClick);
+  });
 });

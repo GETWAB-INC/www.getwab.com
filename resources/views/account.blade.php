@@ -20,7 +20,6 @@
     .dashboard-container {
       display: flex;
       flex-direction: row;
-      min-height: 100vh;
       max-width: 1810px;
       margin: 60px auto;
     }
@@ -545,24 +544,6 @@
     }
 
     /* packages END */
-
-    @media (max-width: 479px) {
-
-      .dashboard-container {
-
-        margin: 0 0 20px auto;
-      }
-
-      .dashboard-sidebar {
-        margin: 0 auto;
-        border-top-right-radius: 6px;
-        border-bottom-right-radius: 6px;
-      }
-
-      .dashboard-main {
-        display: none;
-      }
-    }
 
     /* subscription START */
     .subscription-container {
@@ -1229,8 +1210,32 @@
       word-wrap: break-word;
     }
 
+    .mobile-your-profile-container {
+      display: none;
+    }
+
     /* POPUP logout */
     @media (max-width: 768px) {
+
+      .dashboard-container {
+        margin: 0 0 20px auto;
+      }
+
+      .dashboard-sidebar {
+        margin: 0 auto;
+        border-top-right-radius: 6px;
+        border-bottom-right-radius: 6px;
+        height: 700px;
+      }
+
+      .dashboard-main {
+        display: none;
+      }
+
+      .user-info-section {
+        gap: 24px;
+      }
+
       .logout-confirm-container {
         width: 90%;
         max-width: 320px;
@@ -1279,13 +1284,100 @@
       .nav-menu-item {
         font-size: 16px;
       }
+
       .user-full-name {
         font-size: 16px;
       }
+
       .user-avatar-circle {
         height: 80px;
         width: 80px;
       }
+
+      .title-and-description {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+        padding: 0 24px;
+        margin-bottom: 24px;
+      }
+
+      .content-main-title {
+        font-size: 24px;
+        margin: 0;
+        line-height: 1.2;
+        width: 100%;
+      }
+
+      .content-description-text {
+        font-size: 16px;
+        color: #AFBCB8;
+        margin: 0;
+        line-height: 1.4;
+      }
+
+      .mobile-your-profile-list {
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 8px;
+        display: flex;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: calc(100% - 32px); 
+      }
+
+      .mobile-reports-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .mobile-report-item {
+        width: 327px;
+        height: 60px;
+        background: var(--dark-gray);
+        border-radius: 7px;
+        gap: 10px;
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        padding: 12px;
+      }
+
+      .mobile-report-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 7px;
+        padding: 2px;
+        background: linear-gradient(135deg, #b5d9a7, #00aa89);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+      }
+
+      .mobile-report-title {
+        width: 190px;
+        color: #FFF;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 16px;
+        word-wrap: break-word;
+        padding: 1px 10px;
+      }
+
+      .action-icon {
+        padding: 0px 50px;
+      }
+
     }
   </style>
 </head>
@@ -1365,6 +1457,7 @@
 
     </aside>
 
+    <!-- Desktop Dashboard -->
     <main class="dashboard-main">
 
       <!-- Reports -->
@@ -1927,6 +2020,64 @@
       </div>
 
     </main>
+
+    <!-- Mobile Dashboard -->
+    <main class="mobile-dashboard-main">
+
+      <!-- Mobile Reports -->
+      <div id="mobile-reports" class="mobile-your-profile-container" style="display: none;">
+
+
+        <div class="title-and-description">
+          <h1 class="content-main-title">Your Reports</h1>
+          <p class="content-description-text">
+            All reports you've
+            generated <br />
+            or purchased.
+          </p>
+        </div>
+
+        <div class="mobile-your-profile-list">
+          <div class="mobile-reports-list">
+            <div class="mobile-report-item">
+              <div class="mobile-report-title">Spending by U.S. State (2020–2024)</div>
+              <div class="action-icon">
+                <img src="{{ asset('img/ico/Action-done-ico.svg') }}" alt="" />
+              </div>
+            </div>
+            <div class="mobile-report-item">
+              <div class="mobile-report-title">Dept-Level Trends for California</div>
+              <div class="action-icon">
+                <img src="{{ asset('img/ico/Action-loading-ico.svg') }}" alt="" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+  </div>
+  <!-- Mobile Packages -->
+  <div id="mobile-packages" class="mobile-your-profile-container" style="display: none;">
+    <p>Packages</p>
+  </div>
+
+  <!-- Mobile Subscription -->
+  <div id="mobile-subscription" class="mobile-your-profile-container" style="display: none;">
+    <p>Subscription</p>
+  </div>
+
+  <!-- Mobile Billing -->
+  <div id="mobile-billing" class="mobile-your-profile-container" style="display: none;">
+    <p>Billing</p>
+  </div>
+
+  <!-- Mobile Profile -->
+  <div id="mobile-profile" class="mobile-your-profile-container" style="display: none;">
+    <p>Profile</p>
+  </div>
+
+  </main>
 
   </div>
 
