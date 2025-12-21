@@ -193,6 +193,291 @@
     .subscription-card:last-child .card-title {
       width: 306px;
     }
+
+    @media (min-width: 768px) {
+
+      .mobile-dashboard-main {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 767px) {
+      .dashboard-sidebar {
+        display: none !important;
+      }
+
+      .mobile-dashboard-main {
+        padding: 24px;
+      }
+
+      .subscription-container-mobile {
+        justify-content: flex-start;
+        align-items: center;
+        gap: 24px;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .subscription-card-mobile {
+        padding: 24px;
+        background: #282828;
+        border-radius: 7px;
+        border: 1px solid #b5d9a7;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 10px;
+        display: flex;
+        position: relative;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .card-content-mobile {
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 24px;
+        display: flex;
+        width: 100%;
+      }
+
+      .card-header-mobile {
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 24px;
+        display: flex;
+        width: 100%;
+      }
+
+      .card-title-mobile {
+        align-self: stretch;
+        text-align: center;
+        color: #b5d9a7;
+        font-size: 16px;
+        font-family: Overused Grotesk;
+        font-weight: 700;
+        line-height: 16px;
+        word-wrap: break-word;
+      }
+
+      .card-details-mobile {
+        align-self: stretch;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 16px;
+        display: flex;
+      }
+
+      .detail-row-mobile {
+        align-self: stretch;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 4px;
+        display: inline-flex;
+      }
+
+      .detail-label-mobile {
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        color: white;
+        font-size: 16px;
+        font-family: Overused Grotesk;
+        font-weight: 600;
+        line-height: 16px;
+        word-wrap: break-word;
+      }
+
+      .detail-value-mobile {
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        color: white;
+        font-size: 16px;
+        font-family: Overused Grotesk;
+        font-weight: 400;
+        line-height: 16px;
+        word-wrap: break-word;
+      }
+
+      .card-total-mobile {
+        width: 100%;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 32px;
+        display: inline-flex;
+      }
+
+      .total-label-mobile {
+        flex: 1 1 0;
+        color: white;
+        font-size: 16px;
+        font-family: Overused Grotesk;
+        font-weight: 600;
+        line-height: 16px;
+        word-wrap: break-word;
+      }
+
+      .total-value-mobile {
+        text-align: right;
+        color: white;
+        font-size: 16px;
+        font-family: Overused Grotesk;
+        font-weight: 600;
+        line-height: 16px;
+        word-wrap: break-word;
+      }
+
+      .card-button-mobile {
+        padding: 20px 35px;
+        border-radius: 7px;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        display: inline-flex;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .card-button-mobile.active {
+        background: linear-gradient(360deg, #00ad8c 0%, #00755f 51%);
+      }
+
+      .card-button-mobile.active::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(360deg, #00624f 0%, #005d4b 97%);
+        opacity: 0;
+        transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        border-radius: 7px;
+        z-index: 1;
+      }
+
+      .card-button-mobile.active:hover::before {
+        opacity: 1;
+      }
+
+      .card-button-mobile.inactive {
+        background: #333333;
+        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+
+      .button-text-mobile {
+        text-align: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        color: white;
+        font-size: 16px;
+        font-family: Overused Grotesk;
+        font-weight: 400;
+        line-height: 16px;
+        word-wrap: break-word;
+        position: relative;
+        z-index: 2;
+      }
+
+      .subscription-card-mobile:last-child .card-content-mobile {
+        gap: 24px;
+      }
+
+      .subscription-card-mobile:last-child .card-header-mobile {
+        width: auto;
+        gap: 24px;
+      }
+
+      .subscription-container {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 327px;
+        gap: 24px;
+        margin: 0 auto;
+      }
+
+      .subscription-card {
+        width: 100%;
+        padding: 24px;
+        background: #282828;
+        border-radius: 7px;
+        border: 1px solid #b5d9a7;
+        gap: 10px;
+      }
+
+      .card-content {
+        gap: 24px;
+      }
+
+      .card-header {
+        gap: 24px;
+      }
+
+      .card-title {
+        color: #b5d9a7;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 16px;
+      }
+
+      .card-details {
+        gap: 16px;
+      }
+
+      .detail-label,
+      .detail-value {
+        font-size: 16px;
+        line-height: 16px;
+      }
+
+      .card-total {
+        gap: 32px;
+      }
+
+      .total-label,
+      .total-value {
+        font-size: 16px;
+        line-height: 16px;
+        font-weight: 700;
+      }
+
+      .card-button {
+        padding: 20px 35px;
+        border-radius: 7px;
+      }
+
+      .card-button.active {
+        background: linear-gradient(360deg, #00ad8c 0%, #00755f 51%);
+      }
+
+      .card-button.inactive {
+        background: #333333;
+      }
+
+      .button-text {
+        font-size: 16px;
+        line-height: 16px;
+      }
+
+      .subscription-card:last-child .card-content {
+        gap: 24px;
+      }
+
+      .subscription-card:last-child .card-header {
+        height: auto;
+        width: auto;
+      }
+    }
   </style>
 </head>
 
@@ -209,26 +494,26 @@
         <!-- Avatar -->
         <div class="user-avatar-circle" data-has-avatar="{{ $user->avatar ? 'true' : 'false' }}">
           @if($user->avatar)
-          <!-- exist -->
-          <img
-            src="{{ Storage::url($user->avatar) }}"
-            alt="Avatar"
-            class="avatar-image">
-          <button type="button" class="remove-avatar-btn" aria-label="Delete avatar">
-            <svg class="icon-delete" viewBox="0 0 24 24" width="24" height="24">
-              <path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="white" />
-            </svg>
-          </button>
+            <!-- exist -->
+            <img src="{{ Storage::url($user->avatar) }}" alt="Avatar" class="avatar-image">
+            <button type="button" class="remove-avatar-btn" aria-label="Delete avatar">
+              <svg class="icon-delete" viewBox="0 0 24 24" width="24" height="24">
+                <path
+                  d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                  fill="white" />
+              </svg>
+            </button>
           @else
-          <!-- empty -->
-          <span class="initials">
-            {{ substr($user->name, 0, 1) }}{{ substr($user->surname, 0, 1) }}
-          </span>
-          <button type="button" class="upload-avatar-btn" aria-label="Upload avatar">
-            <svg class="icon-upload" viewBox="-14 -16 48 48">
-              <path d="M17 3.00002H15.72L15.4 2.00002C15.1926 1.41325 14.8077 0.905525 14.2989 0.547183C13.7901 0.18884 13.1824 -0.0023769 12.56 2.23036e-05H7.44C6.81155 0.00119801 6.19933 0.199705 5.68977 0.567528C5.1802 0.93535 4.79901 1.45391 4.6 2.05002L4.28 3.05002H3C2.20435 3.05002 1.44129 3.36609 0.87868 3.9287C0.316071 4.49131 0 5.25437 0 6.05002V14.05C0 14.8457 0.316071 15.6087 0.87868 16.1713C1.44129 16.734 2.20435 17.05 3 17.05H17C17.7956 17.05 18.5587 16.734 19.1213 16.1713C19.6839 15.6087 20 14.8457 20 14.05V6.05002C20.0066 5.65187 19.9339 5.25638 19.7862 4.88661C19.6384 4.51684 19.4184 4.1802 19.1392 3.89631C18.86 3.61241 18.527 3.38695 18.1597 3.23307C17.7924 3.07919 17.3982 2.99997 17 3.00002ZM18 14C18 14.2652 17.8946 14.5196 17.7071 14.7071C17.5196 14.8947 17.2652 15 17 15H3C2.73478 15 2.48043 14.8947 2.29289 14.7071C2.10536 14.5196 2 14.2652 2 14V6.00002C2 5.73481 2.10536 5.48045 2.29289 5.29292C2.48043 5.10538 2.73478 5.00002 3 5.00002H5C5.21807 5.0114 5.43386 4.9511 5.61443 4.82831C5.795 4.70552 5.93042 4.527 6 4.32002L6.54 2.68002C6.60709 2.4814 6.7349 2.30889 6.90537 2.18686C7.07584 2.06484 7.28036 1.99948 7.49 2.00002H12.61C12.8196 1.99948 13.0242 2.06484 13.1946 2.18686C13.3651 2.30889 13.4929 2.4814 13.56 2.68002L14.1 4.32002C14.1642 4.51077 14.2844 4.67771 14.445 4.79903C14.6055 4.92035 14.799 4.9904 15 5.00002H17C17.2652 5.00002 17.5196 5.10538 17.7071 5.29292C17.8946 5.48045 18 5.73481 18 6.00002V14ZM10 5.00002C9.20887 5.00002 8.43552 5.23462 7.77772 5.67414C7.11992 6.11367 6.60723 6.73838 6.30448 7.46929C6.00173 8.20019 5.92252 9.00446 6.07686 9.78038C6.2312 10.5563 6.61216 11.269 7.17157 11.8284C7.73098 12.3879 8.44372 12.7688 9.21964 12.9232C9.99556 13.0775 10.7998 12.9983 11.5307 12.6955C12.2616 12.3928 12.8864 11.8801 13.3259 11.2223C13.7654 10.5645 14 9.79115 14 9.00002C14 7.93916 13.5786 6.92174 12.8284 6.1716C12.0783 5.42145 11.0609 5.00002 10 5.00002ZM10 11C9.60444 11 9.21776 10.8827 8.88886 10.663C8.55996 10.4432 8.30362 10.1308 8.15224 9.76539C8.00087 9.39994 7.96126 8.9978 8.03843 8.60984C8.1156 8.22188 8.30608 7.86551 8.58579 7.58581C8.86549 7.3061 9.22186 7.11562 9.60982 7.03845C9.99778 6.96128 10.3999 7.00089 10.7654 7.15226C11.1308 7.30364 11.4432 7.55998 11.6629 7.88888C11.8827 8.21778 12 8.60446 12 9.00002C12 9.53045 11.7893 10.0392 11.4142 10.4142C11.0391 10.7893 10.5304 11 10 11Z" />
-            </svg>
-          </button>
+            <!-- empty -->
+            <span class="initials">
+              {{ substr($user->name, 0, 1) }}{{ substr($user->surname, 0, 1) }}
+            </span>
+            <button type="button" class="upload-avatar-btn" aria-label="Upload avatar">
+              <svg class="icon-upload" viewBox="-14 -16 48 48">
+                <path
+                  d="M17 3.00002H15.72L15.4 2.00002C15.1926 1.41325 14.8077 0.905525 14.2989 0.547183C13.7901 0.18884 13.1824 -0.0023769 12.56 2.23036e-05H7.44C6.81155 0.00119801 6.19933 0.199705 5.68977 0.567528C5.1802 0.93535 4.79901 1.45391 4.6 2.05002L4.28 3.05002H3C2.20435 3.05002 1.44129 3.36609 0.87868 3.9287C0.316071 4.49131 0 5.25437 0 6.05002V14.05C0 14.8457 0.316071 15.6087 0.87868 16.1713C1.44129 16.734 2.20435 17.05 3 17.05H17C17.7956 17.05 18.5587 16.734 19.1213 16.1713C19.6839 15.6087 20 14.8457 20 14.05V6.05002C20.0066 5.65187 19.9339 5.25638 19.7862 4.88661C19.6384 4.51684 19.4184 4.1802 19.1392 3.89631C18.86 3.61241 18.527 3.38695 18.1597 3.23307C17.7924 3.07919 17.3982 2.99997 17 3.00002ZM18 14C18 14.2652 17.8946 14.5196 17.7071 14.7071C17.5196 14.8947 17.2652 15 17 15H3C2.73478 15 2.48043 14.8947 2.29289 14.7071C2.10536 14.5196 2 14.2652 2 14V6.00002C2 5.73481 2.10536 5.48045 2.29289 5.29292C2.48043 5.10538 2.73478 5.00002 3 5.00002H5C5.21807 5.0114 5.43386 4.9511 5.61443 4.82831C5.795 4.70552 5.93042 4.527 6 4.32002L6.54 2.68002C6.60709 2.4814 6.7349 2.30889 6.90537 2.18686C7.07584 2.06484 7.28036 1.99948 7.49 2.00002H12.61C12.8196 1.99948 13.0242 2.06484 13.1946 2.18686C13.3651 2.30889 13.4929 2.4814 13.56 2.68002L14.1 4.32002C14.1642 4.51077 14.2844 4.67771 14.445 4.79903C14.6055 4.92035 14.799 4.9904 15 5.00002H17C17.2652 5.00002 17.5196 5.10538 17.7071 5.29292C17.8946 5.48045 18 5.73481 18 6.00002V14ZM10 5.00002C9.20887 5.00002 8.43552 5.23462 7.77772 5.67414C7.11992 6.11367 6.60723 6.73838 6.30448 7.46929C6.00173 8.20019 5.92252 9.00446 6.07686 9.78038C6.2312 10.5563 6.61216 11.269 7.17157 11.8284C7.73098 12.3879 8.44372 12.7688 9.21964 12.9232C9.99556 13.0775 10.7998 12.9983 11.5307 12.6955C12.2616 12.3928 12.8864 11.8801 13.3259 11.2223C13.7654 10.5645 14 9.79115 14 9.00002C14 7.93916 13.5786 6.92174 12.8284 6.1716C12.0783 5.42145 11.0609 5.00002 10 5.00002ZM10 11C9.60444 11 9.21776 10.8827 8.88886 10.663C8.55996 10.4432 8.30362 10.1308 8.15224 9.76539C8.00087 9.39994 7.96126 8.9978 8.03843 8.60984C8.1156 8.22188 8.30608 7.86551 8.58579 7.58581C8.86549 7.3061 9.22186 7.11562 9.60982 7.03845C9.99778 6.96128 10.3999 7.00089 10.7654 7.15226C11.1308 7.30364 11.4432 7.55998 11.6629 7.88888C11.8827 8.21778 12 8.60446 12 9.00002C12 9.53045 11.7893 10.0392 11.4142 10.4142C11.0391 10.7893 10.5304 11 10 11Z" />
+              </svg>
+            </button>
           @endif
         </div>
 
@@ -372,10 +657,98 @@
     <!-- Mobile Dashboard -->
     <main class="mobile-dashboard-main">
 
-      <!-- Mobile Subscription -->
-      <div id="mobile-subscription" class="mobile-your-profile-container" style="display: none;">
-        <p>Subscription</p>
+      <div class="mobile-container">
+        <div class="mobile-title">Subscription</div>
+        <div class="mobile-content">
+          <div class="mobile-description">
+            Manage your subscription and billing preferences.
+          </div>
+          <div class="mobile-list">
+            <div class="subscription-container-mobile">
+              <div class="subscription-card-mobile">
+                <div class="card-content-mobile">
+                  <div class="card-header-mobile">
+                    <div class="card-title-mobile">FPDS Query</div>
+                    <div class="card-details-mobile">
+                      <div class="detail-row-mobile">
+                        <div class="detail-label-mobile">Status:</div>
+                        <div class="detail-value-mobile">Active</div>
+                      </div>
+                      <div class="detail-row-mobile">
+                        <div class="detail-label-mobile">Next billing:</div>
+                        <div class="detail-value-mobile">Aug 23, 2025</div>
+                      </div>
+                      <div class="detail-row-mobile">
+                        <div class="detail-label-mobile">Plan:</div>
+                        <div class="detail-value-mobile">Monthly</div>
+                      </div>
+                    </div>
+                    <div class="card-total-mobile">
+                      <div class="total-label-mobile">Total</div>
+                      <div class="total-value-mobile">$49.00</div>
+                    </div>
+                  </div>
+                  <div class="card-button-mobile inactive">
+                    <div class="button-text-mobile">Cancel Subscription</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subscription-card-mobile">
+                <div class="card-content-mobile">
+                  <div class="card-header-mobile">
+                    <div class="card-title-mobile">FPDS Reports</div>
+                    <div class="card-details-mobile">
+                      <div class="detail-row-mobile">
+                        <div class="detail-label-mobile">Status:</div>
+                        <div class="detail-value-mobile">Trial (7 days left)</div>
+                      </div>
+                      <div class="detail-row-mobile">
+                        <div class="detail-label-mobile">Next billing:</div>
+                        <div class="detail-value-mobile">July 30, 2025</div>
+                      </div>
+                      <div class="detail-row-mobile">
+                        <div class="detail-label-mobile">Plan:</div>
+                        <div class="detail-value-mobile">Trial</div>
+                      </div>
+                    </div>
+                    <div class="card-total-mobile">
+                      <div class="total-label-mobile">Total</div>
+                      <div class="total-value-mobile">$49.00</div>
+                    </div>
+                  </div>
+                  <div class="card-button-mobile active">
+                    <div class="button-text-mobile">Upgrade</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subscription-card-mobile">
+                <div class="card-content-mobile">
+                  <div class="card-header-mobile">
+                    <div class="card-title-mobile">FPDS Charts</div>
+                    <div class="card-details-mobile">
+                      <div class="detail-row-mobile">
+                        <div class="detail-label-mobile">Status:</div>
+                        <div class="detail-value-mobile">Not Subscribed</div>
+                      </div>
+                      <div class="detail-row-mobile">
+                        <div class="detail-label-mobile">Access:</div>
+                        <div class="detail-value-mobile">View-only</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-button-mobile active">
+                    <div class="button-text-mobile">Activate</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
+
 
     </main>
 
@@ -526,31 +899,31 @@
   });
 
   // Logout Popup
-  window.openLogoutPopup = function() {
+  window.openLogoutPopup = function () {
     document.getElementById('logoutPopup').style.display = "flex";
     document.querySelector('.logout-confirm-overlay').style.display = "block";
     document.body.style.overflow = "hidden";
   };
 
-  window.closeLogoutPopup = function() {
+  window.closeLogoutPopup = function () {
     document.getElementById('logoutPopup').style.display = "none";
     document.querySelector('.logout-confirm-overlay').style.display = "none";
     document.body.style.overflow = "auto";
   };
 
-  window.performLogout = function() {
+  window.performLogout = function () {
     console.log("Logging out...");
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
     fetch("{{ route('logout') }}", {
-        method: 'POST',
-        headers: {
-          'X-CSRF-TOKEN': csrfToken,
-          'Content-Type': 'application/json'
-        },
-        credentials: 'same-origin'
-      })
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': csrfToken,
+        'Content-Type': 'application/json'
+      },
+      credentials: 'same-origin'
+    })
       .then(response => {
         if (response.ok || response.redirected) {
           window.location.href = '/login';

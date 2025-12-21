@@ -339,8 +339,67 @@
     word-wrap: break-word;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 768px) {
 
+    .mobile-dashboard-main {
+      display: none !important;
+    }
+
+}
+
+@media (max-width: 767px) {
+
+    .mobile-title {
+        align-self: stretch;
+        color: white;
+        font-size: 24px;
+        font-family: Overused Grotesk;
+        font-weight: 400;
+        word-wrap: break-word;
+        margin-bottom: 24px;
+      }
+
+      .mobile-content {
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 24px;
+        display: flex;
+      }
+
+      .mobile-description {
+        position: relative;
+        text-align: left;
+        width: 270px;
+        color: #afbcb8;
+        font-size: 16px;
+        font-family: Overused Grotesk;
+        font-weight: 400;
+        line-height: 100%;
+        word-wrap: break-word;
+        padding: 0 16px;
+      }
+
+      .mobile-description::before {
+        content: url("{{ asset('img/ico/quotes-1.svg') }}");
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform: translateY(-50%);
+        width: 24px;
+        height: 24px;
+      }
+
+      .mobile-description::after {
+        content: url("{{ asset('img/ico/quotes-2.svg') }}");
+        position: absolute;
+        right: 0%;
+        top: 100%;
+        transform: translateY(-50%);
+        width: 24px;
+        height: 24px;
+      }
+      
     .dashboard-container {
         margin: 0 0 20px auto;
     }

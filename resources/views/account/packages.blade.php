@@ -143,6 +143,296 @@
     .package-button-desktop:hover::before {
       opacity: 1;
     }
+
+        @media (min-width: 768px) {
+
+    .mobile-dashboard-main {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 767px) {
+
+    .report-packages-mobile {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .package-card-mobile {
+      width: 327px;
+      padding: 24px;
+      background: #282828;
+      border-radius: 7px;
+      outline: 1px #b5d9a7 solid;
+      outline-offset: -1px;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .package-inner-mobile {
+      width: 279px;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 24px;
+      display: flex;
+    }
+
+    .package-header-mobile {
+      align-self: stretch;
+      height: 160px;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 16px;
+      display: flex;
+    }
+
+    .package-title-mobile {
+      align-self: stretch;
+      text-align: center;
+      color: #b5d9a7;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 16px;
+    }
+
+    .package-remaining-mobile {
+      align-self: stretch;
+      color: white;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 16px;
+    }
+
+    .package-selector-mobile {
+      align-self: stretch;
+      height: 48px;
+      padding-left: 16px;
+      padding-right: 16px;
+      border-radius: 7px;
+      outline: 2px white solid;
+      outline-offset: -2px;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      display: flex;
+      position: relative;
+    }
+
+    .dropdown-trigger-mobile {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 16px;
+      font-family: "Overused Grotesk", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .dropdown-trigger-mobile::after {
+      content: "";
+      width: 12px;
+      height: 8px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1L6 6L11 1' stroke='white' stroke-width='2'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      transition: transform 0.3s ease;
+    }
+
+    .dropdown-trigger-mobile.active::after {
+      transform: rotate(180deg);
+    }
+
+    .package-price-mobile {
+      align-self: stretch;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 32px;
+      display: inline-flex;
+    }
+
+    .price-label-mobile {
+      flex: 1 1 0;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 16px;
+    }
+
+    .price-value-mobile {
+      text-align: right;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 16px;
+    }
+
+    .package-button-mobile {
+      padding-left: 35px;
+      padding-right: 35px;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      background: linear-gradient(360deg, #00ad8c 0%, #00755f 51%);
+      border-radius: 7px;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      display: inline-flex;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .button-text-mobile {
+      text-align: center;
+      justify-content: center;
+      display: flex;
+      flex-direction: column;
+      color: white;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 16px;
+    }
+
+    /* Mobile Dropdown Styles */
+    .dropdown-container-mobile {
+      background: white;
+      overflow: hidden;
+      border-radius: 7px;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      display: none;
+      width: 100%;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 1000;
+      margin-top: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .dropdown-container-mobile.show {
+      display: inline-flex;
+    }
+
+    .dropdown-content-mobile {
+      width: 100%;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      display: inline-flex;
+    }
+
+    .dropdown-item-mobile {
+      width: 100%;
+      min-height: 48px;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      display: flex;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .dropdown-item-mobile:hover {
+      background: #f5f5f5;
+    }
+
+    .dropdown-item-mobile.selected {
+      background: #ededed;
+    }
+
+    .dropdown-item-content-mobile {
+      align-self: stretch;
+      height: 48px;
+      padding-left: 16px;
+      padding-right: 16px;
+      padding-top: 4px;
+      padding-bottom: 4px;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 16px;
+      display: inline-flex;
+    }
+
+    .dropdown-icon-mobile {
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      width: 18px;
+      height: 13px;
+    }
+
+    .dropdown-item-mobile.selected .dropdown-icon-mobile svg path {
+      fill: #333333;
+    }
+
+    .dropdown-item-text-mobile {
+      flex: 1 1 0;
+      align-self: stretch;
+      overflow: hidden;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      display: inline-flex;
+    }
+
+    .dropdown-text-mobile {
+      align-self: stretch;
+      justify-content: center;
+      display: flex;
+      flex-direction: column;
+      color: black;
+      font-size: 16px;
+      font-family: Overused Grotesk;
+      font-weight: 400;
+      line-height: 16px;
+    }
+      .dashboard-sidebar {
+        display: none !important;
+      }
+
+      .report-decoration-profile-2 {
+        width: 10px;
+        height: 10px;
+        left: 194px;
+        top: 104px;
+        position: absolute;
+      }
+
+      .report-decoration-profile-1 {
+        width: 10px;
+        height: 10px;
+        left: -14px;
+        top: 38px;
+        position: absolute;
+        transform-origin: top left;
+      }
+
+      .report-packages-desktop {
+        display: none;
+      }
+
+      .report-packages-mobile {
+        display: flex;
+      }
+
+           .mobile-dashboard-main {
+        padding: 24px;
+      }
+  }
   </style>
 </head>
 
@@ -305,11 +595,237 @@
 
     <!-- Mobile Dashboard -->
     <main class="mobile-dashboard-main">
+      <div class="mobile-container">
+          <div class="mobile-title">Report Packages</div>
+          <div class="mobile-content">
+            <div class="mobile-description">
+              You have active packages with remaining reports.
+            </div>
+            <div class="mobile-list">
+              <div class="report-packages-mobile">
+                <div class="package-card-mobile">
+                  <div class="package-inner-mobile">
+                    <div class="package-header-mobile">
+                      <div class="package-title-mobile">Elementary Reports</div>
+                      <div class="package-remaining-mobile">Reports Remaining: 17</div>
+                      <div class="package-selector-mobile">
+                        <div class="dropdown-trigger-mobile" id="elementary-trigger-mobile">
+                          <span>1 Report</span>
+                        </div>
+                        <div class="dropdown-container-mobile" id="elementary-dropdown-mobile">
+                          <div class="dropdown-content-mobile">
+                            <div class="dropdown-item-mobile selected" data-value="49.00">
+                              <div class="dropdown-item-content-mobile">
+                                <div class="dropdown-icon-mobile">
+                                  <svg width="18" height="13" viewBox="0 0 18 13" fill="none">
+                                    <path d="M6.45586 12.3072L0.755859 6.60723L2.18086 5.18223L6.45586 9.45723L15.6309 0.282227L17.0559 1.70723L6.45586 12.3072Z" fill="#333333"/>
+                                  </svg>
+                                </div>
+                                <div class="dropdown-item-text-mobile">
+                                  <div class="dropdown-text-mobile">1 Report</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="dropdown-item-mobile" data-value="237.32 — $47.46 per report">
+                              <div class="dropdown-item-content-mobile">
+                                <div class="dropdown-icon-mobile">
+                                  <svg width="18" height="13" viewBox="0 0 18 13" fill="none">
+                                    <path d="M6.45586 12.3072L0.755859 6.60723L2.18086 5.18223L6.45586 9.45723L15.6309 0.282227L17.0559 1.70723L6.45586 12.3072Z" fill="transparent"/>
+                                  </svg>
+                                </div>
+                                <div class="dropdown-item-text-mobile">
+                                  <div class="dropdown-text-mobile">5 Reports</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="dropdown-item-mobile" data-value="455.45 — $45.54 per report">
+                              <div class="dropdown-item-content-mobile">
+                                <div class="dropdown-icon-mobile">
+                                  <svg width="18" height="13" viewBox="0 0 18 13" fill="none">
+                                    <path d="M6.45586 12.3072L0.755859 6.60723L2.18086 5.18223L6.45586 9.45723L15.6309 0.282227L17.0559 1.70723L6.45586 12.3072Z" fill="transparent"/>
+                                  </svg>
+                                </div>
+                                <div class="dropdown-item-text-mobile">
+                                  <div class="dropdown-text-mobile">10 Reports</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="dropdown-item-mobile" data-value="994.64 — $39.79 per report">
+                              <div class="dropdown-item-content-mobile">
+                                <div class="dropdown-icon-mobile">
+                                  <svg width="18" height="13" viewBox="0 0 18 13" fill="none">
+                                    <path d="M6.45586 12.3072L0.755859 6.60723L2.18086 5.18223L6.45586 9.45723L15.6309 0.282227L17.0559 1.70723L6.45586 12.3072Z" fill="transparent"/>
+                                  </svg>
+                                </div>
+                                <div class="dropdown-item-text-mobile">
+                                  <div class="dropdown-text-mobile">25 Reports</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="dropdown-item-mobile" data-value="1509.35 — $30.19 per report">
+                              <div class="dropdown-item-content-mobile">
+                                <div class="dropdown-icon-mobile">
+                                  <svg width="18" height="13" viewBox="0 0 18 13" fill="none">
+                                    <path d="M6.45586 12.3072L0.755859 6.60723L2.18086 5.18223L6.45586 9.45723L15.6309 0.282227L17.0559 1.70723L6.45586 12.3072Z" fill="transparent"/>
+                                  </svg>
+                                </div>
+                                <div class="dropdown-item-text-mobile">
+                                  <div class="dropdown-text-mobile">50 Reports</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="dropdown-item-mobile" data-value="1544.14 — $20.59 per report">
+                              <div class="dropdown-item-content-mobile">
+                                <div class="dropdown-icon-mobile">
+                                  <svg width="18" height="13" viewBox="0 0 18 13" fill="none">
+                                    <path d="M6.45586 12.3072L0.755859 6.60723L2.18086 5.18223L6.45586 9.45723L15.6309 0.282227L17.0559 1.70723L6.45586 12.3072Z" fill="transparent"/>
+                                  </svg>
+                                </div>
+                                <div class="dropdown-item-text-mobile">
+                                  <div class="dropdown-text-mobile">75 Reports</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="dropdown-item-mobile" data-value="1099.00 — $10.99 per report">
+                              <div class="dropdown-item-content-mobile">
+                                <div class="dropdown-icon-mobile">
+                                  <svg width="18" height="13" viewBox="0 0 18 13" fill="none">
+                                    <path d="M6.45586 12.3072L0.755859 6.60723L2.18086 5.18223L6.45586 9.45723L15.6309 0.282227L17.0559 1.70723L6.45586 12.3072Z" fill="transparent"/>
+                                  </svg>
+                                </div>
+                                <div class="dropdown-item-text-mobile">
+                                  <div class="dropdown-text-mobile">100 Reports</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="package-price-mobile">
+                        <div class="price-label-mobile">Total</div>
+                        <div class="price-value-mobile" id="elementary-price-mobile">$49.00</div>
+                      </div>
+                    </div>
+                    <button class="package-button-mobile">
+                      <div class="button-text-mobile">Buy Elementary Package</div>
+                    </button>
+                  </div>
+                </div>
 
-    <!-- Mobile Packages -->
-    <div id="mobile-packages" class="mobile-your-profile-container" style="display: none;">
-      <p>Packages</p>
-    </div>
+                <div class="package-card-mobile">
+                  <div class="package-inner-mobile">
+                    <div class="package-header-mobile">
+                      <div class="package-title-mobile">Composite Reports</div>
+                      <div class="package-remaining-mobile">Reports Remaining: 4</div>
+                      <div class="package-selector-mobile">
+                        <div class="dropdown-trigger-mobile" id="composite-trigger-mobile">
+                          <span>1 Report</span>
+                        </div>
+                        <div class="dropdown-container-mobile" id="composite-dropdown-mobile">
+                          <div class="dropdown-content-mobile">
+                            <div class="dropdown-item-mobile selected" data-value="149.00">
+                              <div class="dropdown-item-content-mobile">
+                                <div class="dropdown-icon-mobile">
+                                  <svg width="18" height="13" viewBox="0 0 18 13" fill="none">
+                                    <path d="M6.45586 12.3072L0.755859 6.60723L2.18086 5.18223L6.45586 9.45723L15.6309 0.282227L17.0559 1.70723L6.45586 12.3072Z" fill="#333333"/>
+                                  </svg>
+                                </div>
+                                <div class="dropdown-item-text-mobile">
+                                  <div class="dropdown-text-mobile">1 Report</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="dropdown-item-mobile" data-value="720.94 — $144.19 per report">
+                              <div class="dropdown-item-content-mobile">
+                                <div class="dropdown-icon-mobile">
+                                  <svg width="18" height="13" viewBox="0 0 18 13" fill="none">
+                                    <path d="M6.45586 12.3072L0.755859 6.60723L2.18086 5.18223L6.45586 9.45723L15.6309 0.282227L17.0559 1.70723L6.45586 12.3072Z" fill="transparent"/>
+                                  </svg>
+                                </div>
+                                <div class="dropdown-item-text-mobile">
+                                  <div class="dropdown-text-mobile">5 Reports</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="dropdown-item-mobile" data-value="1381.73 — $138.17 per report">
+                              <div class="dropdown-item-content-mobile">
+                                <div class="dropdown-icon-mobile">
+                                  <svg width="18" height="13" viewBox="0 0 18 13" fill="none">
+                                    <path d="M6.45586 12.3072L0.755859 6.60723L2.18086 5.18223L6.45586 9.45723L15.6309 0.282227L17.0559 1.70723L6.45586 12.3072Z" fill="transparent"/>
+                                  </svg>
+                                </div>
+                                <div class="dropdown-item-text-mobile">
+                                  <div class="dropdown-text-mobile">10 Reports</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="dropdown-item-mobile" data-value="3003.18 — $120.13 per report">
+                              <div class="dropdown-item-content-mobile">
+                                <div class="dropdown-icon-mobile">
+                                  <svg width="18" height="13" viewBox="0 0 18 13" fill="none">
+                                    <path d="M6.45586 12.3072L0.755859 6.60723L2.18086 5.18223L6.45586 9.45723L15.6309 0.282227L17.0559 1.70723L6.45586 12.3072Z" fill="transparent"/>
+                                  </svg>
+                                </div>
+                                <div class="dropdown-item-text-mobile">
+                                  <div class="dropdown-text-mobile">25 Reports</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="dropdown-item-mobile" data-value="4502.58 — $90.05 per report">
+                              <div class="dropdown-item-content-mobile">
+                                <div class="dropdown-icon-mobile">
+                                  <svg width="18" height="13" viewBox="0 0 18 13" fill="none">
+                                    <path d="M6.45586 12.3072L0.755859 6.60723L2.18086 5.18223L6.45586 9.45723L15.6309 0.282227L17.0559 1.70723L6.45586 12.3072Z" fill="transparent"/>
+                                  </svg>
+                                </div>
+                                <div class="dropdown-item-text-mobile">
+                                  <div class="dropdown-text-mobile">50 Reports</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="dropdown-item-mobile" data-value="4498.18 — $59.98 per report">
+                              <div class="dropdown-item-content-mobile">
+                                <div class="dropdown-icon-mobile">
+                                  <svg width="18" height="13" viewBox="0 0 18 13" fill="none">
+                                    <path d="M6.45586 12.3072L0.755859 6.60723L2.18086 5.18223L6.45586 9.45723L15.6309 0.282227L17.0559 1.70723L6.45586 12.3072Z" fill="transparent"/>
+                                  </svg>
+                                </div>
+                                <div class="dropdown-item-text-mobile">
+                                  <div class="dropdown-text-mobile">75 Reports</div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="dropdown-item-mobile" data-value="2990.00 — $29.90 per report">
+                              <div class="dropdown-item-content-mobile">
+                                <div class="dropdown-icon-mobile">
+                                  <svg width="18" height="13" viewBox="0 0 18 13" fill="none">
+                                    <path d="M6.45586 12.3072L0.755859 6.60723L2.18086 5.18223L6.45586 9.45723L15.6309 0.282227L17.0559 1.70723L6.45586 12.3072Z" fill="transparent"/>
+                                  </svg>
+                                </div>
+                                <div class="dropdown-item-text-mobile">
+                                  <div class="dropdown-text-mobile">100 Reports</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="package-price-mobile">
+                        <div class="price-label-mobile">Total</div>
+                        <div class="price-value-mobile" id="composite-price-mobile">$149.00</div>
+                      </div>
+                    </div>
+                    <button class="package-button-mobile">
+                      <div class="button-text-mobile">Buy Composite Package</div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
     </main>
 
   </div>
