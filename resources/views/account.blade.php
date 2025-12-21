@@ -1974,7 +1974,7 @@
         </div>
 
         <div class="profile-container">
-          <form class="profile-section" id="profileForm" action="{{ route('account.process') }}" method="post">
+          <form class="profile-section" id="profileForm" action="{{ route('update.profile') }}" method="post">
             @csrf
             <div class="profile-field">
               <label class="field-label" for="firstName">First Name *</label>

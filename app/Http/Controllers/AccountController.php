@@ -17,7 +17,37 @@ class AccountController extends Controller
         return view('account', compact('user'));
     }
 
-    public function accountProcess(Request $request)
+    public function reports(Request $request)
+    {
+        $user = Auth::user();
+        return view('account.reports', compact('user'));
+    }
+
+    public function packages(Request $request)
+    {
+        $user = Auth::user();
+        return view('account.packages', compact('user'));
+    }
+
+    public function subscription(Request $request)
+    {
+        $user = Auth::user();
+        return view('account.subscription', compact('user'));
+    }
+
+    public function billing(Request $request)
+    {
+        $user = Auth::user();
+        return view('account.billing', compact('user'));
+    }
+
+    public function profile(Request $request)
+    {
+        $user = Auth::user();
+        return view('account.profile', compact('user'));
+    }
+
+    public function updateProfile(Request $request)
     {
         // Валидация входных данных
         $validated = $request->validate([

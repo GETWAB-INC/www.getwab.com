@@ -53,7 +53,7 @@
     <div class="header-login">
       @auth
       <!-- authorized -->
-      <a href="{{ route('account') }}" class="login-text">
+      <a href="{{ route('account') }}" class="login-text" id="profile-link">
         <img src="{{ asset('/img/ico/Profile-ico.svg') }}" alt="Profile" />
       </a>
       @else
@@ -163,7 +163,7 @@
       <div class="header-login">
         @auth
         <!-- authorized -->
-        <a href="{{ route('account') }}" class="login-text">
+        <a href="{{ route('account') }}" class="login-text" id="profile-link">
           <img src="{{ asset('/img/ico/Profile-ico.svg') }}" alt="Profile" />
         </a>
         @else

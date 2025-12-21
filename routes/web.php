@@ -2,6 +2,7 @@
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AccountController;
+use Illuminate\Http\Request;
 // -------------------- Static Pages --------------------
 
 // Home page
@@ -42,10 +43,19 @@ Route::get('/forgot', function () { return view('forgot'); })->name('forgot');
 Route::get('/article', function () { return view('article'); })->name('article')->middleware('auth');
 
 // account page
-Route::get('/account', [AccountController::class, 'account'])->name('account')->middleware('auth');
-Route::post('/account-process', [AccountController::class, 'accountProcess'])->name('account.process');
-Route::post('/account/upload-avatar', [AccountController::class, 'uploadAvatar'])->name('upload.avatar');
-Route::delete('/account/remove-avatar', [AccountController::class, 'removeAvatar'])->name('remove.avatar');
+Route::get('/account', function (Request $request) {
+        // Получаем последний посещённый раздел из сессии
+        $lastSection = $request->session()->get('last_account_section', 'account.reports');
+        return redirect()->route($lastSection);})->name('account')->middleware('auth');
+
+Route::get('/account/reports', [AccountController::class, 'reports'])->name('account.reports')->middleware('auth');
+Route::get('/account/packages', [AccountController::class, 'packages'])->name('account.packages')->middleware('auth');
+Route::get('/account/subscription', [AccountController::class, 'subscription'])->name('account.subscription')->middleware('auth');
+Route::get('/account/billing', [AccountController::class, 'billing'])->name('account.billing')->middleware('auth');
+Route::get('/account/profile', [AccountController::class, 'profile'])->name('account.profile')->middleware('auth');
+Route::post('/update-profile', [AccountController::class, 'updateProfile'])->name('update.profile')->middleware('auth');
+Route::post('/account/upload-avatar', [AccountController::class, 'uploadAvatar'])->name('upload.avatar')->middleware('auth');
+Route::delete('/account/remove-avatar', [AccountController::class, 'removeAvatar'])->name('remove.avatar')->middleware('auth');
 
 // contact page
 Route::get('/contact-us', function () {return view('contact-us');})->name('contact-us');
