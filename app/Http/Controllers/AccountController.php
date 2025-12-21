@@ -14,7 +14,7 @@ class AccountController extends Controller
     {
         $user = Auth::user();
 
-        return view('account', compact('user'));
+        return view('account.account', compact('user'));
     }
 
     public function reports(Request $request)
