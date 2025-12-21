@@ -43,11 +43,7 @@ Route::get('/forgot', function () { return view('forgot'); })->name('forgot');
 Route::get('/article', function () { return view('article'); })->name('article')->middleware('auth');
 
 // account page
-Route::get('/account', function (Request $request) {
-        // Получаем последний посещённый раздел из сессии
-        $lastSection = $request->session()->get('last_account_section', 'account.reports');
-        return redirect()->route($lastSection);})->name('account')->middleware('auth');
-
+Route::get('/account', [AccountController::class, 'account'])->name('account')->middleware('auth');
 Route::get('/account/reports', [AccountController::class, 'reports'])->name('account.reports')->middleware('auth');
 Route::get('/account/packages', [AccountController::class, 'packages'])->name('account.packages')->middleware('auth');
 Route::get('/account/subscription', [AccountController::class, 'subscription'])->name('account.subscription')->middleware('auth');

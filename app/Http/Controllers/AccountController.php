@@ -12,38 +12,52 @@ class AccountController extends Controller
 {
     public function account(Request $request)
     {
-        $user = Auth::user();
+        // Получаем последний посещённый раздел из сессии
+        $lastSection = session('last_account_section');
 
-        return view('account', compact('user'));
+        if ($lastSection) {
+            // Если есть сохранённый URL — редиректим туда
+            return redirect($lastSection);
+        }
+
+        // Если ничего не было посещено — по умолчанию идём в профиль
+        return redirect()->route('account.profile');
     }
+
 
     public function reports(Request $request)
     {
         $user = Auth::user();
+        // Сохраняем текущий URL как последний посещённый
+        session(['last_account_section' => route('account.reports')]);
         return view('account.reports', compact('user'));
     }
 
     public function packages(Request $request)
     {
         $user = Auth::user();
+        session(['last_account_section' => route('account.packages')]);
         return view('account.packages', compact('user'));
     }
 
     public function subscription(Request $request)
     {
         $user = Auth::user();
+        session(['last_account_section' => route('account.subscription')]);
         return view('account.subscription', compact('user'));
     }
 
     public function billing(Request $request)
     {
         $user = Auth::user();
+        session(['last_account_section' => route('account.billing')]);
         return view('account.billing', compact('user'));
     }
 
     public function profile(Request $request)
     {
         $user = Auth::user();
+        session(['last_account_section' => route('account.profile')]);
         return view('account.profile', compact('user'));
     }
 
@@ -84,7 +98,7 @@ class AccountController extends Controller
         // Сохранение изменений
         try {
             $user->save();
-            return redirect()->route('account')->with('success', 'Profile updated successfully.');
+            return redirect()->back()->with('success', 'Profile updated successfully.');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'Error saving: ' . $e->getMessage()]);
         }

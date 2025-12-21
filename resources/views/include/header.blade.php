@@ -12,8 +12,15 @@
           <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
         </div>
         <div class="dropdown-menu">
-          <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>
-          <a href="{{ route('products.fpds-reports')}}" class="dropdown-item">FPDS Reports</a>
+          @auth
+            <!-- authorized -->
+            <a href="https://fpds.getwab.com/query" class="dropdown-item">FPDS Query</a>
+            <a href="{{ route('reports')}}" class="dropdown-item">FPDS Reports Library</a>
+          @else
+            <!-- not authorized -->
+            <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>
+            <a href="{{ route('products.fpds-reports')}}" class="dropdown-item">FPDS Reports</a>
+          @endauth
         </div>
       </div>
 
@@ -76,8 +83,15 @@
         alt="arrow" />
     </div>
     <div class="mobile-submenu">
-      <a href="{{ route('products.fpds-query')}}" class="mobile-submenu-item">FPDS Query</a>
-      <a href="{{ route('products.fpds-reports')}}" class="mobile-submenu-item">FPDS Reports</a>
+      @auth
+        <!-- authorized -->
+        <a href="https://fpds.getwab.com/query" class="mobile-submenu-item">FPDS Query</a>
+        <a href="{{ route('reports')}}" class="mobile-submenu-item">FPDS Reports Library</a>
+      @else
+        <!-- not authorized -->
+        <a href="{{ route('products.fpds-query')}}" class="mobile-submenu-item">FPDS Query</a>
+        <a href="{{ route('products.fpds-reports')}}" class="mobile-submenu-item">FPDS Reports</a>
+      @endauth      
     </div>
 
     <div class="mobile-menu-item">
@@ -121,8 +135,15 @@
           <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
         </div>
         <div class="dropdown-menu">
-          <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>
-          <a href="{{ route('products.fpds-reports')}}" class="dropdown-item">FPDS Reports</a>
+          @auth
+            <!-- authorized -->
+            <a href="https://fpds.getwab.com/query" class="dropdown-item">FPDS Query</a>
+            <a href="{{ route('reports')}}" class="dropdown-item">FPDS Reports Library</a>
+          @else
+            <!-- not authorized -->
+            <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>
+            <a href="{{ route('products.fpds-reports')}}" class="dropdown-item">FPDS Reports</a>
+          @endauth
         </div>
       </div>
 
