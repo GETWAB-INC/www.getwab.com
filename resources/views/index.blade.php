@@ -9,12 +9,11 @@
 
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/wheel.css') }}">
 
     <style>
-        /* Page 1 */
         /* Video START*/
         .background-video-container {
-            /* position: relative; */
             min-height: 100vh;
             overflow: hidden;
             display: flex;
@@ -52,7 +51,6 @@
             position: relative;
             width: 100%;
             max-width: 1920px;
-            /* min-height: 80vh; */
             padding: 60px;
             display: flex;
             flex: 1;
@@ -104,7 +102,9 @@
 
         .hero-button {
             position: relative;
-            padding: 20px 35px;
+            height: 64px;
+            width: 276px;
+            padding: 35px 20px;
             background: linear-gradient(360deg, #00ad8c 0%, #00755f 51%);
             border-radius: 7px;
             display: inline-flex;
@@ -141,9 +141,9 @@
 
         /* Video END */
 
-        /* About START */
+        /* section START */
         .section {
-            padding: 60px;
+            padding: 32px;
         }
 
         .container {
@@ -223,71 +223,7 @@
             border-radius: 0.5rem;
         }
 
-
-        @media (max-width: 1400px) {
-            .hero-title {
-                font-size: 72px;
-                line-height: 72px;
-            }
-
-            .hero-subtitle {
-                font-size: 36px;
-                line-height: 43.2px;
-            }
-
-
-        }
-
-
-        @media (max-width: 768px) {
-
-            .grid-3-columns {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-                padding: 32px 24px;
-            }
-
-            .hero-title {
-                font-size: 40px;
-                line-height: 100%;
-            }
-
-            .hero-subtitle {
-                font-size: 20px;
-                line-height: 120%;
-            }
-
-            .section {
-                padding: 0px;
-            }
-
-            .hero-content {
-                gap: 60px;
-            }
-
-            .hero-text-container {
-                gap: 32px;
-            }
-
-            .title {
-                font-size: 1.5rem;
-            }
-
-            .description {
-                font-size: 1rem;
-            }
-
-            .link {
-                font-size: 20px;
-            }
-
-            .hero-button {
-                font-size: 20px;
-                padding: 16px 28px;
-            }
-        }
-
-        /* About END */
+        /* section END */
 
         /* Products START */
         .products-section {
@@ -366,134 +302,6 @@
             margin: 0;
 
             color: #afbcb8;
-        }
-
-        @media (max-width: 1440px) {
-            .products-container {
-                width: 1440px;
-                padding: 120px 40px;
-                border-radius: 80px;
-                gap: 60px;
-            }
-
-            .products-content {
-                gap: 60px;
-            }
-
-            .product-row {
-                width: 100%;
-                gap: 80px;
-            }
-
-            .product-card {
-                width: 440px;
-                gap: 40px;
-            }
-
-            .product-info {
-                gap: 40px;
-            }
-
-            .product-name {
-                font-size: 28px;
-                line-height: 28px;
-            }
-
-            .product-description {
-                font-size: 20px;
-                line-height: 20px;
-            }
-
-            .product-row img,
-            .product-row.reverse img {
-                width: 60%;
-                height: auto;
-                object-fit: contain;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .products-container {
-                width: 100%;
-                padding: 60px 20px;
-                border-radius: 10px;
-                gap: 40px;
-            }
-
-            .product-row img,
-            .product-row.reverse img {
-                width: 100%;
-            }
-
-            .products-header {
-                width: 100%;
-                text-align: left;
-                gap: 8px;
-            }
-
-            .products-title {
-                font-size: 24px;
-                line-height: 100%;
-                text-align: left;
-            }
-
-            .products-content {
-                gap: 60px;
-            }
-
-            .product-row {
-                flex-direction: column;
-                width: 100%;
-                gap: 30px;
-            }
-
-            .product-row.reverse {
-                flex-direction: column;
-            }
-
-            .product-card {
-                width: 100%;
-                gap: 30px;
-                text-align: left;
-            }
-
-            .product-info {
-                gap: 20px;
-                width: 100%;
-                text-align: left;
-            }
-
-            .product-name {
-                font-size: 16px;
-                line-height: 100%;
-                text-align: left;
-            }
-
-            .product-description {
-                font-size: 16px;
-                line-height: 20px;
-                margin-bottom: 20px;
-                text-align: left;
-            }
-
-            .product-image {
-                width: 100% !important;
-                height: auto !important;
-                order: 2;
-                margin-top: 20px;
-            }
-
-            .product-row .product-card {
-                order: 1;
-            }
-
-            .product-row.reverse .product-card {
-                order: 1;
-            }
-
-            .product-row.reverse .product-image {
-                order: 2;
-            }
         }
 
         /* Products END */
@@ -590,38 +398,6 @@
             line-height: 24px;
             margin: 0;
         }
-
-        @media (max-width: 768px) {
-            .services-container {
-                width: 100%;
-                height: auto;
-                flex-direction: column;
-                gap: 40px;
-            }
-
-            .services-content {
-                width: 100%;
-                height: auto;
-                gap: 30px;
-            }
-
-            .service-card {
-                width: 280px;
-                padding: 20px 30px;
-            }
-
-            .service-icon-wrapper {
-                width: 40px;
-                height: 40px;
-            }
-
-            .service-title {
-                font-size: 16px;
-                width: 180px;
-            }
-
-        }
-
         /* Services END */
 
         /* Clients START */
@@ -682,70 +458,7 @@
             z-index: 2;
         }
 
-        @media (max-width: 1440px) {
-
-            .client-card {
-                width: 440px;
-                height: 486px;
-            }
-
-            .client-card-contractors {
-                width: 444px;
-            }
-
-            .client-card-overlay {
-                width: 460px;
-                height: 160px;
-                left: -10px;
-            }
-
-            .client-card-contractors .client-card-overlay {
-                left: -8px;
-            }
-
-            .client-card-businesses .client-card-overlay {
-                top: 340px;
-            }
-
-            .client-card-title {
-                width: 260px;
-                left: 40px;
-                bottom: 40px;
-                font-size: 40px;
-                line-height: 48px;
-            }
-        }
-
-        @media (max-width: 768px) {
-
-            .client-card {
-                width: 327px;
-                height: 360px;
-            }
-
-            .client-card-overlay {
-                width: 327px;
-                left: 0;
-                height: 100px;
-            }
-
-            .client-card-title {
-                font-size: 28px;
-                line-height: 34px;
-                width: 80%;
-                left: 20px;
-                bottom: 20px;
-            }
-
-            .client-card-contractors .client-card-overlay,
-            .client-card-businesses .client-card-overlay {
-                left: 0;
-                top: auto;
-                bottom: 0;
-                width: 327px;
-            }
-        }
-
+        
         /* Clients END */
 
         /* Choose START */
@@ -838,15 +551,6 @@
             height: 100%;
         }
 
-        /* .icon {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-            transition: all 0.5s ease;
-            transform: scale(0.8);
-            opacity: 0;
-        } */
-
         .icon.visible {
             transform: scale(1);
             opacity: 1;
@@ -870,7 +574,292 @@
             transform: translateY(0);
         }
 
+        @media (max-width: 1440px) {
+
+            body {
+                max-width: 1440px;
+            }
+
+            .grid-3-columns {
+                grid-template-columns: repeat(3, 430px);
+            }
+
+            .hero-title {
+                font-size: 72px;
+                line-height: 72px;
+            }
+
+            .hero-subtitle {
+                font-size: 36px;
+                line-height: 43.2px;
+            }
+
+            .products-container {
+                width: 1440px;
+                padding: 120px 40px;
+                border-radius: 80px;
+                gap: 60px;
+            }
+
+            .products-content {
+                gap: 60px;
+            }
+
+            .product-row {
+                width: 100%;
+                gap: 80px;
+            }
+
+            .product-card {
+                width: 440px;
+                gap: 40px;
+            }
+
+            .product-info {
+                gap: 40px;
+            }
+
+            .product-name {
+                font-size: 28px;
+                line-height: 28px;
+            }
+
+            .product-description {
+                font-size: 20px;
+                line-height: 20px;
+            }
+
+            .product-row img,
+            .product-row.reverse img {
+                width: 60%;
+                height: auto;
+                object-fit: contain;
+            }
+        }
+
         @media (max-width: 768px) {
+            .grid-3-columns {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                padding: 32px 24px;
+            }
+
+            .hero-title {
+                font-size: 40px;
+                line-height: 100%;
+            }
+
+            .hero-subtitle {
+                font-size: 20px;
+                line-height: 120%;
+            }
+
+            .section {
+                padding: 0px;
+            }
+
+            .hero-content {
+                gap: 60px;
+            }
+
+            .hero-text-container {
+                gap: 32px;
+            }
+
+            .title {
+                font-size: 1.5rem;
+            }
+
+            .description {
+                font-size: 1rem;
+            }
+
+            .link {
+                font-size: 20px;
+            }
+
+            .hero-button.main {
+                font-size: 16px;
+                padding: 35px 20px;
+                height: 56px;
+                width: 208px;
+            }
+
+            .hero-button.go {
+                font-size: 16px;
+                padding: 35px 20px;
+                height: 56px;
+                width: 152px;
+                margin-left: auto;
+                margin-right: auto;
+                text-align: center;
+            }
+
+            .hero-button.request {
+                font-size: 16px;
+                padding: 35px 20px;
+                height: 56px;
+                width: 208px;
+                margin-left: auto;
+                margin-right: auto;
+                text-align: center;
+            }
+
+            .hero-button.bottom {
+                font-size: 16px;
+                padding: 35px 20px;
+                height: 56px;
+                width: 208px;
+            }
+
+            .products-container {
+                width: 100%;
+                padding: 32px 20px;
+                border-radius: 10px;
+                gap: 40px;
+            }
+
+            .product-row img,
+            .product-row.reverse img {
+                width: 100%;
+            }
+
+            .products-header {
+                width: 100%;
+                text-align: left;
+                gap: 8px;
+            }
+
+            .products-title {
+                font-size: 24px;
+                line-height: 100%;
+                text-align: left;
+            }
+
+            .products-content {
+                gap: 60px;
+            }
+
+            .product-row {
+                flex-direction: column;
+                width: 100%;
+                gap: 30px;
+            }
+
+            .product-row.reverse {
+                flex-direction: column;
+            }
+
+            .product-card {
+                width: 100%;
+                gap: 30px;
+                text-align: left;
+            }
+
+            .product-info {
+                gap: 20px;
+                width: 100%;
+                text-align: left;
+            }
+
+            .product-name {
+                font-size: 16px;
+                line-height: 100%;
+                text-align: left;
+            }
+
+            .product-description {
+                font-size: 16px;
+                line-height: 20px;
+                text-align: left;
+            }
+
+            .product-image {
+                width: 100% !important;
+                height: auto !important;
+                order: 2;
+                margin-top: 20px;
+            }
+
+            .product-row .product-card {
+                order: 1;
+            }
+
+            .product-row.reverse .product-card {
+                order: 1;
+            }
+
+            .product-row.reverse .product-image {
+                order: 2;
+            }
+
+            .client-card {
+                width: 440px;
+                height: 486px;
+            }
+
+            .client-card-contractors {
+                width: 444px;
+            }
+
+            .client-card-overlay {
+                width: 460px;
+                height: 160px;
+                left: -10px;
+            }
+
+            .client-card-contractors .client-card-overlay {
+                left: -8px;
+            }
+
+            .client-card-businesses .client-card-overlay {
+                top: 340px;
+            }
+
+            .client-card-title {
+                width: 260px;
+                left: 40px;
+                bottom: 40px;
+                font-size: 40px;
+                line-height: 48px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-animation {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .services-container {
+                width: 100%;
+                height: auto;
+                flex-direction: column;
+                gap: 40px;
+            }
+
+            .services-content {
+                width: 100%;
+                height: auto;
+                gap: 30px;
+            }
+
+            .service-card {
+                width: 280px;
+                padding: 20px 30px;
+            }
+
+            .service-icon-wrapper {
+                width: 40px;
+                height: 40px;
+            }
+
+            .service-title {
+                font-size: 16px;
+                width: 180px;
+            }
+
             .choose-getwab-container {
                 height: 800px;
                 border-radius: 20px;
@@ -891,78 +880,7 @@
                 font-size: 14px;
                 width: 120px;
             }
-        }
 
-        /* Mobile wheel START */
-        .mobile-animation {
-            display: none;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            justify-content: flex-end;
-            align-items: center;
-            padding-right: 0;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-
-        .mobile-animation .wheel-container {
-            position: relative;
-            width: 450px;
-            height: 450px;
-            border-radius: 50%;
-            overflow: visible;
-            user-select: none;
-            margin-right: -265px;
-            flex-shrink: 0;
-        }
-
-        .mobile-animation canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            max-width: 450px;
-            height: auto;
-            display: block;
-            pointer-events: none;
-            user-select: none;
-            background: transparent;
-        }
-
-        .mobile-animation .sector-info {
-            position: absolute;
-            display: flex;
-            align-items: center;
-            pointer-events: none;
-            user-select: none;
-            white-space: nowrap;
-            flex-direction: row-reverse;
-            will-change: opacity, left, top;
-            opacity: 0;
-        }
-
-        .mobile-animation .sector-icon {
-            width: 80px;
-            height: 80px;
-            flex-shrink: 0;
-            user-select: none;
-        }
-
-        .mobile-animation .sector-text {
-            color: #b5d9a7;
-            margin-right: 100px;
-            font-size: 20px;
-            max-width: 150px;
-            font-weight: 400;
-            text-align: right;
-            user-select: none;
-            font-family: "Overused Grotesk", sans-serif;
-        }
-
-        @media (max-width: 768px) {
             .desktop-animation {
                 display: none !important;
             }
@@ -974,207 +892,36 @@
             .choose-getwab-container {
                 height: 800px;
             }
-        }
 
-        @media (min-width: 769px) {
-            .mobile-animation {
-                display: none !important;
+            .client-card {
+                width: 327px;
+                height: 360px;
+            }
+
+            .client-card-overlay {
+                width: 327px;
+                left: 0;
+                height: 100px;
+            }
+
+            .client-card-title {
+                font-size: 28px;
+                line-height: 34px;
+                width: 80%;
+                left: 20px;
+                bottom: 20px;
+            }
+
+            .client-card-contractors .client-card-overlay,
+            .client-card-businesses .client-card-overlay {
+                left: 0;
+                top: auto;
+                bottom: 0;
+                width: 327px;
             }
         }
 
-        /* Mobile wheel END */
-
-        /* Desktop wheel START */
-        .wheel-container {
-            position: relative;
-            width: 450px;
-            height: 450px;
-            margin: 0 auto;
-        }
-
-        .sectors-info {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .sectors-info.visible {
-            opacity: 1;
-        }
-
-        .sectors-info.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .sector-info {
-            position: absolute;
-            text-align: center;
-
-            z-index: 10;
-            opacity: 0;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            pointer-events: none;
-        }
-
-        .sector-info.active {
-            opacity: 1;
-            z-index: 20;
-            pointer-events: auto;
-        }
-
-        .sector-info.inactive {
-            opacity: 0;
-            z-index: 10;
-        }
-
-        .sector-icon {
-            width: 40px;
-            height: 40px;
-            margin: 0 auto 5px;
-            display: block;
-        }
-
-        .sector-text {
-            font-size: 14px;
-            line-height: 1.3;
-            font-weight: 500;
-            color: #333;
-        }
-
-        @media (max-width: 425px) {
-            .wheel-container {
-                transform: scale(0.9);
-            }
-
-            .sector-info {
-                width: 100px;
-            }
-
-            .sector-icon {
-                width: 35px;
-                height: 35px;
-            }
-
-            .sector-text {
-                font-size: 12px;
-            }
-
-            .sector-info[data-index="0"] {
-                top: 200px;
-                right: 350px;
-            }
-
-            .sector-info[data-index="1"] {
-                top: 200px;
-                right: 350px;
-            }
-
-            .sector-info[data-index="2"] {
-                top: 200px;
-                right: 350px;
-            }
-
-            .sector-info[data-index="3"] {
-                top: 200px;
-                right: 350px;
-            }
-
-            .sector-info[data-index="4"] {
-                top: 200px;
-                right: 350px;
-            }
-        }
-
-        @media (max-width: 375px) {
-            .wheel-container {
-                transform: scale(0.8);
-            }
-
-            .sector-info {
-                width: 90px;
-            }
-
-            .sector-icon {
-                width: 30px;
-                height: 30px;
-            }
-
-            .sector-text {
-                font-size: 11px;
-            }
-
-            .sector-info[data-index="0"] {
-                top: 190px !important;
-                left: 15px !important;
-            }
-
-            .sector-info[data-index="1"] {
-                top: 190px !important;
-                left: 15px !important;
-            }
-
-            .sector-info[data-index="2"] {
-                top: 190px !important;
-                left: 15px !important;
-            }
-
-            .sector-info[data-index="3"] {
-                top: 190px !important;
-                left: 15px !important;
-            }
-
-            .sector-info[data-index="4"] {
-                top: 190px !important;
-                left: 15px !important;
-            }
-        }
-
-        @media (max-width: 325px) {
-            .wheel-container {
-                transform: scale(0.7);
-            }
-
-            .sector-info {
-                width: 80px;
-            }
-
-            .sector-text {
-                font-size: 10px;
-            }
-
-            .sector-info[data-index="0"] {
-                top: 190px !important;
-                right: 30px !important;
-            }
-
-            .sector-info[data-index="1"] {
-                top: 190px !important;
-                right: 30px !important;
-            }
-
-            .sector-info[data-index="2"] {
-                top: 190px !important;
-                right: 30px !important;
-            }
-
-            .sector-info[data-index="3"] {
-                top: 190px !important;
-                right: 30px !important;
-            }
-
-            .sector-info[data-index="4"] {
-                top: 190px !important;
-                right: 30px !important;
-            }
-
-            /* Desktop wheel END */
-        }
-
+        
         /* Choose END */
     </style>
 </head>
@@ -1199,7 +946,7 @@
                         </h1>
                         <p class="hero-subtitle">Analytics. Automation. Cybersecurity.</p>
                     </div>
-                    <a href="{{ route('register') }}" class="hero-button">
+                    <a href="{{ route('register') }}" class="hero-button main">
                         Explore the Platform
                     </a>
                 </div>
@@ -1249,7 +996,7 @@
                                     with unrestricted access to all fields. Get answers fast —
                                     no API limits or delays.
                                 </p>
-                                <a href="{{ route('products.fpds-query') }}" class="hero-button">
+                                <a href="{{ route('products.fpds-query') }}" class="hero-button go">
                                     Go to Query
                                 </a>
                             </div>
@@ -1267,8 +1014,8 @@
                                     with unrestricted access to all fields. Get answers fast —
                                     no API limits or delays.
                                 </p>
-                                <a href="{{ route('products.fpds-reports') }}" class="hero-button">
-                                    Explore
+                                <a href="{{ route('products.fpds-reports') }}" class="hero-button go">
+                                    Go to Reports
                                 </a>
                             </div>
                         </div>
@@ -1285,11 +1032,14 @@
                         <h2 class="title">Our Services</h2>
                     </div>
                     <div class="grid-item">
-                        <p class="description" style="width: 432px;">
+                        <p class="description">
                             Strategic consulting in analytics,<br />
                             cybersecurity, and automation.<br />
                             For both government and private clients.
                         </p>
+                        <a href="{{ route('contact-us') }}" class="hero-button request">
+                            Request Consultation
+                        </a>
                     </div>
                     <div class="grid-item">
                         <!-- empty -->
@@ -1409,7 +1159,7 @@
                         </h2>
                     </div>
                     <div class="grid-item">
-                        <p class="description" style="width: 432px;">
+                        <p class="description">
                             Strategic consulting in analytics, <br />
                             cybersecurity, and automation. <br />
                             For both government and private clients.
@@ -1527,7 +1277,7 @@
         </section>
 
         <!-- Contract -->
-        <section class="section" style="padding: 160px 60px">
+        <section class="section">
             <div class="container">
                 <div class="grid-3-columns">
                     <div class="grid-item">
@@ -1535,12 +1285,12 @@
                     </div>
 
                     <div class="grid-item">
-                        <p class="description" style="width: 309px; height: 93px;">
+                        <p class="description">
                             Join GETWAB and gain access<br>
                             to smart tools, expert insights,<br>
                             and powerful analytics
                         </p>
-                        <a href="{{ route('register') }}" class="hero-button" style="width: 276px; height: 64px; margin-top:32px">
+                        <a href="{{ route('register') }}" class="hero-button bottom">
                             Explore the Platform
                         </a>
                     </div>
