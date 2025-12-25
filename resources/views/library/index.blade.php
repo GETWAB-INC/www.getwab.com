@@ -101,6 +101,52 @@
             color: #afbcb8;
         }
 
+        .reports-filter.active {
+            background-color: #b5d9a7;
+            color: white;
+            font-weight: bold;
+        }
+
+        .reports-filter.active .reports-filter-text {
+            color: black;
+        }
+
+        .reports-filter {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .clear-search-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 36px;
+            cursor: pointer;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .clear-search-btn:hover {
+            color: #afbcb8;
+        }
+
+        .clear-search-btn:focus {
+            outline-offset: 2px;
+        }
+
+        .highlight {
+            background-color: #00aa89;
+            color: #b5d9a7;
+            border-radius: 3px;
+            padding: 0 2px;
+        }
+
         .reports-filter {
             height: 63px;
             padding: 16px;
@@ -122,7 +168,7 @@
 
         .reports-filter-text {
             color: white;
-            font-size: 16px;
+            font-size: 24px;
             font-weight: 400;
             text-align: center;
             word-wrap: break-word;
@@ -140,7 +186,7 @@
 
         .reports-card {
             width: 100%;
-            padding: 48px 32px;
+            padding: 32px 48px;
             background: #333333;
             border-radius: 6px;
             display: flex;
@@ -149,8 +195,8 @@
             align-items: flex-start;
             gap: 10px;
             transition: transform 0.3s, box-shadow 0.3s;
-            min-height: 300px;
-            max-height: 400px;
+            height: 300px;
+            min-height: 400px;
             overflow: hidden;
             box-sizing: border-box;
         }
@@ -406,22 +452,6 @@
                 gap: 8px;
             }
         }
-
-.reports-filter.active {
-    background-color: #b5d9a7;
-    color: white;
-    font-weight: bold;
-}
-
-.reports-filter.active .reports-filter-text {
-    color: black;
-}
-
-.reports-filter {
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
     </style>
 </head>
 
@@ -436,8 +466,11 @@
                         <div class="reports-search-icon">
                             <img src="{{ asset('img/ico/search_ico.svg') }}" alt="Search" />
                         </div>
-                        <input type="text" class="reports-search-placeholder"
+                        <input type="text" id="search-input" class="reports-search-placeholder"
                             placeholder="Search reports by name, code, or keyword...">
+                        <button type="button" id="clear-search" class="clear-search-btn" aria-label="Clear search">
+                            ×
+                        </button>
                     </div>
                 </div>
                 <div class="reports-filters-item">
@@ -494,7 +527,7 @@
                                         <div class="reports-card-type">CRА Report</div>
                                     @endif
                                 </div>
-                                <div class="reports-card-price">{{ $report['report_price'] }}</div>
+                                <div class="reports-card-price">${{ $report['report_price'] }}</div>
                             </div>
                             <div class="reports-card-body">
                                 <div class="reports-card-details">
@@ -517,45 +550,89 @@
 </html>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const filters = document.querySelectorAll('.reports-filter');
-    const reportCards = document.querySelectorAll('.reports-card-wrapper');
-    let activeFilters = new Set();
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('search-input');
+        const clearButton = document.getElementById('clear-search');
+        const reportCards = document.querySelectorAll('.reports-card-wrapper');
+        const filters = document.querySelectorAll('.reports-filter');
+        let activeFilters = new Set();
 
-    filters.forEach(filter => {
-        filter.addEventListener('click', function() {
-            const filterValue = this.getAttribute('data-filter');
+        function highlightText(text, searchTerm) {
+            if (!searchTerm || !text) return text;
+            const regex = new RegExp(`(${searchTerm})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
 
-            // Переключаем активность фильтра
-            if (activeFilters.has(filterValue)) {
-                activeFilters.delete(filterValue);
-                this.classList.remove('active');
-            } else {
-                activeFilters.add(filterValue);
-                this.classList.add('active');
-            }
+        function applySearchAndFilters() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
 
-            // Применяем фильтрацию
-            applyFilters();
-        });
-    });
+            reportCards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
 
-    function applyFilters() {
-        reportCards.forEach(card => {
-            const cardCategory = card.getAttribute('data-category');
+                const codeElement = card.querySelector('.reports-card-code');
+                const titleElement = card.querySelector('.reports-card-title');
+                const descriptionElement = card.querySelector('.reports-card-description');
 
-            if (activeFilters.size === 0) {
-                // Если нет активных фильтров — показываем все
-                card.style.display = 'block';
-            } else {
-                // Показываем только карточки с совпадающей категорией
-                if (activeFilters.has(cardCategory)) {
+                let searchText = '';
+                if (codeElement) searchText += codeElement.textContent.toLowerCase() + ' ';
+                if (titleElement) searchText += titleElement.textContent.toLowerCase() + ' ';
+                if (descriptionElement) searchText += descriptionElement.textContent.toLowerCase();
+
+                const filterMatch = activeFilters.size === 0 || activeFilters.has(cardCategory);
+
+                let searchMatch = true;
+                if (searchTerm) {
+                    searchMatch = searchText.includes(searchTerm);
+                }
+
+                if (filterMatch && searchMatch) {
                     card.style.display = 'block';
+
+                    if (searchTerm) {
+                        if (codeElement) {
+                            codeElement.innerHTML = highlightText(codeElement.textContent, searchTerm);
+                        }
+                        if (titleElement) {
+                            titleElement.innerHTML = highlightText(titleElement.textContent, searchTerm);
+                        }
+                        if (descriptionElement) {
+                            descriptionElement.innerHTML = highlightText(descriptionElement.textContent, searchTerm);
+                        }
+                    } else {
+                        if (codeElement) codeElement.innerHTML = codeElement.textContent;
+                        if (titleElement) titleElement.innerHTML = titleElement.textContent;
+                        if (descriptionElement) descriptionElement.innerHTML = descriptionElement.textContent;
+                    }
                 } else {
                     card.style.display = 'none';
                 }
-            }
+            });
+        }
+
+        searchInput.addEventListener('input', applySearchAndFilters);
+
+        clearButton.addEventListener('click', function () {
+            searchInput.value = '';
+            searchInput.focus();
+            applySearchAndFilters();
         });
-    }
-});
+
+        filters.forEach(filter => {
+            filter.addEventListener('click', function () {
+                const filterValue = this.getAttribute('data-filter');
+                if (activeFilters.has(filterValue)) {
+                    activeFilters.delete(filterValue);
+                    this.classList.remove('active');
+                } else {
+                    activeFilters.add(filterValue);
+                    this.classList.add('active');
+                }
+                applySearchAndFilters();
+            });
+        });
+
+        applySearchAndFilters();
+    });
+
+
 </script>
