@@ -11,7 +11,7 @@
               <li class="footer-link"><a href="{{ route('products.fpds-query-overview') }}">FPDS Query Overview</a></li>
               <li class="footer-link"><a href="{{ route('products.fpds-reports') }}">FPDS Reports</a></li>
               <li class="footer-link"><a href="{{ route('products.fpds-reports-overview') }}">FPDS Reports Overview</a></li>
-              <li class="footer-link"><a href="{{ route('reports') }}">FPDS Reports Library</a></li>
+              <li class="footer-link"><a href="{{ route('library') }}">FPDS Reports Library</a></li>
             </ul>
           </div>
           <div class="footer-column">

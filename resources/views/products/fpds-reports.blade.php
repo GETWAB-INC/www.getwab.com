@@ -2678,7 +2678,7 @@
 
                         <div class="browse-all-button">
                             <div class="browse-all-text">
-                                <a href="{{ route('reports') }}">
+                                <a href="{{ route('labrary') }}">
                                     Browse All Templates
                                 </a>
                             </div>

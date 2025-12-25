@@ -1650,7 +1650,7 @@
                     <div class="checkout-order-item-card">
                         <div class="checkout-order-item-details">
                             <h1 class="checkout-product-name">One-Time Report</h1>
-                            <p class="checkout-product-type">Report </p>
+                            <p class="checkout-product-type">Report</p>
                             <p class="checkout-product-frequency">One-Time</p>
                         </div>
                         <div class="checkout-order-item-pricing">

@@ -149,20 +149,22 @@
 
         .login-button {
             position: relative;
-            padding: 20px 35px;
             background: linear-gradient(360deg, #00ad8c 0%, #00755f 51%);
             border: none;
             border-radius: 7px;
             color: white;
-            font-size: 24px;
             font-weight: 400;
             line-height: 1;
             cursor: pointer;
             transition: transform 0.2s ease;
             z-index: 1;
             overflow: hidden;
-            width: 100%;
-            max-width: 300px;
+            width: 130px;
+            height: 64px;
+            padding: 35px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .login-button::before {
@@ -283,8 +285,9 @@
             }
 
             .login-button {
-                padding: 18px 30px;
-                font-size: 20px;
+                height: 56px;
+                width: 110px;
+                font-size: 16px;
             }
 
             .register-prompt {
@@ -347,8 +350,7 @@
             }
 
             .login-button {
-                padding: 16px 25px;
-                font-size: 18px;
+                font-size: 16px;
             }
         }
     </style>
@@ -372,7 +374,8 @@
                     <div class="form-field">
                         <label class="form-label">Email address</label>
                         <div class="input-wrapper">
-                            <input type="email" id="email" name="email" class="form-input" placeholder="you@example.com">
+                            <input type="email" id="email" name="email" class="form-input"
+                                placeholder="you@example.com">
                         </div>
                     </div>
 
@@ -412,4 +415,3 @@
 </body>
 
 </html>
-

@@ -2,7 +2,9 @@
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AccountController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\LibraryController;
+
 // -------------------- Static Pages --------------------
 
 // Home page
@@ -56,11 +58,14 @@ Route::delete('/account/remove-avatar', [AccountController::class, 'removeAvatar
 // contact page
 Route::get('/contact-us', function () {return view('contact-us');})->name('contact-us');
 
-// reports page
-Route::get('/reports', function () { return view('reports'); })->name('reports');
+// library
+Route::get('/library', [LibraryController::class, 'index'])->name('library')->middleware('auth');
 
-// reports/SFPR-GEO-EL-1 page
-Route::get('/reports/SFPR-GEO-EL-1', function () { return view('reports.SFPR-GEO-EL-1'); })->name('report');
+// library/SFPR-GEO-EL-1 page
+Route::get('/library/{report_code}', [LibraryController::class, 'show'])->name('report.show')->middleware('auth');
+
+// Generate
+Route::post('/report/generate', [ReportController::class, 'generate'])->name('report.generate')->middleware('auth');
 
 // Products
 Route::get('/products/fpds-query', function () { return view('products.fpds-query'); })->name('products.fpds-query');

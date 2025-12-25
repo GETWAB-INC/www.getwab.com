@@ -13,14 +13,23 @@ return new class extends Migration
     {
         Schema::create('library', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
-            $table->string('type');
-            $table->string('category');
-            $table->string('title');
-            $table->text('description')->nullable();
-            $table->text('methodology')->nullable();
-            $table->text('usage')->nullable();
+            $table->string('report_code')->unique();
+            $table->string('report_type');
+            $table->string('report_category');
+            $table->string('report_title');
+            $table->text('report_description')->nullable();
+            $table->text('report_methodology')->nullable();
+            $table->text('report_usage')->nullable();
+            $table->string('report_vars')->nullable();
+            $table->decimal('report_price', 8, 2)->nullable();
             $table->timestamps();
+
+            $table->index('report_code');
+            $table->index('report_type');
+            $table->index('report_category');
+            $table->index('report_title');
+            $table->index('report_vars');
+            $table->index('report_price');
         });
     }
 

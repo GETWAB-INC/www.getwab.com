@@ -406,11 +406,28 @@
                 gap: 8px;
             }
         }
+
+.reports-filter.active {
+    background-color: #b5d9a7;
+    color: white;
+    font-weight: bold;
+}
+
+.reports-filter.active .reports-filter-text {
+    color: black;
+}
+
+.reports-filter {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
     </style>
 </head>
 
 <body>
     @include('include.header')
+    {{-- {{ dd($reports) }} --}}
     <div class="reports-container">
         <div class="reports-sidebar">
             <div class="reports-filters">
@@ -419,107 +436,76 @@
                         <div class="reports-search-icon">
                             <img src="{{ asset('img/ico/search_ico.svg') }}" alt="Search" />
                         </div>
-                        <input
-                            type="text"
-                            class="reports-search-placeholder"
+                        <input type="text" class="reports-search-placeholder"
                             placeholder="Search reports by name, code, or keyword...">
                     </div>
                 </div>
                 <div class="reports-filters-item">
                     <div class="filters-row">
-                        <div class="reports-filter" style="width: 147px;">
+                        <div class="reports-filter" data-filter="GEO" style="width: 147px;">
                             <div class="reports-filter-text">Geography</div>
                         </div>
-                        <div class="reports-filter" style="width: 114px;">
+                        <div class="reports-filter" data-filter="FUND" style="width: 114px;">
                             <div class="reports-filter-text">Funding</div>
                         </div>
-                        <div class="reports-filter" style="width: 118px;">
+                        <div class="reports-filter" data-filter="TIME" style="width: 118px;">
                             <div class="reports-filter-text">Timeline</div>
                         </div>
                     </div>
                     <div class="filters-row">
-                        <div class="reports-filter" style="width: 118px;">
+                        <div class="reports-filter" data-filter="VEND" style="width: 118px;">
                             <div class="reports-filter-text">Vendors</div>
                         </div>
-                        <div class="reports-filter" style="width: 180px;">
+                        <div class="reports-filter" data-filter="PSC" style="width: 180px;">
                             <div class="reports-filter-text">ProductCodes</div>
                         </div>
-                        <div class="reports-filter" style="width: 128px;">
+                        <div class="reports-filter" data-filter="META" style="width: 128px;">
                             <div class="reports-filter-text">Metadata</div>
                         </div>
                     </div>
                     <div class="filters-row">
-                        <div class="reports-filter" style="width: 135px;">
+                        <div class="reports-filter" data-filter="FCST" style="width: 135px;">
                             <div class="reports-filter-text">Forecasts</div>
                         </div>
-                        <div class="reports-filter" style="width: 169px;">
+                        <div class="reports-filter" data-filter="COMP" style="width: 169px;">
                             <div class="reports-filter-text">Comparisons</div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
+
         <div class="reports-grid">
 
-            <a href="{{ route('report') }}" class="reports-card-wrapper">
-                <div class="reports-card">
-                    <div class="reports-card-content">
-                        <div class="reports-card-header">
-                            <div class="reports-card-info">
-                                <div class="reports-card-code">SFPR-GEO-EL-1</div>
-                                <div class="reports-card-type">Elementary Report</div>
+            @foreach ($reports as $report)
+                <a href="{{ route('report.show', ['report_code' => $report->report_code]) }}" class="reports-card-wrapper"
+                    data-category="{{ $report->report_category }}">
+                    <div class="reports-card">
+                        <div class="reports-card-content">
+                            <div class="reports-card-header">
+                                <div class="reports-card-info">
+                                    <div class="reports-card-code">{{ $report->report_code }}</div>
+                                    @if ($report->report_type == 'EL')
+                                        <div class="reports-card-type">Elementary Report</div>
+                                    @elseif ($report->report_type == 'COLL')
+                                        <div class="reports-card-type">Composite Report</div>
+                                    @else
+                                        <div class="reports-card-type">CRА Report</div>
+                                    @endif
+                                </div>
+                                <div class="reports-card-price">{{ $report->report_price }}</div>
                             </div>
-                            <div class="reports-card-price">$49</div>
-                        </div>
-                        <div class="reports-card-body">
-                            <div class="reports-card-details">
-                                <div class="reports-card-title">Spending by U.S. State</div>
-                                <div class="reports-card-description">Explore total obligated contract dollars per U.S. state</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
-
-            <a href="{{ route('report') }}" class="reports-card-wrapper">
-                <div class="reports-card">
-                    <div class="reports-card-content">
-                        <div class="reports-card-header">
-                            <div class="reports-card-info">
-                                <div class="reports-card-code">SFPR-GEO-COLL-1</div>
-                                <div class="reports-card-type">Composite Report</div>
-                            </div>
-                            <div class="reports-card-price">$149</div>
-                        </div>
-                        <div class="reports-card-body">
-                            <div class="reports-card-details">
-                                <div class="reports-card-title">State Spending & Dept. Breakdown</div>
-                                <div class="reports-card-description">Combines overall spending with department-level analysis by state</div>
+                            <div class="reports-card-body">
+                                <div class="reports-card-details">
+                                    <div class="reports-card-title">{{ $report->report_title }}</div>
+                                    <div class="reports-card-description">{{ $report->report_description }}</div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </a>
-
-            <a href="{{ route('report') }}" class="reports-card-wrapper">
-                <div class="reports-card">
-                    <div class="reports-card-content">
-                        <div class="reports-card-header">
-                            <div class="reports-card-info">
-                                <div class="reports-card-code">CRA360</div>
-                                <div class="reports-card-type">CRA Report</div>
-                            </div>
-                            <div class="reports-card-price">$349</div>
-                        </div>
-                        <div class="reports-card-body">
-                            <div class="reports-card-details">
-                                <div class="reports-card-title">Contractor Responsibility Assessment</div>
-                                <div class="reports-card-description">Generate a risk and compliance profile for any federal contractor</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </a>
+                </a>
+            @endforeach
 
         </div>
     </div>
@@ -529,3 +515,47 @@
 </body>
 
 </html>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filters = document.querySelectorAll('.reports-filter');
+    const reportCards = document.querySelectorAll('.reports-card-wrapper');
+    let activeFilters = new Set();
+
+    filters.forEach(filter => {
+        filter.addEventListener('click', function() {
+            const filterValue = this.getAttribute('data-filter');
+
+            // Переключаем активность фильтра
+            if (activeFilters.has(filterValue)) {
+                activeFilters.delete(filterValue);
+                this.classList.remove('active');
+            } else {
+                activeFilters.add(filterValue);
+                this.classList.add('active');
+            }
+
+            // Применяем фильтрацию
+            applyFilters();
+        });
+    });
+
+    function applyFilters() {
+        reportCards.forEach(card => {
+            const cardCategory = card.getAttribute('data-category');
+
+            if (activeFilters.size === 0) {
+                // Если нет активных фильтров — показываем все
+                card.style.display = 'block';
+            } else {
+                // Показываем только карточки с совпадающей категорией
+                if (activeFilters.has(cardCategory)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            }
+        });
+    }
+});
+</script>

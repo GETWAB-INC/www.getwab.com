@@ -10,10 +10,9 @@
 
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         /*========= Page 4 ==============*/
-
         .sfpr-container {
             display: flex;
             flex-direction: column;
@@ -377,9 +376,11 @@
             color: white;
         }
 
-        /* sfpr-geo-el-1 styles  FINISH */
-
-        /* sfpr-geo-el-1 styles adaptation START */
+        .date-selector-actions {
+            margin-top: 24px;
+            display: flex;
+            justify-content: center;
+        }
 
         @media (max-width: 1440px) {
             .sfpr-content {
@@ -441,6 +442,7 @@
         }
 
         @media (max-width: 768px) {
+
             .sfpr-wrapper {
                 padding: 0 20px;
             }
@@ -532,7 +534,8 @@
 <body>
 
     @include('include.header')
-
+    @include('errors.error')
+    
     <section class="sfpr-container">
         <div class="sfpr-wrapper">
             <article class="sfpr-content">
@@ -547,8 +550,7 @@
 
                 <!-- PDF Preview -->
                 <div class="iframe_pdf">
-                    <iframe src="{{ asset('pdf/cover_demo.pdf') }}" width="100%" height="600px"
-                        title="Report PDF Preview"></iframe>
+                    <iframe src="{{ asset('pdf/cover_demo.pdf') }}" title="Report PDF Preview"></iframe>
 
                     <div class="methodology-section">
                         <h1 class="methodology-title">Methodology</h1>
@@ -585,64 +587,54 @@
                             strategic analysis.
                         </p>
 
-                        <form class="date-selector-container">
+                        <form class="date-selector-container" action="{{route('report.generate')}}" method="post">
+                            @csrf
+                            <input type="hidden" name="report_code" value="SFPR-GEO-EL-1">
+                            <input type="hidden" name="report_type" value="EL">
                             <header class="date-selector-header">
                                 <h2 class="date-selector-title">Select date</h2>
                                 <div class="date-selector-input-area">
                                     <label class="date-selector-label">Enter period</label>
-                                    <div class="date-picker-wrapper">
-                                        <button type="button" class="date-selector-calendar-btn"
-                                            aria-label="Open calendar" id="calendarTrigger">
-                                            <span class="calendar-btn-wrapper">
-                                                <span class="calendar-btn-icon">
-                                                    <img src="{{ asset('img/ico/data_ico.png') }}" alt="">
-                                                </span>
-                                            </span>
-                                        </button>
-                                        <div class="calendar-popup" id="calendarPopup" style="display: none;">
-                                            <div class="year-selector">
-                                                <div class="year-selector-header">
-                                                    <button type="button" class="year-nav-btn"
-                                                        id="prevDecade">‹‹</button>
-                                                    <span class="decade-range" id="decadeRange">2020-2029</span>
-                                                    <button type="button" class="year-nav-btn"
-                                                        id="nextDecade">››</button>
-                                                </div>
-
-                                                <div class="years-grid" id="yearsGrid">
-                                                    <!-- js -->
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </header>
 
                             <fieldset class="date-selector-fields">
+                                <!-- Start Year -->
                                 <div class="date-field-wrapper">
                                     <label class="date-field">
-                                        <input type="text" class="date-field-input start-year-input" placeholder="yyyy"
-                                            maxlength="4" readonly>
+                                        <select class="date-field-input start-year-select" aria-label="Start Year" name="start_year">
+                                            @for ($year = 1957; $year <= date('Y'); $year++)
+                                                <option value="{{ $year }}">{{ $year }}</option>
+                                            @endfor
+                                        </select>
                                         <span class="date-field-label">Start Year</span>
                                     </label>
                                 </div>
+
+                                <!-- End Year -->
                                 <div class="date-field-wrapper">
                                     <label class="date-field">
-                                        <input type="text" class="date-field-input end-year-input" placeholder="yyyy"
-                                            maxlength="4" readonly>
+                                        <select class="date-field-input end-year-select" aria-label="End Year" name="end_year">
+                                            @for ($year = 1957; $year <= date('Y'); $year++)
+                                                <option value="{{ $year }}">{{ $year }}</option>
+                                            @endfor
+                                        </select>
                                         <span class="date-field-label">End Year</span>
                                     </label>
                                 </div>
                             </fieldset>
+
+                            <div class="date-selector-actions">
+                                <button type="submit" class="sfpr-generate-btn select-btn">Generate Report</button>
+                            </div>
                         </form>
                     </div>
 
-                    <button class="sfpr-generate-btn select-btn">Generate Report</button>
                     <div class="usage-section">
                         <h1 class="usage-title">Usage</h1>
                         <p class="usage-text">
-                            This report is ideal for government analysts, procurement professionals, researchers, and
+                            This report is ideal for government analysts, procurement professionals, researchers,
+                            and
                             consultants who require regional breakdowns of federal spending.
                             It can be used to inform strategic decisions, policy making, or audit readiness.
                         </p>
@@ -660,11 +652,8 @@
             </article>
         </div>
     </section>
-
-
     @include('include.footer')
-
-
+    <script src="{{ asset('js/alerts.js') }}"></script>
 </body>
 
 </html>

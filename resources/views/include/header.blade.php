@@ -15,7 +15,7 @@
           @auth
             <!-- authorized -->
             <a href="https://fpds.getwab.com/query" class="dropdown-item">FPDS Query</a>
-            <a href="{{ route('reports')}}" class="dropdown-item">FPDS Reports Library</a>
+            <a href="{{ route('library')}}" class="dropdown-item">FPDS Reports Library</a>
           @else
             <!-- not authorized -->
             <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>
@@ -86,7 +86,7 @@
       @auth
         <!-- authorized -->
         <a href="https://fpds.getwab.com/query" class="mobile-submenu-item">FPDS Query</a>
-        <a href="{{ route('reports')}}" class="mobile-submenu-item">FPDS Reports Library</a>
+        <a href="{{ route('library')}}" class="mobile-submenu-item">FPDS Reports Library</a>
       @else
         <!-- not authorized -->
         <a href="{{ route('products.fpds-query')}}" class="mobile-submenu-item">FPDS Query</a>
@@ -138,7 +138,7 @@
           @auth
             <!-- authorized -->
             <a href="https://fpds.getwab.com/query" class="dropdown-item">FPDS Query</a>
-            <a href="{{ route('reports')}}" class="dropdown-item">FPDS Reports Library</a>
+            <a href="{{ route('library')}}" class="dropdown-item">FPDS Reports Library</a>
           @else
             <!-- not authorized -->
             <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>
