@@ -111,10 +111,6 @@
             color: black;
         }
 
-        .reports-filter {
-            cursor: pointer;
-        }
-
         .clear-search-btn {
             background: none;
             border: none;
@@ -159,6 +155,7 @@
             transition: background-color 0.3s;
             box-sizing: border-box;
             flex-shrink: 0;
+            cursor: pointer;
         }
 
         .reports-filter:hover {
@@ -310,7 +307,7 @@
         @media (max-width: 768px) {
             .reports-container {
                 flex-direction: column;
-                gap: 30px;
+                gap: 24px;
                 padding: 15px;
                 width: 100%;
                 box-sizing: border-box;
@@ -318,15 +315,9 @@
                 margin: 0 15px;
             }
 
-            .reports-sidebar {
-                width: 100%;
-                gap: 30px;
-                box-sizing: border-box;
-            }
-
             .reports-filters {
                 width: 100%;
-                gap: 30px;
+                gap: 24px;
                 box-sizing: border-box;
             }
 
@@ -347,7 +338,7 @@
                 overflow-x: auto;
                 overflow-y: hidden;
                 gap: 10px;
-                padding-bottom: 10px;
+         
                 -webkit-overflow-scrolling: touch;
                 scrollbar-width: thin;
                 scrollbar-color: #5f5f5f transparent;
@@ -391,7 +382,7 @@
             .reports-grid {
                 width: 100%;
                 grid-template-columns: 1fr;
-                gap: 20px;
+                gap: 24px;
                 box-sizing: border-box;
             }
 
@@ -435,12 +426,6 @@
             .reports-card-title,
             .reports-card-description {
                 font-size: 16px;
-            }
-
-            .reports-filter {
-                min-width: 120px;
-                height: 60px;
-                padding: 10px 12px;
             }
 
             .reports-filters-item {
