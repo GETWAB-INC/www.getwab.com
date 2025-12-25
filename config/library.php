@@ -1,20 +1,7 @@
 <?php
 
-namespace Database\Seeders;
-
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use App\Models\Library;
-
-class LibrarySeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
-    {
-        $reports = [
-            [
+return [
+    [
                 'report_code' => 'SFPR-GEO-COLL-1',
                 'report_type' => 'COLL',
                 'report_category' => 'GEO',
@@ -378,10 +365,4 @@ class LibrarySeeder extends Seeder
                 'report_price' => 399.00,
             ],
 
-        ];
-
-        foreach ($reports as $reportData) {
-            Library::create($reportData);
-        }
-    }
-}
+];

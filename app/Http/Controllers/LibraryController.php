@@ -9,19 +9,32 @@ class LibraryController extends Controller
 {
     public function index(Request $request)
     {
-        $reports = Library::whereNotNull('report_title')
-            ->where('report_title', '!=', '')
-            ->get();
+        $reports = config('library');
 
         return view('library.index', compact('reports'));
     }
 
+    
     public function show(Request $request, string $report_code)
     {
-        // Ищем отчёт по коду
-        $report = Library::where('report_code', $report_code)->firstOrFail();
+        // Загружаем все отчёты из файла
+        $reports = config('library');
 
-        // Передаём отчёт в представление
+        // Ищем отчёт с нужным report_code
+        $report = null;
+        foreach ($reports as $item) {
+            if ($item['report_code'] === $report_code) {
+                $report = $item;
+                break;
+            }
+        }
+
+        // Если отчёт не найден — 404
+        if (!$report) {
+            abort(404, 'Report not found');
+        }
+
+        // Передаём найденный отчёт в представление
         return view('library.show', compact('report'));
     }
 }

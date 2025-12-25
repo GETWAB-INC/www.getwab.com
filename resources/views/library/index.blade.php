@@ -479,27 +479,27 @@
         <div class="reports-grid">
 
             @foreach ($reports as $report)
-                <a href="{{ route('report.show', ['report_code' => $report->report_code]) }}" class="reports-card-wrapper"
-                    data-category="{{ $report->report_category }}">
+                <a href="{{ route('report.show', ['report_code' => $report['report_code']]) }}" class="reports-card-wrapper"
+                    data-category="{{ $report['report_category'] }}">
                     <div class="reports-card">
                         <div class="reports-card-content">
                             <div class="reports-card-header">
                                 <div class="reports-card-info">
-                                    <div class="reports-card-code">{{ $report->report_code }}</div>
-                                    @if ($report->report_type == 'EL')
+                                    <div class="reports-card-code">{{ $report['report_code'] }}</div>
+                                    @if ($report['report_type'] == 'EL')
                                         <div class="reports-card-type">Elementary Report</div>
-                                    @elseif ($report->report_type == 'COLL')
+                                    @elseif ($report['report_type'] == 'COLL')
                                         <div class="reports-card-type">Composite Report</div>
                                     @else
                                         <div class="reports-card-type">CRА Report</div>
                                     @endif
                                 </div>
-                                <div class="reports-card-price">{{ $report->report_price }}</div>
+                                <div class="reports-card-price">{{ $report['report_price'] }}</div>
                             </div>
                             <div class="reports-card-body">
                                 <div class="reports-card-details">
-                                    <div class="reports-card-title">{{ $report->report_title }}</div>
-                                    <div class="reports-card-description">{{ $report->report_description }}</div>
+                                    <div class="reports-card-title">{{ $report['report_title'] }}</div>
+                                    <div class="reports-card-description">{{ $report['report_description'] }}</div>
                                 </div>
                             </div>
                         </div>

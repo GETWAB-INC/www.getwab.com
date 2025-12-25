@@ -542,8 +542,8 @@
                 <header class="sfpr-left-section">
                     <div class="sfpr-header">
                         <section class="sfpr-title-section">
-                            <h1 class="sfpr-code">SFPR-GEO-EL-1</h1>
-                            <p class="sfpr-subtitle">Federal Contract Spending by U.S. State</p>
+                            <h1 class="sfpr-code">{{ $report['report_code'] }}</h1>
+                            <p class="sfpr-subtitle">{{ $report['report_title'] }}</p>
                         </section>
                     </div>
                 </header>
@@ -555,10 +555,7 @@
                     <div class="methodology-section">
                         <h1 class="methodology-title">Methodology</h1>
                         <p class="methodology-text">
-                            Data is sourced from the official Federal Procurement Data System (FPDS.gov).
-                            Records are aggregated by the state where the contract was performed, based on the
-                            placeOfPerformance.stateCode field. All dollar amounts represent obligated values
-                            during the selected timeframe.
+                            {{ $report['report_methodology'] }}
                         </p>
                     </div>
 
@@ -569,28 +566,26 @@
                         <dl class="sfpr-info-list">
                             <div class="sfpr-info-item">
                                 <dt class="sfpr-info-label">Type:</dt>
-                                <dd class="sfpr-info-value">Elementary Report</dd>
+                                <dd class="sfpr-info-value">{{ $report['report_type'] }}</dd>
                             </div>
                             <div class="sfpr-info-item">
                                 <dt class="sfpr-info-label">Category:</dt>
-                                <dd class="sfpr-info-value">Geography</dd>
+                                <dd class="sfpr-info-value">{{ $report['report_category'] }}</dd>
                             </div>
                             <div class="sfpr-info-item">
                                 <dt class="sfpr-info-label">Price:</dt>
-                                <dd class="sfpr-info-value">$49</dd>
+                                <dd class="sfpr-info-value">${{ $report['report_price'] }}</dd>
                             </div>
                         </dl>
 
                         <p class="sfpr-description">
-                            This report provides a breakdown of total obligated federal contract spending per U.S. state
-                            over a selected time period. Use it to understand regional procurement trends and inform
-                            strategic analysis.
+                            {{ $report['report_description'] }}
                         </p>
 
                         <form class="date-selector-container" action="{{route('report.generate')}}" method="post">
                             @csrf
-                            <input type="hidden" name="report_code" value="SFPR-GEO-EL-1">
-                            <input type="hidden" name="report_type" value="EL">
+                            <input type="hidden" name="report_code" value="{{ $report['report_code'] }}">
+                            <input type="hidden" name="report_type" value="{{ $report['report_type'] }}">
                             <header class="date-selector-header">
                                 <h2 class="date-selector-title">Select date</h2>
                                 <div class="date-selector-input-area">
@@ -633,19 +628,13 @@
                     <div class="usage-section">
                         <h1 class="usage-title">Usage</h1>
                         <p class="usage-text">
-                            This report is ideal for government analysts, procurement professionals, researchers,
-                            and
-                            consultants who require regional breakdowns of federal spending.
-                            It can be used to inform strategic decisions, policy making, or audit readiness.
+                            {{ $report['report_usage'] }}
                         </p>
                     </div>
                     <div class="methodology-section-mob">
                         <h1 class="methodology-title">Methodology</h1>
                         <p class="methodology-text">
-                            Data is sourced from the official Federal Procurement Data System (FPDS.gov).
-                            Records are aggregated by the state where the contract was performed, based on the
-                            placeOfPerformance.stateCode field. All dollar amounts represent obligated values
-                            during the selected timeframe.
+                            {{ $report['report_methodology'] }}
                         </p>
                     </div>
                 </aside>
