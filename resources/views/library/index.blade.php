@@ -101,7 +101,7 @@
             color: #afbcb8;
         }
 
-        .reports-filter.active {
+        .reports-filter.active, .reports-filter.active:hover {
             background-color: #b5d9a7;
             color: white;
             font-weight: bold;
@@ -113,7 +113,6 @@
 
         .reports-filter {
             cursor: pointer;
-            transition: background-color 0.2s;
         }
 
         .clear-search-btn {
@@ -379,9 +378,9 @@
 
             .reports-filter {
                 flex: 0 0 auto;
-                min-width: 140px;
-                height: 63px;
-                padding: 12px 16px;
+                min-width: 100px;
+                height: 40px;
+                padding: 12px;
             }
 
             .reports-filter-text {
@@ -442,10 +441,6 @@
                 min-width: 120px;
                 height: 60px;
                 padding: 10px 12px;
-            }
-
-            .reports-filter-text {
-                font-size: 14px;
             }
 
             .reports-filters-item {
