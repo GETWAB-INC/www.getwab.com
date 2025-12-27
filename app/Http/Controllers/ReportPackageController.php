@@ -33,6 +33,7 @@ class ReportPackageController extends Controller
             default => [],
         };
     }
+    
     public function orderPackage(Request $request)
     {
         // 1. Получаем входные данные

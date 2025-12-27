@@ -1603,11 +1603,11 @@
                                 <h1 class="checkout-product-price">
                                     ${{ session('fpds_query_subscription.subscription_price') }}.00</h1>
                                 <div class="checkout-order-item-actions">
-                                    <button class="checkout-action-button checkout-delete-button"
+                                    <div class="checkout-action-button checkout-delete-button"
                                         data-item-key="fpds_query_subscription">
                                         <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}"
                                             alt="Delete Item">
-                                    </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1625,11 +1625,11 @@
                                 <h1 class="checkout-product-price">
                                     ${{ session('fpds_report_subscription.subscription_price') }}.00</h1>
                                 <div class="checkout-order-item-actions">
-                                    <button class="checkout-action-button checkout-delete-button"
+                                    <div class="checkout-action-button checkout-delete-button"
                                         data-item-key="fpds_report_subscription">
                                         <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}"
                                             alt="Delete Item">
-                                    </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1647,11 +1647,11 @@
                                 <h1 class="checkout-product-price">
                                     ${{ session('single_elementary_report.report_price') }}.00</h1>
                                 <div class="checkout-order-item-actions">
-                                    <button class="checkout-action-button checkout-delete-button"
+                                    <div class="checkout-action-button checkout-delete-button"
                                         data-item-key="single_elementary_report">
                                         <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}"
                                             alt="Delete Item">
-                                    </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1669,11 +1669,11 @@
                                 <h1 class="checkout-product-price">${{ session('single_composite_report.report_price') }}.00
                                 </h1>
                                 <div class="checkout-order-item-actions">
-                                    <button class="checkout-action-button checkout-delete-button"
+                                    <div class="checkout-action-button checkout-delete-button"
                                         data-item-key="single_composite_report">
                                         <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}"
                                             alt="Delete Item">
-                                    </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1692,11 +1692,11 @@
                                 <h1 class="checkout-product-price">
                                     ${{ session('elementary_report_package.package_price') }}.00</h1>
                                 <div class="checkout-order-item-actions">
-                                    <button class="checkout-action-button checkout-delete-button"
+                                    <div class="checkout-action-button checkout-delete-button"
                                         data-item-key="elementary_report_package">
                                         <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}"
                                             alt="Delete Item">
-                                    </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1715,11 +1715,11 @@
                                 <h1 class="checkout-product-price">
                                     ${{ session('composite_report_package.package_price') }}.00</h1>
                                 <div class="checkout-order-item-actions">
-                                    <button class="checkout-action-button checkout-delete-button"
+                                    <div class="checkout-action-button checkout-delete-button"
                                         data-item-key="composite_report_package">
                                         <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}"
                                             alt="Delete Item">
-                                    </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2122,7 +2122,7 @@
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert('Произошла ошибка при удалении');
+                        alert('An error occurred while deleting');
                     });
             });
         });

@@ -51,9 +51,19 @@ class AccountController extends Controller
 
     public function billing(Request $request)
     {
+        $itemsToShow = [
+            'single_elementary_report' => 'Elementary Report',
+            'single_composite_report' => 'Composite Report',
+            'elementary_report_package' => 'Elementary Package',
+            'composite_report_package' => 'Composite Package',
+            'fpds_query_subscription' => 'FPDS Query Subscription',
+            'fpds_report_subscription' => 'FPDS Report Subscription',
+        ];
+
+
         $user = Auth::user();
         session(['last_account_section' => route('account.billing')]);
-        return view('account.billing', compact('user'));
+        return view('account.billing', compact('user', 'itemsToShow'));
     }
 
     public function profile(Request $request)

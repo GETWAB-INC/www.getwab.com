@@ -336,7 +336,18 @@
       align-items: flex-start;
       display: inline-flex;
     }
-    
+
+    .checkout-link {
+      color: #FFBE5C;
+      text-decoration: none;
+    }
+
+    .checkout-link:hover {
+      text-decoration: underline;
+      color: #FFBE5C;
+    }
+
+
     @media (max-width: 767px) {
       .dashboard-sidebar {
         display: none !important;
@@ -409,56 +420,56 @@
       }
 
       .billing-mobile-card {
-      align-self: stretch;
-      padding-left: 16px;
-      padding-right: 16px;
-      padding-top: 16px;
-      padding-bottom: 16px;
-      background: #2a2a2a;
-      border-radius: 4px;
-      justify-content: flex-start;
-      align-items: center;
-      display: flex;
-      overflow: hidden;
-      border-radius: 4px;
-      outline-offset: -1px;
-      position: relative;
-      padding: 2px;
-      background: linear-gradient(135deg, #b5d9a7, #00aa89);
-      border-radius: 5px;
-    }
+        align-self: stretch;
+        padding-left: 16px;
+        padding-right: 16px;
+        padding-top: 16px;
+        padding-bottom: 16px;
+        background: #2a2a2a;
+        border-radius: 4px;
+        justify-content: flex-start;
+        align-items: center;
+        display: flex;
+        overflow: hidden;
+        border-radius: 4px;
+        outline-offset: -1px;
+        position: relative;
+        padding: 2px;
+        background: linear-gradient(135deg, #b5d9a7, #00aa89);
+        border-radius: 5px;
+      }
 
-    .billing-mobile-card-inner {
-      width: 100%;
-      padding: 14px;
-      background: #2a2a2a;
-      border-radius: 5px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+      .billing-mobile-card-inner {
+        width: 100%;
+        padding: 14px;
+        background: #2a2a2a;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
 
-    .billing-mobile-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      width: 100%;
-    }
+      .billing-mobile-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        width: 100%;
+      }
 
-    .billing-mobile-description {
-      font-size: 16px;
-      font-weight: 600;
-      line-height: 1.4;
-      flex: 1;
-      color: #ffffff;
-    }
+      .billing-mobile-description {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.4;
+        flex: 1;
+        color: #ffffff;
+      }
 
-    .billing-mobile-card-number {
-      font-size: 16px;
-      color: #ccc;
-      white-space: nowrap;
-    }
+      .billing-mobile-card-number {
+        font-size: 16px;
+        color: #ccc;
+        white-space: nowrap;
+      }
     }
   </style>
 </head>
@@ -473,7 +484,7 @@
 
     <!-- Desktop Dashboard -->
     <main class="dashboard-main">
-      
+
       <!-- Billing -->
       <div id="billing" class="content-section">
 
@@ -556,6 +567,53 @@
               </div>
             </div>
           </div>
+
+          @foreach ($itemsToShow as $sessionKey => $displayName)
+            @if (Session::has($sessionKey))
+                  @php $item = Session::get($sessionKey); @endphp
+                  <div class="billing-data-row">
+                    <div class="billing-cell-data billing-cell-date">
+                      <div class="billing-cell-content">
+                        <div class="billing-cell-data-text">
+                          {{ substr(now()->format('F'), 0, 3) . ' ' . now()->format('d, Y') }}
+
+                        </div>
+                      </div>
+                    </div>
+                    <div class="billing-cell-data billing-cell-description">
+                      <div class="billing-cell-content">
+                        <div class="billing-cell-data-text">
+                          {{ $displayName }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="billing-cell-data billing-cell-card">
+                      <div class="billing-cell-content">
+                        <div class="billing-cell-data-center">N/A</div>
+                      </div>
+                    </div>
+                    <div class="billing-cell-data billing-cell-amount">
+                      <div class="billing-cell-content">
+                        <div class="billing-cell-data-center">
+    ${{ number_format(
+        isset($item['report_price']) ? $item['report_price'] :
+            (isset($item['package_price']) ? $item['package_price'] : $item['subscription_price']),
+        2, '.', ''
+    ) }}
+</div>
+
+                      </div>
+                    </div>
+                    <div class="billing-cell-data billing-cell-status">
+                      <div class="billing-status-cell">
+                        <div class="billing-cell-data-center">
+                          <a href="{{ route('checkout') }}" class="checkout-link">Checkout</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            @endif
+          @endforeach
 
           <div class="billing-data-row">
             <div class="billing-cell-data billing-cell-date">
@@ -668,6 +726,7 @@
               </div>
             </div>
           </div>
+
         </div>
       </div>
 
@@ -675,105 +734,105 @@
 
     <!-- Mobile Dashboard -->
     <main class="mobile-dashboard-main">
-          <div class="mobile-title">Billing Information</div>
-          <div class="mobile-content">
-            <div class="mobile-description">
-              We store only billing address and secure payment tokens. No full card data is stored.
+      <div class="mobile-title">Billing Information</div>
+      <div class="mobile-content">
+        <div class="mobile-description">
+          We store only billing address and secure payment tokens. No full card data is stored.
+        </div>
+        <div class="mobile-billing-list">
+          <div class="billing-info-container">
+            <div class="billing-card-item">
+              <div class="billing-card-content">
+                <div class="billing-details">
+                  <div class="billing-card-number">Visa •••• 1111</div>
+                  <div class="billing-expiry">
+                    <span>Expires: </span>
+                    <span>12/30</span>
+                  </div>
+                </div>
+                <button class="token-upgrade-btn">Delete</button>
+              </div>
             </div>
-            <div class="mobile-billing-list">
-              <div class="billing-info-container">
-                <div class="billing-card-item">
-                  <div class="billing-card-content">
-                    <div class="billing-details">
-                      <div class="billing-card-number">Visa •••• 1111</div>
-                      <div class="billing-expiry">
-                        <span>Expires: </span>
-                        <span>12/30</span>
-                      </div>
-                    </div>
-                    <button class="token-upgrade-btn">Delete</button>
+
+            <div class="billing-card-item">
+              <div class="billing-card-content">
+                <div class="billing-details">
+                  <div class="billing-card-number">MasterCard •••• 2222</div>
+                  <div class="billing-expiry">
+                    <span>Expires: </span>
+                    <span>08/26</span>
                   </div>
                 </div>
+                <button class="token-upgrade-btn">Delete</button>
+              </div>
+            </div>
 
-                <div class="billing-card-item">
-                  <div class="billing-card-content">
-                    <div class="billing-details">
-                      <div class="billing-card-number">MasterCard •••• 2222</div>
-                      <div class="billing-expiry">
-                        <span>Expires: </span>
-                        <span>08/26</span>
-                      </div>
-                    </div>
-                    <button class="token-upgrade-btn">Delete</button>
+            <div class="billing-card-item">
+              <div class="billing-card-content">
+                <div class="billing-details">
+                  <div class="billing-card-number">Amex •••• 3456</div>
+                  <div class="billing-expiry">
+                    <span>Expires: </span>
+                    <span>03/28</span>
                   </div>
                 </div>
+                <button class="token-upgrade-btn">Delete</button>
+              </div>
+            </div>
+          </div>
 
-                <div class="billing-card-item">
-                  <div class="billing-card-content">
-                    <div class="billing-details">
-                      <div class="billing-card-number">Amex •••• 3456</div>
-                      <div class="billing-expiry">
-                        <span>Expires: </span>
-                        <span>03/28</span>
-                      </div>
-                    </div>
-                    <button class="token-upgrade-btn">Delete</button>
+          <div class="mobile-billing-table">
+            <div class="billing-mobile-card">
+              <div class="billing-mobile-card-inner">
+                <div class="billing-mobile-content">
+                  <div class="billing-mobile-description">FPDS Query Monthly Subscription</div>
+                  <div class="billing-mobile-details">
+                    <div class="billing-mobile-card-number">Visa •••• 1111</div>
+
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div class="mobile-billing-table">
-                <div class="billing-mobile-card">
-                  <div class="billing-mobile-card-inner">
-                    <div class="billing-mobile-content">
-                      <div class="billing-mobile-description">FPDS Query Monthly Subscription</div>
-                      <div class="billing-mobile-details">
-                        <div class="billing-mobile-card-number">Visa •••• 1111</div>
+            <div class="billing-mobile-card">
+              <div class="billing-mobile-card-inner">
+                <div class="billing-mobile-content">
+                  <div class="billing-mobile-description">One-time Report: SFPR-DEPT-EL-3</div>
+                  <div class="billing-mobile-details">
+                    <div class="billing-mobile-card-number">MasterCard •••• 2222</div>
 
-                      </div>
-                    </div>
                   </div>
                 </div>
+              </div>
+            </div>
 
-                <div class="billing-mobile-card">
-                  <div class="billing-mobile-card-inner">
-                    <div class="billing-mobile-content">
-                      <div class="billing-mobile-description">One-time Report: SFPR-DEPT-EL-3</div>
-                      <div class="billing-mobile-details">
-                        <div class="billing-mobile-card-number">MasterCard •••• 2222</div>
+            <div class="billing-mobile-card">
+              <div class="billing-mobile-card-inner">
+                <div class="billing-mobile-content">
+                  <div class="billing-mobile-description">FPDS Reports Trial Activation</div>
+                  <div class="billing-mobile-details">
+                    <div class="billing-mobile-card-number">Amex •••• 3456</div>
 
-                      </div>
-                    </div>
                   </div>
                 </div>
+              </div>
+            </div>
 
-                <div class="billing-mobile-card">
-                  <div class="billing-mobile-card-inner">
-                    <div class="billing-mobile-content">
-                      <div class="billing-mobile-description">FPDS Reports Trial Activation</div>
-                      <div class="billing-mobile-details">
-                        <div class="billing-mobile-card-number">Amex •••• 3456</div>
+            <div class="billing-mobile-card">
+              <div class="billing-mobile-card-inner">
+                <div class="billing-mobile-content">
+                  <div class="billing-mobile-description">Attempted Payment: FPDS Query Renewal</div>
+                  <div class="billing-mobile-details">
+                    <div class="billing-mobile-card-number">Visa •••• 1111</div>
 
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="billing-mobile-card">
-                  <div class="billing-mobile-card-inner">
-                    <div class="billing-mobile-content">
-                      <div class="billing-mobile-description">Attempted Payment: FPDS Query Renewal</div>
-                      <div class="billing-mobile-details">
-                        <div class="billing-mobile-card-number">Visa •••• 1111</div>
-
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-    
+        </div>
+      </div>
+
 
     </main>
 

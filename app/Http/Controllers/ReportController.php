@@ -128,9 +128,7 @@ class ReportController extends Controller
                 ]);
             }
 
-            return redirect()->route('checkout')->with([
-                'success' => 'Report data saved. Please proceed to checkout to generate the report.'
-            ]);
+            return redirect()->route('checkout');
         }
 
         $reportRecord = Report::create([
