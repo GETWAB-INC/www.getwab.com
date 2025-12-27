@@ -339,15 +339,324 @@
     word-wrap: break-word;
 }
 
+.hero-button {
+    position: relative;
+    height: 64px;
+    width: 276px;
+    padding: 35px 20px;
+    background: linear-gradient(360deg, #00ad8c 0%, #00755f 51%);
+    border-radius: 7px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: white;
+    font-size: 24px;
+    font-family: "Overused Grotesk", sans-serif;
+    font-weight: 400;
+    line-height: 24px;
+    overflow: hidden;
+    z-index: 1;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(360deg, #00624f 0%, #005d4b 97%);
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.4s ease;
+}
+
+.hero-button:hover::before {
+    opacity: 1;
+}
+
+/* Cards */
+
+.cards-desktop {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 48px;
+    flex-wrap: wrap;
+    margin: 0 auto;
+}
+
+.card-desktop {
+    background: #282828;
+    border-radius: 7px;
+    padding: 64px 48px;
+    width: 100%;
+    max-width: 456px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    padding: 1px;
+    background: linear-gradient(135deg, #b5d9a7, #00aa89);
+}
+
+.card-desktop>.content-desktop {
+    width: 100%;
+    height: 100%;
+    background: #282828;
+    border-radius: 6px;
+    padding: 62px 46px;
+}
+
+
+.details-desktop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    width: 100%;
+}
+
+.title-desktop {
+    text-align: center;
+    color: #b5d9a7;
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 32px;
+    width: 100%;
+}
+
+.remaining-desktop {
+    color: white;
+    font-size: 24px;
+    font-weight: 400;
+    width: 100%;
+}
+
+.selector-desktop {
+    width: 100%;
+    position: relative;
+}
+
+.dropdown-trigger {
+    width: 100%;
+    height: 56px;
+    border-radius: 4px;
+    outline: 2px white solid;
+    outline-offset: -2px;
+    background: transparent;
+    color: white;
+    font-size: 16px;
+    font-family: "Overused Grotesk", sans-serif;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+}
+
+
+.price-desktop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    font-size: 24px;
+    color: white;
+    font-weight: 600;
+}
+
+.button-desktop {
+    position: relative;
+    padding: 16px;
+    background: linear-gradient(360deg, #00ad8c 0%, #00755f 51%);
+    border: none;
+    border-radius: 7px;
+    color: white;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    min-width: 120px;
+    z-index: 1;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    display: flex;
+    font-family: "Overused Grotesk", sans-serif;
+    width: 315px;
+    height: 65px;
+    box-sizing: border-box;
+}
+
+.button-desktop::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(360deg, #00624f 0%, #005d4b 97%);
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.4s ease;
+    border-radius: 7px;
+}
+
+.button-desktop:hover::before {
+    opacity: 1;
+}
+
 @media (min-width: 768px) {
 
     .mobile-dashboard-main {
-      display: none !important;
+        display: none !important;
     }
 
 }
 
 @media (max-width: 767px) {
+
+
+    .mobile-dashboard-main {
+        padding: 24px;
+    }
+
+    .cards-desktop {
+        display: none;
+    }
+
+    .cards-mobile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .card-mobile {
+        width: 327px;
+        padding: 24px;
+        background: #282828;
+        border-radius: 7px;
+        outline: 1px #b5d9a7 solid;
+        outline-offset: -1px;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .inner-mobile {
+        width: 279px;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 24px;
+        display: flex;
+    }
+
+    .header-mobile {
+        align-self: stretch;
+        height: 160px;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 16px;
+        display: flex;
+    }
+
+    .title-mobile {
+        align-self: stretch;
+        text-align: center;
+        color: #b5d9a7;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 16px;
+    }
+
+    .remaining-mobile {
+        align-self: stretch;
+        color: white;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 16px;
+    }
+
+    .selector-mobile {
+        align-self: stretch;
+        height: 48px;
+        padding-left: 16px;
+        padding-right: 16px;
+        border-radius: 7px;
+        outline: 2px white solid;
+        outline-offset: -2px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        display: flex;
+        position: relative;
+    }
+
+    .price-mobile {
+        align-self: stretch;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 32px;
+        display: inline-flex;
+    }
+
+    .price-label-mobile {
+        flex: 1 1 0;
+        color: white;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 16px;
+    }
+
+    .price-value-mobile {
+        text-align: right;
+        color: white;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 16px;
+    }
+
+    .button-mobile {
+        padding-left: 35px;
+        padding-right: 35px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        background: linear-gradient(360deg, #00ad8c 0%, #00755f 51%);
+        border-radius: 7px;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        display: inline-flex;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .button-text-mobile {
+        text-align: center;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+        color: white;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 16px;
+    }
 
     .mobile-title {
         align-self: stretch;
@@ -357,17 +666,17 @@
         font-weight: 400;
         word-wrap: break-word;
         margin-bottom: 24px;
-      }
+    }
 
-      .mobile-content {
+    .mobile-content {
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;
         gap: 24px;
         display: flex;
-      }
+    }
 
-      .mobile-description {
+    .mobile-description {
         position: relative;
         text-align: left;
         width: 270px;
@@ -378,9 +687,9 @@
         line-height: 100%;
         word-wrap: break-word;
         padding: 0 16px;
-      }
+    }
 
-      .mobile-description::before {
+    .mobile-description::before {
         content: url("{{ asset('img/ico/quotes-1.svg') }}");
         position: absolute;
         left: 0;
@@ -388,9 +697,9 @@
         transform: translateY(-50%);
         width: 24px;
         height: 24px;
-      }
+    }
 
-      .mobile-description::after {
+    .mobile-description::after {
         content: url("{{ asset('img/ico/quotes-2.svg') }}");
         position: absolute;
         right: 0%;
@@ -398,8 +707,8 @@
         transform: translateY(-50%);
         width: 24px;
         height: 24px;
-      }
-      
+    }
+
     .dashboard-container {
         margin: 0 0 20px auto;
     }

@@ -586,6 +586,7 @@
                             @csrf
                             <input type="hidden" name="report_code" value="{{ $report['report_code'] }}">
                             <input type="hidden" name="report_type" value="{{ $report['report_type'] }}">
+                            <input type="hidden" name="report_price" value="{{ $report['report_price'] }}">
                             <header class="date-selector-header">
                                 <h2 class="date-selector-title">Select date</h2>
                                 <div class="date-selector-input-area">

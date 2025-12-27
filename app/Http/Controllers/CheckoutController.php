@@ -7,86 +7,44 @@ use Illuminate\Support\Facades\Session;
 
 class CheckoutController extends Controller
 {
-    public function showCheckout()
+    /**
+     * Удаляет элемент из сессии по ключу
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function removeItem(Request $request)
     {
-        // Получаем данные из сессии
-        $checkoutData = Session::get('checkout_report');
+        // Получаем ключ элемента из запроса
+        $itemKey = $request->input('item_key');
 
-        if (!$checkoutData) {
-            abort(404, 'Данные заказа не найдены в сессии');
+        // Проверяем, передан ли ключ
+        if (empty($itemKey)) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Missing item key'
+            ], 400);
         }
 
-        // Формируем список товаров
-        $items = $this->buildOrderItems($checkoutData);
+        // Проверяем, существует ли элемент в сессии
+        if (!Session::has($itemKey)) {
+            return response()->json([
+                'success' => false,
+                'error' => 'Item not found in session'
+            ], 404);
+        }
 
+        // Удаляем элемент из сессии
+        Session::forget($itemKey);
 
-        // Рассчитываем суммы
-        $subtotal = array_sum(array_column($items, 'price'));
-        $tax = round($subtotal * 0.085, 2); // 8.5% налог
-        $total = $subtotal + $tax;
-
-        return view('checkout', compact('items', 'subtotal', 'tax', 'total'));
+        // Возвращаем успешный ответ
+        return response()->json([
+            'success' => true,
+            'message' => 'Item removed successfully'
+        ]);
     }
 
-    private function buildOrderItems($data)
-    {
-        $items = [];
-
-        switch ($data['report_type']) {
-            case 'EL':
-                $items[] = [
-                    'name' => 'Экологический отчёт (GEO-EL)',
-                    'type' => 'Отчёт',
-                    'frequency' => 'Однократно',
-                    'price' => 149.00,
-                    'code' => $data['report_code']
-                ];
-                break;
-
-            case 'GEO':
-                $items[] = [
-                    'name' => 'Геопространственный анализ',
-                    'type' => 'Подписка',
-                    'frequency' => 'Ежемесячно',
-                    'price' => 199.00,
-                    'code' => $data['report_code']
-                ];
-                break;
-
-            case 'FPDS':
-                $items[] = [
-                    'name' => 'FPDS Query',
-                    'type' => 'Подписка',
-                    'frequency' => 'Ежемесячно',
-                    'price' => 199.00,
-                    'code' => $data['report_code']
-                ];
-                $items[] = [
-                    'name' => 'FPDS Reports',
-                    'type' => 'Подписка',
-                    'frequency' => 'Годово',
-                    'price' => 499.00,
-                    'code' => $data['report_code']
-                ];
-                $items[] = [
-                    'name' => 'FPDS Charts',
-                    'type' => 'Подписка',
-                    'frequency' => 'Годово',
-                    'price' => 299.00,
-                    'code' => $data['report_code']
-                ];
-                break;
-
-            default:
-                $items[] = [
-                    'name' => 'Базовый отчёт',
-                    'type' => 'Отчёт',
-                    'frequency' => 'Однократно',
-                    'price' => 99.00,
-                    'code' => $data['report_code']
-                ];
-        }
-
-        return $items;
+    public function process(Request $request) {
+        dd($request->all());
     }
 }

@@ -101,7 +101,8 @@
             color: #afbcb8;
         }
 
-        .reports-filter.active, .reports-filter.active:hover {
+        .reports-filter.active,
+        .reports-filter.active:hover {
             background-color: #b5d9a7;
             color: white;
             font-weight: bold;
@@ -133,6 +134,10 @@
 
         .clear-search-btn:focus {
             outline-offset: 2px;
+        }
+
+        .clear-search-btn.hidden {
+            display: none;
         }
 
         .highlight {
@@ -338,7 +343,7 @@
                 overflow-x: auto;
                 overflow-y: hidden;
                 gap: 10px;
-         
+
                 -webkit-overflow-scrolling: touch;
                 scrollbar-width: thin;
                 scrollbar-color: #5f5f5f transparent;
@@ -448,7 +453,8 @@
                         </div>
                         <input type="text" id="search-input" class="reports-search-placeholder"
                             placeholder="Search reports by name, code, or keyword...">
-                        <button type="button" id="clear-search" class="clear-search-btn" aria-label="Clear search">
+                        <button type="button" id="clear-search" class="clear-search-btn hidden"
+                            aria-label="Clear search">
                             ×
                         </button>
                     </div>
@@ -589,7 +595,15 @@
             });
         }
 
-        searchInput.addEventListener('input', applySearchAndFilters);
+        searchInput.addEventListener('input', function () {
+            if (searchInput.value.trim() === '') {
+                clearButton.classList.add('hidden');
+            } else {
+                clearButton.classList.remove('hidden');
+            }
+            applySearchAndFilters();
+        });
+
 
         clearButton.addEventListener('click', function () {
             searchInput.value = '';

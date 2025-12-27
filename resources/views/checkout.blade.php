@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         /* ================ Page 13 ============== */
         .checkout-page {
@@ -1549,14 +1549,16 @@
 
     @include('include.header')
 
-
-
-    </head>
-
-    <body>
-
+        {{-- <pre style="color: white; font-size: 24px;">
+            {{ print_r(session()->all(), true) }}
+        </pre> --}}
+        
+<form method="POST" action="{{ route('checkout.process') }}">
+    @csrf
         <div class="checkout-page">
+
             <div class="checkout-header">
+
                 <h1 class="checkout-title">Checkout</h1>
 
                 <div class="checkout-progress-container">
@@ -1582,137 +1584,178 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <div class="checkout-order-review-container">
+
                 <div class="checkout-order-section">
-                    <!-- ORDER ITEM 1 -->
-                    <div class="checkout-order-item-card">
-                        <div class="checkout-order-item-details">
-                            <h1 class="checkout-product-name">FPDS Query</h1>
-                            <p class="checkout-product-type">Subscription</p>
-                            <p class="checkout-product-frequency">Monthly</p>
-                        </div>
-                        <div class="checkout-order-item-pricing">
-                            <h1 class="checkout-product-price">$199.00</h1>
-                            <div class="checkout-order-item-actions">
-                                <button class="checkout-action-button checkout-edit-button">
-                                    <img class="checkout-decoration" src="{{ asset('img/ico/Pencil.svg') }}" alt="Edit Item">
-                                </button>
-                                <button class="checkout-action-button checkout-delete-button">
-                                    <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}" alt="Delete Item">
-                                </button>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- ORDER ITEM 2 -->
-                    <div class="checkout-order-item-card">
-                        <div class="checkout-order-item-details">
-                            <h1 class="checkout-product-name">FPDS Reports</h1>
-                            <p class="checkout-product-type">Subscription </p>
-                            <p class="checkout-product-frequency">Annual</p>
-                        </div>
-                        <div class="checkout-order-item-pricing">
-                            <h1 class="checkout-product-price">$499.00</h1>
-                            <div class="checkout-order-item-actions">
-                                <button class="checkout-action-button checkout-edit-button">
-                                    <img class="checkout-decoration" src="{{ asset('img/ico/Pencil.svg') }}" alt="Edit Item">
-                                </button>
-                                <button class="checkout-action-button checkout-delete-button">
-                                    <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}" alt="Delete Item">
-                                </button>
+                    <!-- FPDS Query Subscription -->
+                    @if(session()->has('fpds_query_subscription'))
+                        <div class="checkout-order-item-card">
+                            <div class="checkout-order-item-details">
+                                <h1 class="checkout-product-name">FPDS Query</h1>
+                                <p class="checkout-product-type">Subscription</p>
+                                <p class="checkout-product-frequency">{{ session('fpds_query_subscription.subscription_frequency') }}</p>
+                            </div>
+                            <div class="checkout-order-item-pricing">
+                                <h1 class="checkout-product-price">
+                                    ${{ session('fpds_query_subscription.subscription_price') }}.00</h1>
+                                <div class="checkout-order-item-actions">
+                                    <button class="checkout-action-button checkout-delete-button"
+                                        data-item-key="fpds_query_subscription">
+                                        <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}"
+                                            alt="Delete Item">
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
 
-                    <!-- ORDER ITEM 3 -->
-                    <div class="checkout-order-item-card">
-                        <div class="checkout-order-item-details">
-                            <h1 class="checkout-product-name">FPDS Charts</h1>
-                            <p class="checkout-product-type">Subscription</p>
-                            <p class="checkout-product-frequency">Annual</p>
-                        </div>
-                        <div class="checkout-order-item-pricing">
-                            <h1 class="checkout-product-price">$299.00</h1>
-                            <div class="checkout-order-item-actions">
-                                <button class="checkout-action-button checkout-edit-button">
-                                    <img class="checkout-decoration" src="{{ asset('img/ico/Pencil.svg') }}" alt="Edit Item">
-                                </button>
-                                <button class="checkout-action-button checkout-delete-button">
-                                    <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}" alt="Delete Item">
-                                </button>
+                    <!-- FPDS Reports Subscription -->
+                    @if(session()->has('fpds_report_subscription'))
+                        <div class="checkout-order-item-card">
+                            <div class="checkout-order-item-details">
+                                <h1 class="checkout-product-name">FPDS Reports</h1>
+                                <p class="checkout-product-type">Subscription</p>
+                                <p class="checkout-product-frequency">{{ session('fpds_report_subscription.subscription_frequency') }}</p>
+                            </div>
+                            <div class="checkout-order-item-pricing">
+                                <h1 class="checkout-product-price">
+                                    ${{ session('fpds_report_subscription.subscription_price') }}.00</h1>
+                                <div class="checkout-order-item-actions">
+                                    <button class="checkout-action-button checkout-delete-button"
+                                        data-item-key="fpds_report_subscription">
+                                        <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}"
+                                            alt="Delete Item">
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
 
-                    <!-- ORDER ITEM 4 -->
-                    <div class="checkout-order-item-card">
-                        <div class="checkout-order-item-details">
-                            <h1 class="checkout-product-name">One-Time Report</h1>
-                            <p class="checkout-product-type">Report</p>
-                            <p class="checkout-product-frequency">One-Time</p>
-                        </div>
-                        <div class="checkout-order-item-pricing">
-                            <h1 class="checkout-product-price">$149.00</h1>
-                            <div class="checkout-order-item-actions">
-                                <button class="checkout-action-button checkout-edit-button">
-                                    <img class="checkout-decoration" src="{{ asset('img/ico/Pencil.svg') }}" alt="Edit Item">
-                                </button>
-                                <button class="checkout-action-button checkout-delete-button">
-                                    <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}" alt="Delete Item">
-                                </button>
+                    <!-- Single ELEMENTARY Report -->
+                    @if(session()->has('single_elementary_report'))
+                        <div class="checkout-order-item-card">
+                            <div class="checkout-order-item-details">
+                                <h1 class="checkout-product-name">1 Report</h1>
+                                <p class="checkout-product-type">Elementary Report</p>
+                                <p class="checkout-product-frequency">One-Time Purchase</p>
+                            </div>
+                            <div class="checkout-order-item-pricing">
+                                <h1 class="checkout-product-price">
+                                    ${{ session('single_elementary_report.report_price') }}.00</h1>
+                                <div class="checkout-order-item-actions">
+                                    <button class="checkout-action-button checkout-delete-button"
+                                        data-item-key="single_elementary_report">
+                                        <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}"
+                                            alt="Delete Item">
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
 
-                    <!-- ORDER ITEM 5 -->
-                    <div class="checkout-order-item-card">
-                        <div class="checkout-order-item-details">
-                            <h1 class="checkout-product-name">10 Report Package</h1>
-                            <p class="checkout-product-type">Report Package</p>
-                            <p class="checkout-product-frequency">One-Time</p>
-                        </div>
-                        <div class="checkout-order-item-pricing">
-                            <h1 class="checkout-product-price">$399.00</h1>
-                            <div class="checkout-order-item-actions">
-                                <button class="checkout-action-button checkout-edit-button">
-                                    <img class="checkout-decoration" src="{{ asset('img/ico/Pencil.svg') }}" alt="Edit Item">
-                                </button>
-                                <button class="checkout-action-button checkout-delete-button">
-                                    <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}" alt="Delete Item">
-                                </button>
+                    <!-- Single COMPOSITE Report -->
+                    @if(session()->has('single_composite_report'))
+                        <div class="checkout-order-item-card">
+                            <div class="checkout-order-item-details">
+                                <h1 class="checkout-product-name">1 Report</h1>
+                                <p class="checkout-product-type">Composite Report</p>
+                                <p class="checkout-product-frequency">One-Time Purchase</p>
+                            </div>
+                            <div class="checkout-order-item-pricing">
+                                <h1 class="checkout-product-price">${{ session('single_composite_report.report_price') }}.00
+                                </h1>
+                                <div class="checkout-order-item-actions">
+                                    <button class="checkout-action-button checkout-delete-button"
+                                        data-item-key="single_composite_report">
+                                        <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}"
+                                            alt="Delete Item">
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
+
+                    <!-- ELEMENTARY Report Package -->
+                    @if(session()->has('elementary_report_package'))
+                        <div class="checkout-order-item-card">
+                            <div class="checkout-order-item-details">
+                                <h1 class="checkout-product-name">{{ session('elementary_report_package.reports_count') }}
+                                    Elementary Reports</h1>
+                                <p class="checkout-product-type">Elementary Report Package</p>
+                                <p class="checkout-product-frequency">One-Time Purchase</p>
+                            </div>
+                            <div class="checkout-order-item-pricing">
+                                <h1 class="checkout-product-price">
+                                    ${{ session('elementary_report_package.package_price') }}.00</h1>
+                                <div class="checkout-order-item-actions">
+                                    <button class="checkout-action-button checkout-delete-button"
+                                        data-item-key="elementary_report_package">
+                                        <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}"
+                                            alt="Delete Item">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                    <!-- COMPOSITE Report Package -->
+                    @if(session()->has('composite_report_package'))
+                        <div class="checkout-order-item-card">
+                            <div class="checkout-order-item-details">
+                                <h1 class="checkout-product-name">{{ session('composite_report_package.reports_count') }}
+                                    Composite Reports</h1>
+                                <p class="checkout-product-type">Composite Report Package</p>
+                                <p class="checkout-product-frequency">One-Time Purchase</p>
+                            </div>
+                            <div class="checkout-order-item-pricing">
+                                <h1 class="checkout-product-price">
+                                    ${{ session('composite_report_package.package_price') }}.00</h1>
+                                <div class="checkout-order-item-actions">
+                                    <button class="checkout-action-button checkout-delete-button"
+                                        data-item-key="composite_report_package">
+                                        <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}"
+                                            alt="Delete Item">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                 </div>
 
                 <div class="checkout-payment-breakdown">
                     <div class="checkout-payment-calculations">
                         <div class="checkout-cost-line-item">
                             <h2 class="checkout-cost-label">Subtotal:</h2>
-                            <p class="checkout-cost-amount">$1545.00</p>
+                            <p class="checkout-cost-amount">$0.00</p>
                             <div class="checkout-cost-divider"></div>
                         </div>
 
                         <div class="checkout-cost-line-item">
                             <h2 class="checkout-cost-label">Sales Tax (8.5%):</h2>
-                            <p class="checkout-cost-amount">$131.33</p>
+                            <p class="checkout-cost-amount">$0.00</p>
                             <div class="checkout-cost-divider"></div>
                         </div>
 
                         <div class="checkout-total-summary">
                             <h1 class="checkout-total-label">Total Due:</h1>
-                            <h1 class="checkout-total-amount">$1676.33</h1>
+                            <h1 class="checkout-total-amount">$0.00</h1>
                         </div>
                     </div>
                 </div>
+
             </div>
+
         </div>
 
 
 
         <div class="form-item">
+
             <div class="active-step-2-header">
                 <div class="active-step-2-progress-container">
                     <div class="active-step-2-progress-indicator">
@@ -1740,19 +1783,21 @@
             </div>
 
 
-            <form class="form-container">
+            <div class="form-container">
                 <div class="form-fields">
 
 
                     <div class="form-group">
                         <label class="form-label" for="first-name">First Name</label>
-                        <input type="text" id="first-name" name="first-name" class="input-box" placeholder="Enter your first name" value="Ilia">
+                        <input type="text" id="first-name" name="first-name" class="input-box"
+                            placeholder="Enter your first name" value="Ilia">
                     </div>
 
 
                     <div class="form-group">
                         <label class="form-label" for="last-name">Last Name</label>
-                        <input type="text" id="last-name" name="last-name" class="input-box" placeholder="Enter your last name" value="Oborin">
+                        <input type="text" id="last-name" name="last-name" class="input-box"
+                            placeholder="Enter your last name" value="Oborin">
                     </div>
 
 
@@ -1764,7 +1809,8 @@
                             <div class="select-box" id="country-select-trigger">
                                 <span class="select-text">United States</span>
                                 <div class="arrow-container">
-                                    <img class="arrow-down" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
+                                    <img class="arrow-down" src="{{ asset('img/ico/arrow-chekout.svg') }}"
+                                        alt="Edit Item">
                                 </div>
                             </div>
                             <div class="custom-dropdown" id="country-dropdown">
@@ -1784,7 +1830,8 @@
                             <div class="select-box" id="state-select-trigger">
                                 <span class="select-text">New York</span>
                                 <div class="arrow-container">
-                                    <img class="arrow-down" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
+                                    <img class="arrow-down" src="{{ asset('img/ico/arrow-chekout.svg') }}"
+                                        alt="Edit Item">
                                 </div>
                             </div>
                             <div class="custom-dropdown" id="state-dropdown">
@@ -1817,7 +1864,8 @@
                         <label class="form-label" for="address2">
                             Address Line 2 <span class="optional">(optional)</span>
                         </label>
-                        <input type="text" id="address2" name="address2" class="input-box" placeholder="Apartment, suite, etc.">
+                        <input type="text" id="address2" name="address2" class="input-box"
+                            placeholder="Apartment, suite, etc.">
                     </div>
 
 
@@ -1827,10 +1875,7 @@
                     </div>
 
                 </div>
-            </form>
-
-
-
+            </div>
 
         </div>
 
@@ -1871,7 +1916,8 @@
                                 <div class="step-3-custom-select">
                                     <div class="step-3-select-trigger">
                                         <img src="{{ asset('img/ico/visa-ico.png') }}" alt="Edit Item">
-                                        <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
+                                        <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}"
+                                            alt="Edit Item">
                                     </div>
 
                                     <div class="step-3-select-options">
@@ -1905,7 +1951,8 @@
                             <div class="step-3-form-field step-3-card-number-field">
                                 <label class="step-3-field-label">Card Number</label>
                                 <div class="step-3-input-field step-3-card-number-field-input">
-                                    <input type="text" class="step-3-form-input-field step-3-card-number-input" placeholder="0000 0000 0000 0000" maxlength="19">
+                                    <input type="text" class="step-3-form-input-field step-3-card-number-input"
+                                        placeholder="0000 0000 0000 0000" maxlength="19">
                                 </div>
                             </div>
 
@@ -1916,10 +1963,12 @@
                                         <div class="step-3-custom-select step-3-month-select-field">
                                             <div class="step-3-select-trigger">
                                                 <span class="step-3-selected-option-text">01</span>
-                                                <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
+                                                <img class="step-3-select-arrow"
+                                                    src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
                                             </div>
                                             <div class="step-3-select-options">
-                                                <button class="step-3-select-option step-3-selected" data-value="01">01</button>
+                                                <button class="step-3-select-option step-3-selected"
+                                                    data-value="01">01</button>
                                                 <button class="step-3-select-option" data-value="02">02</button>
                                                 <button class="step-3-select-option" data-value="03">03</button>
                                                 <button class="step-3-select-option" data-value="04">04</button>
@@ -1937,11 +1986,13 @@
                                         <div class="step-3-custom-select step-3-year-select-field">
                                             <div class="step-3-select-trigger">
                                                 <span class="step-3-selected-option-text">2025</span>
-                                                <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
+                                                <img class="step-3-select-arrow"
+                                                    src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
                                             </div>
                                             <div class="step-3-select-options">
                                                 <button class="step-3-select-option" data-value="2024">2024</button>
-                                                <button class="step-3-select-option step-3-selected" data-value="2025">2025</button>
+                                                <button class="step-3-select-option step-3-selected"
+                                                    data-value="2025">2025</button>
                                                 <button class="step-3-select-option" data-value="2026">2026</button>
                                                 <button class="step-3-select-option" data-value="2027">2027</button>
                                                 <button class="step-3-select-option" data-value="2028">2028</button>
@@ -1955,14 +2006,17 @@
                                 <div class="step-3-form-field step-3-cvv-code-field">
                                     <label class="step-3-field-label">CVV</label>
                                     <div class="step-3-input-field step-3-cvv-field-input">
-                                        <input type="password" class="step-3-form-input-field step-3-cvv-code-input" placeholder="000" maxlength="3">
+                                        <input type="password" class="step-3-form-input-field step-3-cvv-code-input"
+                                            placeholder="000" maxlength="3">
                                     </div>
                                 </div>
                             </div>
 
                             <div class="step-3-save-card-option">
-                                <input type="checkbox" id="step-3-saveCardOption" class="step-3-option-checkbox" checked>
-                                <label for="step-3-saveCardOption" class="step-3-checkbox-text">Save this card for future purchases</label>
+                                <input type="checkbox" id="step-3-saveCardOption" class="step-3-option-checkbox"
+                                    checked>
+                                <label for="step-3-saveCardOption" class="step-3-checkbox-text">Save this card for
+                                    future purchases</label>
                             </div>
 
                         </div>
@@ -1987,7 +2041,9 @@
 
                         <div class="step-3-security-content">
                             <p class="step-3-security-description">
-                                We do not store full card numbers or CVV. All transactions are securely processed through Bank of America's Secure Acceptance platform using encrypted and PCI-compliant technology. Only encrypted tokens are saved to enable future payments.
+                                We do not store full card numbers or CVV. All transactions are securely processed
+                                through Bank of America's Secure Acceptance platform using encrypted and PCI-compliant
+                                technology. Only encrypted tokens are saved to enable future payments.
                             </p>
                             <div class="step-3-legal-terms">
                                 <span>By proceeding, you agree to our </span>
@@ -2007,11 +2063,68 @@
             </div>
 
         </div>
+</form>
+    @include('include.footer')
 
-        @include('include.footer')
-
-        <script src="{{ asset('js/chekout.js') }}"></script>
-
-    </body>
+<script src="{{ asset('js/chekout.js') }}"></script>
+</body>
 
 </html>
+<script>
+    function updateCheckoutTotal() {
+        let subtotal = 0;
+
+        document.querySelectorAll('.checkout-product-price').forEach(priceEl => {
+            const priceText = priceEl.textContent.replace('$', '').trim();
+            const price = parseFloat(priceText) || 0;
+            subtotal += price;
+        });
+
+        const taxRate = 0.085;
+        const tax = subtotal * taxRate;
+        const total = subtotal + tax;
+
+        const subtotalEl = document.querySelector('.checkout-cost-line-item:nth-child(1) .checkout-cost-amount');
+        const taxEl = document.querySelector('.checkout-cost-line-item:nth-child(2) .checkout-cost-amount');
+        const totalEl = document.querySelector('.checkout-total-amount');
+
+        if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+        if (taxEl) taxEl.textContent = `$${tax.toFixed(2)}`;
+        if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
+
+        const hasItems = document.querySelectorAll('.checkout-order-item-card').length > 0;
+        document.querySelector('.checkout-payment-breakdown').style.display = hasItems ? 'block' : 'none';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateCheckoutTotal();
+
+        document.querySelectorAll('.checkout-delete-button').forEach(button => {
+            button.addEventListener('click', function () {
+                const itemKey = this.getAttribute('data-item-key');
+
+                fetch('{{ route("checkout.remove-item") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({ item_key: itemKey })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            this.closest('.checkout-order-item-card').remove();
+                            updateCheckoutTotal();
+                        } else {
+                            alert('Ошибка: ' + data.error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Произошла ошибка при удалении');
+                    });
+            });
+        });
+    });
+</script>

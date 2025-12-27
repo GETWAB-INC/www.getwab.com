@@ -42,6 +42,14 @@ class ReportPackage extends Model
         'updated_at'        => 'datetime',
     ];
 
+    /**
+     * Связь с пакетами отчётов (один пользователь — много пакетов)
+     */
+    public function reportPackages()
+    {
+        return $this->hasMany(ReportPackage::class, 'user_id', 'id');
+    }
+
     // Можно добавить мутаторы для дополнительной обработки (опционально)
     // protected function createdAt(): Attribute { ... }
 }

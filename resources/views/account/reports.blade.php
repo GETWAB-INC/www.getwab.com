@@ -422,7 +422,7 @@
             </div>
             <div class="reports-cell report-code">
               <div class="cell-content">
-                <a href="{{ route('report') }}" class="a-report">
+                <a href="#" class="a-report">
                   <div class="cell-text">SFPR-GEO-EL-1</div>
                 </a>
               </div>
@@ -462,7 +462,7 @@
             </div>
             <div class="reports-cell report-code">
               <div class="cell-content">
-                <a href="{{ route('report') }}" class="a-report">
+                <a href="#" class="a-report">
                   <div class="cell-text">SFPR-DEPT-COLL-2</div>
                 </a>
               </div>

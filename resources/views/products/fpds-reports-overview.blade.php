@@ -1188,7 +1188,7 @@
                       </p>
                     </div>
                   </header>
-                  <a href="{{ route('reports') }}" class="reports-pricing__btn">Browse Reports</a>
+                  <a href="{{ route('library') }}" class="reports-pricing__btn">Browse Reports</a>
                 </div>
               </article>
 

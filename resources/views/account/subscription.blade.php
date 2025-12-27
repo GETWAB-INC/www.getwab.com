@@ -10,472 +10,9 @@
   <link rel="stylesheet" href="{{ asset('css/account.css') }}" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <style>
-    .subscription-container {
-      justify-content: flex-start;
-      align-items: center;
-      gap: 32px;
-      display: flex;
-    }
-
-    .subscription-card {
-      padding: 1px;
-      border-radius: 7px;
-      background: linear-gradient(105deg, #b5d9a7, #00aa89);
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      gap: 10px;
-      display: flex;
-      position: relative;
-    }
-
-    .card-content {
-      flex-direction: column;
-      padding: 48px 32px;
-      align-items: center;
-      gap: 63px;
-      display: flex;
-      width: 100%;
-      height: 100%;
-      background-color: #282828;
-      border-radius: 6px;
-
-    }
-
-    .card-header {
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      gap: 32px;
-      display: flex;
-    }
-
-    .card-title {
-      align-self: stretch;
-      text-align: center;
-      color: #b5d9a7;
-      font-size: 32px;
-      font-family: Overused Grotesk;
-      font-weight: 600;
-      line-height: 32px;
-      word-wrap: break-word;
-    }
-
-    .card-details {
-      align-self: stretch;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: flex-start;
-      gap: 24px;
-      display: flex;
-    }
-
-    .detail-row {
-      align-self: stretch;
-      justify-content: flex-start;
-      align-items: center;
-      gap: 4px;
-      display: inline-flex;
-    }
-
-    .detail-label {
-      justify-content: center;
-      display: flex;
-      flex-direction: column;
-      color: white;
-      font-size: 24px;
-      font-family: Overused Grotesk;
-      font-weight: 600;
-      word-wrap: break-word;
-    }
-
-    .detail-value {
-      justify-content: center;
-      display: flex;
-      flex-direction: column;
-      color: white;
-      font-size: 24px;
-      font-family: Overused Grotesk;
-      font-weight: 400;
-      word-wrap: break-word;
-    }
-
-    .card-total {
-      width: 360px;
-      justify-content: flex-start;
-      align-items: flex-start;
-      gap: 32px;
-      display: inline-flex;
-    }
-
-    .total-label {
-      flex: 1 1 0;
-      color: white;
-      font-size: 24px;
-      font-family: Overused Grotesk;
-      font-weight: 600;
-      word-wrap: break-word;
-    }
-
-    .total-value {
-      text-align: right;
-      color: white;
-      font-size: 24px;
-      font-family: Overused Grotesk;
-      font-weight: 600;
-      word-wrap: break-word;
-    }
-
-    .card-button {
-      padding: 20px 35px;
-      border-radius: 7px;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      display: inline-flex;
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card-button.active {
-      background: linear-gradient(360deg, #00ad8c 0%, #00755f 51%);
-    }
-
-    .card-button.active::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(360deg, #00624f 0%, #005d4b 97%);
-      opacity: 0;
-      transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      border-radius: 7px;
-      z-index: 1;
-    }
-
-    .card-button.active:hover::before {
-      opacity: 1;
-    }
-
-    .card-button.inactive {
-      background: #333333;
-      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    }
-
-    .button-text {
-      text-align: center;
-      justify-content: center;
-      display: flex;
-      flex-direction: column;
-      color: white;
-      font-size: 24px;
-      font-family: Overused Grotesk;
-      font-weight: 400;
-      line-height: 24px;
-      word-wrap: break-word;
-      position: relative;
-      z-index: 2;
-    }
-
-    .subscription-card:last-child .card-content {
-      gap: 181px;
-    }
-
-    .subscription-card:last-child .card-header {
-      width: 360px;
-      gap: 32px;
-    }
-
-    .subscription-card:last-child .card-title {
-      width: 306px;
-    }
-
-    @media (min-width: 768px) {
-
-      .mobile-dashboard-main {
-        display: none !important;
-      }
-    }
-
     @media (max-width: 767px) {
       .dashboard-sidebar {
         display: none !important;
-      }
-
-      .mobile-dashboard-main {
-        padding: 24px;
-      }
-
-      .subscription-container-mobile {
-        justify-content: flex-start;
-        align-items: center;
-        gap: 24px;
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-      }
-
-      .subscription-card-mobile {
-        padding: 24px;
-        background: #282828;
-        border-radius: 7px;
-        border: 1px solid #b5d9a7;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 10px;
-        display: flex;
-        position: relative;
-        width: 100%;
-        box-sizing: border-box;
-      }
-
-      .card-content-mobile {
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 24px;
-        display: flex;
-        width: 100%;
-      }
-
-      .card-header-mobile {
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 24px;
-        display: flex;
-        width: 100%;
-      }
-
-      .card-title-mobile {
-        align-self: stretch;
-        text-align: center;
-        color: #b5d9a7;
-        font-size: 16px;
-        font-family: Overused Grotesk;
-        font-weight: 700;
-        line-height: 16px;
-        word-wrap: break-word;
-      }
-
-      .card-details-mobile {
-        align-self: stretch;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: flex-start;
-        gap: 16px;
-        display: flex;
-      }
-
-      .detail-row-mobile {
-        align-self: stretch;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 4px;
-        display: inline-flex;
-      }
-
-      .detail-label-mobile {
-        justify-content: center;
-        display: flex;
-        flex-direction: column;
-        color: white;
-        font-size: 16px;
-        font-family: Overused Grotesk;
-        font-weight: 600;
-        line-height: 16px;
-        word-wrap: break-word;
-      }
-
-      .detail-value-mobile {
-        justify-content: center;
-        display: flex;
-        flex-direction: column;
-        color: white;
-        font-size: 16px;
-        font-family: Overused Grotesk;
-        font-weight: 400;
-        line-height: 16px;
-        word-wrap: break-word;
-      }
-
-      .card-total-mobile {
-        width: 100%;
-        justify-content: flex-start;
-        align-items: flex-start;
-        gap: 32px;
-        display: inline-flex;
-      }
-
-      .total-label-mobile {
-        flex: 1 1 0;
-        color: white;
-        font-size: 16px;
-        font-family: Overused Grotesk;
-        font-weight: 600;
-        line-height: 16px;
-        word-wrap: break-word;
-      }
-
-      .total-value-mobile {
-        text-align: right;
-        color: white;
-        font-size: 16px;
-        font-family: Overused Grotesk;
-        font-weight: 600;
-        line-height: 16px;
-        word-wrap: break-word;
-      }
-
-      .card-button-mobile {
-        padding: 20px 35px;
-        border-radius: 7px;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        display: inline-flex;
-        cursor: pointer;
-        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        position: relative;
-        overflow: hidden;
-        width: 100%;
-        box-sizing: border-box;
-      }
-
-      .card-button-mobile.active {
-        background: linear-gradient(360deg, #00ad8c 0%, #00755f 51%);
-      }
-
-      .card-button-mobile.active::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(360deg, #00624f 0%, #005d4b 97%);
-        opacity: 0;
-        transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        border-radius: 7px;
-        z-index: 1;
-      }
-
-      .card-button-mobile.active:hover::before {
-        opacity: 1;
-      }
-
-      .card-button-mobile.inactive {
-        background: #333333;
-        transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      }
-
-      .button-text-mobile {
-        text-align: center;
-        justify-content: center;
-        display: flex;
-        flex-direction: column;
-        color: white;
-        font-size: 16px;
-        font-family: Overused Grotesk;
-        font-weight: 400;
-        line-height: 16px;
-        word-wrap: break-word;
-        position: relative;
-        z-index: 2;
-      }
-
-      .subscription-card-mobile:last-child .card-content-mobile {
-        gap: 24px;
-      }
-
-      .subscription-card-mobile:last-child .card-header-mobile {
-        width: auto;
-        gap: 24px;
-      }
-
-      .subscription-container {
-        flex-direction: column;
-        align-items: flex-start;
-        width: 327px;
-        gap: 24px;
-        margin: 0 auto;
-      }
-
-      .subscription-card {
-        width: 100%;
-        padding: 24px;
-        background: #282828;
-        border-radius: 7px;
-        border: 1px solid #b5d9a7;
-        gap: 10px;
-      }
-
-      .card-content {
-        gap: 24px;
-      }
-
-      .card-header {
-        gap: 24px;
-      }
-
-      .card-title {
-        color: #b5d9a7;
-        font-size: 16px;
-        font-weight: 700;
-        line-height: 16px;
-      }
-
-      .card-details {
-        gap: 16px;
-      }
-
-      .detail-label,
-      .detail-value {
-        font-size: 16px;
-        line-height: 16px;
-      }
-
-      .card-total {
-        gap: 32px;
-      }
-
-      .total-label,
-      .total-value {
-        font-size: 16px;
-        line-height: 16px;
-        font-weight: 700;
-      }
-
-      .card-button {
-        padding: 20px 35px;
-        border-radius: 7px;
-      }
-
-      .card-button.active {
-        background: linear-gradient(360deg, #00ad8c 0%, #00755f 51%);
-      }
-
-      .card-button.inactive {
-        background: #333333;
-      }
-
-      .button-text {
-        font-size: 16px;
-        line-height: 16px;
-      }
-
-      .subscription-card:last-child .card-content {
-        gap: 24px;
-      }
-
-      .subscription-card:last-child .card-header {
-        height: auto;
-        width: auto;
       }
     }
   </style>
@@ -503,86 +40,68 @@
           </p>
         </div>
 
-        <div class="subscription-container">
-          <div class="subscription-card">
-            <div class="card-content">
-              <div class="card-header">
-                <div class="card-title">FPDS Query</div>
-                <div class="card-details">
-                  <div class="detail-row">
-                    <div class="detail-label">Status:</div>
-                    <div class="detail-value">Active</div>
-                  </div>
-                  <div class="detail-row">
-                    <div class="detail-label">Next billing:</div>
-                    <div class="detail-value">Aug 23, 2025</div>
-                  </div>
-                  <div class="detail-row">
-                    <div class="detail-label">Plan:</div>
-                    <div class="detail-value">Monthly</div>
-                  </div>
-                </div>
-                <div class="card-total">
-                  <div class="total-label">Total</div>
-                  <div class="total-value">$49.00</div>
-                </div>
-              </div>
-              <div class="card-button inactive">
-                <div class="button-text">Cancel Subscription</div>
-              </div>
-            </div>
-          </div>
+        
+        <div class="cards-desktop">
 
-          <div class="subscription-card">
-            <div class="card-content">
-              <div class="card-header">
-                <div class="card-title">FPDS Reports</div>
-                <div class="card-details">
-                  <div class="detail-row">
-                    <div class="detail-label">Status:</div>
-                    <div class="detail-value">Trial (7 days left)</div>
-                  </div>
-                  <div class="detail-row">
-                    <div class="detail-label">Next billing:</div>
-                    <div class="detail-value">July 30, 2025</div>
-                  </div>
-                  <div class="detail-row">
-                    <div class="detail-label">Plan:</div>
-                    <div class="detail-value">Trial</div>
-                  </div>
-                </div>
-                <div class="card-total">
-                  <div class="total-label">Total</div>
-                  <div class="total-value">$49.00</div>
-                </div>
-              </div>
-              <div class="card-button active">
-                <div class="button-text">Upgrade</div>
-              </div>
-            </div>
-          </div>
+          <form method="POST" action="{{ route('order.subscription') }}">
+            <input type="hidden" name="subscription_type" value="fpds_query">
+            @csrf
+            <div class="card-desktop">
 
-          <div class="subscription-card">
-            <div class="card-content">
-              <div class="card-header">
-                <div class="card-title">FPDS Charts</div>
-                <div class="card-details">
-                  <div class="detail-row">
-                    <div class="detail-label">Status:</div>
-                    <div class="detail-value">Not Subscribed</div>
+              <div class="content-desktop">
+                <div class="details-desktop">
+                  <h2 class="title-desktop">FPDS Query</h2>
+                  <p class="remaining-desktop">Status: Not Subscribed</p>
+
+                  <div class="selector-desktop">
+                    <select class="dropdown-trigger" name="subscription_price" id="elem-reports-select" required>
+                      <option value="monthly" data-price="49.00">Monthly ($49.00/month)</option>
+                      <option value="yearly" data-price="390.00">Yearly ($390.00/year) — Save 32%</option>
+                    </select>
+
                   </div>
-                  <div class="detail-row">
-                    <div class="detail-label">Access:</div>
-                    <div class="detail-value">View-only</div>
+
+                  <div class="price-desktop">
+                    <span>Total</span>
+                    <span id="elem-price">$0.00</span>
                   </div>
+
+                  <button class="button-desktop">Activate</button>
                 </div>
               </div>
-              <div class="card-button active">
-                <div class="button-text">Activate</div>
+
+            </div>
+          </form>
+
+          <form method="POST" action="{{ route('order.subscription') }}">
+            <input type="hidden" name="subscription_type" value="fpds_reports">
+            @csrf
+            <div class="card-desktop">
+              <div class="content-desktop">
+                <div class="details-desktop">
+                  <h2 class="title-desktop">FPDS Reports</h2>
+                  <p class="remaining-desktop">Status: Not Subscribed</p>
+
+                  <div class="selector-desktop">
+                    <select class="dropdown-trigger" name="subscription_price" id="composite-reports-select" required>
+                      <option value="monthly" data-price="149.00">Monthly ($799.00/month)</option>
+                      <option value="yearly" data-price="670.00">Yearly ($6490.00/year) — Save 32%</option>
+                    </select>
+
+                  </div>
+
+                  <div class="price-desktop">
+                    <span>Total</span>
+                    <span id="composite-price-desktop">$0.00</span>
+                  </div>
+
+                  <button class="button-desktop">Activate</button>
+                </div>
               </div>
             </div>
-          </div>
+          </form>
         </div>
+
       </div>
 
     </main>
@@ -596,87 +115,68 @@
           <div class="mobile-description">
             Manage your subscription and billing preferences.
           </div>
+          
           <div class="mobile-list">
-            <div class="subscription-container-mobile">
-              <div class="subscription-card-mobile">
-                <div class="card-content-mobile">
-                  <div class="card-header-mobile">
-                    <div class="card-title-mobile">FPDS Query</div>
-                    <div class="card-details-mobile">
-                      <div class="detail-row-mobile">
-                        <div class="detail-label-mobile">Status:</div>
-                        <div class="detail-value-mobile">Active</div>
+
+            <form method="POST" action="{{ route('order.subscription') }}">
+              <input type="hidden" name="subscription_type" value="fpds_query">
+              @csrf
+              <div class="cards-mobile">
+                <div class="card-mobile">
+                  <div class="inner-mobile">
+                    <div class="header-mobile">
+                      <div class="title-mobile">FPDS Query</div>
+                      <div class="remaining-mobile">Status: Not Subscribed</div>
+
+                      <div class="selector-desktop">
+                        <select class="dropdown-trigger" name="subscription_price" id="mobile-elem-select" required>
+                          <option value="monthly" data-price="49.00">Monthly ($49.00/month)</option>
+                          <option value="yearly" data-price="490.00">Yearly ($490.00/year) — Save 16%</option>
+                  
+                        </select>
+
                       </div>
-                      <div class="detail-row-mobile">
-                        <div class="detail-label-mobile">Next billing:</div>
-                        <div class="detail-value-mobile">Aug 23, 2025</div>
-                      </div>
-                      <div class="detail-row-mobile">
-                        <div class="detail-label-mobile">Plan:</div>
-                        <div class="detail-value-mobile">Monthly</div>
+                      <div class="price-mobile">
+                        <div class="price-label-mobile">Total</div>
+                        <div class="price-value-mobile" id="elementary-price-mobile">$49.00</div>
                       </div>
                     </div>
-                    <div class="card-total-mobile">
-                      <div class="total-label-mobile">Total</div>
-                      <div class="total-value-mobile">$49.00</div>
-                    </div>
-                  </div>
-                  <div class="card-button-mobile inactive">
-                    <div class="button-text-mobile">Cancel Subscription</div>
+                    <button class="button-mobile">
+                      <div class="button-text-mobile">Activate</div>
+                    </button>
                   </div>
                 </div>
-              </div>
+            </form>
 
-              <div class="subscription-card-mobile">
-                <div class="card-content-mobile">
-                  <div class="card-header-mobile">
-                    <div class="card-title-mobile">FPDS Reports</div>
-                    <div class="card-details-mobile">
-                      <div class="detail-row-mobile">
-                        <div class="detail-label-mobile">Status:</div>
-                        <div class="detail-value-mobile">Trial (7 days left)</div>
-                      </div>
-                      <div class="detail-row-mobile">
-                        <div class="detail-label-mobile">Next billing:</div>
-                        <div class="detail-value-mobile">July 30, 2025</div>
-                      </div>
-                      <div class="detail-row-mobile">
-                        <div class="detail-label-mobile">Plan:</div>
-                        <div class="detail-value-mobile">Trial</div>
-                      </div>
-                    </div>
-                    <div class="card-total-mobile">
-                      <div class="total-label-mobile">Total</div>
-                      <div class="total-value-mobile">$49.00</div>
-                    </div>
-                  </div>
-                  <div class="card-button-mobile active">
-                    <div class="button-text-mobile">Upgrade</div>
-                  </div>
-                </div>
-              </div>
+            <form method="POST" action="{{ route('order.subscription') }}">
+              <input type="hidden" name="subscription_type" value="fpds_reports">
+              @csrf
+              <div class="card-mobile">
+                <div class="inner-mobile">
+                  <div class="header-mobile">
+                    <div class="title-mobile">FPDS Reports</div>
+                    <div class="remaining-mobile">Status: Not Subscribed</div>
 
-              <div class="subscription-card-mobile">
-                <div class="card-content-mobile">
-                  <div class="card-header-mobile">
-                    <div class="card-title-mobile">FPDS Charts</div>
-                    <div class="card-details-mobile">
-                      <div class="detail-row-mobile">
-                        <div class="detail-label-mobile">Status:</div>
-                        <div class="detail-value-mobile">Not Subscribed</div>
-                      </div>
-                      <div class="detail-row-mobile">
-                        <div class="detail-label-mobile">Access:</div>
-                        <div class="detail-value-mobile">View-only</div>
-                      </div>
+                    <div class="selector-desktop">
+                      <select class="dropdown-trigger" name="reports_count" id="mobile-composite-select" required>
+                        <option value="monthly" data-price="799.00">Monthly ($799.00/month)</option>
+                        <option value="yearly" data-price="6490.00">Yearly ($6490.00/year) — Save 32%</option>
+                      </select>
+
+                    </div>
+
+                    <div class="price-mobile">
+                      <div class="price-label-mobile">Total</div>
+                      <div class="price-value-mobile" id="composite-price-mobile">$0.00</div>
                     </div>
                   </div>
-                  <div class="card-button-mobile active">
+                  <button class="button-mobile">
                     <div class="button-text-mobile">Activate</div>
-                  </div>
+                  </button>
                 </div>
               </div>
-            </div>
+            </form>
+
           </div>
         </div>
 

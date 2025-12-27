@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Report;
 
 class AccountController extends Controller
 {
@@ -14,43 +15,52 @@ class AccountController extends Controller
     {
         $user = Auth::user();
 
-        return view('account.account', compact('user'));
+        $reports = Report::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('account.account', compact('user', 'reports'));
     }
 
     public function reports(Request $request)
     {
         $user = Auth::user();
-    // Сохраняем текущий URL как последний посещённый
-    session(['last_account_section' => route('account.reports')]);
-    return view('account.reports', compact('user'));
+        // Сохраняем текущий URL как последний посещённый
+        session(['last_account_section' => route('account.reports')]);
+
+        $reports = Report::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('account.reports', compact('user', 'reports'));
     }
 
     public function packages(Request $request)
     {
         $user = Auth::user();
-    session(['last_account_section' => route('account.packages')]);
-    return view('account.packages', compact('user'));
+        session(['last_account_section' => route('account.packages')]);
+        return view('account.packages', compact('user'));
     }
 
     public function subscription(Request $request)
     {
         $user = Auth::user();
-    session(['last_account_section' => route('account.subscription')]);
-    return view('account.subscription', compact('user'));
+        session(['last_account_section' => route('account.subscription')]);
+        return view('account.subscription', compact('user'));
     }
 
     public function billing(Request $request)
     {
         $user = Auth::user();
-    session(['last_account_section' => route('account.billing')]);
-    return view('account.billing', compact('user'));
+        session(['last_account_section' => route('account.billing')]);
+        return view('account.billing', compact('user'));
     }
 
     public function profile(Request $request)
     {
         $user = Auth::user();
-    session(['last_account_section' => route('account.profile')]);
-    return view('account.profile', compact('user'));
+        session(['last_account_section' => route('account.profile')]);
+        return view('account.profile', compact('user'));
     }
 
     public function updateProfile(Request $request)

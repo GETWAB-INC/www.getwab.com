@@ -4,6 +4,9 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\LibraryController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\ReportPackageController;
+use App\Http\Controllers\SubscriptionController;
 
 // -------------------- Static Pages --------------------
 
@@ -55,14 +58,18 @@ Route::post('/update-profile', [AccountController::class, 'updateProfile'])->nam
 Route::post('/account/upload-avatar', [AccountController::class, 'uploadAvatar'])->name('upload.avatar')->middleware('auth');
 Route::delete('/account/remove-avatar', [AccountController::class, 'removeAvatar'])->name('remove.avatar')->middleware('auth');
 
+Route::post('/order/package', action: [ReportPackageController::class, 'orderPackage'])->name('order.package')->middleware('auth');
+Route::post('/order/subscription', action: [SubscriptionController::class, 'orderSubscription'])->name('order.subscription')->middleware('auth');
+
+
 // contact page
 Route::get('/contact-us', function () {return view('contact-us');})->name('contact-us');
 
 // library
-Route::get('/library', [LibraryController::class, 'index'])->name('library')->middleware('auth');
+Route::get('/library', [LibraryController::class, 'index'])->name('library');
 
 // library/SFPR-GEO-EL-1 page
-Route::get('/library/{report_code}', [LibraryController::class, 'show'])->name('report.show')->middleware('auth');
+Route::get('/library/{report_code}', [LibraryController::class, 'show'])->name('report.show');
 
 // Generate
 Route::post('/report/generate', [ReportController::class, 'generate'])->name('report.generate')->middleware('auth');
@@ -91,6 +98,9 @@ Route::get('/mission', function () { return view('mission'); })->name('mission')
 
 // checkout page
 Route::get('/checkout', function () { return view('checkout'); })->name('checkout')->middleware('auth');
+Route::post('/checkout/remove-item', [CheckoutController::class, 'removeItem'])->name('checkout.remove-item')->middleware('auth');
+Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process')->middleware('auth');
+
 // thank-you page
 Route::get('/thank-you', function () { return view('thank-you'); })->middleware('auth');
 // cancelled page

@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('report_id')->unique();
-            $table->string('report_code')->unique();
+            $table->string('report_id')->nullable()->unique();
+            $table->string('report_code');
             $table->string('title');
             $table->string('status')->default('draft');
             $table->timestamps();

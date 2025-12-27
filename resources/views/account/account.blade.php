@@ -210,122 +210,104 @@
           </p>
         </div>
 
-        <div class="reports-table">
-          <div class="reports-row">
-            <div class="reports-header report-id">
-              <div class="header-content">
-                <div class="header-text">Report ID</div>
-              </div>
-            </div>
-            <div class="reports-header report-code">
-              <div class="header-content">
-                <div class="header-text">Report Code</div>
-              </div>
-            </div>
-            <div class="reports-header title">
-              <div class="header-content">
-                <div class="header-text">Title</div>
-              </div>
-            </div>
-            <div class="reports-header date">
-              <div class="header-content">
-                <div class="header-text">Date</div>
-              </div>
-            </div>
-            <div class="reports-header status">
-              <div class="header-content">
-                <div class="header-text">Status</div>
-              </div>
-            </div>
-            <div class="reports-header action">
-              <div class="header-content">
-                <div class="header-text">Action</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 1 -->
-          <div class="reports-row">
-            <div class="reports-cell report-id">
+        @if($reports->isEmpty())
+          <div class="reports-table">
+            <div class="reports-row"
+              style="background: #282828; padding: 20px; justify-content: center; text-align: center;">
               <div class="cell-content">
-                <div class="cell-text">RPT-20250719-1145</div>
-              </div>
-            </div>
-            <div class="reports-cell report-code">
-              <div class="cell-content">
-                <a href="{{ route('report') }}" class="a-report">
-                  <div class="cell-text">SFPR-GEO-EL-1</div>
+                <div class="cell-text" style="font-size: 28px; font-weight: 600; margin-bottom: 12px;">
+                  You don’t have any reports yet.
+                </div>
+                <div class="cell-text" style="font-size: 20px; color: #b5d9a7; margin-bottom: 20px;">
+                  Explore our library and generate your first report today!
+                </div>
+                <a href="{{ route('library') }}" class="hero-button">
+                  Go to Library
                 </a>
-              </div>
-            </div>
-            <div class="reports-cell title">
-              <div class="cell-content">
-                <div class="cell-text">Spending by U.S. State (2020–2024)</div>
-              </div>
-            </div>
-            <div class="reports-cell date">
-              <div class="cell-content">
-                <div class="cell-text">July 19, 2025</div>
-              </div>
-            </div>
-            <div class="reports-cell status">
-              <div class="status-container">
-                <div class="status-icon">
-                  <img src="{{ asset('img/ico/Status-done-ico.svg') }}" alt="" />
-                </div>
-              </div>
-            </div>
-            <div class="reports-cell action">
-              <div class="action-container">
-                <div class="action-icon">
-                  <img src="{{ asset('img/ico/Action-done-ico.svg') }}" alt="" />
-                </div>
+
               </div>
             </div>
           </div>
+        @else
 
-          <!-- 2 -->
-          <div class="reports-row">
-            <div class="reports-cell report-id">
-              <div class="cell-content">
-                <div class="cell-text">RPT-20250721-1423</div>
+          <div class="reports-table">
+            <div class="reports-row">
+              <div class="reports-header report-id">
+                <div class="header-content">
+                  <div class="header-text">Report ID</div>
+                </div>
               </div>
-            </div>
-            <div class="reports-cell report-code">
-              <div class="cell-content">
-                <a href="{{ route('report') }}" class="a-report">
-                  <div class="cell-text">SFPR-DEPT-COLL-2</div>
-                </a>
+              <div class="reports-header report-code">
+                <div class="header-content">
+                  <div class="header-text">Report Code</div>
+                </div>
               </div>
-            </div>
-            <div class="reports-cell title">
-              <div class="cell-content">
-                <div class="cell-text">Dept-Level Trends for California</div>
+              <div class="reports-header title">
+                <div class="header-content">
+                  <div class="header-text">Title</div>
+                </div>
               </div>
-            </div>
-            <div class="reports-cell date">
-              <div class="cell-content">
-                <div class="cell-text">July 21, 2025</div>
+              <div class="reports-header date">
+                <div class="header-content">
+                  <div class="header-text">Date</div>
+                </div>
               </div>
-            </div>
-            <div class="reports-cell status">
-              <div class="status-container">
-                <div class="status-icon">
-                  <img src="{{ asset('img/ico/Status-loading-ico.svg') }}" alt="" />
+              <div class="reports-header status">
+                <div class="header-content">
+                  <div class="header-text">Status</div>
+                </div>
+              </div>
+              <div class="reports-header action">
+                <div class="header-content">
+                  <div class="header-text">Action</div>
                 </div>
               </div>
             </div>
-            <div class="reports-cell action">
-              <div class="action-container">
-                <div class="action-icon">
-                  <img src="{{ asset('img/ico/Action-loading-ico.svg') }}" alt="" />
+
+            @foreach($reports as $report)
+              <div class="reports-row">
+                <div class="reports-cell report-id">
+                  <div class="cell-content">
+                    <div class="cell-text">{{ $report->report_id ?? 'N/A' }}</div>
+                  </div>
+                </div>
+                <div class="reports-cell report-code">
+                  <div class="cell-content">
+                    <a href="{{ route('report.show', ['report_code' => $report->report_code]) }}" class="a-report">
+                      <div class="cell-text">{{ $report->report_code ?? 'N/A' }}</div>
+                    </a>
+                  </div>
+                </div>
+                <div class="reports-cell title">
+                  <div class="cell-content">
+                    <div class="cell-text">{{ $report->title ?? 'No title' }}</div>
+                  </div>
+                </div>
+                <div class="reports-cell date">
+                  <div class="cell-content">
+                    <div class="cell-text">
+                      {{ $report->created_at ? $report->created_at->format('F d, Y') : 'Unknown date' }}</div>
+                  </div>
+                </div>
+                <div class="reports-cell status">
+                  <div class="status-container">
+                    <div class="status-icon">
+                      <div class="cell-text">{{ $report->status ?? 'No title' }}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="reports-cell action">
+                  <div class="action-container">
+                    <div class="action-icon">
+                      <img src="{{ asset('img/ico/Action-loading-ico.svg') }}" alt="" />
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            @endforeach
 
           </div>
-
-        </div>
+        @endif
 
       </div>
 

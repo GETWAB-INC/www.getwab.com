@@ -50,4 +50,12 @@ class User extends Authenticatable
             'phone_verified_at' => 'datetime',
         ];
     }
+
+    /**
+     * Связь с пакетами отчётов
+     */
+    public function reportPackages()
+    {
+        return $this->hasMany(ReportPackage::class, 'user_id', 'id');
+    }
 }
