@@ -595,12 +595,12 @@
                     <div class="billing-cell-data billing-cell-amount">
                       <div class="billing-cell-content">
                         <div class="billing-cell-data-center">
-    ${{ number_format(
-        isset($item['report_price']) ? $item['report_price'] :
-            (isset($item['package_price']) ? $item['package_price'] : $item['subscription_price']),
-        2, '.', ''
-    ) }}
-</div>
+                        ${{ number_format(
+                        isset($item['report_price']) ? $item['report_price'] :
+                              (isset($item['package_price']) ? $item['package_price'] : $item['subscription_price']),
+                           2, '.', ''
+                        ) }}
+                        </div>
 
                       </div>
                     </div>
@@ -615,117 +615,47 @@
             @endif
           @endforeach
 
-          <div class="billing-data-row">
-            <div class="billing-cell-data billing-cell-date">
-              <div class="billing-cell-content">
-                <div class="billing-cell-data-text">July 23, 2025</div>
-              </div>
-            </div>
-            <div class="billing-cell-data billing-cell-description">
-              <div class="billing-cell-content">
-                <div class="billing-cell-data-text">FPDS Query Monthly Subscription</div>
-              </div>
-            </div>
-            <div class="billing-cell-data billing-cell-card">
-              <div class="billing-cell-content">
-                <div class="billing-cell-data-center">Visa •••• 1111</div>
-              </div>
-            </div>
-            <div class="billing-cell-data billing-cell-amount">
-              <div class="billing-cell-content">
-                <div class="billing-cell-data-center">$199.00</div>
-              </div>
-            </div>
-            <div class="billing-cell-data billing-cell-status">
-              <div class="billing-status-cell">
-                <div class="billing-cell-data-center">Paid</div>
-              </div>
-            </div>
-          </div>
 
-          <div class="billing-data-row">
-            <div class="billing-cell-data billing-cell-date">
-              <div class="billing-cell-content">
-                <div class="billing-cell-data-text">July 18, 2025</div>
-              </div>
+          @foreach ($billingHistory as $record)
+    <div class="billing-data-row">
+        <div class="billing-cell-data billing-cell-date">
+            <div class="billing-cell-content">
+                <div class="billing-cell-data-text">
+                    {{ $record->getFormattedDate() }}
+                </div>
             </div>
-            <div class="billing-cell-data billing-cell-description">
-              <div class="billing-cell-content">
-                <div class="billing-cell-data-text">One-time Report: SFPR-DEPT-EL-3</div>
-              </div>
+        </div>
+        <div class="billing-cell-data billing-cell-description">
+            <div class="billing-cell-content">
+                <div class="billing-cell-data-text">
+                    {{ $record->description }}
+                </div>
             </div>
-            <div class="billing-cell-data billing-cell-card">
-              <div class="billing-cell-content">
-                <div class="billing-cell-data-center">MasterCard •••• 2222</div>
-              </div>
+        </div>
+        <div class="billing-cell-data billing-cell-card">
+            <div class="billing-cell-content">
+                <div class="billing-cell-data-center">
+                    {{ $record->getMaskedCard() }}
+                </div>
             </div>
-            <div class="billing-cell-data billing-cell-amount">
-              <div class="billing-cell-content">
-                <div class="billing-cell-data-center">$149.00</div>
-              </div>
+        </div>
+        <div class="billing-cell-data billing-cell-amount">
+            <div class="billing-cell-content">
+                <div class="billing-cell-data-center">
+                    {{ $record->getFormattedAmount() }}
+                </div>
             </div>
-            <div class="billing-cell-data billing-cell-status">
-              <div class="billing-status-cell">
-                <div class="billing-cell-data-center">Paid</div>
-              </div>
+        </div>
+        <div class="billing-cell-data billing-cell-status">
+            <div class="billing-status-cell">
+                <div class="billing-cell-data-center {{ $record->status }}">
+                    {{ ucfirst($record->status) }}
+                </div>
             </div>
-          </div>
+        </div>
+    </div>
+@endforeach
 
-          <div class="billing-data-row">
-            <div class="billing-cell-data billing-cell-date">
-              <div class="billing-cell-content">
-                <div class="billing-cell-data-text">July 10, 2025</div>
-              </div>
-            </div>
-            <div class="billing-cell-data billing-cell-description">
-              <div class="billing-cell-content">
-                <div class="billing-cell-data-text">FPDS Reports Trial Activation</div>
-              </div>
-            </div>
-            <div class="billing-cell-data billing-cell-card">
-              <div class="billing-cell-content">
-                <div class="billing-cell-data-center">Amex •••• 3456</div>
-              </div>
-            </div>
-            <div class="billing-cell-data billing-cell-amount">
-              <div class="billing-cell-content">
-                <div class="billing-cell-data-center">$0.00</div>
-              </div>
-            </div>
-            <div class="billing-cell-data billing-cell-status">
-              <div class="billing-status-cell">
-                <div class="billing-cell-data-center">Trial</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="billing-data-row">
-            <div class="billing-cell-data billing-cell-date">
-              <div class="billing-cell-content">
-                <div class="billing-cell-data-text">August 1, 2025</div>
-              </div>
-            </div>
-            <div class="billing-cell-data billing-cell-description">
-              <div class="billing-cell-content">
-                <div class="billing-cell-data-text">Attempted Payment: FPDS Query Renewal</div>
-              </div>
-            </div>
-            <div class="billing-cell-data billing-cell-card">
-              <div class="billing-cell-content">
-                <div class="billing-cell-data-center">Visa •••• 1111</div>
-              </div>
-            </div>
-            <div class="billing-cell-data billing-cell-amount">
-              <div class="billing-cell-content">
-                <div class="billing-cell-data-center">$199.00</div>
-              </div>
-            </div>
-            <div class="billing-cell-data billing-cell-status">
-              <div class="billing-status-cell">
-                <div class="billing-cell-data-center declined">Declined</div>
-              </div>
-            </div>
-          </div>
 
         </div>
       </div>

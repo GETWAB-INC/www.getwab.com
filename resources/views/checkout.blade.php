@@ -231,33 +231,6 @@
             width: 100%;
         }
 
-        .checkout-cost-line-item {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            padding-bottom: 16px;
-            margin-bottom: 16px;
-        }
-
-        .checkout-cost-label,
-        .checkout-cost-amount {
-            font-weight: 400;
-            font-size: 24px;
-            line-height: 31px;
-            color: #FFFFFF;
-            margin: 0;
-        }
-
-        .checkout-cost-divider {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background-color: #FFFFFF;
-            opacity: 0.3;
-        }
-
         .checkout-total-summary {
             display: flex;
             justify-content: space-between;
@@ -881,7 +854,6 @@
         .step-3-card-number-field-input .step-3-form-input-field {
             width: 100%;
             text-align: left;
-            font-size: 16px;
         }
 
         .step-3-form-fields-row {
@@ -1272,11 +1244,6 @@
                 justify-content: center;
             }
 
-            .checkout-cost-label,
-            .checkout-cost-amount {
-                font-size: 16px;
-            }
-
             .checkout-total-label,
             .checkout-total-amount {
                 font-size: 20px;
@@ -1549,12 +1516,11 @@
 
     @include('include.header')
 
-        {{-- <pre style="color: white; font-size: 24px;">
+    {{-- <pre style="color: white; font-size: 24px;">
             {{ print_r(session()->all(), true) }}
         </pre> --}}
-        
-<form method="POST" action="{{ route('checkout.process') }}">
-    @csrf
+
+    
         <div class="checkout-page">
 
             <div class="checkout-header">
@@ -1597,7 +1563,8 @@
                             <div class="checkout-order-item-details">
                                 <h1 class="checkout-product-name">FPDS Query</h1>
                                 <p class="checkout-product-type">Subscription</p>
-                                <p class="checkout-product-frequency">{{ session('fpds_query_subscription.subscription_frequency') }}</p>
+                                <p class="checkout-product-frequency">
+                                    {{ session('fpds_query_subscription.subscription_frequency') }}</p>
                             </div>
                             <div class="checkout-order-item-pricing">
                                 <h1 class="checkout-product-price">
@@ -1619,7 +1586,8 @@
                             <div class="checkout-order-item-details">
                                 <h1 class="checkout-product-name">FPDS Reports</h1>
                                 <p class="checkout-product-type">Subscription</p>
-                                <p class="checkout-product-frequency">{{ session('fpds_report_subscription.subscription_frequency') }}</p>
+                                <p class="checkout-product-frequency">
+                                    {{ session('fpds_report_subscription.subscription_frequency') }}</p>
                             </div>
                             <div class="checkout-order-item-pricing">
                                 <h1 class="checkout-product-price">
@@ -1729,22 +1697,12 @@
 
                 <div class="checkout-payment-breakdown">
                     <div class="checkout-payment-calculations">
-                        <div class="checkout-cost-line-item">
-                            <h2 class="checkout-cost-label">Subtotal:</h2>
-                            <p class="checkout-cost-amount">$0.00</p>
-                            <div class="checkout-cost-divider"></div>
-                        </div>
-
-                        <div class="checkout-cost-line-item">
-                            <h2 class="checkout-cost-label">Sales Tax (8.5%):</h2>
-                            <p class="checkout-cost-amount">$0.00</p>
-                            <div class="checkout-cost-divider"></div>
-                        </div>
 
                         <div class="checkout-total-summary">
-                            <h1 class="checkout-total-label">Total Due:</h1>
-                            <h1 class="checkout-total-amount">$0.00</h1>
+                            <div class="checkout-total-label">Total Due:</div>
+                            <div class="checkout-total-amount"></div>
                         </div>
+
                     </div>
                 </div>
 
@@ -1753,7 +1711,8 @@
         </div>
 
 
-
+    <form method="POST" action="{{ route('checkout.process') }}">
+        @csrf
         <div class="form-item">
 
             <div class="active-step-2-header">
@@ -1790,14 +1749,14 @@
                     <div class="form-group">
                         <label class="form-label" for="first-name">First Name</label>
                         <input type="text" id="first-name" name="first-name" class="input-box"
-                            placeholder="Enter your first name" value="Ilia">
+                            placeholder="Enter your first name" value="">
                     </div>
 
 
                     <div class="form-group">
                         <label class="form-label" for="last-name">Last Name</label>
                         <input type="text" id="last-name" name="last-name" class="input-box"
-                            placeholder="Enter your last name" value="Oborin">
+                            placeholder="Enter your last name" value="">
                     </div>
 
 
@@ -1814,11 +1773,7 @@
                                 </div>
                             </div>
                             <div class="custom-dropdown" id="country-dropdown">
-                                <div class="dropdown-option selected" data-value="United States">United States</div>
-                                <div class="dropdown-option" data-value="Canada">Canada</div>
-                                <div class="dropdown-option" data-value="United Kingdom">United Kingdom</div>
-                                <div class="dropdown-option" data-value="Germany">Germany</div>
-                                <div class="dropdown-option" data-value="France">France</div>
+                                <div class="dropdown-option selected" name="country" data-value="United States">United States</div>
                             </div>
                         </div>
                     </div>
@@ -1835,7 +1790,7 @@
                                 </div>
                             </div>
                             <div class="custom-dropdown" id="state-dropdown">
-                                <div class="dropdown-option selected" data-value="New York">New York</div>
+                                <div class="dropdown-option" data-value="New York">New York</div>
                                 <div class="dropdown-option" data-value="California">California</div>
                                 <div class="dropdown-option" data-value="Florida">Florida</div>
                                 <div class="dropdown-option" data-value="Texas">Texas</div>
@@ -1916,32 +1871,26 @@
                                 <div class="step-3-custom-select">
                                     <div class="step-3-select-trigger">
                                         <img src="{{ asset('img/ico/visa-ico.png') }}" alt="Edit Item">
-                                        <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}"
-                                            alt="Edit Item">
+                                        <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
                                     </div>
 
                                     <div class="step-3-select-options">
 
-                                        <button class="step-3-select-option" data-value="visa">
-
-
+                                        <div class="step-3-select-option" data-value="visa">
                                             <img src="{{ asset('img/ico/visa-ico.png') }}" alt="Edit Item">
-                                        </button>
+                                        </div>
 
-                                        <button class="step-3-select-option" data-value="mastercard">
-
+                                        <div class="step-3-select-option" data-value="mastercard">
                                             <img src="{{ asset('img/ico/mastercard-ico.png') }}" alt="Edit Item">
-                                        </button>
+                                        </div>
 
-                                        <button class="step-3-select-option" data-value="amex">
-
+                                        <div class="step-3-select-option" data-value="amex">
                                             <img src="{{ asset('img/ico/amex-ico.png') }}" alt="Edit Item">
-                                        </button>
+                                        </div>
 
-                                        <button class="step-3-select-option" data-value="discover">
-
+                                        <div class="step-3-select-option" data-value="discover">
                                             <img src="{{ asset('img/ico/discover-ico.png') }}" alt="Edit Item">
-                                        </button>
+                                        </div>
 
 
                                     </div>
@@ -1951,8 +1900,7 @@
                             <div class="step-3-form-field step-3-card-number-field">
                                 <label class="step-3-field-label">Card Number</label>
                                 <div class="step-3-input-field step-3-card-number-field-input">
-                                    <input type="text" class="step-3-form-input-field step-3-card-number-input"
-                                        placeholder="0000 0000 0000 0000" maxlength="19">
+                                    <input type="text" class="step-3-form-input-field step-3-card-number-input" placeholder="0000 0000 0000 0000" maxlength="19">
                                 </div>
                             </div>
 
@@ -1963,41 +1911,36 @@
                                         <div class="step-3-custom-select step-3-month-select-field">
                                             <div class="step-3-select-trigger">
                                                 <span class="step-3-selected-option-text">01</span>
-                                                <img class="step-3-select-arrow"
-                                                    src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
+                                                <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
                                             </div>
                                             <div class="step-3-select-options">
-                                                <button class="step-3-select-option step-3-selected"
-                                                    data-value="01">01</button>
-                                                <button class="step-3-select-option" data-value="02">02</button>
-                                                <button class="step-3-select-option" data-value="03">03</button>
-                                                <button class="step-3-select-option" data-value="04">04</button>
-                                                <button class="step-3-select-option" data-value="05">05</button>
-                                                <button class="step-3-select-option" data-value="06">06</button>
-                                                <button class="step-3-select-option" data-value="07">07</button>
-                                                <button class="step-3-select-option" data-value="08">08</button>
-                                                <button class="step-3-select-option" data-value="09">09</button>
-                                                <button class="step-3-select-option" data-value="10">10</button>
-                                                <button class="step-3-select-option" data-value="11">11</button>
-                                                <button class="step-3-select-option" data-value="12">12</button>
+                                                <option class="step-3-select-option" value="01">01</option>
+                                                <option class="step-3-select-option" value="02">02</option>
+                                                <option class="step-3-select-option" value="03">03</option>
+                                                <option class="step-3-select-option" value="04">04</option>
+                                                <option class="step-3-select-option" value="05">05</option>
+                                                <option class="step-3-select-option" value="06">06</option>
+                                                <option class="step-3-select-option" value="07">07</option>
+                                                <option class="step-3-select-option" value="08">08</option>
+                                                <option class="step-3-select-option" value="09">09</option>
+                                                <option class="step-3-select-option" value="10">10</option>
+                                                <option class="step-3-select-option" value="11">11</option>
+                                                <option class="step-3-select-option" value="12">12</option>
                                             </div>
                                         </div>
 
                                         <div class="step-3-custom-select step-3-year-select-field">
                                             <div class="step-3-select-trigger">
                                                 <span class="step-3-selected-option-text">2025</span>
-                                                <img class="step-3-select-arrow"
-                                                    src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
+                                                <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
                                             </div>
                                             <div class="step-3-select-options">
-                                                <button class="step-3-select-option" data-value="2024">2024</button>
-                                                <button class="step-3-select-option step-3-selected"
-                                                    data-value="2025">2025</button>
-                                                <button class="step-3-select-option" data-value="2026">2026</button>
-                                                <button class="step-3-select-option" data-value="2027">2027</button>
-                                                <button class="step-3-select-option" data-value="2028">2028</button>
-                                                <button class="step-3-select-option" data-value="2029">2029</button>
-                                                <button class="step-3-select-option" data-value="2030">2030</button>
+                                                <option class="step-3-select-option" value="2025">2025</option>
+                                                <option class="step-3-select-option" value="2026">2026</option>
+                                                <option class="step-3-select-option" value="2027">2027</option>
+                                                <option class="step-3-select-option" value="2028">2028</option>
+                                                <option class="step-3-select-option" value="2029">2029</option>
+                                                <option class="step-3-select-option" value="2030">2030</option>
                                             </div>
                                         </div>
                                     </div>
@@ -2006,8 +1949,7 @@
                                 <div class="step-3-form-field step-3-cvv-code-field">
                                     <label class="step-3-field-label">CVV</label>
                                     <div class="step-3-input-field step-3-cvv-field-input">
-                                        <input type="password" class="step-3-form-input-field step-3-cvv-code-input"
-                                            placeholder="000" maxlength="3">
+                                        <input type="password" class="step-3-form-input-field step-3-cvv-code-input" placeholder="000" maxlength="4">
                                     </div>
                                 </div>
                             </div>
@@ -2063,38 +2005,30 @@
             </div>
 
         </div>
-</form>
+    </form>
     @include('include.footer')
 
-<script src="{{ asset('js/chekout.js') }}"></script>
+    <script src="{{ asset('js/chekout.js') }}"></script>
 </body>
 
 </html>
 <script>
     function updateCheckoutTotal() {
-        let subtotal = 0;
+        let total = 0;
 
         document.querySelectorAll('.checkout-product-price').forEach(priceEl => {
             const priceText = priceEl.textContent.replace('$', '').trim();
             const price = parseFloat(priceText) || 0;
-            subtotal += price;
+            total += price;
         });
 
-        const taxRate = 0.085;
-        const tax = subtotal * taxRate;
-        const total = subtotal + tax;
-
-        const subtotalEl = document.querySelector('.checkout-cost-line-item:nth-child(1) .checkout-cost-amount');
-        const taxEl = document.querySelector('.checkout-cost-line-item:nth-child(2) .checkout-cost-amount');
         const totalEl = document.querySelector('.checkout-total-amount');
-
-        if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
-        if (taxEl) taxEl.textContent = `$${tax.toFixed(2)}`;
         if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
 
         const hasItems = document.querySelectorAll('.checkout-order-item-card').length > 0;
         document.querySelector('.checkout-payment-breakdown').style.display = hasItems ? 'block' : 'none';
     }
+
 
     document.addEventListener('DOMContentLoaded', () => {
         updateCheckoutTotal();

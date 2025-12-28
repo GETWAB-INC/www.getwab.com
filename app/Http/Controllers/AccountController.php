@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Report;
+use App\Models\BillingRecord;
+use App\Models\Subscription;
 
 class AccountController extends Controller
 {
@@ -45,9 +47,52 @@ class AccountController extends Controller
     public function subscription(Request $request)
     {
         $user = Auth::user();
+
+        // Получаем подписки типа 'fpds_query'
+        $fpds_query = Subscription::where('user_id', $user->id)
+            ->where('subscription_type', 'fpds_query')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Получаем подписки типа 'fpds_reports'
+        $fpds_reports = Subscription::where('user_id', $user->id)
+            ->where('subscription_type', 'fpds_reports')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Формируем флаги для fpds_query
+        $hasActiveFpdsQuery = false;
+        $hasExpiredOrCancelledFpdsQuery = false;
+
+        if ($fpds_query->isNotEmpty()) {
+            $firstFpdsQuery = $fpds_query->first();
+            $hasActiveFpdsQuery = ($firstFpdsQuery->status === 'active');
+            $hasExpiredOrCancelledFpdsQuery = in_array($firstFpdsQuery->status, ['expired', 'cancelled']);
+        }
+
+        // Формируем флаги для fpds_reports
+        $hasActiveFpdsReports = false;
+        $hasExpiredOrCancelledFpdsReports = false;
+
+        if ($fpds_reports->isNotEmpty()) {
+            $firstFpdsReports = $fpds_reports->first();
+            $hasActiveFpdsReports = ($firstFpdsReports->status === 'active');
+            $hasExpiredOrCancelledFpdsReports = in_array($firstFpdsReports->status, ['expired', 'cancelled']);
+        }
+
+        
         session(['last_account_section' => route('account.subscription')]);
-        return view('account.subscription', compact('user'));
+        return view('account.subscription', compact(
+            'user',
+            'fpds_query',
+            'fpds_reports',
+            'hasActiveFpdsQuery',
+            'hasExpiredOrCancelledFpdsQuery',
+            'hasActiveFpdsReports',
+            'hasExpiredOrCancelledFpdsReports'
+        ));
     }
+
 
     public function billing(Request $request)
     {
@@ -60,10 +105,16 @@ class AccountController extends Controller
             'fpds_report_subscription' => 'FPDS Report Subscription',
         ];
 
-
         $user = Auth::user();
+
+
+        // Получаем историю билинга — ТОЛЬКО из billing_records
+        $billingHistory = BillingRecord::where('user_id', $user->id)
+            ->orderBy('billed_at', 'desc') // новые сверху
+            ->get();
+
         session(['last_account_section' => route('account.billing')]);
-        return view('account.billing', compact('user', 'itemsToShow'));
+        return view('account.billing', compact('user', 'itemsToShow', 'billingHistory'));
     }
 
     public function profile(Request $request)

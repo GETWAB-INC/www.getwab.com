@@ -210,7 +210,7 @@
 
         <main class="thank-you-container">
             <section class="thank-you-content">
-                <header class="thank-you-header">
+                <div class="thank-you-header">
                     <div class="thank-you-icon">
                         <div class="thank-you-icon-inner"></div>
                     </div>
@@ -250,12 +250,12 @@
                             <td class="thank-you-detail-value">2025-07-31T163620Z</td>
                         </tr>
                     </table>
-                </header>
+                </div>
 
-                <footer class="thank-you-actions">
-                    <button class="thank-you-button thank-you-button-primary">Return to Home</button>
-                    <button class="thank-you-button thank-you-button-secondary">Print or Save Receipt</button>
-                </footer>
+                <div class="thank-you-actions">
+                    <a class="thank-you-button thank-you-button-primary" href="{{ route('account.billing') }}">Return to Account</a>
+                    <a class="thank-you-button thank-you-button-secondary" onclick="window.print()">Print or Save Receipt</a>
+                </div>
             </section>
         </main>
 

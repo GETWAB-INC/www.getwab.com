@@ -234,7 +234,7 @@
 
         <main class="cancelled-container">
             <section class="cancelled-content">
-                <header class="cancelled-header">
+                <div class="cancelled-header">
                     <div class="cancelled-icon">
                         <div class="cancelled-icon-inner"></div>
                     </div>
@@ -270,12 +270,12 @@
                             <td class="cancelled-detail-value">7541472296866474203252</td>
                         </tr>
                     </table>
-                </header>
+                </div>
 
-                <footer class="cancelled-actions">
-                    <button class="cancelled-button cancelled-button-primary">Try Again</button>
-                    <button class="cancelled-button cancelled-button-secondary">Return to Home</button>
-                </footer>
+                <div class="cancelled-actions">
+                    <a class="cancelled-button cancelled-button-primary" href="{{ route('checkout') }}">Try Again</a>
+                    <a class="cancelled-button cancelled-button-secondary" href="{{ route('/') }}">Return to Home</a>
+                </div>
             </section>
         </main>
 

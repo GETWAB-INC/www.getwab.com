@@ -62,4 +62,8 @@ class SubscriptionController extends Controller
         // 7. Перенаправляем на страницу checkout
         return redirect()->route('checkout');
     }
+
+    public function cancelSubscription(Request $request) {
+        dd($request->all());
+    }
 }

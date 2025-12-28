@@ -10,6 +10,9 @@
   <link rel="stylesheet" href="{{ asset('css/account.css') }}" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <style>
+    .bold {
+      font-weight: bold;
+    }
     @media (max-width: 767px) {
       .dashboard-sidebar {
         display: none !important;
@@ -26,10 +29,9 @@
 
     @include('account.aside')
 
-    <!-- Desktop Dashboard -->
+    <!-- Desktop -->
     <main class="dashboard-main">
 
-      <!-- Subscription -->
       <div id="subscription" class="content-section">
 
         <div class="title-and-description">
@@ -40,9 +42,41 @@
           </p>
         </div>
 
-        
+        <!-- Subscription -->
         <div class="cards-desktop">
 
+          <!-- Cancel Query -->
+          @if ($hasActiveFpdsQuery)
+          <form method="POST" action="{{ route('cancel.subscription') }}">
+            <input type="hidden" name="subscription_type" value="fpds_query">
+            @csrf
+            <div class="card-desktop">
+
+              <div class="content-desktop">
+                <div class="details-desktop">
+                  <div class="title-desktop">FPDS Query</div>
+                  <div class="remaining-desktop"><span class="bold">Status:</span> {{ $fpds_query->first()->status }}</div>
+
+                  <div class="remaining-desktop"><span class="bold">Next billing:</span> {{ $fpds_query->first()->next_billing_at->format('M/d/Y') }}</div>
+
+                  <div class="remaining-desktop"><span class="bold">Plan:</span> {{ $fpds_query->first()->plan }}</div>
+
+                  <div class="price-desktop">
+                    <span>Total</span>
+                    <span id="elem-price">${{ $fpds_query->first()->amount }}</span>
+                  </div>
+
+                  <button class="cancel-button">Cancel Subscription</button>
+                </div>
+              </div>
+
+            </div>
+          </form>
+          @elseif ($hasExpiredOrCancelledFpdsQuery)
+          <!-- Restore Query -->
+
+          @else
+          <!-- Active Query -->
           <form method="POST" action="{{ route('order.subscription') }}">
             <input type="hidden" name="subscription_type" value="fpds_query">
             @csrf
@@ -50,8 +84,8 @@
 
               <div class="content-desktop">
                 <div class="details-desktop">
-                  <h2 class="title-desktop">FPDS Query</h2>
-                  <p class="remaining-desktop">Status: Not Subscribed</p>
+                  <div class="title-desktop">FPDS Query</div>
+                  <div class="remaining-desktop"><span class="bold">Status:</span> Not Subscribed</div>
 
                   <div class="selector-desktop">
                     <select class="dropdown-trigger" name="subscription_price" id="elem-reports-select" required>
@@ -72,7 +106,38 @@
 
             </div>
           </form>
+          @endif
 
+
+          <!-- Cancel Reports -->
+          @if ($hasActiveFpdsReports)
+          <form method="POST" action="{{ route('cancel.subscription') }}">
+            <input type="hidden" name="subscription_type" value="fpds_reports">
+            @csrf
+            <div class="card-desktop">
+              <div class="content-desktop">
+                <div class="details-desktop">
+                  <div class="title-desktop">FPDS Reports</div>
+                  <div class="remaining-desktop"><span class="bold">Status:</span> {{ $fpds_reports->first()->status }}</div>
+                  <div class="remaining-desktop"><span class="bold">Next billing:</span> {{ $fpds_reports->first()->next_billing_at->format('M/d/Y') }}</div>
+                  <div class="remaining-desktop"><span class="bold">Plan:</span> {{ $fpds_reports->first()->plan }}</div>
+                  
+
+                  <div class="price-desktop">
+                    <span>Total</span>
+                    <span id="composite-price-desktop">${{ $fpds_reports->first()->amount }}</span>
+                  </div>
+
+                  <button class="cancel-button">Cancel Subscription</button>
+                </div>
+              </div>
+            </div>
+          </form>
+          @elseif ($hasExpiredOrCancelledFpdsReports)
+          <!-- Restore Reports -->
+
+          @else
+          <!-- Active Reports -->
           <form method="POST" action="{{ route('order.subscription') }}">
             <input type="hidden" name="subscription_type" value="fpds_reports">
             @csrf
@@ -80,7 +145,7 @@
               <div class="content-desktop">
                 <div class="details-desktop">
                   <h2 class="title-desktop">FPDS Reports</h2>
-                  <p class="remaining-desktop">Status: Not Subscribed</p>
+                  <p class="remaining-desktop"><span class="bold">Status:</span> Not Subscribed</p>
 
                   <div class="selector-desktop">
                     <select class="dropdown-trigger" name="subscription_price" id="composite-reports-select" required>
@@ -100,13 +165,15 @@
               </div>
             </div>
           </form>
+          @endif
+
         </div>
 
       </div>
 
     </main>
 
-    <!-- Mobile Dashboard -->
+    <!-- Mobile -->
     <main class="mobile-dashboard-main">
 
       <div class="mobile-container">
@@ -116,9 +183,12 @@
             Manage your subscription and billing preferences.
           </div>
           
+          <!-- Subscription -->
           <div class="mobile-list">
 
-            <form method="POST" action="{{ route('order.subscription') }}">
+          <!-- Cancel Query Mobile-->
+          @if ($hasActiveFpdsQuery)
+          <form method="POST" action="{{ route('cancel.subscription') }}">
               <input type="hidden" name="subscription_type" value="fpds_query">
               @csrf
               <div class="cards-mobile">
@@ -126,7 +196,36 @@
                   <div class="inner-mobile">
                     <div class="header-mobile">
                       <div class="title-mobile">FPDS Query</div>
-                      <div class="remaining-mobile">Status: Not Subscribed</div>
+                      <div class="remaining-mobile"><span class="bold">Status:</span> {{ $fpds_query->first()->status }}</div>
+                      <div class="remaining-mobile"><span class="bold">Next billing:</span> {{ $fpds_query->first()->next_billing_at->format('M/d/Y') }}</div>
+                      <div class="remaining-mobile"><span class="bold">Plan:</span> {{ $fpds_query->first()->plan }}</div>
+                      
+                      <div class="price-mobile">
+                        <div class="price-label-mobile">Total</div>
+                        <div class="price-value-mobile" id="elementary-price-mobile">${{ $fpds_query->first()->amount }}</div>
+                      </div>
+                    </div>
+                    <button class="cancel-button">
+                      Cancel Subscription
+                    </button>
+                  </div>
+                </div>
+          </form>
+
+          @elseif ($hasExpiredOrCancelledFpdsQuery)
+          <!-- Restore Query Mobile-->
+
+          @else
+          <!-- Active Query Mobile-->
+          <form method="POST" action="{{ route('order.subscription') }}">
+              <input type="hidden" name="subscription_type" value="fpds_query">
+              @csrf
+              <div class="cards-mobile">
+                <div class="card-mobile">
+                  <div class="inner-mobile">
+                    <div class="header-mobile">
+                      <div class="title-mobile">FPDS Query</div>
+                      <div class="remaining-mobile"><span class="bold">Status:</span> Not Subscribed</div>
 
                       <div class="selector-desktop">
                         <select class="dropdown-trigger" name="subscription_price" id="mobile-elem-select" required>
@@ -146,16 +245,48 @@
                     </button>
                   </div>
                 </div>
-            </form>
+          </form>
+          @endif
 
-            <form method="POST" action="{{ route('order.subscription') }}">
+
+          <!-- Cancel Reports Mobile-->
+          @if ($hasActiveFpdsReports)
+          <form method="POST" action="{{ route('cancel.subscription') }}">
               <input type="hidden" name="subscription_type" value="fpds_reports">
               @csrf
               <div class="card-mobile">
                 <div class="inner-mobile">
                   <div class="header-mobile">
                     <div class="title-mobile">FPDS Reports</div>
-                    <div class="remaining-mobile">Status: Not Subscribed</div>
+                    <div class="remaining-mobile"><span class="bold">Status:</span> {{ $fpds_reports->first()->status }}</div>
+                    <div class="remaining-mobile"><span class="bold">Next billing:</span> {{ $fpds_reports->first()->next_billing_at->format('M/d/Y') }}</div>
+                    <div class="remaining-mobile"><span class="bold">Plan:</span> {{ $fpds_reports->first()->plan }}</div>
+                    
+
+                    <div class="price-mobile">
+                      <div class="price-label-mobile">Total</div>
+                      <div class="price-value-mobile" id="composite-price-mobile">${{ $fpds_reports->first()->amount }}</div>
+                    </div>
+                  </div>
+                  <button class="cancel-button">
+                    Cancel Subscription
+                  </button>
+                </div>
+              </div>
+          </form>
+          @elseif ($hasExpiredOrCancelledFpdsReports)
+          <!-- Restore Reports Mobile-->
+
+          @else
+          <!-- Active Reports Mobile-->
+          <form method="POST" action="{{ route('order.subscription') }}">
+              <input type="hidden" name="subscription_type" value="fpds_reports">
+              @csrf
+              <div class="card-mobile">
+                <div class="inner-mobile">
+                  <div class="header-mobile">
+                    <div class="title-mobile">FPDS Reports</div>
+                    <div class="remaining-mobile"><span class="bold">Status:</span> Not Subscribed</div>
 
                     <div class="selector-desktop">
                       <select class="dropdown-trigger" name="reports_count" id="mobile-composite-select" required>
@@ -175,13 +306,13 @@
                   </button>
                 </div>
               </div>
-            </form>
+          </form>
+          @endif
 
           </div>
         </div>
 
       </div>
-
 
     </main>
 

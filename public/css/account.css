@@ -197,7 +197,7 @@
 }
 
 .content-description-text::before {
-    content: url("{{ asset('img/ico/quotes-1.svg') }}");
+    content: url("../img/ico/quotes-1.svg");
     position: absolute;
     left: 0;
     top: 0;
@@ -207,7 +207,7 @@
 }
 
 .content-description-text::after {
-    content: url("{{ asset('img/ico/quotes-2.svg') }}");
+    content: url("../img/ico/quotes-2.svg");
     position: absolute;
     right: 0%;
     top: 100%;
@@ -313,6 +313,7 @@
 .cancel-button {
     padding: 20px 35px;
     background: #474747;
+    color: white;
     border-radius: 7px;
     justify-content: center;
     align-items: center;
@@ -321,6 +322,7 @@
     cursor: pointer;
     border: none;
     width: auto;
+    font-size: 24px;
 }
 
 .cancel-button:hover {
@@ -647,6 +649,11 @@
         width: 100%;
     }
 
+    .cancel-button {
+        height: 56px;
+        font-size: 16px;
+    }
+
     .button-text-mobile {
         text-align: center;
         justify-content: center;
@@ -759,19 +766,11 @@
         font-size: 16px;
     }
 
-    .cancel-button {
-        width: 114px;
-        padding: 12px 20px;
-        font-size: 14px;
-    }
-
     .button-text {
         font-size: 16px;
     }
 
-    .cancel-button .button-text {
-        font-size: 14px;
-    }
+
 
     .nav-menu-item {
         font-size: 16px;
