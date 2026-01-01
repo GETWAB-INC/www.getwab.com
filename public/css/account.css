@@ -218,8 +218,8 @@
 
 /* Aside END */
 
-/* POPUP logout */
-.logout-confirm-overlay {
+/* POPUP */
+.popup-confirm-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -230,7 +230,7 @@
     z-index: 1000;
 }
 
-.logout-confirm-container {
+.popup-confirm-container {
     width: 450px;
     position: fixed;
     top: 50%;
@@ -245,7 +245,7 @@
     background: linear-gradient(135deg, #b5d9a7, #00aa89);
 }
 
-.logout-confirm-content {
+.popup-confirm-content {
     width: 100%;
     height: 100%;
     display: flex;
@@ -257,7 +257,7 @@
     box-sizing: border-box;
 }
 
-.logout-confirm-text {
+.popup-confirm-text {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -265,7 +265,7 @@
     gap: 16px;
 }
 
-.logout-confirm-title {
+.popup-confirm-title {
     align-self: stretch;
     text-align: center;
     color: white;
@@ -275,8 +275,8 @@
     word-wrap: break-word;
 }
 
-.logout-confirm-message {
-    width: 350.18px;
+.popup-confirm-message {
+    width: 350px;
     text-align: center;
     color: white;
     font-size: 24px;
@@ -285,7 +285,7 @@
     word-wrap: break-word;
 }
 
-.logout-confirm-buttons {
+.popup-confirm-buttons {
     align-self: stretch;
     justify-content: center;
     align-items: center;
@@ -293,7 +293,7 @@
     display: flex;
 }
 
-.logout-button {
+.popup-button {
     padding: 20px 35px;
     background: #ff2d55;
     border-radius: 7px;
@@ -306,7 +306,7 @@
     width: auto;
 }
 
-.logout-button:hover {
+.popup-button:hover {
     background-color: #e01a40;
 }
 
@@ -735,32 +735,32 @@
         gap: 24px;
     }
 
-    .logout-confirm-container {
+    .popup-confirm-container {
         width: 90%;
         max-width: 320px;
     }
 
-    .logout-confirm-content {
+    .popup-confirm-content {
         width: 100%;
         gap: 32px;
     }
 
-    .logout-confirm-title {
+    .popup-confirm-title {
         font-size: 16px;
     }
 
-    .logout-confirm-message {
-        width: 160px;
+    .popup-confirm-message {
+        width: 300px;
         font-size: 16px;
     }
 
-    .logout-confirm-buttons {
+    .popup-confirm-buttons {
         flex-direction: column;
         gap: 12px;
         width: 100%;
     }
 
-    .logout-button {
+    .popup-button {
         width: 154px;
         padding: 16px 20px;
         font-size: 16px;

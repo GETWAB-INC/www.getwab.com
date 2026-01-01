@@ -56,16 +56,19 @@
                 <div class="details-desktop">
                   <div class="title-desktop">FPDS Query</div>
 
-                  <div class="remaining-desktop"><span class="bold">Status:</span> {{ $fpds_query->first()->status }}</div>
-                  <div class="remaining-desktop"><span class="bold">Plan:</span> {{ $fpds_query->first()->plan }}</div>
-                  <div class="remaining-desktop"><span class="bold">Next billing:</span> {{ $fpds_query->first()->next_billing_at->format('m/d/Y') }}</div>
+                  <div class="remaining-desktop"><span class="bold">Status:</span> {{ $fpds_query->status }}</div>
+                  <div class="remaining-desktop"><span class="bold">Plan:</span> {{ $fpds_query->plan }}</div>
+                  <div class="remaining-desktop"><span class="bold">Next billing:</span> {{ $fpds_query->next_billing_at->format('m/d/Y') }}</div>
 
                   <div class="price-desktop">
                     <span>Total</span>
-                    <span id="elem-price">${{ $fpds_query->first()->amount }}</span>
+                    <span id="elem-price">${{ $fpds_query->amount }}</span>
                   </div>
 
-                  <button class="cancel-button">Cancel Subscription</button>
+                  <button class="cancel-button" type="button" onclick="cancelSubscription('fpds_query')">
+                    Cancel Subscription
+                  </button>
+
                 </div>
               </div>
 
@@ -82,13 +85,13 @@
                         <div class="title-desktop">FPDS Query</div>
 
                           <div class="remaining-desktop"><span class="bold">Status:</span> Cancelled</div>
-                          <div class="remaining-desktop"><span class="bold">Plan:</span> {{ $fpds_query->first()->plan }}</div>
-                          <div class="remaining-desktop"><span class="bold">Access until:</span> {{ $fpds_query->first()->expires_at->format('m/d/Y') }}</div>
+                          <div class="remaining-desktop"><span class="bold">Plan:</span> {{ $fpds_query->plan }}</div>
+                          <div class="remaining-desktop"><span class="bold">Access until:</span> {{ $fpds_query->expires_at->format('m/d/Y') }}</div>
 
                 <div class="selector-desktop">
                     <select class="dropdown-trigger" name="new_plan" id="restore-plan-select" required>
                         @php
-                    $currentPlan = $fpds_query->first()->plan;
+                    $currentPlan = $fpds_query->plan;
                 @endphp
                 <option value="Monthly" {{ $currentPlan === 'Monthly' ? 'selected' : '' }}>Monthly ($49.00/month)</option>
                 <option value="Annual" {{ $currentPlan === 'Annual' ? 'selected' : '' }}>Yearly ($390.00/year) — Save 32%</option>
@@ -100,7 +103,7 @@
                     <span id="restore-price">$0.00</span>
                 </div>
 
-                <button class="button-desktop">Restore Subscription</button>
+                <button class="button-desktop" type="button" onclick="restoreSubscription('fpds_query')">Restore Subscription</button>
                     </div>
                 </div>
             </div>
@@ -116,8 +119,8 @@
                       <div class="title-desktop">FPDS Query</div>
 
                       <div class="remaining-desktop"><span class="bold">Status:</span> Expired</div>
-                      <div class="remaining-desktop"><span class="bold">Plan:</span> {{ $fpds_query->first()->plan }}</div>
-                      <div class="remaining-desktop"><span class="bold">Expired on:</span> {{ $fpds_query->first()->expires_at->format('m/d/Y') }}</div>
+                      <div class="remaining-desktop"><span class="bold">Plan:</span> {{ $fpds_query->plan }}</div>
+                      <div class="remaining-desktop"><span class="bold">Expired on:</span> {{ $fpds_query->expires_at->format('m/d/Y') }}</div>
 
                       <div class="selector-desktop">
                           <select class="dropdown-trigger" name="new_plan" id="renew-plan-select" required>
@@ -131,7 +134,7 @@
                           <span id="renew-price">$0.00</span>
                       </div>
 
-                      <button class="button-desktop">Renew Subscription</button>
+                      <button class="button-desktop" type="button" onclick="renewSubscription('fpds_query')">Renew Subscription</button>
                     </div>
                 </div>
             </div>
@@ -162,7 +165,7 @@
                     <span id="elem-price">$0.00</span>
                   </div>
 
-                  <button class="button-desktop">Start 7‑Day Free Trial</button>
+                  <button class="button-desktop" type="button" onclick="startTrial('fpds_query')">Start 7‑Day Free Trial</button>
                 </div>
               </div>
 
@@ -181,16 +184,16 @@
                 <div class="details-desktop">
                   <div class="title-desktop">FPDS Reports</div>
 
-                  <div class="remaining-desktop"><span class="bold">Status:</span> {{ $fpds_reports->first()->status }}</div>
-                  <div class="remaining-desktop"><span class="bold">Plan:</span> {{ $fpds_reports->first()->plan }}</div>
-                  <div class="remaining-desktop"><span class="bold">Next billing:</span> {{ $fpds_reports->first()->next_billing_at->format('m/d/Y') }}</div>
+                  <div class="remaining-desktop"><span class="bold">Status:</span> {{ $fpds_reports->status }}</div>
+                  <div class="remaining-desktop"><span class="bold">Plan:</span> {{ $fpds_reports->plan }}</div>
+                  <div class="remaining-desktop"><span class="bold">Next billing:</span> {{ $fpds_reports->next_billing_at->format('m/d/Y') }}</div>
 
                   <div class="price-desktop">
                     <span>Total</span>
-                    <span id="composite-price-desktop">${{ $fpds_reports->first()->amount }}</span>
+                    <span id="composite-price-desktop">${{ $fpds_reports->amount }}</span>
                   </div>
 
-                  <button class="cancel-button">Cancel Subscription</button>
+                  <button class="cancel-button" type="button" onclick="cancelSubscription('fpds_reports')">Cancel Subscription</button>
                 </div>
               </div>
             </div>
@@ -206,13 +209,13 @@
                         <div class="title-desktop">FPDS Reports</div>
 
                         <div class="remaining-desktop"><span class="bold">Status:</span> Cancelled</div>
-                        <div class="remaining-desktop"><span class="bold">Plan:</span> {{ $fpds_reports->first()->plan }}</div>
-                        <div class="remaining-desktop"><span class="bold">Access until:</span> {{ $fpds_reports->first()->expires_at->format('m/d/Y') }}</div>
+                        <div class="remaining-desktop"><span class="bold">Plan:</span> {{ $fpds_reports->plan }}</div>
+                        <div class="remaining-desktop"><span class="bold">Access until:</span> {{ $fpds_reports->expires_at->format('m/d/Y') }}</div>
 
                         <div class="selector-desktop">
                             <select class="dropdown-trigger" name="new_plan" id="reports-restore-plan-select" required>
                             @php
-                            $currentPlan = $fpds_reports->first()->plan;
+                            $currentPlan = $fpds_reports->plan;
                         @endphp
                         <option value="Monthly" {{ $currentPlan === 'Monthly' ? 'selected' : '' }}>Monthly ($799.00/month)</option>
                         <option value="Annual" {{ $currentPlan === 'Annual' ? 'selected' : '' }}>Yearly ($6 490.00/year) — Save 32%</option>
@@ -224,7 +227,7 @@
                             <span id="reports-restore-price">$0.00</span>
                         </div>
 
-                        <button class="button-desktop">Restore Subscription</button>
+                        <button class="button-desktop" type="button" onclick="restoreSubscription('fpds_reports')">Restore Subscription</button>
                     </div>
                 </div>
             </div>
@@ -240,8 +243,8 @@
                       <div class="title-desktop">FPDS Reports</div>
 
                       <div class="remaining-desktop"><span class="bold">Status:</span> Expired</div>
-                      <div class="remaining-desktop"><span class="bold">Plan:</span> {{ $fpds_reports->first()->plan }}</div>
-                      <div class="remaining-desktop"><span class="bold">Expired on:</span> {{ $fpds_reports->first()->expires_at->format('m/d/Y') }}</div>
+                      <div class="remaining-desktop"><span class="bold">Plan:</span> {{ $fpds_reports->plan }}</div>
+                      <div class="remaining-desktop"><span class="bold">Expired on:</span> {{ $fpds_reports->expires_at->format('m/d/Y') }}</div>
 
                       <div class="selector-desktop">
                           <select class="dropdown-trigger" name="new_plan" id="reports-renew-plan-select" required>
@@ -255,7 +258,7 @@
                           <span id="reports-renew-price">$0.00</span>
                       </div>
 
-                      <button class="button-desktop">Renew Subscription</button>
+                      <button class="button-desktop" type="button" onclick="renewSubscription('fpds_reports')">Renew Subscription</button>
                     </div>
                 </div>
             </div>
@@ -285,7 +288,7 @@
                     <span id="composite-price-desktop">$0.00</span>
                   </div>
 
-                  <button class="button-desktop">Activate</button>
+                  <button class="button-desktop" type="button" onclick="activateSubscription('fpds_reports')">Activate</button>
                 </div>
               </div>
             </div>
@@ -322,16 +325,16 @@
                     <div class="header-mobile">
                       <div class="title-mobile">FPDS Query</div>
 
-                      <div class="remaining-mobile"><span class="bold">Status:</span> {{ $fpds_query->first()->status }}</div>
-                      <div class="remaining-mobile"><span class="bold">Plan:</span> {{ $fpds_query->first()->plan }}</div>
-                      <div class="remaining-mobile"><span class="bold">Next billing:</span> {{ $fpds_query->first()->next_billing_at->format('m/d/Y') }}</div>
+                      <div class="remaining-mobile"><span class="bold">Status:</span> {{ $fpds_query->status }}</div>
+                      <div class="remaining-mobile"><span class="bold">Plan:</span> {{ $fpds_query->plan }}</div>
+                      <div class="remaining-mobile"><span class="bold">Next billing:</span> {{ $fpds_query->next_billing_at->format('m/d/Y') }}</div>
                       
                       <div class="price-mobile">
                         <div class="price-label-mobile">Total</div>
-                        <div class="price-value-mobile" id="elementary-price-mobile">${{ $fpds_query->first()->amount }}</div>
+                        <div class="price-value-mobile" id="elementary-price-mobile">${{ $fpds_query->amount }}</div>
                       </div>
                     </div>
-                    <button class="cancel-button">
+                    <button class="cancel-button" type="button" onclick="cancelSubscription('fpds_query')">
                       Cancel Subscription
                     </button>
                   </div>
@@ -349,12 +352,12 @@
                     <div class="title-mobile">FPDS Query</div>
 
                     <div class="remaining-mobile"><span class="bold">Status:</span> Cancelled</div>
-                    <div class="remaining-mobile"><span class="bold">Plan:</span> {{ $fpds_query->first()->plan }}</div>
-                    <div class="remaining-mobile"><span class="bold">Access until:</span> {{ $fpds_query->first()->expires_at->format('m/d/Y') }}</div>
+                    <div class="remaining-mobile"><span class="bold">Plan:</span> {{ $fpds_query->plan }}</div>
+                    <div class="remaining-mobile"><span class="bold">Access until:</span> {{ $fpds_query->expires_at->format('m/d/Y') }}</div>
                     <div class="selector-desktop">
                       <select class="dropdown-trigger" name="new_plan" id="mobile-restore-plan-select" required>
                         @php
-                        $currentPlan = $fpds_query->first()->plan;
+                        $currentPlan = $fpds_query->plan;
                         @endphp
                         <option value="Monthly" {{ $currentPlan === 'Monthly' ? 'selected' : '' }}>Monthly ($49.00/month)</option>
                         <option value="Annual" {{ $currentPlan === 'Annual' ? 'selected' : '' }}>Yearly ($490.00/year) — Save 16%</option>
@@ -366,7 +369,7 @@
                     </div>
                   </div>
                   <button class="button-mobile">
-                    <div class="button-text-mobile">Restore Subscription</div>
+                    <div class="button-text-mobile" type="button" onclick="restoreSubscription('fpds_query')">Restore Subscription</div>
                   </button>
                 </div>
               </div>
@@ -383,7 +386,7 @@
                 <div class="header-mobile">
                     <div class="title-mobile">FPDS Query</div>
                     <div class="remaining-mobile"><span class="bold">Status:</span> Expired</div>
-                    <div class="remaining-mobile"><span class="bold">Expired on:</span> {{ $fpds_query->first()->expires_at->format('M/d/Y') }}</div>
+                    <div class="remaining-mobile"><span class="bold">Expired on:</span> {{ $fpds_query->expires_at->format('M/d/Y') }}</div>
 
                     <div class="selector-desktop">
                 <select class="dropdown-trigger" name="new_plan" id="mobile-renew-plan-select" required>
@@ -398,7 +401,7 @@
                     </div>
                 </div>
                 <button class="button-mobile">
-                    <div class="button-text-mobile">Renew Subscription</div>
+                    <div class="button-text-mobile" type="button" onclick="renewSubscription('fpds_query')">Renew Subscription</div>
                 </button>
                     </div>
                 </div>
@@ -431,7 +434,7 @@
 
                     </div>
                     <button class="button-mobile">
-                      <div class="button-text-mobile">Start 7‑Day Free Trial</div>
+                      <div class="button-text-mobile" type="button" onclick="startTrial('fpds_query')">Start 7‑Day Free Trial</div>
                     </button>
                   </div>
                 </div>
@@ -448,17 +451,17 @@
                 <div class="inner-mobile">
                   <div class="header-mobile">
                     <div class="title-mobile">FPDS Reports</div>
-                    <div class="remaining-mobile"><span class="bold">Status:</span> {{ $fpds_reports->first()->status }}</div>
-                    <div class="remaining-mobile"><span class="bold">Next billing:</span> {{ $fpds_reports->first()->next_billing_at->format('M/d/Y') }}</div>
-                    <div class="remaining-mobile"><span class="bold">Plan:</span> {{ $fpds_reports->first()->plan }}</div>
+                    <div class="remaining-mobile"><span class="bold">Status:</span> {{ $fpds_reports->status }}</div>
+                    <div class="remaining-mobile"><span class="bold">Next billing:</span> {{ $fpds_reports->next_billing_at->format('M/d/Y') }}</div>
+                    <div class="remaining-mobile"><span class="bold">Plan:</span> {{ $fpds_reports->plan }}</div>
                     
 
                     <div class="price-mobile">
                       <div class="price-label-mobile">Total</div>
-                      <div class="price-value-mobile" id="composite-price-mobile">${{ $fpds_reports->first()->amount }}</div>
+                      <div class="price-value-mobile" id="composite-price-mobile">${{ $fpds_reports->amount }}</div>
                     </div>
                   </div>
-                  <button class="cancel-button">
+                  <button class="cancel-button" type="button" onclick="cancelSubscription('fpds_reports')">
                     Cancel Subscription
                   </button>
                 </div>
@@ -475,13 +478,13 @@
                         <div class="title-mobile">FPDS Reports</div>
 
                         <div class="remaining-mobile"><span class="bold">Status:</span> Cancelled</div>
-                        <div class="remaining-mobile"><span class="bold">Plan:</span> {{ $fpds_reports->first()->plan }}</div>
-                        <div class="remaining-mobile"><span class="bold">Access until:</span> {{ $fpds_reports->first()->expires_at->format('m/d/Y') }}</div>
+                        <div class="remaining-mobile"><span class="bold">Plan:</span> {{ $fpds_reports->plan }}</div>
+                        <div class="remaining-mobile"><span class="bold">Access until:</span> {{ $fpds_reports->expires_at->format('m/d/Y') }}</div>
 
                         <div class="selector-desktop">
                             <select class="dropdown-trigger" name="new_plan" id="mobile-reports-restore-plan-select" required>
                             @php
-                            $currentPlan = $fpds_reports->first()->plan;
+                            $currentPlan = $fpds_reports->plan;
                         @endphp
                         <option value="Monthly" {{ $currentPlan === 'Monthly' ? 'selected' : '' }}>Monthly ($799.00/month)</option>
                         <option value="Annual" {{ $currentPlan === 'Annual' ? 'selected' : '' }}>Yearly ($6 490.00/year) — Save 32%</option>
@@ -494,7 +497,7 @@
                         </div>
                     </div>
                     <button class="button-mobile">
-                        <div class="button-text-mobile">Restore Subscription</div>
+                        <div class="button-text-mobile" type="button" onclick="restoreSubscription('fpds_reports')">Restore Subscription</div>
                     </button>
                 </div>
             </div>
@@ -509,8 +512,8 @@
                     <div class="header-mobile">
                 <div class="title-mobile">FPDS Reports</div>
                 <div class="remaining-mobile"><span class="bold">Status:</span> Expired</div>
-                <div class="remaining-mobile"><span class="bold">Plan:</span> {{ $fpds_reports->first()->plan }}</div>
-                <div class="remaining-mobile"><span class="bold">Expired on:</span> {{ $fpds_reports->first()->expires_at->format('m/d/Y') }}</div>
+                <div class="remaining-mobile"><span class="bold">Plan:</span> {{ $fpds_reports->plan }}</div>
+                <div class="remaining-mobile"><span class="bold">Expired on:</span> {{ $fpds_reports->expires_at->format('m/d/Y') }}</div>
 
                 <div class="selector-desktop">
                     <select class="dropdown-trigger" name="new_plan" id="mobile-reports-renew-plan-select" required>
@@ -525,7 +528,7 @@
                 </div>
                     </div>
                     <button class="button-mobile">
-                <div class="button-text-mobile">Renew Subscription</div>
+                <div class="button-text-mobile" type="button" onclick="renewSubscription('fpds_reports')">Renew Subscription</div>
                     </button>
                 </div>
             </div>
@@ -556,7 +559,7 @@
                     </div>
                   </div>
                   <button class="button-mobile">
-                    <div class="button-text-mobile">Activate</div>
+                    <div class="button-text-mobile" type="button" onclick="activateSubscription('fpds_reports')">Activate</div>
                   </button>
                 </div>
               </div>

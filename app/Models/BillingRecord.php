@@ -129,17 +129,15 @@ class BillingRecord extends Model
      * Используется при создании записи, чтобы избежать двойного запроса в БД.
      *
      * @param array $data Исходные данные подписки
-     * @return string Читаемое описание вида «FPDS Query Trial (Monthly)»
+     * @return string Читаемое описание вида:
+     *   - «7‑day FPDS Query trial → Annual subscription» (для trial);
+     *   - «FPDS Reports → Annual subscription» (для не‑trial).
      */
     protected static function getReadableDescription(array $data): string
     {
         $typeNames = [
             'fpds_query' => 'FPDS Query',
             'fpds_reports' => 'FPDS Reports',
-        ];
-        $statusNames = [
-            'trial' => 'Trial',
-            'active' => 'Subscription',
         ];
         $planNames = [
             'Monthly' => 'Monthly',
@@ -151,19 +149,23 @@ class BillingRecord extends Model
         $subscriptionPlan = $data['subscription_plan'] ?? '';
 
         $typeName = $typeNames[$subscriptionType] ?? $subscriptionType;
-        $statusName = $statusNames[$subscriptionStatus] ?? $subscriptionStatus;
         $planName = $planNames[$subscriptionPlan] ?? $subscriptionPlan;
 
-        return "{$typeName} {$statusName} ({$planName})";
+        if ($subscriptionStatus === 'trial') {
+            // Для trial: «7‑day [тип] trial → [план] subscription»
+            return "7‑day {$typeName} trial → {$planName} subscription";
+        } else {
+            // Для не‑trial: «[тип] → [план] subscription»
+            return "{$typeName} → {$planName} subscription";
+        }
     }
-
 
 
     public static function createRecord(array $data): BillingRecord
     {
         // 1. Формируем читаемое описание ДО создания записи
         $readableDescription = self::getReadableDescription($data);
-        
+
         // 2. Создаём запись С ГОТОВЫМ description
         return self::create([
             'user_id' => auth()->id(),
@@ -175,9 +177,6 @@ class BillingRecord extends Model
             'currency' => $data['currency'] ?? 'USD',
             'status' => 'completed',
             'gateway_transaction_id' => $data['transaction_id'] ?? null,
-            // 'subscription_type' => $data['subscription_type'] ?? '',
-            // 'subscription_status' => $data['subscription_status'] ?? '',
-            // 'subscription_plan' => $data['subscription_plan'] ?? '',
         ]);
     }
 }

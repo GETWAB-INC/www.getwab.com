@@ -52,30 +52,23 @@ class AccountController extends Controller
         $fpds_query = Subscription::where('user_id', $user->id)
             ->where('subscription_type', 'fpds_query')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->first();
 
         // Получаем подписки типа 'fpds_reports'
         $fpds_reports = Subscription::where('user_id', $user->id)
             ->where('subscription_type', 'fpds_reports')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->first();
 
         // Формируем флаги для fpds_query
         $hasActiveFpdsQuery = false;
         $hasCancelledFpdsQuery = false;
         $hasExpiredFpdsQuery = false;
 
-        if ($fpds_query->isNotEmpty()) {
-            $firstFpdsQuery = $fpds_query->first();
-
-            // Объединённая проверка: active ИЛИ активный trial
-            $hasActiveFpdsQuery = (
-                $firstFpdsQuery->status === Subscription::STATUS_ACTIVE
-                || $firstFpdsQuery->isActiveTrial()
-            );
-
-            $hasCancelledFpdsQuery = ($firstFpdsQuery->status === Subscription::STATUS_CANCELLED);
-            $hasExpiredFpdsQuery = ($firstFpdsQuery->isExpired());
+        if ($fpds_query) {
+            $hasActiveFpdsQuery = ($fpds_query->isActive() || $fpds_query->isTrial());
+            $hasCancelledFpdsQuery = ($fpds_query->isCancelled());
+            $hasExpiredFpdsQuery = ($fpds_query->isExpired());
         }
 
         // Формируем флаги для fpds_reports
@@ -83,21 +76,16 @@ class AccountController extends Controller
         $hasCancelledFpdsReports = false;
         $hasExpiredFpdsReports = false;
 
-        if ($fpds_reports->isNotEmpty()) {
-            $firstFpdsReports = $fpds_reports->first();
-
-            // Объединённая проверка: active ИЛИ активный trial
-            $hasActiveFpdsReports = (
-                $firstFpdsReports->status === Subscription::STATUS_ACTIVE
-                || $firstFpdsReports->isActiveTrial()
-            );
-
-            $hasCancelledFpdsReports = ($firstFpdsReports->status === Subscription::STATUS_CANCELLED);
-            $hasExpiredFpdsReports = ($firstFpdsReports->isExpired());
+        if ($fpds_reports) {
+            $hasActiveFpdsReports = ($fpds_reports->isActive() || $fpds_reports->isTrial());
+            $hasCancelledFpdsReports = ($fpds_reports->isCancelled());
+            $hasExpiredFpdsReports = ($fpds_reports->isExpired());
         }
 
+        // dd($hasActiveFpdsQuery, $hasCancelledFpdsQuery, $hasExpiredFpdsQuery, $hasActiveFpdsReports, $hasCancelledFpdsReports, $hasExpiredFpdsReports);
+        
         session(['last_account_section' => route('account.subscription')]);
-
+        
         return view('account.subscription', compact(
             'user',
             'fpds_query',
