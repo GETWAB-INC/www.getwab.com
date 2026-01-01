@@ -395,36 +395,47 @@
                         <form class="register-form" method="POST" action="{{ route('register-process') }}">
                             @csrf
 
+
                             <div class="form-field">
                                 <label class="form-label" for="name">First Name *</label>
                                 <div class="input-wrapper">
-                                    <input class="form-input" type="text" id="name" name="name" placeholder="John">
+                                    <input class="form-input" type="text" id="name" name="name" placeholder="John"
+                                        value="{{ old('name') }}">
                                 </div>
                             </div>
+
                             <div class="form-field">
                                 <label class="form-label" for="surname">Last Name</label>
                                 <div class="input-wrapper">
-                                    <input class="form-input" type="text" id="surname" name="surname" placeholder="Doe">
+                                    <input class="form-input" type="text" id="surname" name="surname" placeholder="Doe"
+                                        value="{{ old('surname') }}">
                                 </div>
                             </div>
+
                             <div class="form-field">
                                 <label class="form-label" for="email">Business Email *</label>
                                 <div class="input-wrapper">
-                                    <input class="form-input" type="email" id="email" name="email" placeholder="you@company.com">
+                                    <input class="form-input" type="email" id="email" name="email"
+                                        placeholder="your@company.com" value="{{ old('email') }}">
                                 </div>
                             </div>
+
                             <div class="form-field">
                                 <label class="form-label" for="password">Create Password</label>
                                 <div class="input-wrapper">
-                                    <input class="form-input" type="password" id="password" name="password" placeholder="••••••••">
+                                    <input class="form-input" type="password" id="password" name="password"
+                                        placeholder="••••••••">
                                 </div>
                             </div>
+
                             <div class="form-field">
                                 <label class="form-label" for="password_confirmation">Confirm Password</label>
                                 <div class="input-wrapper">
-                                    <input class="form-input" type="password" id="password_confirmation" name="password_confirmation" placeholder="••••••••">
+                                    <input class="form-input" type="password" id="password_confirmation"
+                                        name="password_confirmation" placeholder="••••••••">
                                 </div>
                             </div>
+
                             <div class="register-footer">
                                 <div class="login-prompt">
                                     <span class="login-text-registered">Already registered?</span>
@@ -437,8 +448,8 @@
                                     <span class="button-text">Register</span>
                                 </button>
                             </div>
-
                         </form>
+
 
                     </div>
                 </div>
@@ -449,6 +460,7 @@
     @include('include.footer')
 
     <script src="{{ asset('js/alerts.js') }}"></script>
-    
+
 </body>
+
 </html>

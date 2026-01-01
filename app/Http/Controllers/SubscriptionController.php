@@ -4,66 +4,166 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use App\Models\Subscription;
+use Illuminate\Support\Facades\Log;
 
 class SubscriptionController extends Controller
 {
     public function orderSubscription(Request $request)
     {
-        // 1. Получаем входные данные
-        $subscriptionType = $request->input('subscription_type');
-        $subscriptionPriceKey = $request->input('subscription_price'); // 'monthly' или 'yearly'
+        $validated = $request->validate([
+            'subscription_type' => 'required|in:fpds_query,fpds_reports',
+            'subscription_status' => 'required|in:trial,active',
+            'subscription_plan' => 'required|in:Monthly,Annual',
+        ]);
 
-        // 2. Определяем цены и частоту для типа подписки
-        $prices = [
-            'fpds_query' => [
-                'monthly' => 49.00,
-                'yearly' => 490.00,
-            ],
-            'fpds_reports' => [
-                'monthly' => 799.00,
-                'yearly' => 6490.00,
-            ],
-        ];
-
-        $frequencies = [
-            'monthly' => 'Monthly',
-            'yearly' => 'Annual',
-        ];
-
-        // 3. Проверяем валидность типа подписки и периода
-        if (!isset($prices[$subscriptionType])) {
-            return redirect()->back()->withErrors(['subscription_type' => 'Invalid subscription type']);
+        $subscriptionType = $validated['subscription_type']; // fpds_query or fpds_reports
+        $subscriptionStatus = $validated['subscription_status']; // 'active', 'trial', 'cancelled', 'expired', 'suspended'
+        $subscriptionPlan = $validated['subscription_plan']; // 'Monthly' or 'Annual'
+        
+        $prices = Subscription::PRICES; // Array
+        $totalPrice = $prices[$subscriptionType][$subscriptionPlan]; // 49.0 or 490.00 or 799.00 or 6490.00
+        
+        if ($subscriptionStatus === 'trial') {
+            $totalPrice = 0;
         }
-
-        if (!isset($prices[$subscriptionType][$subscriptionPriceKey])) {
-            return redirect()->back()->withErrors(['subscription_price' => 'Invalid subscription period']);
-        }
-
-        // 4. Рассчитываем итоговую сумму
-        $totalPrice = $prices[$subscriptionType][$subscriptionPriceKey];
-        $frequency = $frequencies[$subscriptionPriceKey];
-
-        // 5. Формируем данные для сессии
+        
         $orderData = [
             'subscription_type' => $subscriptionType,
+            'subscription_status' => $subscriptionStatus,
             'subscription_price' => $totalPrice,
-            'subscription_frequency' => $frequency,
+            'subscription_plan' => $subscriptionPlan,
         ];
 
-        // 6. Сохраняем в сессию под ключом, зависящим от типа подписки
-        $sessionKey = match ($subscriptionType) {
-            'fpds_query' => 'fpds_query_subscription',
-            'fpds_reports' => 'fpds_report_subscription',
-            default => throw new \Exception('Unknown subscription type'),
-        };
+        if ($subscriptionStatus === 'trial') {
+            Session::put('fpds_query_trial', $orderData);
+        }
+        if ($subscriptionStatus === 'active') {
+            Session::put('fpds_report_subscription', $orderData);
+        }    
 
-        Session::put($sessionKey, $orderData);
-
-        // 7. Перенаправляем на страницу checkout
         return redirect()->route('checkout');
     }
 
-    public function cancelSubscription(Request $request) {
+
+    public function cancelSubscription(Request $request)
+    {
+        // 1. Валидация входных данных
+        $validated = $request->validate([
+            'subscription_type' => 'required|in:fpds_query,fpds_reports',
+        ]);
+
+        $subscriptionType = $validated['subscription_type'];
+        $userId = auth()->id();
+
+        // 2. Поиск активной подписки пользователя
+        $subscription = Subscription::where('user_id', $userId)
+            ->where('subscription_type', $subscriptionType)
+            ->whereIn('status', ['active', 'trial'])
+            ->first();
+
+        if (!$subscription) {
+            return redirect()->back()->withErrors(['subscription' => 'Active subscription not found']);
+        }
+
+        // 3. Отмена подписки: обновление статуса и дат
+        try {
+            $subscription->update([
+                'status' => 'cancelled',
+                'cancelled_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            // 4. Успешное завершение
+            return redirect()->back()->withSuccess('Subscription cancelled successfully');
+        } catch (\Exception $e) {
+            Log::error('Subscription cancellation failed: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['subscription' => 'Failed to cancel subscription']);
+        }
+    }
+
+    public function restoreSubscription(Request $request)
+    {
+        // 1. Валидация входных данных
+        $validated = $request->validate([
+            'subscription_type' => 'required|in:fpds_query,fpds_reports',
+            'new_plan' => 'required|in:Monthly,Annual',
+        ]);
+
+        $subscriptionType = $validated['subscription_type'];
+        $newPlan = Subscription::normalizePlan($validated['new_plan']); // 'Monthly'/'Annual'
+        $userId = auth()->id();
+
+        // 2. Поиск существующей подписки
+        $subscription = Subscription::where('user_id', $userId)
+            ->where('subscription_type', $subscriptionType)
+            ->first();
+
+        if (!$subscription) {
+            return redirect()->back()->withErrors(['subscription' => 'Subscription not found']);
+        }
+
+        // 3. Проверяем, истекла ли подписка (включая trial)
+        if ($subscription->isExpired()) {
+            return redirect()->back()->withErrors(['subscription' => 'Subscription has expired. Please renew it.']);
+        }
+
+        // 4. Получаем цены из централизованной константы модели
+        $prices = Subscription::PRICES;
+
+        // 5. Нормализуем текущий план из БД
+        $currentPlan = Subscription::normalizePlan($subscription->plan);
+
+        // 6. Получаем цену и частоту для нового плана
+        $currentPrice = $prices[$subscriptionType][$newPlan];
+        $subscriptionPlan = $newPlan; // 'Monthly' или 'Annual' — уже в нужном формате
+
+        // 7. Логика восстановления
+        if ($currentPlan === $newPlan && !$subscription->isActive()) {
+            // СЛУЧАЙ 1: план не изменился И подписка НЕ активна
+            try {
+                $subscription->update([
+                    'status' => Subscription::STATUS_ACTIVE,
+                    'cancelled_at' => null,
+                    'updated_at' => now(),
+                ]);
+
+                return redirect()->back()->withSuccess('Subscription restored successfully');
+            } catch (\Exception $e) {
+                Log::error('Subscription restore failed: ' . $e->getMessage());
+                return redirect()->back()->withErrors(['subscription' => 'Failed to restore subscription']);
+            }
+        } else {
+            // СЛУЧАЙ 2: план изменился ИЛИ подписка уже активна
+            if ($currentPlan !== $newPlan) {
+                // Подплан изменился — пересчитываем и отправляем на checkout
+                $orderData = [
+                    'subscription_type' => $subscriptionType,
+                    'subscription_price' => $currentPrice,
+                    'subscription_plan' => $subscriptionPlan,
+                ];
+
+                $sessionKey = match ($subscriptionType) {
+                    'fpds_query' => 'fpds_query_subscription',
+                    'fpds_reports' => 'fpds_report_subscription',
+                    default => throw new \Exception('Unknown subscription type'),
+                };
+
+                Session::put($sessionKey, $orderData);
+
+                return redirect()->route('checkout');
+            } else {
+                // Подписка уже активна — ошибка
+                return redirect()->back()->withErrors(['subscription' => 'Subscription is already active']);
+            }
+        }
+    }
+
+
+
+
+    public function renewSubscription(Request $request)
+    {
         dd($request->all());
     }
 }

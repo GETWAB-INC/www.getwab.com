@@ -1557,6 +1557,29 @@
 
                 <div class="checkout-order-section">
 
+                    <!-- FPDS Query Trial -->
+                    @if(session()->has('fpds_query_trial'))
+                        <div class="checkout-order-item-card">
+                            <div class="checkout-order-item-details">
+                                <h1 class="checkout-product-name">FPDS Query 7‑Day Free Trial</h1>
+                                <p class="checkout-product-type">Subscription</p>
+                                <p class="checkout-product-frequency">
+                                    {{ session('fpds_query_trial.subscription_plan') }}</p>
+                            </div>
+                            <div class="checkout-order-item-pricing">
+                                <h1 class="checkout-product-price">
+                                    ${{ session('fpds_query_trial.subscription_price') }}.00</h1>
+                                <div class="checkout-order-item-actions">
+                                    <div class="checkout-action-button checkout-delete-button"
+                                        data-item-key="fpds_query_trial">
+                                        <img class="checkout-decoration" src="{{ asset('img/ico/Trash.svg') }}"
+                                            alt="Delete Item">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     <!-- FPDS Query Subscription -->
                     @if(session()->has('fpds_query_subscription'))
                         <div class="checkout-order-item-card">
@@ -1564,7 +1587,7 @@
                                 <h1 class="checkout-product-name">FPDS Query</h1>
                                 <p class="checkout-product-type">Subscription</p>
                                 <p class="checkout-product-frequency">
-                                    {{ session('fpds_query_subscription.subscription_frequency') }}</p>
+                                    {{ session('fpds_query_subscription.subscription_plan') }}</p>
                             </div>
                             <div class="checkout-order-item-pricing">
                                 <h1 class="checkout-product-price">
@@ -1587,7 +1610,7 @@
                                 <h1 class="checkout-product-name">FPDS Reports</h1>
                                 <p class="checkout-product-type">Subscription</p>
                                 <p class="checkout-product-frequency">
-                                    {{ session('fpds_report_subscription.subscription_frequency') }}</p>
+                                    {{ session('fpds_report_subscription.subscription_plan') }}</p>
                             </div>
                             <div class="checkout-order-item-pricing">
                                 <h1 class="checkout-product-price">

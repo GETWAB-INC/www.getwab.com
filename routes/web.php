@@ -61,6 +61,8 @@ Route::delete('/account/remove-avatar', [AccountController::class, 'removeAvatar
 Route::post('/order/package', action: [ReportPackageController::class, 'orderPackage'])->name('order.package')->middleware('auth');
 Route::post('/order/subscription', action: [SubscriptionController::class, 'orderSubscription'])->name('order.subscription')->middleware('auth');
 Route::post('/cancel/subscription', action: [SubscriptionController::class, 'cancelSubscription'])->name('cancel.subscription')->middleware('auth');
+Route::post('/restore/subscription', action: [SubscriptionController::class, 'restoreSubscription'])->name('restore.subscription')->middleware('auth');
+Route::post('subscription/renew', [SubscriptionController::class, 'renewSubscription'])->name('renew.subscription')->middleware('auth');
 
 // contact page
 Route::get('/contact-us', function () {return view('contact-us');})->name('contact-us');

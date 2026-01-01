@@ -12,27 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('payment_methods', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->id()->comment('Primary key, auto‑incrementing ID of the payment method record');
+            $table->unsignedBigInteger('user_id')->index()->comment('ID of the user who owns this payment method');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            
-            // Токен от платёжной системы (Stripe, PayPal и т.п.)
-            $table->string('token', 255)->unique();
-            
-            // Данные карты (только безопасные)
-            $table->string('last_four', 4);
-            $table->string('brand', 20);         // Visa, MasterCard
-            $table->integer('exp_month');     // 1-12
-            $table->integer('exp_year');        // 2025, 2026
-            
-            // Флаги
-            $table->boolean('is_default')->default(false); // основная карта
-            $table->boolean('is_active')->default(true);  // активна ли карта
-            
+            $table->string('token', 255)->unique()->index()->comment('Token from the payment gateway used to reference this payment method');
+            $table->string('last_four', 4)->index()->comment('Last 4 digits of the credit/debit card — only safe part stored');
+            $table->string('brand', 20)->index()->comment('Brand of the payment card (e.g., Visa, MasterCard, American Express)');
+            $table->integer('exp_month')->index()->comment('Expiration month of the card (1–12)');
+            $table->integer('exp_year')->index()->comment('Expiration year of the card (e.g., 2025, 2026)');
+            $table->boolean('is_default')->default(false)->index()->comment('Flag indicating whether this is the user’s default payment method');
+            $table->boolean('is_active')->default(true)->index()->comment('Flag indicating whether the payment method is currently active and can be used for charges');
             $table->timestamps();
             $table->softDeletes();
-
-            $table->index(['user_id', 'is_default', 'is_active']);
         });
     }
 

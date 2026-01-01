@@ -12,22 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('report_packages', function (Blueprint $table) {
-            $table->id();
-            
-            // Связь с пользователем
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')
-                  ->references('id')
-                  ->on('users')
-                  ->onDelete('cascade');
-            
-            // Тип пакета: 'el' (elementary) или 'coll' (composite)
-            $table->string('package_type', 10);
-            
-            // Остаток доступных отчётов
-            $table->integer('remaining_reports');
-            
-            // Временные метки
+            $table->id()->comment('Primary key, auto‑incrementing ID of the report package record');
+            $table->unsignedBigInteger('user_id')->index()->comment('ID of the user who owns this report package');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('package_type', 10)->index()->comment("Type of the report package ('el' for elementary, 'coll' for composite)");
+            $table->integer('remaining_reports')->index()->comment('Number of available reports remaining in this package (decrements with each use)');
             $table->timestamps();
         });
     }

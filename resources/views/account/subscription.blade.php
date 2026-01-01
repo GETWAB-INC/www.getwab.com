@@ -42,7 +42,7 @@
           </p>
         </div>
 
-        <!-- Subscription -->
+        <!-- Desktop Subscription -->
         <div class="cards-desktop">
 
           <!-- Cancel Query -->
@@ -55,11 +55,10 @@
               <div class="content-desktop">
                 <div class="details-desktop">
                   <div class="title-desktop">FPDS Query</div>
+
                   <div class="remaining-desktop"><span class="bold">Status:</span> {{ $fpds_query->first()->status }}</div>
-
-                  <div class="remaining-desktop"><span class="bold">Next billing:</span> {{ $fpds_query->first()->next_billing_at->format('M/d/Y') }}</div>
-
                   <div class="remaining-desktop"><span class="bold">Plan:</span> {{ $fpds_query->first()->plan }}</div>
+                  <div class="remaining-desktop"><span class="bold">Next billing:</span> {{ $fpds_query->first()->next_billing_at->format('m/d/Y') }}</div>
 
                   <div class="price-desktop">
                     <span>Total</span>
@@ -72,13 +71,76 @@
 
             </div>
           </form>
-          @elseif ($hasExpiredOrCancelledFpdsQuery)
-          <!-- Restore Query -->
+          @elseif ($hasCancelledFpdsQuery)
+          <!-- Cancelled Query -->
+          <form method="POST" action="{{ route('restore.subscription') }}">
+            @csrf
+            <input type="hidden" name="subscription_type" value="fpds_query">
+            <div class="card-desktop">
+                <div class="content-desktop">
+                    <div class="details-desktop">
+                        <div class="title-desktop">FPDS Query</div>
 
+                          <div class="remaining-desktop"><span class="bold">Status:</span> Cancelled</div>
+                          <div class="remaining-desktop"><span class="bold">Plan:</span> {{ $fpds_query->first()->plan }}</div>
+                          <div class="remaining-desktop"><span class="bold">Access until:</span> {{ $fpds_query->first()->expires_at->format('m/d/Y') }}</div>
+
+                <div class="selector-desktop">
+                    <select class="dropdown-trigger" name="new_plan" id="restore-plan-select" required>
+                        @php
+                    $currentPlan = $fpds_query->first()->plan;
+                @endphp
+                <option value="Monthly" {{ $currentPlan === 'Monthly' ? 'selected' : '' }}>Monthly ($49.00/month)</option>
+                <option value="Annual" {{ $currentPlan === 'Annual' ? 'selected' : '' }}>Yearly ($390.00/year) — Save 32%</option>
+                    </select>
+                </div>
+
+                <div class="price-desktop">
+                    <span>Total</span>
+                    <span id="restore-price">$0.00</span>
+                </div>
+
+                <button class="button-desktop">Restore Subscription</button>
+                    </div>
+                </div>
+            </div>
+          </form>
+          @elseif ($hasExpiredFpdsQuery)
+          <!-- Expired Query -->
+          <form method="POST" action="{{ route('renew.subscription') }}">
+            @csrf
+            <input type="hidden" name="subscription_type" value="fpds_query">
+            <div class="card-desktop">
+                <div class="content-desktop">
+                    <div class="details-desktop">
+                      <div class="title-desktop">FPDS Query</div>
+
+                      <div class="remaining-desktop"><span class="bold">Status:</span> Expired</div>
+                      <div class="remaining-desktop"><span class="bold">Plan:</span> {{ $fpds_query->first()->plan }}</div>
+                      <div class="remaining-desktop"><span class="bold">Expired on:</span> {{ $fpds_query->first()->expires_at->format('m/d/Y') }}</div>
+
+                      <div class="selector-desktop">
+                          <select class="dropdown-trigger" name="new_plan" id="renew-plan-select" required>
+                              <option value="Monthly">Monthly ($49.00/month)</option>
+                              <option value="Annual">Yearly ($390.00/year) — Save 32%</option>
+                          </select>
+                      </div>
+
+                      <div class="price-desktop">
+                          <span>Total</span>
+                          <span id="renew-price">$0.00</span>
+                      </div>
+
+                      <button class="button-desktop">Renew Subscription</button>
+                    </div>
+                </div>
+            </div>
+          </form>
           @else
-          <!-- Active Query -->
+          <!-- Trial Query -->
           <form method="POST" action="{{ route('order.subscription') }}">
             <input type="hidden" name="subscription_type" value="fpds_query">
+            <input type="hidden" name="subscription_status" value="trial">
             @csrf
             <div class="card-desktop">
 
@@ -88,9 +150,9 @@
                   <div class="remaining-desktop"><span class="bold">Status:</span> Not Subscribed</div>
 
                   <div class="selector-desktop">
-                    <select class="dropdown-trigger" name="subscription_price" id="elem-reports-select" required>
-                      <option value="monthly" data-price="49.00">Monthly ($49.00/month)</option>
-                      <option value="yearly" data-price="390.00">Yearly ($390.00/year) — Save 32%</option>
+                    <select class="dropdown-trigger" name="subscription_plan" id="elem-reports-select" required>
+                      <option value="Monthly" data-price="49.00">Monthly ($49.00/month)</option>
+                      <option value="Annual" data-price="390.00">Yearly ($390.00/year) — Save 32%</option>
                     </select>
 
                   </div>
@@ -100,7 +162,7 @@
                     <span id="elem-price">$0.00</span>
                   </div>
 
-                  <button class="button-desktop">Activate</button>
+                  <button class="button-desktop">Start 7‑Day Free Trial</button>
                 </div>
               </div>
 
@@ -118,10 +180,10 @@
               <div class="content-desktop">
                 <div class="details-desktop">
                   <div class="title-desktop">FPDS Reports</div>
+
                   <div class="remaining-desktop"><span class="bold">Status:</span> {{ $fpds_reports->first()->status }}</div>
-                  <div class="remaining-desktop"><span class="bold">Next billing:</span> {{ $fpds_reports->first()->next_billing_at->format('M/d/Y') }}</div>
                   <div class="remaining-desktop"><span class="bold">Plan:</span> {{ $fpds_reports->first()->plan }}</div>
-                  
+                  <div class="remaining-desktop"><span class="bold">Next billing:</span> {{ $fpds_reports->first()->next_billing_at->format('m/d/Y') }}</div>
 
                   <div class="price-desktop">
                     <span>Total</span>
@@ -133,13 +195,76 @@
               </div>
             </div>
           </form>
-          @elseif ($hasExpiredOrCancelledFpdsReports)
-          <!-- Restore Reports -->
+          @elseif ($hasCancelledFpdsReports)
+          <!-- Cancelled Reports -->
+          <form method="POST" action="{{ route('restore.subscription') }}">
+            @csrf
+            <input type="hidden" name="subscription_type" value="fpds_reports">
+            <div class="card-desktop">
+                <div class="content-desktop">
+                    <div class="details-desktop">
+                        <div class="title-desktop">FPDS Reports</div>
 
+                        <div class="remaining-desktop"><span class="bold">Status:</span> Cancelled</div>
+                        <div class="remaining-desktop"><span class="bold">Plan:</span> {{ $fpds_reports->first()->plan }}</div>
+                        <div class="remaining-desktop"><span class="bold">Access until:</span> {{ $fpds_reports->first()->expires_at->format('m/d/Y') }}</div>
+
+                        <div class="selector-desktop">
+                            <select class="dropdown-trigger" name="new_plan" id="reports-restore-plan-select" required>
+                            @php
+                            $currentPlan = $fpds_reports->first()->plan;
+                        @endphp
+                        <option value="Monthly" {{ $currentPlan === 'Monthly' ? 'selected' : '' }}>Monthly ($799.00/month)</option>
+                        <option value="Annual" {{ $currentPlan === 'Annual' ? 'selected' : '' }}>Yearly ($6 490.00/year) — Save 32%</option>
+                            </select>
+                        </div>
+
+                        <div class="price-desktop">
+                            <span>Total</span>
+                            <span id="reports-restore-price">$0.00</span>
+                        </div>
+
+                        <button class="button-desktop">Restore Subscription</button>
+                    </div>
+                </div>
+            </div>
+          </form>
+          @elseif ($hasExpiredFpdsReports)
+          <!-- Expired Reports -->
+          <form method="POST" action="{{ route('renew.subscription') }}">
+            @csrf
+            <input type="hidden" name="subscription_type" value="fpds_reports">
+            <div class="card-desktop">
+                <div class="content-desktop">
+                    <div class="details-desktop">
+                      <div class="title-desktop">FPDS Reports</div>
+
+                      <div class="remaining-desktop"><span class="bold">Status:</span> Expired</div>
+                      <div class="remaining-desktop"><span class="bold">Plan:</span> {{ $fpds_reports->first()->plan }}</div>
+                      <div class="remaining-desktop"><span class="bold">Expired on:</span> {{ $fpds_reports->first()->expires_at->format('m/d/Y') }}</div>
+
+                      <div class="selector-desktop">
+                          <select class="dropdown-trigger" name="new_plan" id="reports-renew-plan-select" required>
+                              <option value="Monthly">Monthly ($799.00/month)</option>
+                              <option value="Annual">Yearly ($6 490.00/year) — Save 32%</option>
+                          </select>
+                      </div>
+
+                      <div class="price-desktop">
+                          <span>Total</span>
+                          <span id="reports-renew-price">$0.00</span>
+                      </div>
+
+                      <button class="button-desktop">Renew Subscription</button>
+                    </div>
+                </div>
+            </div>
+          </form>
           @else
-          <!-- Active Reports -->
+          <!-- Activate Reports -->
           <form method="POST" action="{{ route('order.subscription') }}">
             <input type="hidden" name="subscription_type" value="fpds_reports">
+            <input type="hidden" name="subscription_status" value="active">
             @csrf
             <div class="card-desktop">
               <div class="content-desktop">
@@ -148,9 +273,9 @@
                   <p class="remaining-desktop"><span class="bold">Status:</span> Not Subscribed</p>
 
                   <div class="selector-desktop">
-                    <select class="dropdown-trigger" name="subscription_price" id="composite-reports-select" required>
-                      <option value="monthly" data-price="149.00">Monthly ($799.00/month)</option>
-                      <option value="yearly" data-price="670.00">Yearly ($6490.00/year) — Save 32%</option>
+                    <select class="dropdown-trigger" name="subscription_plan" id="composite-reports-select" required>
+                      <option value="Monthly" data-price="149.00">Monthly ($799.00/month)</option>
+                      <option value="Annual" data-price="670.00">Yearly ($6490.00/year) — Save 32%</option>
                     </select>
 
                   </div>
@@ -196,9 +321,10 @@
                   <div class="inner-mobile">
                     <div class="header-mobile">
                       <div class="title-mobile">FPDS Query</div>
+
                       <div class="remaining-mobile"><span class="bold">Status:</span> {{ $fpds_query->first()->status }}</div>
-                      <div class="remaining-mobile"><span class="bold">Next billing:</span> {{ $fpds_query->first()->next_billing_at->format('M/d/Y') }}</div>
                       <div class="remaining-mobile"><span class="bold">Plan:</span> {{ $fpds_query->first()->plan }}</div>
+                      <div class="remaining-mobile"><span class="bold">Next billing:</span> {{ $fpds_query->first()->next_billing_at->format('m/d/Y') }}</div>
                       
                       <div class="price-mobile">
                         <div class="price-label-mobile">Total</div>
@@ -211,14 +337,78 @@
                   </div>
                 </div>
           </form>
+          @elseif ($hasCancelledFpdsQuery)
+          <!-- Cancelled Query Mobile -->
+          <form method="POST" action="{{ route('restore.subscription') }}">
+            @csrf
+            <input type="hidden" name="subscription_type" value="fpds_query">
+            <div class="cards-mobile">
+              <div class="card-mobile">
+                <div class="inner-mobile">
+                  <div class="header-mobile">
+                    <div class="title-mobile">FPDS Query</div>
 
-          @elseif ($hasExpiredOrCancelledFpdsQuery)
-          <!-- Restore Query Mobile-->
+                    <div class="remaining-mobile"><span class="bold">Status:</span> Cancelled</div>
+                    <div class="remaining-mobile"><span class="bold">Plan:</span> {{ $fpds_query->first()->plan }}</div>
+                    <div class="remaining-mobile"><span class="bold">Access until:</span> {{ $fpds_query->first()->expires_at->format('m/d/Y') }}</div>
+                    <div class="selector-desktop">
+                      <select class="dropdown-trigger" name="new_plan" id="mobile-restore-plan-select" required>
+                        @php
+                        $currentPlan = $fpds_query->first()->plan;
+                        @endphp
+                        <option value="Monthly" {{ $currentPlan === 'Monthly' ? 'selected' : '' }}>Monthly ($49.00/month)</option>
+                        <option value="Annual" {{ $currentPlan === 'Annual' ? 'selected' : '' }}>Yearly ($490.00/year) — Save 16%</option>
+                      </select>
+                    </div>
+                    <div class="price-mobile">
+                      <div class="price-label-mobile">Total</div>
+                      <div class="price-value-mobile" id="mobile-restore-price">$0.00</div>
+                    </div>
+                  </div>
+                  <button class="button-mobile">
+                    <div class="button-text-mobile">Restore Subscription</div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+          @elseif ($hasExpiredFpdsQuery)
+          <!-- Expired Query Mobile -->
+          <form method="POST" action="{{ route('renew.subscription') }}">
+            @csrf
+            <input type="hidden" name="subscription_type" value="fpds_query">
+            <div class="cards-mobile">
+                <div class="card-mobile">
+                    <div class="inner-mobile">
+                <div class="header-mobile">
+                    <div class="title-mobile">FPDS Query</div>
+                    <div class="remaining-mobile"><span class="bold">Status:</span> Expired</div>
+                    <div class="remaining-mobile"><span class="bold">Expired on:</span> {{ $fpds_query->first()->expires_at->format('M/d/Y') }}</div>
 
+                    <div class="selector-desktop">
+                <select class="dropdown-trigger" name="new_plan" id="mobile-renew-plan-select" required>
+                    <option value="Monthly">Monthly ($49.00/month)</option>
+                    <option value="Annual">Yearly ($490.00/year) — Save 16%</option>
+                </select>
+                    </div>
+
+                    <div class="price-mobile">
+                <div class="price-label-mobile">Total</div>
+                <div class="price-value-mobile" id="mobile-renew-price">$0.00</div>
+                    </div>
+                </div>
+                <button class="button-mobile">
+                    <div class="button-text-mobile">Renew Subscription</div>
+                </button>
+                    </div>
+                </div>
+            </div>
+          </form>
           @else
-          <!-- Active Query Mobile-->
+          <!-- Trial Query Mobile-->
           <form method="POST" action="{{ route('order.subscription') }}">
               <input type="hidden" name="subscription_type" value="fpds_query">
+              <input type="hidden" name="subscription_status" value="trial">
               @csrf
               <div class="cards-mobile">
                 <div class="card-mobile">
@@ -228,20 +418,20 @@
                       <div class="remaining-mobile"><span class="bold">Status:</span> Not Subscribed</div>
 
                       <div class="selector-desktop">
-                        <select class="dropdown-trigger" name="subscription_price" id="mobile-elem-select" required>
-                          <option value="monthly" data-price="49.00">Monthly ($49.00/month)</option>
-                          <option value="yearly" data-price="490.00">Yearly ($490.00/year) — Save 16%</option>
-                  
+                        <select class="dropdown-trigger" name="subscription_plan" id="mobile-elem-select" required>
+                          <option value="Monthly" data-price="49.00">Monthly ($49.00/month)</option>
+                          <option value="Annual" data-price="490.00">Yearly ($490.00/year) — Save 16%</option>
                         </select>
-
                       </div>
+
                       <div class="price-mobile">
                         <div class="price-label-mobile">Total</div>
                         <div class="price-value-mobile" id="elementary-price-mobile">$49.00</div>
                       </div>
+
                     </div>
                     <button class="button-mobile">
-                      <div class="button-text-mobile">Activate</div>
+                      <div class="button-text-mobile">Start 7‑Day Free Trial</div>
                     </button>
                   </div>
                 </div>
@@ -249,7 +439,7 @@
           @endif
 
 
-          <!-- Cancel Reports Mobile-->
+          <!-- Cancel Reports Mobile -->
           @if ($hasActiveFpdsReports)
           <form method="POST" action="{{ route('cancel.subscription') }}">
               <input type="hidden" name="subscription_type" value="fpds_reports">
@@ -274,13 +464,77 @@
                 </div>
               </div>
           </form>
-          @elseif ($hasExpiredOrCancelledFpdsReports)
-          <!-- Restore Reports Mobile-->
+          @elseif ($hasCancelledFpdsReports)
+          <!-- Cancelled Reports Mobile  -->
+          <form method="POST" action="{{ route('restore.subscription') }}">
+            @csrf
+            <input type="hidden" name="subscription_type" value="fpds_reports">
+            <div class="card-mobile">
+                <div class="inner-mobile">
+                    <div class="header-mobile">
+                        <div class="title-mobile">FPDS Reports</div>
 
+                        <div class="remaining-mobile"><span class="bold">Status:</span> Cancelled</div>
+                        <div class="remaining-mobile"><span class="bold">Plan:</span> {{ $fpds_reports->first()->plan }}</div>
+                        <div class="remaining-mobile"><span class="bold">Access until:</span> {{ $fpds_reports->first()->expires_at->format('m/d/Y') }}</div>
+
+                        <div class="selector-desktop">
+                            <select class="dropdown-trigger" name="new_plan" id="mobile-reports-restore-plan-select" required>
+                            @php
+                            $currentPlan = $fpds_reports->first()->plan;
+                        @endphp
+                        <option value="Monthly" {{ $currentPlan === 'Monthly' ? 'selected' : '' }}>Monthly ($799.00/month)</option>
+                        <option value="Annual" {{ $currentPlan === 'Annual' ? 'selected' : '' }}>Yearly ($6 490.00/year) — Save 32%</option>
+                            </select>
+                        </div>
+
+                        <div class="price-mobile">
+                            <div class="price-label-mobile">Total</div>
+                            <div class="price-value-mobile" id="mobile-reports-restore-price">$0.00</div>
+                        </div>
+                    </div>
+                    <button class="button-mobile">
+                        <div class="button-text-mobile">Restore Subscription</div>
+                    </button>
+                </div>
+            </div>
+          </form>
+          @elseif ($hasExpiredFpdsReports)
+          <!-- Expired Reports Mobile  -->
+          <form method="POST" action="{{ route('renew.subscription') }}">
+            @csrf
+            <input type="hidden" name="subscription_type" value="fpds_reports">
+            <div class="card-mobile">
+                <div class="inner-mobile">
+                    <div class="header-mobile">
+                <div class="title-mobile">FPDS Reports</div>
+                <div class="remaining-mobile"><span class="bold">Status:</span> Expired</div>
+                <div class="remaining-mobile"><span class="bold">Plan:</span> {{ $fpds_reports->first()->plan }}</div>
+                <div class="remaining-mobile"><span class="bold">Expired on:</span> {{ $fpds_reports->first()->expires_at->format('m/d/Y') }}</div>
+
+                <div class="selector-desktop">
+                    <select class="dropdown-trigger" name="new_plan" id="mobile-reports-renew-plan-select" required>
+                        <option value="Monthly">Monthly ($799.00/month)</option>
+                <option value="Annual">Yearly ($6 490.00/year) — Save 32%</option>
+                    </select>
+                </div>
+
+                <div class="price-mobile">
+                    <div class="price-label-mobile">Total</div>
+                    <div class="price-value-mobile" id="mobile-reports-renew-price">$0.00</div>
+                </div>
+                    </div>
+                    <button class="button-mobile">
+                <div class="button-text-mobile">Renew Subscription</div>
+                    </button>
+                </div>
+            </div>
+          </form>
           @else
-          <!-- Active Reports Mobile-->
+          <!-- Activate Reports Mobile -->
           <form method="POST" action="{{ route('order.subscription') }}">
               <input type="hidden" name="subscription_type" value="fpds_reports">
+              <input type="hidden" name="subscription_status" value="active">
               @csrf
               <div class="card-mobile">
                 <div class="inner-mobile">
@@ -290,8 +544,8 @@
 
                     <div class="selector-desktop">
                       <select class="dropdown-trigger" name="reports_count" id="mobile-composite-select" required>
-                        <option value="monthly" data-price="799.00">Monthly ($799.00/month)</option>
-                        <option value="yearly" data-price="6490.00">Yearly ($6490.00/year) — Save 32%</option>
+                        <option value="Monthly" data-price="799.00">Monthly ($799.00/month)</option>
+                        <option value="Annual" data-price="6490.00">Yearly ($6490.00/year) — Save 32%</option>
                       </select>
 
                     </div>
@@ -310,6 +564,7 @@
           @endif
 
           </div>
+
         </div>
 
       </div>

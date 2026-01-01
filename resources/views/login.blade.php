@@ -100,7 +100,7 @@
         }
 
         .form-input {
-            color: #5f5f5f;
+            color: #FFF;
             font-size: 24px;
             font-family: Overused Grotesk;
             font-weight: 400;
@@ -375,7 +375,7 @@
                         <label class="form-label">Email address</label>
                         <div class="input-wrapper">
                             <input type="email" id="email" name="email" class="form-input"
-                                placeholder="you@example.com">
+                                placeholder="your@company.com" value="{{ old('email') }}">
                         </div>
                     </div>
 

@@ -62,34 +62,52 @@ class AccountController extends Controller
 
         // Формируем флаги для fpds_query
         $hasActiveFpdsQuery = false;
-        $hasExpiredOrCancelledFpdsQuery = false;
+        $hasCancelledFpdsQuery = false;
+        $hasExpiredFpdsQuery = false;
 
         if ($fpds_query->isNotEmpty()) {
             $firstFpdsQuery = $fpds_query->first();
-            $hasActiveFpdsQuery = ($firstFpdsQuery->status === 'active');
-            $hasExpiredOrCancelledFpdsQuery = in_array($firstFpdsQuery->status, ['expired', 'cancelled']);
+
+            // Объединённая проверка: active ИЛИ активный trial
+            $hasActiveFpdsQuery = (
+                $firstFpdsQuery->status === Subscription::STATUS_ACTIVE
+                || $firstFpdsQuery->isActiveTrial()
+            );
+
+            $hasCancelledFpdsQuery = ($firstFpdsQuery->status === Subscription::STATUS_CANCELLED);
+            $hasExpiredFpdsQuery = ($firstFpdsQuery->isExpired());
         }
 
         // Формируем флаги для fpds_reports
         $hasActiveFpdsReports = false;
-        $hasExpiredOrCancelledFpdsReports = false;
+        $hasCancelledFpdsReports = false;
+        $hasExpiredFpdsReports = false;
 
         if ($fpds_reports->isNotEmpty()) {
             $firstFpdsReports = $fpds_reports->first();
-            $hasActiveFpdsReports = ($firstFpdsReports->status === 'active');
-            $hasExpiredOrCancelledFpdsReports = in_array($firstFpdsReports->status, ['expired', 'cancelled']);
+
+            // Объединённая проверка: active ИЛИ активный trial
+            $hasActiveFpdsReports = (
+                $firstFpdsReports->status === Subscription::STATUS_ACTIVE
+                || $firstFpdsReports->isActiveTrial()
+            );
+
+            $hasCancelledFpdsReports = ($firstFpdsReports->status === Subscription::STATUS_CANCELLED);
+            $hasExpiredFpdsReports = ($firstFpdsReports->isExpired());
         }
 
-        
         session(['last_account_section' => route('account.subscription')]);
+
         return view('account.subscription', compact(
             'user',
             'fpds_query',
             'fpds_reports',
             'hasActiveFpdsQuery',
-            'hasExpiredOrCancelledFpdsQuery',
+            'hasCancelledFpdsQuery',
+            'hasExpiredFpdsQuery',
             'hasActiveFpdsReports',
-            'hasExpiredOrCancelledFpdsReports'
+            'hasCancelledFpdsReports',
+            'hasExpiredFpdsReports'
         ));
     }
 
