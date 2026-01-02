@@ -158,6 +158,45 @@ class SubscriptionController extends Controller
 
     public function renewSubscription(Request $request)
     {
-        dd($request->all());
+        $validated = $request->validate([
+            'subscription_type' => 'required|in:fpds_query,fpds_reports',
+            'new_plan' => 'required|in:Monthly,Annual',
+        ]);
+
+        $subscriptionType = $validated['subscription_type']; // 'fpds_query' или 'fpds_reports'
+        $newPlan = $validated['new_plan']; // 'Monthly' или 'Annual'
+
+        // Запрещаем триал для fpds_query
+        if ($subscriptionType === 'fpds_query') {
+            $subscriptionStatus = 'active';
+        } else {
+            // Для fpds_reports допускаем триал (если нужно в будущем)
+            $subscriptionStatus = 'trial'; // или 'active' — зависит от логики
+        }
+
+        // В текущем контексте всегда 'active' для обоих типов
+        $subscriptionStatus = 'active';
+
+        // Получаем цены из модели Subscription
+        $prices = Subscription::PRICES;
+        $totalPrice = $prices[$subscriptionType][$newPlan];
+
+        // Триал для fpds_query запрещён → цена всегда полная
+
+        $orderData = [
+            'subscription_type' => $subscriptionType,
+            'subscription_status' => $subscriptionStatus,
+            'subscription_price' => $totalPrice,
+            'subscription_plan' => $newPlan,
+        ];
+
+        // Сохраняем в сессию: ключ зависит от типа подписки
+        if ($subscriptionType === 'fpds_query') {
+            Session::put('fpds_query_subscription', $orderData);
+        } elseif ($subscriptionType === 'fpds_reports') {
+            Session::put('fpds_report_subscription', $orderData);
+        }
+
+        return redirect()->route('checkout');
     }
 }

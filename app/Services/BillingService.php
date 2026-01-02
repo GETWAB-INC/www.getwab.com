@@ -30,8 +30,6 @@ class BillingService
                 continue;
             }
 
-            
-
             try {
                 DB::transaction(function () use ($data, $sessionKey, &$results) {
                     
@@ -40,7 +38,7 @@ class BillingService
 
                     // 2. Дополняем $data ID биллинговой записи для подписки
                     $data['billing_record_id'] = $billingRecord->id;
-
+                    
                     // 3. Создаём подписку
                     Subscription::store($data);
 

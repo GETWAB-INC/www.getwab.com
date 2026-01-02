@@ -81,8 +81,6 @@ class AccountController extends Controller
             $hasCancelledFpdsReports = ($fpds_reports->isCancelled());
             $hasExpiredFpdsReports = ($fpds_reports->isExpired());
         }
-
-        // dd($hasActiveFpdsQuery, $hasCancelledFpdsQuery, $hasExpiredFpdsQuery, $hasActiveFpdsReports, $hasCancelledFpdsReports, $hasExpiredFpdsReports);
         
         session(['last_account_section' => route('account.subscription')]);
         

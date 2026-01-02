@@ -9,8 +9,4 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote')->hourly();
 
-// Your new scheduled commands
-Schedule::command('send:helloemail')->everyMinute();
-Schedule::command('send:againemail')->everyMinute();
-Schedule::command('send:lastemail')->everyMinute();
-Schedule::command('mail:clean-imap-emails')->everyMinute();
+Schedule::command('subscription:update-status')->everyMinute();

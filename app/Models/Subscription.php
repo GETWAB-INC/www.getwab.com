@@ -203,38 +203,70 @@ class Subscription extends Model
         $subscription_plan = $data['subscription_plan'];
         $billing_record_id = $data['billing_record_id'];
 
-        $subscription = new Subscription();
-        $subscription->user_id = auth()->id();
-        $subscription->billing_record_id = $billing_record_id;
-        $subscription->subscription_type = $subscription_type;
-        $subscription->status = $subscription_status;
-        $subscription->plan = $subscription_plan;
-        $subscription->start_at = now();
+        // Ищем существующую подписку пользователя для данного типа
+        $existingSubscription = Subscription::where('user_id', auth()->id())
+            ->where('subscription_type', $subscription_type)
+            ->first();
 
-        if ($subscription_status == 'trial') {
-            $subscription->next_billing_at = now()->addDays(7);
-            $subscription->expires_at = now()->addDays(7);
-            $subscription->trial_start_at = now();
-            $subscription->trial_end_at = now()->addDays(7);
+        if ($existingSubscription) {
+            // Обновляем существующую подписку
+            $subscription = $existingSubscription;
+            $subscription->billing_record_id = $billing_record_id;
+            $subscription->status = $subscription_status;
+            $subscription->plan = $subscription_plan;
+            // start_at НЕ меняем — сохраняем первоначальную дату
+
+            if ($subscription_status == 'trial') {
+                $subscription->next_billing_at = now()->addDays(7);
+                $subscription->expires_at = now()->addDays(7);
+                $subscription->trial_start_at = now();
+                $subscription->trial_end_at = now()->addDays(7);
+            } else {
+                $subscription->next_billing_at = $subscription->calculateNextBillingDate();
+                $subscription->expires_at = $subscription->calculateExpireDate();
+            }
+
+            $subscription->cancelled_at = NULL;
+            $subscription->amount = self::PRICES[$subscription_type][$subscription_plan];
+            $subscription->currency = 'USD';
+            $subscription->payment_gateway_id = NULL;
+            $subscription->notes = "Subscription updated, linked to billing #{$billing_record_id}";
         } else {
-            $subscription->next_billing_at = $subscription->calculateNextBillingDate();
-            $subscription->expires_at = $subscription->calculateExpireDate();
-        }
+            // Создаём новую подписку
+            $subscription = new Subscription();
+            $subscription->user_id = auth()->id();
+            $subscription->billing_record_id = $billing_record_id;
+            $subscription->subscription_type = $subscription_type;
+            $subscription->status = $subscription_status;
+            $subscription->plan = $subscription_plan;
+            $subscription->start_at = now(); // Только для новых подписок
 
-        $subscription->cancelled_at = NULL;
-        $subscription->amount = self::PRICES[$subscription_type][$subscription_plan];
-        $subscription->currency = 'USD';
-        $subscription->payment_gateway_id = NULL;
-        $subscription->notes = "Subscription linked to billing #{$billing_record_id}";
+            if ($subscription_status == 'trial') {
+                $subscription->next_billing_at = now()->addDays(7);
+                $subscription->expires_at = now()->addDays(7);
+                $subscription->trial_start_at = now();
+                $subscription->trial_end_at = now()->addDays(7);
+            } else {
+                $subscription->next_billing_at = $subscription->calculateNextBillingDate();
+                $subscription->expires_at = $subscription->calculateExpireDate();
+            }
+
+            $subscription->cancelled_at = NULL;
+            $subscription->amount = self::PRICES[$subscription_type][$subscription_plan];
+            $subscription->currency = 'USD';
+            $subscription->payment_gateway_id = NULL;
+            $subscription->notes = "Subscription linked to billing #{$billing_record_id}";
+        }
 
         try {
             $subscription->save();
         } catch (\Exception $e) {
-            dd($e);
-            \Log::error('Failed to save subscription in createFromData', [
+            \Log::error('Failed to save/update subscription in store', [
                 'error_message' => $e->getMessage(),
                 'exception_class' => get_class($e),
                 'data_used' => $data,
+                'user_id' => auth()->id(),
+                'subscription_type' => $subscription_type,
                 'timestamp' => now()->toDateTimeString()
             ]);
             throw $e;
@@ -242,6 +274,7 @@ class Subscription extends Model
 
         return $subscription;
     }
+
 
     /**
      * Обновляет подписку с пересчётом дат и статуса.
