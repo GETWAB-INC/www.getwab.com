@@ -133,7 +133,7 @@ class BillingRecord extends Model
      *   - «7‑day FPDS Query trial → Annual subscription» (для trial);
      *   - «FPDS Reports → Annual subscription» (для не‑trial).
      */
-    protected static function getReadableDescription(array $data): string
+    protected static function getSubscriptionDescription(array $data): string
     {
         $typeNames = [
             'fpds_query' => 'FPDS Query',

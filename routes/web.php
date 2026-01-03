@@ -23,6 +23,7 @@ Route::get('/login', function () {
 
 // Login Process
 Route::post('/login-process', [LoginController::class, 'login'])->name('login-process');
+Route::post('/fpds/query', [LoginController::class, 'fpdsQuery'])->name('fpds.query')->middleware('auth');
 // Logout
 Route::post('/logout', function () {
     Auth::logout();

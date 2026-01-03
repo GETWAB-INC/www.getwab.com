@@ -178,181 +178,12 @@
       height: 24px;
     }
 
-    @media (min-width: 768px) {
 
-    .mobile-dashboard-main {
-      display: none !important;
-    }
-  }
-
-  @media (max-width: 767px) {
-      .dashboard-sidebar {
+    @media (max-width: 767px) {
+      .mobile-dashboard-main {
         display: none !important;
       }
-
-      .mobile-your-reports {
-        align-self: stretch;
-        padding-bottom: 32px;
-        padding-left: 24px;
-        padding-right: 24px;
-        position: relative;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        display: inline-flex;
-      }
-
-      .mobile-your-reports-container {
-        width: 327px;
-        position: relative;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 24px;
-        display: inline-flex;
-      }
-
-      .mobile-your-reports-title {
-        align-self: stretch;
-        color: var(--white);
-        font-size: 24px;
-        font-family: Overused Grotesk;
-        font-weight: 400;
-        line-height: 24px;
-        word-wrap: break-word;
-      }
-
-      .mobile-your-reports-content {
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: flex-start;
-        gap: 24px;
-        display: flex;
-      }
-
-      .mobile-your-reports-description {
-        width: 200px;
-        color: var(--gray);
-        font-size: 16px;
-        font-family: Overused Grotesk;
-        font-weight: 400;
-        line-height: 16px;
-        word-wrap: break-word;
-      }
-
-      .mobile-your-reports-list {
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: flex-start;
-        gap: 8px;
-        display: flex;
-      }
-
-      .mobile-reports-list {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .mobile-dashboard-main {
-        padding: 24px;
-      }
-
-      .mobile-report-item {
-        width: 327px;
-        height: 60px;
-        background: var(--dark-gray);
-        border-radius: 7px;
-        gap: 10px;
-        display: flex;
-        justify-content: space-between;
-        position: relative;
-        padding: 12px;
-      }
-
-      .mobile-report-item::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border-radius: 7px;
-        padding: 2px;
-        background: linear-gradient(135deg, #b5d9a7, #00aa89);
-        -webkit-mask: linear-gradient(#fff 0 0) content-box,
-          linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        pointer-events: none;
-      }
-
-      .mobile-report-item-content {
-        width: 100%;
-        height: 100%;
-        background: var(--dark-gray);
-        border-radius: 6px;
-        padding: 6px 14px;
-        display: flex;
-        align-items: center;
-        gap: 75px;
-        position: relative;
-        z-index: 1;
-      }
-
-      .mobile-report-date {
-        display: none;
-      }
-
-      .mobile-report-id {
-        display: none;
-      }
-
-      .mobile-report-status {
-        display: none;
-      }
-
-      .mobile-report-title {
-        width: 190px;
-        color: #FFF;
-        font-size: 16px;
-        font-weight: 700;
-        line-height: 16px;
-        word-wrap: break-word;
-        padding: 1px 10px;
-      }
-
-      .action-icon {
-        padding: 0px 50px;
-      }
-
-      .mobile-report-action {
-        height: 32px;
-        padding-left: 4px;
-        padding-right: 4px;
-        overflow: hidden;
-        justify-content: center;
-        align-items: center;
-        display: flex;
-      }
-
-      .mobile-decoration-dot-2 {
-        width: 10px;
-        height: 10px;
-        left: 115px;
-        top: 75px;
-        position: absolute;
-      }
-
-      .mobile-decoration-dot-1 {
-        width: 10px;
-        height: 10px;
-        left: -14px;
-        top: 38px;
-        position: absolute;
-        transform-origin: top left;
-      }
-  }
+    }
   </style>
 </head>
 
@@ -379,122 +210,105 @@
           </p>
         </div>
 
-        <div class="reports-table">
-          <div class="reports-row">
-            <div class="reports-header report-id">
-              <div class="header-content">
-                <div class="header-text">Report ID</div>
-              </div>
-            </div>
-            <div class="reports-header report-code">
-              <div class="header-content">
-                <div class="header-text">Report Code</div>
-              </div>
-            </div>
-            <div class="reports-header title">
-              <div class="header-content">
-                <div class="header-text">Title</div>
-              </div>
-            </div>
-            <div class="reports-header date">
-              <div class="header-content">
-                <div class="header-text">Date</div>
-              </div>
-            </div>
-            <div class="reports-header status">
-              <div class="header-content">
-                <div class="header-text">Status</div>
-              </div>
-            </div>
-            <div class="reports-header action">
-              <div class="header-content">
-                <div class="header-text">Action</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 1 -->
-          <div class="reports-row">
-            <div class="reports-cell report-id">
+        @if($reports->isEmpty())
+          <div class="reports-table">
+            <div class="reports-row"
+              style="background: #282828; padding: 20px; justify-content: center; text-align: center;">
               <div class="cell-content">
-                <div class="cell-text">RPT-20250719-1145</div>
-              </div>
-            </div>
-            <div class="reports-cell report-code">
-              <div class="cell-content">
-                <a href="#" class="a-report">
-                  <div class="cell-text">SFPR-GEO-EL-1</div>
+                <div class="cell-text" style="font-size: 28px; font-weight: 600; margin-bottom: 12px;">
+                  You don’t have any reports yet.
+                </div>
+                <div class="cell-text" style="font-size: 20px; color: #b5d9a7; margin-bottom: 20px;">
+                  Explore our library and generate your first report today!
+                </div>
+                <a href="{{ route('library') }}" class="hero-button">
+                  Go to Library
                 </a>
-              </div>
-            </div>
-            <div class="reports-cell title">
-              <div class="cell-content">
-                <div class="cell-text">Spending by U.S. State (2020–2024)</div>
-              </div>
-            </div>
-            <div class="reports-cell date">
-              <div class="cell-content">
-                <div class="cell-text">July 19, 2025</div>
-              </div>
-            </div>
-            <div class="reports-cell status">
-              <div class="status-container">
-                <div class="status-icon">
-                  <img src="{{ asset('img/ico/Status-done-ico.svg') }}" alt="" />
-                </div>
-              </div>
-            </div>
-            <div class="reports-cell action">
-              <div class="action-container">
-                <div class="action-icon">
-                  <img src="{{ asset('img/ico/Action-done-ico.svg') }}" alt="" />
-                </div>
+
               </div>
             </div>
           </div>
+        @else
 
-          <!-- 2 -->
-          <div class="reports-row">
-            <div class="reports-cell report-id">
-              <div class="cell-content">
-                <div class="cell-text">RPT-20250721-1423</div>
+          <div class="reports-table">
+            <div class="reports-row">
+              <div class="reports-header report-id">
+                <div class="header-content">
+                  <div class="header-text">Report ID</div>
+                </div>
               </div>
-            </div>
-            <div class="reports-cell report-code">
-              <div class="cell-content">
-                <a href="#" class="a-report">
-                  <div class="cell-text">SFPR-DEPT-COLL-2</div>
-                </a>
+              <div class="reports-header report-code">
+                <div class="header-content">
+                  <div class="header-text">Report Code</div>
+                </div>
               </div>
-            </div>
-            <div class="reports-cell title">
-              <div class="cell-content">
-                <div class="cell-text">Dept-Level Trends for California</div>
+              <div class="reports-header title">
+                <div class="header-content">
+                  <div class="header-text">Title</div>
+                </div>
               </div>
-            </div>
-            <div class="reports-cell date">
-              <div class="cell-content">
-                <div class="cell-text">July 21, 2025</div>
+              <div class="reports-header date">
+                <div class="header-content">
+                  <div class="header-text">Date</div>
+                </div>
               </div>
-            </div>
-            <div class="reports-cell status">
-              <div class="status-container">
-                <div class="status-icon">
-                  <img src="{{ asset('img/ico/Status-loading-ico.svg') }}" alt="" />
+              <div class="reports-header status">
+                <div class="header-content">
+                  <div class="header-text">Status</div>
+                </div>
+              </div>
+              <div class="reports-header action">
+                <div class="header-content">
+                  <div class="header-text">Action</div>
                 </div>
               </div>
             </div>
-            <div class="reports-cell action">
-              <div class="action-container">
-                <div class="action-icon">
-                  <img src="{{ asset('img/ico/Action-loading-ico.svg') }}" alt="" />
+
+            @foreach($reports as $report)
+              <div class="reports-row">
+                <div class="reports-cell report-id">
+                  <div class="cell-content">
+                    <div class="cell-text">{{ $report->report_id ?? 'N/A' }}</div>
+                  </div>
+                </div>
+                <div class="reports-cell report-code">
+                  <div class="cell-content">
+                    <a href="{{ route('report.show', ['report_code' => $report->report_code]) }}" class="a-report">
+                      <div class="cell-text">{{ $report->report_code ?? 'N/A' }}</div>
+                    </a>
+                  </div>
+                </div>
+                <div class="reports-cell title">
+                  <div class="cell-content">
+                    <div class="cell-text">{{ $report->title ?? 'No title' }} @if ($report->getParametersString())({{ $report->getParametersString() }})@endif</div>
+
+                  </div>
+                </div>
+                <div class="reports-cell date">
+                  <div class="cell-content">
+                    <div class="cell-text">
+                      {{ $report->created_at ? $report->created_at->format('F d, Y') : 'Unknown date' }}</div>
+                  </div>
+                </div>
+                <div class="reports-cell status">
+                  <div class="status-container">
+                    <div class="status-icon">
+                      <div class="cell-text">{{ $report->status ?? 'No title' }}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="reports-cell action">
+                  <div class="action-container">
+                    <div class="action-icon">
+                      <img src="{{ asset('img/ico/Action-loading-ico.svg') }}" alt="" />
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            @endforeach
 
           </div>
-
-        </div>
+        @endif
 
       </div>
 
@@ -503,34 +317,37 @@
     <!-- Mobile Dashboard -->
     <main class="mobile-dashboard-main">
 
-      <div class="mobile-container">
-          <div class="mobile-title">Your Reports</div>
-          <div class="mobile-content">
-            <div class="mobile-description">
-              All reports you've generated or purchased
+      <div id="mobile-reports" class="mobile-your-profile-container">
+
+        <div class="title-and-description">
+          <h1 class="content-main-title">Your Reports</h1>
+          <p class="content-description-text">
+            All reports you've
+            generated <br />
+            or purchased.
+          </p>
+        </div>
+
+        <div class="mobile-your-profile-list">
+          <div class="mobile-reports-list">
+            <div class="mobile-report-item">
+              <div class="mobile-report-title">Spending by U.S. State (2020–2024)</div>
+              <div class="action-icon">
+                <img src="{{ asset('img/ico/Action-done-ico.svg') }}" alt="" />
+              </div>
             </div>
-            <div class="mobile-list">
-              <div class="mobile-reports-list">
-                <div class="mobile-report-item">
-                  <div class="mobile-report-title">Spending by U.S. State (2020–2024)</div>
-                  <div class="mobile-report-date">July 19, 2025</div>
-                  <div class="action-icon">
-                    <img src="{{ asset('img/ico/Action-done-ico.svg') }}" alt="" />
-                  </div>
-                </div>
-                <div class="mobile-report-item">
-                  <div class="mobile-report-title">Dept-Level Trends for California</div>
-                  <div class="mobile-report-date">July 21, 2025</div>
-                  <div class="action-icon">
-                    <img src="{{ asset('img/ico/Action-loading-ico.svg') }}" alt="" />
-                  </div>
-                </div>
+            <div class="mobile-report-item">
+              <div class="mobile-report-title">Dept-Level Trends for California</div>
+              <div class="action-icon">
+                <img src="{{ asset('img/ico/Action-loading-ico.svg') }}" alt="" />
               </div>
             </div>
           </div>
-
         </div>
-      </main>
+
+      </div>
+
+    </main>
 
   </div>
 

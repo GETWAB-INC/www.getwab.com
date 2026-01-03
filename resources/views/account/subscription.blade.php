@@ -143,7 +143,6 @@
           <!-- Trial Query -->
           <form method="POST" action="{{ route('order.subscription') }}">
             <input type="hidden" name="subscription_type" value="fpds_query">
-            <input type="hidden" name="subscription_status" value="trial">
             @csrf
             <div class="card-desktop">
 
@@ -411,7 +410,6 @@
           <!-- Trial Query Mobile-->
           <form method="POST" action="{{ route('order.subscription') }}">
               <input type="hidden" name="subscription_type" value="fpds_query">
-              <input type="hidden" name="subscription_status" value="trial">
               @csrf
               <div class="cards-mobile">
                 <div class="card-mobile">

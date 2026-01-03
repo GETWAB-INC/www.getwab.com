@@ -63,10 +63,10 @@ class CheckoutController extends Controller
 
         if ($paymentSuccessful) {
             $billingService = new BillingService();
-
+            
             // 1. Обрабатываем подписки
             $subscriptionResult = $billingService->processSubscriptions();
-
+            
             // 2. Обрабатываем пакеты отчётов
             $packageResult = $billingService->processReportPackage();
 

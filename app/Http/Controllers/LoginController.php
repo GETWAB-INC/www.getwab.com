@@ -40,4 +40,11 @@ class LoginController extends Controller
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
     }
+
+    public function fpdsQuery(Request $request)
+    {
+        if (auth()->check()) {
+            return redirect('https://fpds.getwab.com/query');
+        }
+    }
 }

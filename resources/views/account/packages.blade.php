@@ -51,7 +51,7 @@
               <div class="content-desktop">
                 <div class="details-desktop">
                   <h2 class="title-desktop">Elementary Reports</h2>
-                  <p class="remaining-desktop">Reports Remaining: <span id="elementary-remaining">17</span></p>
+                  <p class="remaining-desktop">Reports Remaining: <span id="elementary-remaining">{{ $elementaryCount }}</span></p>
 
                   <div class="selector-desktop">
                     <select class="dropdown-trigger" name="reports_count" id="elem-reports-select" required>
@@ -85,7 +85,7 @@
               <div class="content-desktop">
                 <div class="details-desktop">
                   <h2 class="title-desktop">Composite Reports</h2>
-                  <p class="remaining-desktop">Reports Remaining: <span id="composite-remaining">4</span></p>
+                  <p class="remaining-desktop">Reports Remaining: <span id="composite-remaining">{{ $compositeCount }}</span></p>
 
                   <div class="selector-desktop">
                     <select class="dropdown-trigger" name="reports_count" id="composite-reports-select" required>
@@ -135,7 +135,7 @@
                   <div class="inner-mobile">
                     <div class="header-mobile">
                       <div class="title-mobile">Elementary Reports</div>
-                      <div class="remaining-mobile">Reports Remaining: 17</div>
+                      <div class="remaining-mobile">Reports Remaining: {{ $elementaryCount }}</div>
 
                       <div class="selector-desktop">
                         <select class="dropdown-trigger" name="reports_count" id="mobile-elem-select" required>
@@ -168,7 +168,7 @@
                 <div class="inner-mobile">
                   <div class="header-mobile">
                     <div class="title-mobile">Composite Reports</div>
-                    <div class="remaining-mobile">Reports Remaining: 4</div>
+                    <div class="remaining-mobile">Reports Remaining: {{ $compositeCount }}</div>
 
                     <div class="selector-desktop">
                       <select class="dropdown-trigger" name="reports_count" id="mobile-composite-select" required>

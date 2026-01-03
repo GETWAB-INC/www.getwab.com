@@ -43,8 +43,25 @@ class AccountController extends Controller
     public function packages(Request $request)
     {
         $user = Auth::user();
+
+        // Получаем запись для 'elementary' и берём remaining_reports
+        $elementaryPackage = $user->reportPackages()
+            ->where('package_type', 'elementary')
+            ->first();
+        $elementaryCount = $elementaryPackage ? $elementaryPackage->remaining_reports : 0;
+
+        // Аналогично для 'composite'
+        $compositePackage = $user->reportPackages()
+            ->where('package_type', 'composite')
+            ->first();
+        $compositeCount = $compositePackage ? $compositePackage->remaining_reports : 0;
+
         session(['last_account_section' => route('account.packages')]);
-        return view('account.packages', compact('user'));
+        return view('account.packages', compact(
+            'user',
+            'elementaryCount',
+            'compositeCount'
+        ));
     }
 
     public function subscription(Request $request)

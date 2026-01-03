@@ -97,7 +97,7 @@
         }
 
         .form-input {
-            color: #5f5f5f;
+            color: #FFF;
             font-size: 24px;
             font-family: Overused Grotesk;
             font-weight: 400;

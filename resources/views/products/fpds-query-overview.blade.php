@@ -897,7 +897,8 @@
 
         <section class="comparison">
             <div class="comparison__container">
-                <h2 id="comparison-heading" class="visually-hidden">Feature Comparison: FPDS Query vs FPDS Atom Feed</h2>
+                <h2 id="comparison-heading" class="visually-hidden">Feature Comparison: FPDS Query vs FPDS Atom Feed
+                </h2>
                 <div class="comparison__table-container">
                     <table class="comparison__table">
                         <thead>
@@ -1003,44 +1004,61 @@
                     <!-- Pricing Cards -->
                     <div class="pricing-cards">
                         <!-- Card 1 -->
+
                         <div class="pricing-card">
-                            <div class="card-content">
-                                <div class="card-header">
-                                    <h3 class="plan-name">PRO Plan - Monthly</h3>
-                                    <div class="plan-price">
-                                        <span class="price-amount">$49</span>
-                                        <span class="price-period">/ month</span>
+                            <form action="{{ route('order.subscription') }}" method="post">
+                                @csrf
+                                <input type="hidden" name="subscription_type" value="fpds_query">
+                                <input type="hidden" name="subscription_plan" value="Monthly">
+                                
+                                <div class="card-content">
+
+                                    <div class="card-header">
+                                        <h3 class="plan-name">PRO Plan - Monthly</h3>
+                                        <div class="plan-price">
+                                            <span class="price-amount">$49</span>
+                                            <span class="price-period">/ month</span>
+                                        </div>
                                     </div>
+                                    <div class="plan-features">
+                                        <div class="feature">Full access, unlimited queries</div>
+                                        <div class="feature">CSV export, SQL interface</div>
+                                    </div>
+                                    <button href="{{ route('checkout') }}" class="select-btn">
+                                        Select Monthly
+                                    </button>
+
                                 </div>
-                                <div class="plan-features">
-                                    <div class="feature">Full access, unlimited queries</div>
-                                    <div class="feature">CSV export, SQL interface</div>
-                                </div>
-                                <a href="{{ route('checkout') }}" class="select-btn">
-                                    Select Monthly
-                                </a>
-                            </div>
+                            </form>
                         </div>
+
 
                         <!-- Card 2 -->
                         <div class="pricing-card yearly-card">
-                            <div class="card-content">
-                                <div class="card-header">
-                                    <h3 class="plan-name">PRO Plan - Yearly</h3>
-                                    <div class="plan-price">
-                                        <span class="price-amount">$399</span>
-                                        <span class="price-period">/ year</span>
+                            <form action="{{ route('order.subscription') }}" method="post">
+                                @csrf
+                                <input type="hidden" name="subscription_type" value="fpds_query">
+                                <input type="hidden" name="subscription_plan" value="Annual">
+                                <div class="card-content">
+
+                                    <div class="card-header">
+                                        <h3 class="plan-name">PRO Plan - Yearly</h3>
+                                        <div class="plan-price">
+                                            <span class="price-amount">$390</span>
+                                            <span class="price-period">/ year</span>
+                                        </div>
                                     </div>
+                                    <div class="plan-features">
+                                        <div class="feature">Full access, unlimited queries</div>
+                                        <div class="feature">CSV export, SQL interface</div>
+                                        <div class="feature">Priority support</div>
+                                    </div>
+                                    <button href="{{ route('checkout') }}" class="select-btn">
+                                        Select Yearly
+                                    </button>
+
                                 </div>
-                                <div class="plan-features">
-                                    <div class="feature">Full access, unlimited queries</div>
-                                    <div class="feature">CSV export, SQL interface</div>
-                                    <div class="feature">Priority support</div>
-                                </div>
-                                <a href="{{ route('checkout') }}" class="select-btn">
-                                    Select Yearly
-                                </a>
-                            </div>
+                            </form>
                         </div>
 
                     </div>

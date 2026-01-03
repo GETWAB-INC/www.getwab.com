@@ -13,18 +13,32 @@ class SubscriptionController extends Controller
     {
         $validated = $request->validate([
             'subscription_type' => 'required|in:fpds_query,fpds_reports',
-            'subscription_status' => 'required|in:trial,active',
             'subscription_plan' => 'required|in:Monthly,Annual',
         ]);
 
-        $subscriptionType = $validated['subscription_type']; // fpds_query or fpds_reports
-        $subscriptionStatus = $validated['subscription_status']; // 'active', 'trial', 'cancelled', 'expired', 'suspended'
-        $subscriptionPlan = $validated['subscription_plan']; // 'Monthly' or 'Annual'
+        $user = auth()->user();
 
-        $prices = Subscription::PRICES; // Array
-        $totalPrice = $prices[$subscriptionType][$subscriptionPlan]; // 49.0 or 490.00 or 799.00 or 6490.00
+        // Получаем существующую подписку для текущего пользователя и типа подписки
+        $existingSubscription = Subscription::where('user_id', $user->id)
+            ->where('subscription_type', $validated['subscription_type'])
+            ->first();
 
-        if ($subscriptionStatus === 'trial') {
+        // Определяем статус автоматически
+        if (!$existingSubscription) {
+            $subscriptionStatus = 'trial'; // Нет подписки → новый trial
+        } else {
+            // Используем метод модели для проверки текущего статуса trial
+            $subscriptionStatus = $existingSubscription->isCurrentlyTrial() ? 'trial' : 'active';
+        }
+
+        $subscriptionType = $validated['subscription_type'];
+        $subscriptionPlan = $validated['subscription_plan'];
+
+        $prices = Subscription::PRICES;
+        $totalPrice = $prices[$subscriptionType][$subscriptionPlan];
+
+        // Если статус trial И тип подписки fpds_query — цена 0
+        if ($subscriptionStatus === 'trial' && $subscriptionType === 'fpds_query') {
             $totalPrice = 0;
         }
 
@@ -35,15 +49,21 @@ class SubscriptionController extends Controller
             'subscription_plan' => $subscriptionPlan,
         ];
 
-        if ($subscriptionStatus === 'trial') {
-            Session::put('fpds_query_trial', $orderData);
-        }
-        if ($subscriptionStatus === 'active') {
+        // Чёткая логика сохранения в сессию по типу и статусу
+        if ($subscriptionType === 'fpds_query') {
+            if ($subscriptionStatus === 'trial') {
+                Session::put('fpds_query_trial', $orderData);
+            } else {
+                Session::put('fpds_query_subscription', $orderData);
+            }
+        } elseif ($subscriptionType === 'fpds_reports') {
+            // Для fpds_reports всегда active (trial не предусмотрен)
             Session::put('fpds_report_subscription', $orderData);
         }
 
         return redirect()->route('checkout');
     }
+
 
 
     public function cancelSubscription(Request $request)
