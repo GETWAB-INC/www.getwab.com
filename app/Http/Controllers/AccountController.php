@@ -17,7 +17,8 @@ class AccountController extends Controller
     {
         $user = Auth::user();
 
-        $reports = Report::where('user_id', $user->id)
+        $reports = Report::with('parameters')
+            ->where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -30,9 +31,11 @@ class AccountController extends Controller
         // Сохраняем текущий URL как последний посещённый
         session(['last_account_section' => route('account.reports')]);
 
-        $reports = Report::where('user_id', $user->id)
+        $reports = Report::with('parameters')
+            ->where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->get();
+
 
         return view('account.reports', compact('user', 'reports'));
     }
@@ -81,9 +84,9 @@ class AccountController extends Controller
             $hasCancelledFpdsReports = ($fpds_reports->isCancelled());
             $hasExpiredFpdsReports = ($fpds_reports->isExpired());
         }
-        
+
         session(['last_account_section' => route('account.subscription')]);
-        
+
         return view('account.subscription', compact(
             'user',
             'fpds_query',

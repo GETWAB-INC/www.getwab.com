@@ -33,16 +33,15 @@ class ReportPackageController extends Controller
             default => [],
         };
     }
-    
+
     public function orderPackage(Request $request)
     {
         // 1. Получаем входные данные
         $packageType = $request->input('package_type');
         $reportsCount = (int)$request->input('reports_count');
 
-
         // 2. Получаем цены для типа пакета
-        $prices = $this->getPackagePrices($packageType); // или self::PACKAGE_PRICES[$packageType]
+        $prices = $this->getPackagePrices($packageType);
 
         // 3. Проверяем валидность количества отчётов
         if (!isset($prices[$reportsCount])) {
@@ -66,5 +65,4 @@ class ReportPackageController extends Controller
         // 7. Перенаправляем на страницу checkout
         return redirect()->route('checkout');
     }
-
 }

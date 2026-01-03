@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
 use App\Models\Report;
+use App\Models\ReportParameter;
 
 class ReportController extends Controller
 {
@@ -26,7 +27,7 @@ class ReportController extends Controller
                 'end_year'   => "required|integer|between:1957,{$currentYear}|gte:start_year",
             ],
             'SFPR-GEO-EL-2' => [
-                'start_year' => "required|integer|between:2000,{$currentYear}",
+                'start_year' => "required|integer|between:1957,{$currentYear}",
                 'end_year'   => "required|integer|between:1957,{$currentYear}|gte:start_year",
             ],
         ][$reportType] ?? [];
@@ -79,7 +80,7 @@ class ReportController extends Controller
             ])->withInput();
         }
 
-        // Получаем правила валидации для этого типа отчёта
+        // Получаем правила валидации
         $rules = $this->getReportRules($reportCode);
         if (empty($rules)) {
             return back()->withErrors([
@@ -87,10 +88,7 @@ class ReportController extends Controller
             ])->withInput();
         }
 
-        // Получаем сообщения об ошибках
         $messages = $this->getErrorMessages();
-
-        // Валидируем данные
         $validator = Validator::make($request->all(), $rules, $messages);
 
         if ($validator->fails()) {
@@ -99,50 +97,53 @@ class ReportController extends Controller
                 ->withInput();
         }
 
-        // Получаем текущего пользователя
         $user = auth()->user();
-
-
-        // Ищем активный пакет отчётов с оставшимися отчётами
         $activePackage = $user->reportPackages()
             ->where('remaining_reports', '>', 0)
             ->first();
 
         if (!$activePackage) {
-            // Нет активного пакета — сохраняем данные в сессию и перенаправляем на чекаут
-
+            // Логика для отсутствия пакета (как в вашем коде)
             if ($request->input('report_type') === "EL") {
                 Session::put('single_elementary_report', [
                     'report_code' => $reportCode,
                     'report_type' => $request->input('report_type'),
                     'start_year'  => $request->input('start_year'),
                     'end_year'    => $request->input('end_year'),
-                    'report_price'    => $request->input('report_price'),
+                    'report_price' => $request->input('report_price'),
                 ]);
             } else {
                 Session::put('single_composite_report', [
                     'report_code' => $reportCode,
                     'report_type' => $request->input('report_type'),
                     'start_year'  => $request->input('start_year'),
-                    'report_price'    => $request->input('report_price'),
+                    'report_price' => $request->input('report_price'),
                 ]);
             }
-
             return redirect()->route('checkout');
         }
 
+        // Создаём отчёт
         $reportRecord = Report::create([
             'user_id' => auth()->id(),
             'report_code' => $reportCode,
-            'title' => $this->getReportTitle($reportCode), // ваша логика получения названия
-            'status' => 'draft', // начальный статус
-            'report_id' => null, // пока нет ID генерации
+            'title' => $this->getReportTitle($reportCode),
+            'report_id' => null,
         ]);
+
+        // Сохраняем параметры в report_parameters
+        $parameters = $request->except('_token', 'report_code', 'report_type', 'report_price');
+        foreach ($parameters as $key => $value) {
+            ReportParameter::create([
+                'report_id' => $reportRecord->id,
+                'parameter_key' => $key,
+                'parameter_value' => $value,
+            ]);
+        }
 
         // Уменьшаем количество оставшихся отчётов в пакете
         $activePackage->decrement('remaining_reports');
 
-        // Перенаправляем на аккаунт с сообщением об успехе
         return redirect()->route('account')->with([
             'success' => 'Your report has been created and will be processed shortly.'
         ]);

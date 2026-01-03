@@ -280,7 +280,8 @@
                 </div>
                 <div class="reports-cell title">
                   <div class="cell-content">
-                    <div class="cell-text">{{ $report->title ?? 'No title' }}</div>
+                    <div class="cell-text">{{ $report->title ?? 'No title' }} @if ($report->getParametersString())({{ $report->getParametersString() }})@endif</div>
+
                   </div>
                 </div>
                 <div class="reports-cell date">

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('report_id')->nullable()->unique()->index()->comment('External/unique identifier of the report (may be NULL if not assigned yet)');
             $table->string('report_code')->index()->comment('Internal code/reference for the report type or category');
             $table->string('title')->index()->comment('Human‑readable title/name of the report');
-            $table->string('status')->default('draft')->index()->comment("Current status of the report");
+            $table->string('status')->default('pending')->index()->comment("Current status of the report");
             $table->timestamps();
         });
     }

@@ -10,3 +10,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote')->hourly();
 
 Schedule::command('subscription:update-status')->everyMinute();
+Schedule::command('app:generate-reports')->everyMinute();

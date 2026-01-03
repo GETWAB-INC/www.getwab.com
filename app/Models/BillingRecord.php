@@ -160,20 +160,46 @@ class BillingRecord extends Model
         }
     }
 
+    private static function getPackageDescription(array $data): string
+    {
+        $packageNames = [
+            'elementary' => 'Elementary Report Package',
+            'composite' => 'Composite Report Package',
+        ];
+
+        $packageType = $data['package_type'] ?? '';
+        $reportsCount = $data['reports_count'] ?? 0;
+
+        $packageName = $packageNames[$packageType] ?? $packageType;
+
+        return "{$packageName} ({$reportsCount} reports)";
+    }
+
+
 
     public static function createRecord(array $data): BillingRecord
     {
-        // 1. Формируем читаемое описание ДО создания записи
-        $readableDescription = self::getReadableDescription($data);
+        // 1. Определяем тип записи: подписка или пакет
+        $isSubscription = isset($data['subscription_type']);
+        $isReportPackage = isset($data['package_type']);
 
-        // 2. Создаём запись С ГОТОВЫМ description
+        if (!$isSubscription && !$isReportPackage) {
+            throw new \InvalidArgumentException('Data must contain either subscription_type or package_type');
+        }
+
+        // 2. Формируем читаемое описание
+        $description = $isSubscription
+            ? self::getSubscriptionDescription($data)
+            : self::getPackageDescription($data);
+
+        // 3. Создаём запись
         return self::create([
             'user_id' => auth()->id(),
             'billed_at' => now(),
-            'description' => $readableDescription,
+            'description' => $description,
             'card_last_four' => $data['card_last_four'] ?? '0000',
             'card_brand' => $data['card_brand'] ?? 'Unknown',
-            'amount' => $data['subscription_price'],
+            'amount' => $isSubscription ? $data['subscription_price'] : $data['package_price'],
             'currency' => $data['currency'] ?? 'USD',
             'status' => 'completed',
             'gateway_transaction_id' => $data['transaction_id'] ?? null,

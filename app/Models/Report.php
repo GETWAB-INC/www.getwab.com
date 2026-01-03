@@ -73,4 +73,22 @@ class Report extends Model
      * @var array
      */
     protected $appends = [];
+
+    public function parameters()
+    {
+        return $this->hasMany(ReportParameter::class, 'report_id', 'id');
+    }
+
+    public function getParametersString()
+    {
+        if ($this->parameters->isEmpty()) {
+            return '';
+        }
+
+        $pairs = [];
+        foreach ($this->parameters as $param) {
+            $pairs[] = "{$param->parameter_key}: {$param->parameter_value}";
+        }
+        return implode(', ', $pairs);
+    }
 }

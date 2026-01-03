@@ -56,20 +56,28 @@ class CheckoutController extends Controller
 
         if (!$testMode) {
             // Здесь будет реальная интеграция с платёжным шлюзом
-            // Например: $paymentSuccessful = $this->paymentGateway->charge(...);
             $paymentSuccessful = false; // Заглушка
         } else {
             $paymentSuccessful = true;
         }
-        
+
         if ($paymentSuccessful) {
             $billingService = new BillingService();
-            $result = $billingService->processSubscriptions();
 
-            if ($result['success']) {
-                return view('thank-you')->with('messages', $result['messages']);
+            // 1. Обрабатываем подписки
+            $subscriptionResult = $billingService->processSubscriptions();
+
+            // 2. Обрабатываем пакеты отчётов
+            $packageResult = $billingService->processReportPackage();
+
+            // 3. Собираем общий результат
+            $success = $subscriptionResult['success'] && $packageResult['success'];
+            $messages = array_merge($subscriptionResult['messages'], $packageResult['messages']);
+
+            if ($success) {
+                return view('thank-you')->with('messages', $messages);
             } else {
-                return view('cancelled')->with('errors', $result['messages']);
+                return view('cancelled')->with('errors', $messages);
             }
         } else {
             return view('cancelled')->with('errors', ['Payment failed']);
