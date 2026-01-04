@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use App\Models\Subscription;
-use App\Models\BillingRecord;
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
 use App\Services\BillingService;
-
+use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
@@ -51,6 +49,118 @@ class CheckoutController extends Controller
 
     public function process(Request $request)
     {
+        $hasItemsInCart = false;
+        $cartItems = [
+            'fpds_query_trial',
+            'fpds_query_subscription',
+            'fpds_report_subscription',
+            'single_elementary_report',
+            'single_composite_report',
+            'elementary_report_package',
+            'composite_report_package'
+        ];
+
+        foreach ($cartItems as $itemKey) {
+            if (session()->has($itemKey)) {
+                $hasItemsInCart = true;
+                break;
+            }
+        }
+
+        if (!$hasItemsInCart) {
+            return back()
+                ->withErrors(['cart' => 'No items in your cart. Please add products before proceeding.'])
+                ->withInput();
+        }
+
+        $validated = $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s\-]+$/u',
+            ],
+            'surname' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s\-]*$/u',
+            ],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                'unique:users,email',
+            ],
+            'confirm_email' => [
+                'required',
+                'email',
+                'same:email',
+            ],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
+            ],
+            'password_confirmation' => [
+                'required',
+            ],
+            'city' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+            'address1' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+            'address2' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+            'zip' => [
+                'nullable',
+                'string',
+                'max:20',
+            ],
+        ], [
+            // Custom error messages
+            'name.required' => 'First name is required.',
+            'name.regex' => 'First name may only contain letters, spaces, and hyphens.',
+            'surname.required' => 'Last name is required.',
+            'surname.regex' => 'Last name may only contain letters, spaces, and hyphens.',
+            'email.required' => 'Email is required.',
+            'email.email' => 'Please enter a valid email address.',
+            'email.unique' => 'A user with this email already exists.',
+            'confirm_email.required' => 'Please confirm your email address.',
+            'confirm_email.same' => 'The email confirmation does not match the email.',
+            'password.required' => 'Password is required.',
+            'password.min' => 'Password must be at least 8 characters long.',
+            'password.confirmed' => 'The passwords do not match.',
+            'password.regex' => 'Password must contain: uppercase letter, lowercase letter, number, and special character.',
+            'password_confirmation.required' => 'Please confirm your password.',
+        ]);
+
+
+        // dd(Auth::check(), $request->session()->all(), $request->all());
+
+        $email = $validated['email'];
+
+        if (!Auth::check()) {
+            $user = User::where('email', $email)->first();
+
+            if (!$user) {
+                $registerController = new \App\Http\Controllers\RegisterController();
+                $user = $registerController->registerThruOrder($validated);
+            }
+            Auth::login($user, true);
+        }
+
         // Переключатель тестового режима
         $testMode = true; // Меняйте это значение для тестирования
 
@@ -63,10 +173,10 @@ class CheckoutController extends Controller
 
         if ($paymentSuccessful) {
             $billingService = new BillingService();
-            
+
             // 1. Обрабатываем подписки
             $subscriptionResult = $billingService->processSubscriptions();
-            
+
             // 2. Обрабатываем пакеты отчётов
             $packageResult = $billingService->processReportPackage();
 

@@ -1515,6 +1515,7 @@
 <body>
 
     @include('include.header')
+    @include('errors.error')
 
     {{-- <pre style="color: white; font-size: 24px;">
             {{ print_r(session()->all(), true) }}
@@ -1554,6 +1555,11 @@
             </div>
 
             <div class="checkout-order-review-container">
+
+                <div class="checkout-order-item-card" id="emptyMessage" style="display: none;">
+                    <div class="checkout-product-name">No items in your cart.</div>
+                </div>
+
 
                 <div class="checkout-order-section">
 
@@ -1768,23 +1774,74 @@
             <div class="form-container">
                 <div class="form-fields">
 
-
+                    {{-- Name --}}
                     <div class="form-group">
-                        <label class="form-label" for="first-name">First Name</label>
-                        <input type="text" id="first-name" name="first-name" class="input-box"
-                            placeholder="Enter your first name" value="">
+                        <label class="form-label" for="name">First Name</label>
+                        <input type="text" id="name" name="name" class="input-box"
+                            placeholder="Enter your first name" value="{{ old('name') }}">
                     </div>
 
-
+                    {{-- Surname --}}
                     <div class="form-group">
-                        <label class="form-label" for="last-name">Last Name</label>
-                        <input type="text" id="last-name" name="last-name" class="input-box"
-                            placeholder="Enter your last name" value="">
+                        <label class="form-label" for="surname">Last Name</label>
+                        <input type="text" id="surname" name="surname" class="input-box"
+                            placeholder="Enter your last name" value="{{ old('surname') }}">
                     </div>
 
+                    {{-- Email --}}
+                    @guest
+                    <div class="form-group">
+                    <label class="form-label" for="email">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        class="input-box"
+                        placeholder="Enter email"
+                        value="{{ old('email', $email ?? '') }}"
+                        autocomplete="email">
+                    </div>
 
+                    <div class="form-group">
+                    <label class="form-label" for="confirm_email">Confirm email</label>
+                    <input
+                        type="email"
+                        id="confirm_email"
+                        name="confirm_email"
+                        class="input-box"
+                        placeholder="Confirm your email"
+                        value="{{ old('confirm_email', $confirm_email ?? '') }}"
+                        autocomplete="email">
+                    </div>
 
+                    {{-- Password --}}
+                    <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="input-box"
+                        placeholder="Create a password"
+                        value="{{ old('password') }}"
+                        autocomplete="new-password">
+                    </div>
 
+                    {{-- Confirm Password --}}
+                    <div class="form-group">
+                    <label class="form-label" for="password_confirmation">Confirm password</label>
+                    <input
+                        type="password"
+                        id="password_confirmation"
+                        name="password_confirmation"
+                        class="input-box"
+                        placeholder="Re‑enter your password"
+                        value="{{ old('password_confirmation') }}"
+                        autocomplete="new-password">
+                    </div>
+                    @endguest
+
+                    {{-- Country --}}
                     <div class="form-group">
                         <label class="form-label" for="country">Country</label>
                         <div class="select-wrapper custom">
@@ -1801,55 +1858,97 @@
                         </div>
                     </div>
 
-
+                    {{-- State --}}
                     <div class="form-group">
                         <label class="form-label" for="state">State</label>
                         <div class="select-wrapper custom">
                             <div class="select-box" id="state-select-trigger">
-                                <span class="select-text">New York</span>
+                                <span class="select-text">Virginia</span>
                                 <div class="arrow-container">
                                     <img class="arrow-down" src="{{ asset('img/ico/arrow-chekout.svg') }}"
                                         alt="Edit Item">
                                 </div>
                             </div>
                             <div class="custom-dropdown" id="state-dropdown">
-                                <div class="dropdown-option" data-value="New York">New York</div>
+                                <div class="dropdown-option" data-value="Alabama">Alabama</div>
+                                <div class="dropdown-option" data-value="Alaska">Alaska</div>
+                                <div class="dropdown-option" data-value="Arizona">Arizona</div>
+                                <div class="dropdown-option" data-value="Arkansas">Arkansas</div>
                                 <div class="dropdown-option" data-value="California">California</div>
+                                <div class="dropdown-option" data-value="Colorado">Colorado</div>
+                                <div class="dropdown-option" data-value="Connecticut">Connecticut</div>
+                                <div class="dropdown-option" data-value="Delaware">Delaware</div>
                                 <div class="dropdown-option" data-value="Florida">Florida</div>
-                                <div class="dropdown-option" data-value="Texas">Texas</div>
+                                <div class="dropdown-option" data-value="Georgia">Georgia</div>
+                                <div class="dropdown-option" data-value="Hawaii">Hawaii</div>
+                                <div class="dropdown-option" data-value="Idaho">Idaho</div>
                                 <div class="dropdown-option" data-value="Illinois">Illinois</div>
-                                <div class="dropdown-option" data-value="Pennsylvania">Pennsylvania</div>
+                                <div class="dropdown-option" data-value="Indiana">Indiana</div>
+                                <div class="dropdown-option" data-value="Iowa">Iowa</div>
+                                <div class="dropdown-option" data-value="Kansas">Kansas</div>
+                                <div class="dropdown-option" data-value="Kentucky">Kentucky</div>
+                                <div class="dropdown-option" data-value="Louisiana">Louisiana</div>
+                                <div class="dropdown-option" data-value="Maine">Maine</div>
+                                <div class="dropdown-option" data-value="Maryland">Maryland</div>
+                                <div class="dropdown-option" data-value="Massachusetts">Massachusetts</div>
+                                <div class="dropdown-option" data-value="Michigan">Michigan</div>
+                                <div class="dropdown-option" data-value="Minnesota">Minnesota</div>
+                                <div class="dropdown-option" data-value="Mississippi">Mississippi</div>
+                                <div class="dropdown-option" data-value="Missouri">Missouri</div>
+                                <div class="dropdown-option" data-value="Montana">Montana</div>
+                                <div class="dropdown-option" data-value="Nebraska">Nebraska</div>
+                                <div class="dropdown-option" data-value="Nevada">Nevada</div>
+                                <div class="dropdown-option" data-value="New Hampshire">New Hampshire</div>
+                                <div class="dropdown-option" data-value="New Jersey">New Jersey</div>
+                                <div class="dropdown-option" data-value="New Mexico">New Mexico</div>
+                                <div class="dropdown-option" data-value="New York">New York</div>
+                                <div class="dropdown-option" data-value="North Carolina">North Carolina</div>
+                                <div class="dropdown-option" data-value="North Dakota">North Dakota</div>
                                 <div class="dropdown-option" data-value="Ohio">Ohio</div>
+                                <div class="dropdown-option" data-value="Oklahoma">Oklahoma</div>
+                                <div class="dropdown-option" data-value="Oregon">Oregon</div>
+                                <div class="dropdown-option" data-value="Pennsylvania">Pennsylvania</div>
+                                <div class="dropdown-option" data-value="Rhode Island">Rhode Island</div>
+                                <div class="dropdown-option" data-value="South Carolina">South Carolina</div>
+                                <div class="dropdown-option" data-value="South Dakota">South Dakota</div>
+                                <div class="dropdown-option" data-value="Tennessee">Tennessee</div>
+                                <div class="dropdown-option" data-value="Texas">Texas</div>
+                                <div class="dropdown-option" data-value="Utah">Utah</div>
+                                <div class="dropdown-option" data-value="Vermont">Vermont</div>
+                                <div class="dropdown-option" data-value="Virginia">Virginia</div>
+                                <div class="dropdown-option" data-value="Washington">Washington</div>
+                                <div class="dropdown-option" data-value="West Virginia">West Virginia</div>
+                                <div class="dropdown-option" data-value="Wisconsin">Wisconsin</div>
+                                <div class="dropdown-option" data-value="Wyoming">Wyoming</div>
                             </div>
                         </div>
                     </div>
 
-
-
+                    {{-- City --}}
                     <div class="form-group">
                         <label class="form-label" for="city">City</label>
-                        <input type="text" id="city" name="city" class="input-box" placeholder="Enter your city">
+                        <input type="text" id="city" name="city" class="input-box" placeholder="Enter your city" value="{{ old('city') }}">
                     </div>
 
-
+                    {{-- Address 1 --}}
                     <div class="form-group">
                         <label class="form-label" for="address1">Address Line 1</label>
-                        <input type="text" id="address1" name="address1" class="input-box" placeholder="Street address">
+                        <input type="text" id="address1" name="address1" class="input-box" placeholder="Street address" value="{{ old('address1') }}">
                     </div>
 
-
+                    {{-- Address 2 --}}
                     <div class="form-group">
                         <label class="form-label" for="address2">
                             Address Line 2 <span class="optional">(optional)</span>
                         </label>
                         <input type="text" id="address2" name="address2" class="input-box"
-                            placeholder="Apartment, suite, etc.">
+                            placeholder="Apartment, suite, etc." value="{{ old('address2') }}">
                     </div>
 
-
+                    {{-- ZIP --}}
                     <div class="form-group">
                         <label class="form-label" for="zip">ZIP Code</label>
-                        <input type="text" id="zip" name="zip" class="input-box" placeholder="ZIP Code">
+                        <input type="text" id="zip" name="zip" class="input-box" placeholder="ZIP Code" value="{{ old('zip') }}">
                     </div>
 
                 </div>
@@ -1857,7 +1956,7 @@
 
         </div>
 
-
+        {{-- Payment info --}}
         <div class="payment-container">
             <div class="step-3-header">
                 <div class="step-3-progress-container">
@@ -1958,12 +2057,14 @@
                                                 <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
                                             </div>
                                             <div class="step-3-select-options">
-                                                <option class="step-3-select-option" value="2025">2025</option>
                                                 <option class="step-3-select-option" value="2026">2026</option>
                                                 <option class="step-3-select-option" value="2027">2027</option>
                                                 <option class="step-3-select-option" value="2028">2028</option>
                                                 <option class="step-3-select-option" value="2029">2029</option>
                                                 <option class="step-3-select-option" value="2030">2030</option>
+                                                <option class="step-3-select-option" value="2031">2031</option>
+                                                <option class="step-3-select-option" value="2032">2032</option>
+                                                <option class="step-3-select-option" value="2033">2033</option>
                                             </div>
                                         </div>
                                     </div>
@@ -2032,56 +2133,66 @@
     @include('include.footer')
 
     <script src="{{ asset('js/chekout.js') }}"></script>
+    <script src="{{ asset('js/alerts.js') }}"></script>
 </body>
 
 </html>
 <script>
-    function updateCheckoutTotal() {
-        let total = 0;
 
-        document.querySelectorAll('.checkout-product-price').forEach(priceEl => {
-            const priceText = priceEl.textContent.replace('$', '').trim();
-            const price = parseFloat(priceText) || 0;
-            total += price;
-        });
+function updateCheckoutTotal() {
+    let total = 0;
+    let hasItems = false;
 
-        const totalEl = document.querySelector('.checkout-total-amount');
-        if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
+    document.querySelectorAll('.checkout-product-price').forEach(priceEl => {
+        const priceText = priceEl.textContent.replace('$', '').trim();
+        const price = parseFloat(priceText) || 0;
+        total += price;
+        hasItems = true;
+    });
 
-        const hasItems = document.querySelectorAll('.checkout-order-item-card').length > 0;
-        document.querySelector('.checkout-payment-breakdown').style.display = hasItems ? 'block' : 'none';
+    const totalEl = document.querySelector('.checkout-total-amount');
+    if (totalEl) {
+        totalEl.textContent = `$${total.toFixed(2)}`;
     }
 
+    const paymentBreakdown = document.querySelector('.checkout-payment-breakdown');
+    if (paymentBreakdown) {
+        paymentBreakdown.style.display = hasItems ? 'block' : 'none';
+    }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        updateCheckoutTotal();
+    const emptyMessage = document.getElementById('emptyMessage');
+    if (emptyMessage) {
+        emptyMessage.style.display = hasItems ? 'none' : 'block';
+    }
+}
 
-        document.querySelectorAll('.checkout-delete-button').forEach(button => {
-            button.addEventListener('click', function () {
-                const itemKey = this.getAttribute('data-item-key');
-
-                fetch('{{ route("checkout.remove-item") }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({ item_key: itemKey })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            this.closest('.checkout-order-item-card').remove();
-                            updateCheckoutTotal();
-                        } else {
-                            alert('Ошибка: ' + data.error);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('An error occurred while deleting');
-                    });
+document.addEventListener('DOMContentLoaded', () => {
+    updateCheckoutTotal();
+    document.querySelectorAll('.checkout-delete-button').forEach(button => {
+        button.addEventListener('click', function () {
+            const itemKey = this.getAttribute('data-item-key');
+            fetch('{{ route("checkout.remove-item") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ item_key: itemKey })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    this.closest('.checkout-order-item-card').remove();
+                    updateCheckoutTotal();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting');
             });
         });
+    });
     });
 </script>

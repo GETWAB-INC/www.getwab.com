@@ -40,6 +40,7 @@ Route::get('/register', function () {
     return view('register');
 })->name('register');
 Route::post('/register-process', [RegisterController::class, 'register'])->name('register-process');
+Route::get('/verify/{user}', [RegisterController::class, 'verify'])->name('verification.verify');
 
 
 // forgot
@@ -59,11 +60,11 @@ Route::post('/update-profile', [AccountController::class, 'updateProfile'])->nam
 Route::post('/account/upload-avatar', [AccountController::class, 'uploadAvatar'])->name('upload.avatar')->middleware('auth');
 Route::delete('/account/remove-avatar', [AccountController::class, 'removeAvatar'])->name('remove.avatar')->middleware('auth');
 
-Route::post('/order/package', action: [ReportPackageController::class, 'orderPackage'])->name('order.package')->middleware('auth');
-Route::post('/order/subscription', action: [SubscriptionController::class, 'orderSubscription'])->name('order.subscription')->middleware('auth');
+Route::post('/order/package', action: [ReportPackageController::class, 'orderPackage'])->name('order.package');
+Route::post('/order/subscription', action: [SubscriptionController::class, 'orderSubscription'])->name('order.subscription');
 Route::post('/cancel/subscription', action: [SubscriptionController::class, 'cancelSubscription'])->name('cancel.subscription')->middleware('auth');
 Route::post('/restore/subscription', action: [SubscriptionController::class, 'restoreSubscription'])->name('restore.subscription')->middleware('auth');
-Route::post('subscription/renew', [SubscriptionController::class, 'renewSubscription'])->name('renew.subscription')->middleware('auth');
+Route::post('/renew/subscription', [SubscriptionController::class, 'renewSubscription'])->name('renew.subscription')->middleware('auth');
 
 // contact page
 Route::get('/contact-us', function () {return view('contact-us');})->name('contact-us');
@@ -100,9 +101,9 @@ Route::get('/company', function () { return view('company'); })->name('company')
 Route::get('/mission', function () { return view('mission'); })->name('mission');
 
 // checkout page
-Route::get('/checkout', function () { return view('checkout'); })->name('checkout')->middleware('auth');
-Route::post('/checkout/remove-item', [CheckoutController::class, 'removeItem'])->name('checkout.remove-item')->middleware('auth');
-Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process')->middleware('auth');
+Route::get('/checkout', function () { return view('checkout'); })->name('checkout');
+Route::post('/checkout/remove-item', [CheckoutController::class, 'removeItem'])->name('checkout.remove-item');
+Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
 
 // thank-you page
 Route::get('/thank-you', function () { return view('thank-you'); })->middleware('auth');

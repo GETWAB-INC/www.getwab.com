@@ -265,9 +265,10 @@
           @else
           <!-- Activate Reports -->
           <form method="POST" action="{{ route('order.subscription') }}">
+            @csrf
             <input type="hidden" name="subscription_type" value="fpds_reports">
             <input type="hidden" name="subscription_status" value="active">
-            @csrf
+            
             <div class="card-desktop">
               <div class="content-desktop">
                 <div class="details-desktop">

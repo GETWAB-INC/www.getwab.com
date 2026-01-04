@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\VerifyEmail;
 
 class RegisterController extends Controller
 {
@@ -78,9 +80,80 @@ class RegisterController extends Controller
             // Перенаправляем на маршрут 'account'
             return redirect()->route('account')
                 ->with('success', 'Registration successful! You are now logged in.');
-
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'An error occurred during registration. Please try again.']);
         }
+    }
+
+    /**
+     * Регистрирует пользователя из данных заказа (с паролем из формы).
+     *
+     * @param array $orderData Данные из формы заказа (включая password и password_confirmation)
+     * @return User
+     */
+    public function registerThruOrder(array $orderData): User
+    {
+        $email = $orderData['email'];
+
+        // Проверяем, есть ли пользователь с таким email
+        $user = User::where('email', $email)->first();
+
+        if ($user) {
+            return $user; // Уже существует — возвращаем
+        }
+
+        // Создаём пользователя с переданным паролем
+        $user = User::create([
+            'name' => $orderData['name'],
+            'surname' => $orderData['surname'] ?? null,
+            'email' => $email,
+            'password' => Hash::make($orderData['password']),
+            'is_verified' => false, // Email не подтверждён
+        ]);
+
+        // Отправляем письмо для верификации
+        try {
+            Mail::to($user->email)->send(new VerifyEmail($user));
+        } catch (\Exception $e) {
+            \Log::warning('Failed to send verification email', [
+                'user_id' => $user->id,
+                'error' => $e->getMessage()
+            ]);
+        }
+
+        return $user;
+    }
+
+    /**
+     * Обрабатывает верификацию email по ссылке.
+     *
+     * @param Request $request
+     * @param int $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function verify(Request $request, int $user)
+    {
+        // Ищем пользователя по ID
+        $user = User::find($user);
+
+        if (!$user) {
+            return redirect()->route('login')
+                ->with('error', 'User not found.');
+        }
+
+        // Проверяем, не верифицирован ли уже
+        if ($user->is_verified) {
+            return redirect()->route('login')
+                ->with('info', 'Email already verified.');
+        }
+
+        // Обновляем статус верификации
+        $user->update(['is_verified' => true]);
+
+        // Автоматически логиним пользователя
+        Auth::login($user, true);
+
+        return redirect()->route('account')
+            ->with('success', 'Your email has been verified! You are now logged in.');
     }
 }

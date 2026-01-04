@@ -1237,8 +1237,14 @@
 
             <div class="reports-pricing__cards-row bottom-row">
               <article class="reports-pricing__card wide">
+                <form method="POST" action="{{ route('order.subscription') }}">
+                  @csrf
+                  <input type="hidden" name="subscription_type" value="fpds_reports">
+                  <input type="hidden" name="subscription_status" value="active">
+                  <input type="hidden" name="subscription_plan" value="Monthly">
                 <div class="reports-pricing__card-content">
-                  <header class="reports-pricing__card-header">
+                  
+                  <div class="reports-pricing__card-header">
                     <h3 class="reports-pricing__plan-name">
                       Unlimited Access
                     </h3>
@@ -1257,9 +1263,11 @@
                         full FPDS report library — anytime, with no limits
                       </p>
                     </div>
-                  </header>
-                  <a href="{{ route('checkout') }}" class="reports-pricing__btn">Subscribe Now</a>
+                  </div>
+                  <button href="{{ route('checkout') }}" class="reports-pricing__btn">Subscribe Now</button>
+                  
                 </div>
+                </form>
               </article>
             </div>
 

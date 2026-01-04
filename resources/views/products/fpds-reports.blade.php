@@ -15,7 +15,6 @@
         /*========= Page 3 ==============*/
 
         /* fpds-report-hero styles START */
-
         .fpds-report-hero {
             width: 1920px;
             max-width: 100%;
@@ -46,10 +45,10 @@
         .fpds-report-content {
             width: 100%;
             flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
             gap: 48px;
             display: flex;
+            align-items: center;
+            text-align: center;
         }
 
         .fpds-report-title {
@@ -73,14 +72,6 @@
             color: #afbcb8;
             font-size: 48px;
             font-weight: 400;
-        }
-
-        .fpds-report-line {
-            display: none;
-            width: 134px;
-            height: 5px;
-            background: white;
-            border-radius: 100px;
         }
 
         /* fpds-report-hero styles FINISH */
@@ -141,9 +132,6 @@
                 line-height: 24px;
             }
 
-            .fpds-report-line {
-                display: block;
-            }
         }
 
         @media (max-width: 325px) {
@@ -158,78 +146,9 @@
 
         /* fpds-report-hero adaptation styles FINISH */
 
-        /*fpds-section style START*/
 
-        .fpds-section {
-            display: flex;
-            justify-content: center;
 
-            justify-content: space-between;
-            max-width: 1800px;
-            width: 100%;
-            margin: 0 auto;
-            margin-top: 100px;
-        }
 
-        .fpds-content-container {
-            justify-content: flex-start;
-            align-items: flex-start;
-            gap: 290px;
-            display: flex;
-        }
-
-        .fpds-title-container {
-            justify-content: flex-start;
-            align-items: flex-start;
-            display: flex;
-        }
-
-        .fpds-title {
-            width: 330px;
-            justify-content: center;
-            display: flex;
-            flex-direction: column;
-            color: white;
-            font-size: 48px;
-            font-family: Overused Grotesk;
-            font-weight: 400;
-            word-wrap: break-word;
-        }
-
-        .fpds-description {
-            position: relative;
-            width: 305px;
-            color: white;
-            font-size: 24px;
-            font-family: Overused Grotesk;
-            font-weight: 400;
-            line-height: 24px;
-            word-wrap: break-word;
-        }
-
-        .fpds-description-1 {
-            position: absolute;
-            top: -15px;
-            left: -15px;
-        }
-
-        .fpds-description-2 {
-            position: absolute;
-            bottom: -15px;
-            right: 25px;
-        }
-
-        .fpds-image {
-            width: 560px;
-            height: 330px;
-            border-radius: 7px;
-        }
-
-        .mobile-break {
-            display: inline;
-        }
-
-        /*fpds-section style FINISH*/
 
         /* fpds-section adaptation styles START */
 
@@ -693,53 +612,6 @@
             word-wrap: break-word;
         }
 
-        .browse-all-button {
-            padding-left: 35px;
-            padding-right: 35px;
-            padding-top: 20px;
-            padding-bottom: 20px;
-            background: linear-gradient(360deg, #00ad8c 0%, #00755f 51%);
-            border-radius: 7px;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            display: inline-flex;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .browse-all-button::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(360deg, #00624f 0%, #005d4b 97%);
-            opacity: 0;
-            z-index: -1;
-            transition: opacity 0.4s ease;
-        }
-
-        .browse-all-button:hover::before {
-            opacity: 1;
-        }
-
-        .browse-all-text {
-            text-align: center;
-            justify-content: center;
-            display: flex;
-            flex-direction: column;
-            color: white;
-            font-size: 24px;
-            font-family: Overused Grotesk;
-            font-weight: 400;
-            line-height: 24px;
-            word-wrap: break-word;
-        }
-
         .explore-library-right {
             width: 1180px;
             flex-direction: column;
@@ -973,36 +845,7 @@
                 word-wrap: break-word;
             }
 
-            .fpds-mobile-slider-browse-button {
-                padding: 20px 35px;
-                background: linear-gradient(360deg, #00ad8c 0%, #00755f 51%);
-                border-radius: 7px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                gap: 10px;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                margin-top: 10px;
-                border: none;
-            }
 
-            .fpds-mobile-slider-browse-button:hover {
-                background: linear-gradient(360deg, #00755f 0%, #00ad8c 51%);
-            }
-
-            .fpds-mobile-slider-button-text {
-                text-align: center;
-                justify-content: center;
-                display: flex;
-                flex-direction: column;
-                color: white;
-                font-size: 16px;
-                font-weight: 400;
-                line-height: 16px;
-                word-wrap: break-word;
-                margin: 0;
-            }
 
             .fpds-mobile-slider-controls {
                 display: flex;
@@ -1053,78 +896,10 @@
         }
 
         /* custom-report-container  styles START */
-        .custom-report-container {
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-end;
-            gap: 60px;
-            display: inline-flex;
-            background: #282828;
-            padding: 80px 0;
-            width: 100%;
-        }
 
-        .custom-report-wrapper {
-            width: 100%;
-            max-width: 1920px;
-            padding-left: 60px;
-            padding-right: 60px;
-            justify-content: space-between;
-            align-items: flex-start;
-            display: inline-flex;
-            box-sizing: border-box;
-        }
 
-        .custom-report-content {
-            width: 100%;
-            justify-content: space-between;
-            align-items: flex-start;
-            display: flex;
-        }
 
-        .custom-report-left {
-            justify-content: flex-start;
-            align-items: flex-start;
-            gap: 290px;
-            display: flex;
-        }
 
-        .custom-report-text {
-            justify-content: flex-start;
-            align-items: flex-start;
-            display: flex;
-        }
-
-        .custom-report-title {
-            width: 330px;
-            justify-content: center;
-            display: flex;
-            flex-direction: column;
-            color: white;
-            font-size: 48px;
-            font-family: Overused Grotesk;
-            font-weight: 400;
-            word-wrap: break-word;
-        }
-
-        .custom-report-title-mobile {
-            display: none;
-        }
-
-        .custom-report-description {
-            width: 309px;
-            color: #afbcb8;
-            font-size: 24px;
-            font-family: Overused Grotesk;
-            font-weight: 400;
-            word-wrap: break-word;
-            line-height: 1.4;
-        }
-
-        .custom-report-description-1-mobile,
-        .custom-report-description-2-mobile {
-            display: none;
-        }
 
         .custom-report-form {
             width: 560px;
@@ -1376,24 +1151,7 @@
         /* custom-report-container adaptation styles START */
 
         @media (max-width: 1440px) {
-            .custom-report-container {
-                padding: 60px 0;
-                gap: 40px;
-            }
 
-            .custom-report-wrapper {
-                padding-left: 40px;
-                padding-right: 40px;
-            }
-
-            .custom-report-left {
-                gap: 200px;
-            }
-
-            .custom-report-title {
-                width: 280px;
-                font-size: 40px;
-            }
 
             .custom-report-description {
                 width: 280px;
@@ -1438,69 +1196,8 @@
         }
 
         @media (max-width: 768px) {
-            .custom-report-container {
-                padding: 40px 0;
-                gap: 30px;
-                align-items: center;
-            }
 
-            .custom-report-wrapper {
-                padding-left: 20px;
-                padding-right: 20px;
-                flex-direction: column;
-            }
 
-            .custom-report-content {
-                flex-direction: column;
-                gap: 40px;
-            }
-
-            .custom-report-left {
-                flex-direction: column;
-                gap: 30px;
-                width: 100%;
-            }
-
-            .custom-report-text {
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .custom-report-title-mobile {
-                display: block;
-                color: white;
-                font-family: Overused Grotesk;
-                font-weight: 400;
-                word-wrap: normal;
-                font-size: 32px;
-                margin-bottom: 15px;
-            }
-
-            .custom-report-title {
-                display: none;
-            }
-
-            .custom-report-description {
-                width: 195px;
-                font-size: 18px;
-                text-align: left;
-                line-height: 1.5;
-                position: relative;
-            }
-
-            .custom-report-description-1-mobile {
-                position: absolute;
-                display: block;
-                top: -10px;
-                left: -12px;
-            }
-
-            .custom-report-description-2-mobile {
-                position: absolute;
-                display: block;
-                bottom: -10px;
-                right: 10px;
-            }
 
             .custom-report-form {
                 width: 100%;
@@ -1553,23 +1250,7 @@
         }
 
         @media (max-width: 480px) {
-            .custom-report-container {
-                padding: 30px 0;
-                gap: 25px;
-            }
 
-            .custom-report-wrapper {
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-
-            .custom-report-title {
-                font-size: 28px;
-            }
-
-            .custom-report-description {
-                font-size: 16px;
-            }
 
             .input-field,
             .email-input,
@@ -2577,33 +2258,44 @@
         <div class="fpds-report-hero">
             <div class="fpds-report-container">
                 <div class="fpds-report-content">
-                    <div class="fpds-report-title">FPDS Reports</div>
-                    <div class="fpds-report-subtitle">High-Performance Federal Contract Reports Powered <br>by Raw FPDS Data</div>
+                    <h1 class="fpds-report-title">FPDS Reports</h1>
+                    <h2 class="fpds-report-subtitle">High-Performance Federal Contract Reports Powered<br>by Raw FPDS Data</h2>
 
-                    <div class="fpds-report-line"></div>
+                    <form action="{{ route('products.fpds-reports-overview') }}">
+                        <button class="hero-button">
+                            Benefits & Pricing
+                        </button>
+                    </form>
+
+
                 </div>
             </div>
         </div>
     </section>
 
-    <section>
-        <div class="fpds-section">
-            <div class="fpds-content-container">
-                <div class="fpds-title-container">
-                    <div class="fpds-title">What is <span class="mobile-break">FPDS Report?</span></div>
+    <!-- What is FPDS Report -->
+    <section class="section">
+        <div class="container">
+            <div class="grid-3-columns">
+                <div class="grid-item">
+                    <h2 class="title">What is FPDS<br> Report?</h2>
                 </div>
-                <div class="fpds-description">
-                    <img class="fpds-description-1" src="{{ asset('img/ico/quotes-1.svg') }}" alt="">
-                    FPDS Report is a next-generation analytical report.
-                    We transform raw data from the Federal Procurement
-                    Data System (FPDS) into clear, structured, and actionable insights — no distortions,
-                    no averages, no middlemen.
-                    <img class="fpds-description-2" src="{{ asset('img/ico/quotes-2.svg') }}" alt="">
+                <div class="grid-item">
+                    <p class="description">
+                        FPDS Report is a next-generation analytical report.
+                        We transform raw data from the Federal Procurement
+                        Data System (FPDS) into clear, structured, and actionable insights — no distortions,
+                        no averages, no middlemen.
+                    </p>
+                </div>
+                <div class="grid-item">
+                    <img src="{{ asset('img/main/SectionImage3.png') }}" alt="FPDS Report Visualization" class="image">
                 </div>
             </div>
-            <img class="fpds-image" src="{{ asset('img/main/SectionImage3.png') }}" alt="FPDS Report Visualization" />
         </div>
     </section>
+
+
 
     <section>
         <div class="why-choose-us-container">
@@ -2625,7 +2317,8 @@
                     </div>
                     <div class="feature-content">
                         <div class="feature-title">Raw, Unfiltered Data</div>
-                        <div class="feature-description">We work directly with FPDS source data (110+ million records), no third-party aggregators.</div>
+                        <div class="feature-description">We work directly with FPDS source data (110+ million records),
+                            no third-party aggregators.</div>
                     </div>
                 </div>
 
@@ -2635,7 +2328,8 @@
                     </div>
                     <div class="feature-content">
                         <div class="feature-title">Fully Customizable to Your Needs</div>
-                        <div class="feature-description">Choose by state, agency, contract type, date range, or vendor — and get an exact data slice.</div>
+                        <div class="feature-description">Choose by state, agency, contract type, date range, or vendor —
+                            and get an exact data slice.</div>
                     </div>
                 </div>
 
@@ -2645,7 +2339,8 @@
                     </div>
                     <div class="feature-content">
                         <div class="feature-title">Visualization + Analysis</div>
-                        <div class="feature-description">Each FPDS Report includes charts, tables, and a summary with key takeaways.</div>
+                        <div class="feature-description">Each FPDS Report includes charts, tables, and a summary with
+                            key takeaways.</div>
                     </div>
                 </div>
 
@@ -2655,19 +2350,13 @@
                     </div>
                     <div class="feature-content">
                         <div class="feature-title">Delivery Within 1 Hour</div>
-                        <div class="feature-description">Standard reports are generated fast. Custom reports based on complexity.</div>
+                        <div class="feature-description">Standard reports are generated fast. Custom reports based on
+                            complexity.</div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-
-
-
-
-
-
 
     <section>
         <div class="explore-library-container">
@@ -2676,15 +2365,12 @@
                     <div class="explore-library-left">
                         <div class="explore-library-title">Explore Our FPDS Reports Library</div>
 
-                        <div class="browse-all-button">
-                            <div class="browse-all-text">
-                                <a href="{{ route('library') }}">
-                                    Browse All Templates
-                                </a>
-                            </div>
 
-                        </div>
-
+                        <form action="{{ route('library') }}">
+                            <button class="hero-button">
+                                Browse All Templates
+                            </button>
+                        </form>
 
                     </div>
                     <div class="explore-library-right">
@@ -2692,10 +2378,12 @@
                         <div class="report-item">
                             <div class="report-item-content">
                                 <div class="report-item-left">
-                                    <div class="report-icon-placeholder"><img src="{{ asset('/img/ico/GeographicSpendingAnalysis.png') }}" alt=""></div>
+                                    <div class="report-icon-placeholder"><img
+                                            src="{{ asset('/img/ico/GeographicSpendingAnalysis.png') }}" alt=""></div>
                                     <div class="report-details">
                                         <div class="report-title">Geographic Spending Analysis</div>
-                                        <div class="report-description">Analysis of federal contracts by states, regions, and geographic areas</div>
+                                        <div class="report-description">Analysis of federal contracts by states,
+                                            regions, and geographic areas</div>
                                     </div>
                                 </div>
                                 <div class="report-arrow">
@@ -2708,10 +2396,13 @@
                         <div class="report-item">
                             <div class="report-item-content">
                                 <div class="report-item-left">
-                                    <div class="report-icon-placeholder"><img src="{{ asset('/img/ico/Vendor-BasedContractingOverview.png') }}" alt=""></div>
+                                    <div class="report-icon-placeholder"><img
+                                            src="{{ asset('/img/ico/Vendor-BasedContractingOverview.png') }}" alt="">
+                                    </div>
                                     <div class="report-details">
                                         <div class="report-title">Vendor-Based Contracting Overview</div>
-                                        <div class="report-description">Analysis of contractors: volume, distribution, and concentration</div>
+                                        <div class="report-description">Analysis of contractors: volume, distribution,
+                                            and concentration</div>
                                     </div>
                                 </div>
                                 <div class="report-arrow">
@@ -2724,7 +2415,8 @@
                         <div class="report-item">
                             <div class="report-item-content">
                                 <div class="report-item-left">
-                                    <div class="report-icon-placeholder"><img src="{{ asset('/img/ico/DepartmentandAgencySpending.png') }}" alt=""></div>
+                                    <div class="report-icon-placeholder"><img
+                                            src="{{ asset('/img/ico/DepartmentandAgencySpending.png') }}" alt=""></div>
                                     <div class="report-details">
                                         <div class="report-title">Department and Agency Spending</div>
                                         <div class="report-description">Growth, Budget Trends, Comparisons</div>
@@ -2740,10 +2432,13 @@
                         <div class="report-item">
                             <div class="report-item-content">
                                 <div class="report-item-left">
-                                    <div class="report-icon-placeholder"><img src="{{ asset('/img/ico/SpendingbyProductandServiceCodes.png') }}" alt=""></div>
+                                    <div class="report-icon-placeholder"><img
+                                            src="{{ asset('/img/ico/SpendingbyProductandServiceCodes.png') }}" alt="">
+                                    </div>
                                     <div class="report-details">
                                         <div class="report-title">Spending by Product and Service Codes</div>
-                                        <div class="report-description">Contracts categorized by product/service codes (PSC/NAICS)</div>
+                                        <div class="report-description">Contracts categorized by product/service codes
+                                            (PSC/NAICS)</div>
                                     </div>
                                 </div>
                                 <div class="report-arrow">
@@ -2756,10 +2451,13 @@
                         <div class="report-item">
                             <div class="report-item-content">
                                 <div class="report-item-left">
-                                    <div class="report-icon-placeholder"><img src="{{ asset('/img/ico/ContractingMetadataandAnomalies.png') }}" alt=""></div>
+                                    <div class="report-icon-placeholder"><img
+                                            src="{{ asset('/img/ico/ContractingMetadataandAnomalies.png') }}" alt="">
+                                    </div>
                                     <div class="report-details">
                                         <div class="report-title">Contracting Metadata and Anomalies</div>
-                                        <div class="report-description">General contract statistics, types, anomalies, and incomplete records</div>
+                                        <div class="report-description">General contract statistics, types, anomalies,
+                                            and incomplete records</div>
                                     </div>
                                 </div>
                                 <div class="report-arrow">
@@ -2772,10 +2470,13 @@
                         <div class="report-item">
                             <div class="report-item-content">
                                 <div class="report-item-left">
-                                    <div class="report-icon-placeholder"><img src="{{ asset('/img/ico/FederalContractingTrendsOverTime.png') }}" alt=""></div>
+                                    <div class="report-icon-placeholder"><img
+                                            src="{{ asset('/img/ico/FederalContractingTrendsOverTime.png') }}" alt="">
+                                    </div>
                                     <div class="report-details">
                                         <div class="report-title">Federal Contracting Trends Over Time</div>
-                                        <div class="report-description">Yearly, quarterly, and time-based trends in federal contracting</div>
+                                        <div class="report-description">Yearly, quarterly, and time-based trends in
+                                            federal contracting</div>
                                     </div>
                                 </div>
                                 <div class="report-arrow">
@@ -2788,10 +2489,12 @@
                         <div class="report-item">
                             <div class="report-item-content">
                                 <div class="report-item-left">
-                                    <div class="report-icon-placeholder"><img src="{{ asset('/img/ico/FederalSpendingForecasts.png') }}" alt=""></div>
+                                    <div class="report-icon-placeholder"><img
+                                            src="{{ asset('/img/ico/FederalSpendingForecasts.png') }}" alt=""></div>
                                     <div class="report-details">
                                         <div class="report-title">Federal Spending Forecasts</div>
-                                        <div class="report-description">Forecasts of future contract volumes and activity</div>
+                                        <div class="report-description">Forecasts of future contract volumes and
+                                            activity</div>
                                     </div>
                                 </div>
                                 <div class="report-arrow">
@@ -2804,10 +2507,12 @@
                         <div class="report-item">
                             <div class="report-item-content">
                                 <div class="report-item-left">
-                                    <div class="report-icon-placeholder"><img src="{{ asset('/img/ico/ComplianceandRiskAssessment.png') }}" alt=""></div>
+                                    <div class="report-icon-placeholder"><img
+                                            src="{{ asset('/img/ico/ComplianceandRiskAssessment.png') }}" alt=""></div>
                                     <div class="report-details">
                                         <div class="report-title">Compliance and Risk Assessment</div>
-                                        <div class="report-description">Assessment of risk, compliance, single-bid contracts, and red flags</div>
+                                        <div class="report-description">Assessment of risk, compliance, single-bid
+                                            contracts, and red flags</div>
                                     </div>
                                 </div>
                                 <div class="report-arrow">
@@ -2832,17 +2537,22 @@
                                 <div class="fpds-mobile-slider-card-content">
                                     <div class="fpds-mobile-slider-card-details">
                                         <div class="fpds-mobile-slider-icon-container">
-                                            <img class="fpds-mobile-slider-arrow-icon" src="{{ asset('/img/ico/rightup_arrow.png') }}" alt="">
+                                            <img class="fpds-mobile-slider-arrow-icon"
+                                                src="{{ asset('/img/ico/rightup_arrow.png') }}" alt="">
                                         </div>
 
                                         <div class="fpds-mobile-slider-card-body">
                                             <div class="fpds-mobile-slider-icon-wrapper">
-                                                <img class="fpds-mobile-slider-report-icon" src="{{ asset('/img/ico/GeographicSpendingAnalysis.png') }}" alt="Geographic Spending Analysis">
+                                                <img class="fpds-mobile-slider-report-icon"
+                                                    src="{{ asset('/img/ico/GeographicSpendingAnalysis.png') }}"
+                                                    alt="Geographic Spending Analysis">
                                             </div>
 
                                             <div class="fpds-mobile-slider-text-content">
-                                                <div class="fpds-mobile-slider-card-title">Geographic Spending Analysis</div>
-                                                <div class="fpds-mobile-slider-card-description">Analysis of federal contracts by states, regions, and geographic areas</div>
+                                                <div class="fpds-mobile-slider-card-title">Geographic Spending Analysis
+                                                </div>
+                                                <div class="fpds-mobile-slider-card-description">Analysis of federal
+                                                    contracts by states, regions, and geographic areas</div>
                                             </div>
                                         </div>
                                     </div>
@@ -2854,17 +2564,22 @@
                                 <div class="fpds-mobile-slider-card-content">
                                     <div class="fpds-mobile-slider-card-details">
                                         <div class="fpds-mobile-slider-icon-container">
-                                            <img class="fpds-mobile-slider-arrow-icon" src="{{ asset('/img/ico/rightup_arrow.png') }}" alt="">
+                                            <img class="fpds-mobile-slider-arrow-icon"
+                                                src="{{ asset('/img/ico/rightup_arrow.png') }}" alt="">
                                         </div>
 
                                         <div class="fpds-mobile-slider-card-body">
                                             <div class="fpds-mobile-slider-icon-wrapper">
-                                                <img class="fpds-mobile-slider-report-icon" src="{{ asset('/img/ico/Vendor-BasedContractingOverview.png') }}" alt="Vendor-Based Contracting Overview">
+                                                <img class="fpds-mobile-slider-report-icon"
+                                                    src="{{ asset('/img/ico/Vendor-BasedContractingOverview.png') }}"
+                                                    alt="Vendor-Based Contracting Overview">
                                             </div>
 
                                             <div class="fpds-mobile-slider-text-content">
-                                                <div class="fpds-mobile-slider-card-title">Vendor-Based Contracting Overview</div>
-                                                <div class="fpds-mobile-slider-card-description">Analysis of contractors: volume, distribution, and concentration</div>
+                                                <div class="fpds-mobile-slider-card-title">Vendor-Based Contracting
+                                                    Overview</div>
+                                                <div class="fpds-mobile-slider-card-description">Analysis of
+                                                    contractors: volume, distribution, and concentration</div>
                                             </div>
                                         </div>
                                     </div>
@@ -2876,17 +2591,22 @@
                                 <div class="fpds-mobile-slider-card-content">
                                     <div class="fpds-mobile-slider-card-details">
                                         <div class="fpds-mobile-slider-icon-container">
-                                            <img class="fpds-mobile-slider-arrow-icon" src="{{ asset('/img/ico/rightup_arrow.png') }}" alt="">
+                                            <img class="fpds-mobile-slider-arrow-icon"
+                                                src="{{ asset('/img/ico/rightup_arrow.png') }}" alt="">
                                         </div>
 
                                         <div class="fpds-mobile-slider-card-body">
                                             <div class="fpds-mobile-slider-icon-wrapper">
-                                                <img class="fpds-mobile-slider-report-icon" src="{{ asset('/img/ico/DepartmentandAgencySpending.png') }}" alt="Department and Agency Spending">
+                                                <img class="fpds-mobile-slider-report-icon"
+                                                    src="{{ asset('/img/ico/DepartmentandAgencySpending.png') }}"
+                                                    alt="Department and Agency Spending">
                                             </div>
 
                                             <div class="fpds-mobile-slider-text-content">
-                                                <div class="fpds-mobile-slider-card-title">Department and Agency Spending</div>
-                                                <div class="fpds-mobile-slider-card-description">Growth, Budget Trends, Comparisons</div>
+                                                <div class="fpds-mobile-slider-card-title">Department and Agency
+                                                    Spending</div>
+                                                <div class="fpds-mobile-slider-card-description">Growth, Budget Trends,
+                                                    Comparisons</div>
                                             </div>
                                         </div>
                                     </div>
@@ -2898,17 +2618,22 @@
                                 <div class="fpds-mobile-slider-card-content">
                                     <div class="fpds-mobile-slider-card-details">
                                         <div class="fpds-mobile-slider-icon-container">
-                                            <img class="fpds-mobile-slider-arrow-icon" src="{{ asset('/img/ico/rightup_arrow.png') }}" alt="">
+                                            <img class="fpds-mobile-slider-arrow-icon"
+                                                src="{{ asset('/img/ico/rightup_arrow.png') }}" alt="">
                                         </div>
 
                                         <div class="fpds-mobile-slider-card-body">
                                             <div class="fpds-mobile-slider-icon-wrapper">
-                                                <img class="fpds-mobile-slider-report-icon" src="{{ asset('/img/ico/SpendingbyProductandServiceCodes.png') }}" alt="Spending by Product and Service Codes">
+                                                <img class="fpds-mobile-slider-report-icon"
+                                                    src="{{ asset('/img/ico/SpendingbyProductandServiceCodes.png') }}"
+                                                    alt="Spending by Product and Service Codes">
                                             </div>
 
                                             <div class="fpds-mobile-slider-text-content">
-                                                <div class="fpds-mobile-slider-card-title">Spending by Product and Service Codes</div>
-                                                <div class="fpds-mobile-slider-card-description">Contracts categorized by product/service codes (PSC/NAICS)</div>
+                                                <div class="fpds-mobile-slider-card-title">Spending by Product and
+                                                    Service Codes</div>
+                                                <div class="fpds-mobile-slider-card-description">Contracts categorized
+                                                    by product/service codes (PSC/NAICS)</div>
                                             </div>
                                         </div>
                                     </div>
@@ -2920,17 +2645,22 @@
                                 <div class="fpds-mobile-slider-card-content">
                                     <div class="fpds-mobile-slider-card-details">
                                         <div class="fpds-mobile-slider-icon-container">
-                                            <img class="fpds-mobile-slider-arrow-icon" src="{{ asset('/img/ico/rightup_arrow.png') }}" alt="">
+                                            <img class="fpds-mobile-slider-arrow-icon"
+                                                src="{{ asset('/img/ico/rightup_arrow.png') }}" alt="">
                                         </div>
 
                                         <div class="fpds-mobile-slider-card-body">
                                             <div class="fpds-mobile-slider-icon-wrapper">
-                                                <img class="fpds-mobile-slider-report-icon" src="{{ asset('/img/ico/ContractingMetadataandAnomalies.png') }}" alt="Contracting Metadata and Anomalies">
+                                                <img class="fpds-mobile-slider-report-icon"
+                                                    src="{{ asset('/img/ico/ContractingMetadataandAnomalies.png') }}"
+                                                    alt="Contracting Metadata and Anomalies">
                                             </div>
 
                                             <div class="fpds-mobile-slider-text-content">
-                                                <div class="fpds-mobile-slider-card-title">Contracting Metadata and Anomalies</div>
-                                                <div class="fpds-mobile-slider-card-description">General contract statistics, types, anomalies, and incomplete records</div>
+                                                <div class="fpds-mobile-slider-card-title">Contracting Metadata and
+                                                    Anomalies</div>
+                                                <div class="fpds-mobile-slider-card-description">General contract
+                                                    statistics, types, anomalies, and incomplete records</div>
                                             </div>
                                         </div>
                                     </div>
@@ -2942,17 +2672,22 @@
                                 <div class="fpds-mobile-slider-card-content">
                                     <div class="fpds-mobile-slider-card-details">
                                         <div class="fpds-mobile-slider-icon-container">
-                                            <img class="fpds-mobile-slider-arrow-icon" src="{{ asset('/img/ico/rightup_arrow.png') }}" alt="">
+                                            <img class="fpds-mobile-slider-arrow-icon"
+                                                src="{{ asset('/img/ico/rightup_arrow.png') }}" alt="">
                                         </div>
 
                                         <div class="fpds-mobile-slider-card-body">
                                             <div class="fpds-mobile-slider-icon-wrapper">
-                                                <img class="fpds-mobile-slider-report-icon" src="{{ asset('/img/ico/FederalContractingTrendsOverTime.png') }}" alt="Federal Contracting Trends Over Time">
+                                                <img class="fpds-mobile-slider-report-icon"
+                                                    src="{{ asset('/img/ico/FederalContractingTrendsOverTime.png') }}"
+                                                    alt="Federal Contracting Trends Over Time">
                                             </div>
 
                                             <div class="fpds-mobile-slider-text-content">
-                                                <div class="fpds-mobile-slider-card-title">Federal Contracting Trends Over Time</div>
-                                                <div class="fpds-mobile-slider-card-description">Yearly, quarterly, and time-based trends in federal contracting</div>
+                                                <div class="fpds-mobile-slider-card-title">Federal Contracting Trends
+                                                    Over Time</div>
+                                                <div class="fpds-mobile-slider-card-description">Yearly, quarterly, and
+                                                    time-based trends in federal contracting</div>
                                             </div>
                                         </div>
                                     </div>
@@ -2964,17 +2699,22 @@
                                 <div class="fpds-mobile-slider-card-content">
                                     <div class="fpds-mobile-slider-card-details">
                                         <div class="fpds-mobile-slider-icon-container">
-                                            <img class="fpds-mobile-slider-arrow-icon" src="{{ asset('/img/ico/rightup_arrow.png') }}" alt="">
+                                            <img class="fpds-mobile-slider-arrow-icon"
+                                                src="{{ asset('/img/ico/rightup_arrow.png') }}" alt="">
                                         </div>
 
                                         <div class="fpds-mobile-slider-card-body">
                                             <div class="fpds-mobile-slider-icon-wrapper">
-                                                <img class="fpds-mobile-slider-report-icon" src="{{ asset('/img/ico/FederalSpendingForecasts.png') }}" alt="Federal Spending Forecasts">
+                                                <img class="fpds-mobile-slider-report-icon"
+                                                    src="{{ asset('/img/ico/FederalSpendingForecasts.png') }}"
+                                                    alt="Federal Spending Forecasts">
                                             </div>
 
                                             <div class="fpds-mobile-slider-text-content">
-                                                <div class="fpds-mobile-slider-card-title">Federal Spending Forecasts</div>
-                                                <div class="fpds-mobile-slider-card-description">Forecasts of future contract volumes and activity</div>
+                                                <div class="fpds-mobile-slider-card-title">Federal Spending Forecasts
+                                                </div>
+                                                <div class="fpds-mobile-slider-card-description">Forecasts of future
+                                                    contract volumes and activity</div>
                                             </div>
                                         </div>
                                     </div>
@@ -2986,17 +2726,22 @@
                                 <div class="fpds-mobile-slider-card-content">
                                     <div class="fpds-mobile-slider-card-details">
                                         <div class="fpds-mobile-slider-icon-container">
-                                            <img class="fpds-mobile-slider-arrow-icon" src="{{ asset('/img/ico/rightup_arrow.png') }}" alt="">
+                                            <img class="fpds-mobile-slider-arrow-icon"
+                                                src="{{ asset('/img/ico/rightup_arrow.png') }}" alt="">
                                         </div>
 
                                         <div class="fpds-mobile-slider-card-body">
                                             <div class="fpds-mobile-slider-icon-wrapper">
-                                                <img class="fpds-mobile-slider-report-icon" src="{{ asset('/img/ico/ComplianceandRiskAssessment.png') }}" alt="Compliance and Risk Assessment">
+                                                <img class="fpds-mobile-slider-report-icon"
+                                                    src="{{ asset('/img/ico/ComplianceandRiskAssessment.png') }}"
+                                                    alt="Compliance and Risk Assessment">
                                             </div>
 
                                             <div class="fpds-mobile-slider-text-content">
-                                                <div class="fpds-mobile-slider-card-title">Compliance and Risk Assessment</div>
-                                                <div class="fpds-mobile-slider-card-description">Assessment of risk, compliance, single-bid contracts, and red flags</div>
+                                                <div class="fpds-mobile-slider-card-title">Compliance and Risk
+                                                    Assessment</div>
+                                                <div class="fpds-mobile-slider-card-description">Assessment of risk,
+                                                    compliance, single-bid contracts, and red flags</div>
                                             </div>
                                         </div>
                                     </div>
@@ -3005,9 +2750,11 @@
                         </div>
                     </div>
 
-                    <div class="fpds-mobile-slider-browse-button">
-                        <p class="fpds-mobile-slider-button-text">Browse All Templates</p>
-                    </div>
+                    <form action="{{ route('library') }}">
+                        <button class="hero-button">
+                            Browse All Templates
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -3021,7 +2768,8 @@
                     <div class="sample-report-left">
                         <div class="sample-report-title">See a Sample FPDS Report</div>
                     </div>
-                    <img class="sample-report-image" src="{{ asset('/img/ico/transparent_background.png') }}" alt="Sample FPDS Report" />
+                    <img class="sample-report-image" src="{{ asset('/img/ico/transparent_background.png') }}"
+                        alt="Sample FPDS Report" />
                 </div>
             </div>
             <div class="download-report-button">
@@ -3037,24 +2785,22 @@
         </div>
     </section>
 
-    <section>
-        <div class="custom-report-container">
-            <div class="custom-report-wrapper">
-                <div class="custom-report-content">
-                    <div class="custom-report-left">
-                        <div class="custom-report-text">
-                            <div class="custom-report-title">Need a Custom FPDS Report?</div>
-                            <div class="custom-report-title-mobile">
-                                Who <br>
-                                We Serve</div>
-                        </div>
-                        <div class="custom-report-description">
-                            <img class="custom-report-description-1-mobile" src="{{ asset('img/ico/quotes-1.svg') }}" alt="">
-                            We can build a report tailored to your request.<br><br>
-                            Just tell us what you need — e.g., "DoD contracts in Texas, non-competed, 2024" — and we'll handle the rest.
-                            <img class="custom-report-description-2-mobile" src="{{ asset('img/ico/quotes-2.svg') }}" alt="">
-                        </div>
-                    </div>
+    <section class="section">
+        <div class="container">
+            <div class="grid-3-columns">
+                <div class="grid-item">
+                    <h2 class="title">Need a Custom<br> FPDS Report?</h2>
+                </div>
+                <div class="grid-item">
+                    <p class="description">
+                        We can build a report tailored<br> to your request.<br><br>
+                        Just tell us what you need —<br> e.g., "DoD contracts in Texas,<br> non-competed, 2024" —
+                        and<br> we'll
+                        handle the rest.
+                    </p>
+                </div>
+                <div class="grid-item">
+
                     <div class="custom-report-form">
                         <div class="form-fields">
                             <div class="form-inputs">
@@ -3084,6 +2830,7 @@
                             </button>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -3219,38 +2966,18 @@
         </div>
     </section>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const faqItems = document.querySelectorAll('.faq-item');
-
-            faqItems.forEach(item => {
-                const question = item.querySelector('.faq-question');
-
-                question.addEventListener('click', () => {
-                    // Close all other open FAQs
-                    faqItems.forEach(otherItem => {
-                        if (otherItem !== item && otherItem.classList.contains('active')) {
-                            otherItem.classList.remove('active');
-                        }
-                    });
-
-                    // Switch the current FAQ
-                    item.classList.toggle('active');
-                });
-            });
-        });
-    </script>
-
-
     <section>
         <div class="fpds-cta">
             <div class="fpds-container">
                 <div class="fpds-heading">Ready to get your FPDS Report?</div>
-                <div class="fpds-button">
-                    <a href="{{ route('products.fpds-reports-overview') }}" class="button-text">
-                        FPDS Reports — Benefits & Pricing
-                    </a>
-                </div>
+
+
+                <form action="{{ route('products.fpds-reports-overview') }}">
+                    <button class="hero-button">
+                        Benefits & Pricing
+                    </button>
+                </form>
+
             </div>
         </div>
     </section>

@@ -111,89 +111,9 @@
             opacity: 1;
         }
 
-        .fpds-query-line {
-            display: none;
-            width: 134px;
-            height: 5px;
-            background: white;
-            border-radius: 100px;
-        }
+
 
         /* END fpds-query-hero section */
-
-        /* START fpds-query-section section */
-        .fpds-query-section {
-            display: flex;
-            justify-content: center;
-            justify-content: space-between;
-            max-width: 1800px;
-            width: 100%;
-            margin: 0 auto;
-            margin-top: 100px;
-        }
-
-        .fpds-query-content-container {
-            justify-content: flex-start;
-            align-items: flex-start;
-            gap: 290px;
-            display: flex;
-        }
-
-        .fpds-query-title-container {
-            justify-content: flex-start;
-            align-items: flex-start;
-            display: flex;
-        }
-
-        .fpds-query-section-title {
-            width: 330px;
-            justify-content: center;
-            display: flex;
-            flex-direction: column;
-            color: white;
-            font-size: 48px;
-            font-family: Overused Grotesk;
-            font-weight: 400;
-            word-wrap: break-word;
-        }
-
-        .fpds-query-description {
-            position: relative;
-            width: 320px;
-            color: white;
-            font-size: 24px;
-            font-weight: 400;
-            line-height: 24px;
-            color: #afbcb8;
-        }
-
-        .fpds-query-description-mobile {
-            display: none;
-        }
-
-        .fpds-query-description-1 {
-            position: absolute;
-            top: -15px;
-            left: -15px;
-        }
-
-        .fpds-query-description-2 {
-            position: absolute;
-            bottom: -15px;
-            right: 91px;
-        }
-
-        .fpds-query-image {
-            width: 560px;
-            height: 330px;
-            border-radius: 7px;
-        }
-
-        .query-mobile-break {
-            display: inline;
-        }
-
-        /* END fpds-query-section section */
 
         /* START query-features-container section */
         .query-features-container {
@@ -360,7 +280,7 @@
 
         .use-cases__title {
             font-weight: 400;
-            font-size: 24px;
+            font-size: 48px;
             line-height: 63px;
             color: #ffffff;
             flex-grow: 0;
@@ -577,9 +497,6 @@
                 margin-top: 0px;
             }
 
-            .fpds-query-line {
-                display: block;
-            }
         }
 
         @media (max-width: 325px) {
@@ -594,100 +511,6 @@
 
         /* END adaptation fpds-query-hero section */
 
-        /* START adaptation fpds-query-section section */
-        @media (max-width: 1440px) {
-            .fpds-query-section {
-                padding: 30px 30px;
-                width: 100%;
-                max-width: 1440px;
-            }
-
-            .fpds-query-content-container {
-                gap: 80px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .fpds-query-section {
-                display: flex;
-                flex-direction: column;
-                padding: 0px 26px;
-                margin-top: 40px;
-                margin-bottom: 70px;
-            }
-
-            .fpds-query-content-container {
-                flex-direction: column;
-                gap: 40px;
-                margin-bottom: 40px;
-            }
-
-            .fpds-query-description {
-                display: none;
-            }
-
-            .fpds-query-description-mobile {
-                display: block;
-                font-size: 16px;
-                width: 251px;
-                font-weight: 400;
-                line-height: 24px;
-                color: #afbcb8;
-                position: relative;
-            }
-
-            .fpds-query-description-mobile-1 {
-                width: 10px;
-                position: absolute;
-                top: -5px;
-                left: -10px;
-            }
-
-            .fpds-query-description-mobile-2 {
-                width: 10px;
-                position: absolute;
-                bottom: -5px;
-                left: 144px;
-            }
-
-            .fpds-query-description-2 {
-                right: -206px;
-            }
-
-            .fpds-query-image {
-                width: 100%;
-                max-width: 410px;
-                max-height: 200px;
-            }
-
-            .query-mobile-break {
-                display: block;
-            }
-
-            .fpds-query-section-title {
-                display: block;
-                width: 150px;
-                font-size: 24px;
-            }
-        }
-
-        @media (max-width: 385px) {
-            .fpds-query-description {
-                width: 100%;
-                max-width: 327px;
-            }
-
-            .fpds-query-description-2 {
-                right: 35px;
-            }
-
-            .fpds-query-image {
-                width: 327px;
-                height: 177px;
-            }
-        }
-
-        /* END adaptation fpds-query-section section */
 
         /* START adaptation query-features-container section */
         @media (max-width: 1600px) {
@@ -911,51 +734,52 @@
         <div class="fpds-query-hero">
             <div class="fpds-query-container">
                 <div class="fpds-query-content">
-                    <div class="fpds-query-title">FPDS Query</div>
+                    <h1 class="fpds-query-title">FPDS Query</h1>
                     <div class="fpds-query-subtitle-container">
                         <p class="fpds-query-subtitle">High-speed FPDS analytics engine.</p>
                         <p class="fpds-query-subtitle"> Direct access to raw federal contract data</p>
 
                     </div>
                     <div class="fpds-query-subtitle-container-mobile">
-                        <p class="fpds-query-subtitle">High-speed FPDS analytics engine.Direct access to raw federal contract data</p>
+                        <p class="fpds-query-subtitle">High-speed FPDS analytics engine.Direct access to raw federal
+                            contract data</p>
                     </div>
 
-                    <form action="{{ route('fpds.query') }}" method="post">
-                    @csrf
-                    <button class="fpds-query-btn">
-                        Launch FPDS Query Demo
-                    </button>
+                    <form action="{{ route('order.subscription') }}" method="post">
+                        @csrf
+                        <input type="hidden" name="subscription_type" value="fpds_query">
+                        <input type="hidden" name="subscription_plan" value="Monthly">
+                        
+                        <button class="fpds-query-btn">
+                            Launch FPDS Query Demo
+                        </button>
                     </form>
 
-                    <div class="fpds-query-line"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section>
-        <div class="fpds-query-section">
-            <div class="fpds-query-content-container">
-                <div class="fpds-query-title-container">
-                    <div class="fpds-query-section-title">What is FPDS<span class="query-mobile-break"> Query?</span></div>
+    <!-- What is FPDS Query -->
+    <section class="section">
+        <div class="container">
+            <div class="grid-3-columns">
+                <div class="grid-item">
+                    <h2 class="title">What is FPDS<br> Query?</h2>
                 </div>
-                <p class="fpds-query-description">
-                    <img class="fpds-query-description-1" src="{{ asset('img/ico/quotes-1.svg') }}" alt="">
-                    Go beyond FPDS Atom — deep, flexible SQL access
-                    <br> to the full federal procurement dataset with full control <br>
-                    and zero restrictions.
-                    <img class="fpds-query-description-2" src="{{ asset('img/ico/quotes-2.svg') }}" alt="">
-                </p>
-                <p class="fpds-query-description-mobile">
-                    <img class="fpds-query-description-mobile-1" src="{{ asset('img/ico/quotes-1.svg') }}" alt="">
-                    Go beyond FPDS Atom — deep, flexible SQL access
-                    to the full federal procurement dataset with full control
-                    and zero restrictions.
-                    <img class="fpds-query-description-mobile-2" src="{{ asset('img/ico/quotes-2.svg') }}" alt="">
-                </p>
+                <div class="grid-item">
+                    <p class="description">
+                        Go beyond FPDS Atom — deep,<br>
+                        flexible SQL access<br>
+                        to the full federal procurement<br>
+                        dataset with full control<br>
+                        and zero restrictions.
+                    </p>
+                </div>
+                <div class="grid-item">
+                    <img src="{{ asset('img/main/FPDSquerydata.png') }}" alt="" class="image">
+                </div>
             </div>
-            <img class="fpds-query-image" src="{{ asset('img/main/FPDSquerydata.png') }}" alt="FPDS Query Interface" />
         </div>
     </section>
 
@@ -978,7 +802,8 @@
                     </div>
                     <div class="query-feature-content">
 
-                        <div class="query-feature-description">Full SQL access — filters, joins, aggregations, subqueries</div>
+                        <div class="query-feature-description">Full SQL access — filters, joins, aggregations,
+                            subqueries</div>
                     </div>
                 </div>
 
@@ -998,7 +823,8 @@
                     </div>
                     <div class="query-feature-content">
 
-                        <div class="query-feature-description">Zero limits: slice, group, compute — any way you want</div>
+                        <div class="query-feature-description">Zero limits: slice, group, compute — any way you want
+                        </div>
                     </div>
                 </div>
 
@@ -1018,9 +844,9 @@
 
     <section class="use-cases">
         <div class="use-cases__container">
-            <h1 class="use-cases__title">
+            <h2 class="use-cases__title">
                 Use Cases
-            </h1>
+            </h2>
 
             <div class="use-cases__grid">
                 <div class="use-case-card">
@@ -1067,18 +893,20 @@
 
     <section class="preview-section">
         <div class="preview-container">
-            <h1 class="preview-title">
+            <h2 class="preview-title">
                 Preview
-            </h1>
+            </h2>
             <div class="preview-content">
                 <img src="{{ asset('/img/main/ProductImage.png') }}" alt="" class="preview-image">
                 <div class="preview-actions">
 
-                    <form action="{{ route('fpds.query') }}" method="post">
-                    @csrf
-                    <button class="btn-primary">
-                        Launch FPDS Query Demo
-                    </button>
+                    <form action="{{ route('order.subscription') }}" method="post">
+                        @csrf
+                        <input type="hidden" name="subscription_type" value="fpds_query">
+                        <input type="hidden" name="subscription_plan" value="Monthly">
+                        <button class="btn-primary">
+                            Launch FPDS Query Demo
+                        </button>
                     </form>
 
                     <a href="{{ route('products.fpds-query-overview') }}" class="btn-secondary">
@@ -1094,4 +922,5 @@
     @include('include.footer')
 
 </body>
+
 </html>

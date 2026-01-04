@@ -60,7 +60,7 @@
       border-left: none;
     }
 
-    .reports-header.title {
+    .reports-header.space {
       flex: 1 1 0;
       border-left: none;
     }
@@ -125,7 +125,7 @@
       border-left: none;
     }
 
-    .reports-cell.title {
+    .reports-cell.space {
       flex: 1 1 0;
       border-left: none;
     }
@@ -242,7 +242,7 @@
                   <div class="header-text">Report Code</div>
                 </div>
               </div>
-              <div class="reports-header title">
+              <div class="reports-header space">
                 <div class="header-content">
                   <div class="header-text">Title</div>
                 </div>
@@ -278,7 +278,7 @@
                     </a>
                   </div>
                 </div>
-                <div class="reports-cell title">
+                <div class="reports-cell space">
                   <div class="cell-content">
                     <div class="cell-text">{{ $report->title ?? 'No title' }} @if ($report->getParametersString())({{ $report->getParametersString() }})@endif</div>
 

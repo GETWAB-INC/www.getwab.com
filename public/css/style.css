@@ -160,7 +160,7 @@ body {
     background-color: #282828;
     margin: 0 auto;
     max-width: 1920px;
-    
+
 }
 
 body.no-scroll,
@@ -169,11 +169,7 @@ body.no-scroll * {
 }
 
 body[style*="overflow: hidden"] {
-    /* position: fixed; */
-    /* width: 100%; */
     height: 100vh;
-    /* top: 0;
-    left: 0; */
 }
 
 
@@ -541,6 +537,128 @@ body[style*="overflow: hidden"] {
     display: none;
 }
 
+.hero-button {
+    position: relative;
+    height: 64px;
+    width: 276px;
+    padding: 35px 20px;
+    background: linear-gradient(360deg, #00ad8c 0%, #00755f 51%);
+    border-radius: 7px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: white;
+    font-size: 24px;
+    font-family: "Overused Grotesk", sans-serif;
+    font-weight: 400;
+    line-height: 24px;
+    overflow: hidden;
+    z-index: 1;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(360deg, #00624f 0%, #005d4b 97%);
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.4s ease;
+}
+
+.hero-button:hover::before {
+    opacity: 1;
+}
+
+/* section START */
+.section {
+    padding: 32px;
+}
+
+.container {
+    width: 100%;
+    max-width: 1920px;
+    margin: 0 auto;
+}
+
+.grid-3-columns {
+    display: grid;
+    grid-template-columns: repeat(3, 560px);
+    gap: 2rem;
+    justify-content: center;
+    padding: 0 1rem;
+}
+
+.grid-item {
+    display: flex;
+    flex-direction: column;
+    max-width: 560px;
+    width: 100%;
+}
+
+.title {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #FFF;
+    font-family: "Overused Grotesk", sans-serif;
+    font-weight: 400;
+    line-height: 120%;
+    margin: 0;
+}
+
+.description {
+    position: relative;
+    margin-bottom: 1rem;
+    color: #afbcb8;
+    font-size: 1.5rem;
+    font-weight: 400;
+    max-width: 100%;
+}
+
+.description::before {
+    content: url("../img/ico/quotes-1.svg");
+    position: absolute;
+    left: -5%;
+    top: 0;
+    transform: translateY(-50%);
+
+}
+
+.description::after {
+    content: url("../img/ico/quotes-2.svg");
+    position: absolute;
+    right: 0%;
+    top: 100%;
+    transform: translateY(-50%);
+}
+
+.link {
+    color: var(--Light-green, #b5d9a7);
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 24px;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+.image {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+}
+
+/* section END */
 /*ADAPTATION HEADER START*/
 
 @media (max-width: 768px) {
@@ -763,6 +881,36 @@ body[style*="overflow: hidden"] {
     .hero-button {
         font-size: 16px;
         padding: 12px 20px;
+    }
+
+    .grid-3-columns {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 32px 24px;
+    }
+
+    .section {
+        padding: 0px;
+    }
+
+    .hero-content {
+        gap: 60px;
+    }
+
+    .hero-text-container {
+        gap: 32px;
+    }
+
+    .title {
+        font-size: 1.5rem;
+    }
+
+    .description {
+        font-size: 1rem;
+    }
+
+    .link {
+        font-size: 20px;
     }
 }
 
