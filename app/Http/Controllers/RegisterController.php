@@ -108,7 +108,6 @@ class RegisterController extends Controller
             'surname' => $orderData['surname'] ?? null,
             'email' => $email,
             'password' => Hash::make($orderData['password']),
-            'is_verified' => false, // Email не подтверждён
         ]);
 
         // Отправляем письмо для верификации

@@ -73,83 +73,131 @@ class CheckoutController extends Controller
                 ->withInput();
         }
 
-        $validated = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                'regex:/^[\pL\s\-]+$/u',
-            ],
-            'surname' => [
-                'required',
-                'string',
-                'max:255',
-                'regex:/^[\pL\s\-]*$/u',
-            ],
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'max:255',
-                'unique:users,email',
-            ],
-            'confirm_email' => [
-                'required',
-                'email',
-                'same:email',
-            ],
-            'password' => [
-                'required',
-                'string',
-                'min:8',
-                'confirmed',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
-            ],
-            'password_confirmation' => [
-                'required',
-            ],
-            'city' => [
-                'nullable',
-                'string',
-                'max:255',
-            ],
-            'address1' => [
-                'nullable',
-                'string',
-                'max:255',
-            ],
-            'address2' => [
-                'nullable',
-                'string',
-                'max:255',
-            ],
-            'zip' => [
-                'nullable',
-                'string',
-                'max:20',
-            ],
-        ], [
-            // Custom error messages
-            'name.required' => 'First name is required.',
-            'name.regex' => 'First name may only contain letters, spaces, and hyphens.',
-            'surname.required' => 'Last name is required.',
-            'surname.regex' => 'Last name may only contain letters, spaces, and hyphens.',
-            'email.required' => 'Email is required.',
-            'email.email' => 'Please enter a valid email address.',
-            'email.unique' => 'A user with this email already exists.',
-            'confirm_email.required' => 'Please confirm your email address.',
-            'confirm_email.same' => 'The email confirmation does not match the email.',
-            'password.required' => 'Password is required.',
-            'password.min' => 'Password must be at least 8 characters long.',
-            'password.confirmed' => 'The passwords do not match.',
-            'password.regex' => 'Password must contain: uppercase letter, lowercase letter, number, and special character.',
-            'password_confirmation.required' => 'Please confirm your password.',
-        ]);
-
+        if (Auth::check()) {
+            // Пользователь авторизован: проверяем только обязательные поля без пароля
+            $validated = $request->validate([
+                'name' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    'regex:/^[\pL\s\-]+$/u',
+                ],
+                'surname' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    'regex:/^[\pL\s\-]*$/u',
+                ],
+                'city' => [
+                    'required',
+                    'nullable',
+                    'string',
+                    'max:255',
+                ],
+                'address1' => [
+                    'required',
+                    'nullable',
+                    'string',
+                    'max:255',
+                ],
+                'address2' => [
+                    'nullable',
+                    'string',
+                    'max:255',
+                ],
+                'zip' => [
+                    'required',
+                    'nullable',
+                    'string',
+                    'max:20',
+                ],
+            ], [
+                'name.required' => 'First name is required.',
+                'name.regex' => 'First name may only contain letters, spaces, and hyphens.',
+                'surname.required' => 'Last name is required.',
+                'surname.regex' => 'Last name may only contain letters, spaces, and hyphens.',
+            ]);
+        } else {
+            // Пользователь не авторизован: полная валидация (включая email и пароль)
+            $validated = $request->validate([
+                'name' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    'regex:/^[\pL\s\-]+$/u',
+                ],
+                'surname' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    'regex:/^[\pL\s\-]*$/u',
+                ],
+                'email' => [
+                    'required',
+                    'string',
+                    'email',
+                    'max:255',
+                    'unique:users,email',
+                ],
+                'confirm_email' => [
+                    'required',
+                    'email',
+                    'same:email',
+                ],
+                'password' => [
+                    'required',
+                    'string',
+                    'min:8',
+                    'confirmed',
+                    'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
+                ],
+                'password_confirmation' => [
+                    'required',
+                ],
+                'city' => [
+                    'required',
+                    'nullable',
+                    'string',
+                    'max:255',
+                ],
+                'address1' => [
+                    'required',
+                    'nullable',
+                    'string',
+                    'max:255',
+                ],
+                'address2' => [
+                    'nullable',
+                    'string',
+                    'max:255',
+                ],
+                'zip' => [
+                    'required',
+                    'nullable',
+                    'string',
+                    'max:20',
+                ],
+            ], [
+                'name.required' => 'First name is required.',
+                'name.regex' => 'First name may only contain letters, spaces, and hyphens.',
+                'surname.required' => 'Last name is required.',
+                'surname.regex' => 'Last name may only contain letters, spaces, and hyphens.',
+                'email.required' => 'Email is required.',
+                'email.email' => 'Please enter a valid email address.',
+                'email.unique' => 'A user with this email already exists.',
+                'confirm_email.required' => 'Please confirm your email address.',
+                'confirm_email.same' => 'The email confirmation does not match the email.',
+                'password.required' => 'Password is required.',
+                'password.min' => 'Password must be at least 8 characters long.',
+                'password.confirmed' => 'The passwords do not match.',
+                'password.regex' => 'Password must contain: uppercase letter, lowercase letter, number, and special character.',
+                'password_confirmation.required' => 'Please confirm your password.',
+            ]);
+        }
 
         // dd(Auth::check(), $request->session()->all(), $request->all());
 
-        $email = $validated['email'];
+        $email = Auth::check() ? Auth::user()->email : $validated['email'];
 
         if (!Auth::check()) {
             $user = User::where('email', $email)->first();
