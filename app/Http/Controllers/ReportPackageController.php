@@ -34,35 +34,50 @@ class ReportPackageController extends Controller
         };
     }
 
+    private function addPackageToSession($type, $count)
+    {
+        $prices = $this->getPackagePrices($type);
+        if (!isset($prices[$count])) {
+            return; // пропускаем, если количество невалидно
+        }
+        $totalPrice = $prices[$count];
+        $orderData = [
+            'package_type' => $type,
+            'reports_count' => $count,
+            'package_price' => $totalPrice,
+        ];
+        $sessionKey = $type . '_report_package';
+        Session::put($sessionKey, $orderData);
+    }
+
+
     public function orderPackage(Request $request)
     {
         // 1. Получаем входные данные
         $packageType = $request->input('package_type');
-        $reportsCount = (int)$request->input('reports_count');
+        $reportsCount = (int)$request->input('reports_count', 1); // по умолчанию 1
 
-        // 2. Получаем цены для типа пакета
-        $prices = $this->getPackagePrices($packageType);
-
-        // 3. Проверяем валидность количества отчётов
-        if (!isset($prices[$reportsCount])) {
-            return redirect()->back()->withErrors(['reports_count' => 'Incorrect number of reports']);
+        // 2. Проверяем, является ли пакет комбинированным
+        if ($packageType === 'elementary_composite') {
+            // Обрабатываем два пакета: elementary и composite
+            $this->addPackageToSession('elementary', $reportsCount);
+            $this->addPackageToSession('composite', $reportsCount);
+        } else {
+            // Обычная логика для одиночного пакета
+            $prices = $this->getPackagePrices($packageType);
+            if (!isset($prices[$reportsCount])) {
+                return redirect()->back()->withErrors(['reports_count' => 'Incorrect number of reports']);
+            }
+            $totalPrice = $prices[$reportsCount];
+            $orderData = [
+                'package_type' => $packageType,
+                'reports_count' => $reportsCount,
+                'package_price' => $totalPrice,
+            ];
+            $sessionKey = $packageType . '_report_package';
+            Session::put($sessionKey, $orderData);
         }
-
-        // 4. Рассчитываем итоговую сумму
-        $totalPrice = $prices[$reportsCount];
-
-        // 5. Формируем данные для сессии
-        $orderData = [
-            'package_type' => $packageType,
-            'reports_count' => $reportsCount,
-            'package_price' => $totalPrice,
-        ];
-
-        // 6. Сохраняем в сессию под ключом, зависящим от типа пакета
-        $sessionKey = $packageType . '_report_package';
-        Session::put($sessionKey, $orderData);
-
-        // 7. Перенаправляем на страницу checkout
+        // 3. Перенаправляем на страницу checkout
         return redirect()->route('checkout');
     }
 }

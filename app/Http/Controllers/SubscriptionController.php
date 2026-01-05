@@ -11,6 +11,7 @@ class SubscriptionController extends Controller
 {
     public function orderSubscription(Request $request)
     {
+
         $validated = $request->validate([
             'subscription_type' => 'required|in:fpds_query,fpds_reports',
             'subscription_plan' => 'required|in:Monthly,Annual',

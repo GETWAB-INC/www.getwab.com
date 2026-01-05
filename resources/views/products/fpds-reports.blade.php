@@ -2845,15 +2845,17 @@
                     </div>
                     <div class="plans-cards">
                         <!-- Single Report Card -->
-                        <div class="plan-card">
+                        <form method="POST" action="{{ route('order.package') }}">
+                            @csrf
+                            <input type="hidden" name="package_type" value="elementary_composite">
+                            <input type="hidden" name="reports_count" value="1">
+                            <div class="plan-card">
                             <div class="plan-content">
-
-
                                 <div class="plan-details">
                                     <div class="plan-title-section">
                                         <div class="plan-name">Single Report</div>
                                     </div>
-                                    <div class="plan-price">$99–199</div>
+                                    <div class="plan-price">$49–149</div>
                                     <div class="plan-icon">
                                         <div class="single-report-icon">
                                             <img src="{{ asset('/img/ico/SingleReport.png') }}" alt="" />
@@ -2861,39 +2863,46 @@
 
                                     </div>
                                     <div class="plan-button">
-                                        <a href="{{ route('checkout') }}" class="button-text">
+                                        <button class="button-text">
                                             Order
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
-
-
                             </div>
                         </div>
-
+                    </form>
+                    
                         <!-- Unlimited Subscription Card -->
+                        <form method="POST" action="{{ route('order.subscription') }}">
+                            @csrf
+                            <input type="hidden" name="subscription_type" value="fpds_reports">
+                            <input type="hidden" name="subscription_status" value="active">
+                            <input type="hidden" name="subscription_plan" value="Monthly">
                         <div class="plan-card">
                             <div class="plan-content">
                                 <div class="plan-details">
+
                                     <div class="plan-title-section">
                                         <div class="plan-name">Unlimited Subscription</div>
                                     </div>
                                     <div class="plan-price">
                                         <span class="plan-price-sm">from</span>
-                                        <span> $99</span>
+                                        <span>$799</span>
                                         <span class="plan-price-sm">/month</span>
                                     </div>
                                     <div class="plan-icon">
                                         <img src="{{ asset('/img/ico/UnlimitedSubscription.png') }}" alt="" />
                                     </div>
                                     <div class="plan-button">
-                                        <a href="{{ route('checkout') }}" class="button-text">
+                                        <button class="button-text">
                                             Order
-                                        </a>
+                                        </button>
                                     </div>
-                                </div>
+                                </div>                             
                             </div>
                         </div>
+                        </form>
+
                     </div>
                 </div>
             </div>

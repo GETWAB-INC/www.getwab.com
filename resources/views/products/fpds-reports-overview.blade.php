@@ -1163,19 +1163,23 @@
     <section class="reports-pricing">
       <div class="reports-pricing__container">
         <div class="reports-pricing__content">
-          <header class="reports-pricing__header">
+          <div class="reports-pricing__header">
             <h2 class="reports-pricing__title">
               Choose <br />
               your plan
             </h2>
-          </header>
+          </div>
 
           <div class="reports-pricing__cards">
             <div class="reports-pricing__cards-row top-row">
 
               <article class="reports-pricing__card standard">
+                <form method="POST" action="{{ route('order.package') }}">
+                   @csrf
+                   <input type="hidden" name="package_type" value="elementary_composite">
+                   <input type="hidden" name="reports_count" value="1">
                 <div class="reports-pricing__card-content">
-                  <header class="reports-pricing__card-header">
+                  <div class="reports-pricing__card-header">
                     <h3 class="reports-pricing__plan-name">Single Report</h3>
                     <div class="reports-pricing__price">
                       <span class="reports-pricing__price-amount">$49–149</span>
@@ -1187,14 +1191,19 @@
                         Perfect for quick insights
                       </p>
                     </div>
-                  </header>
-                  <a href="{{ route('library') }}" class="reports-pricing__btn">Browse Reports</a>
+                  </div>
+                  <button class="reports-pricing__btn">Browse Reports</button>
                 </div>
+                </form>
               </article>
 
               <article class="reports-pricing__card standard">
+                <form method="POST" action="{{ route('order.package') }}">
+                   @csrf
+                   <input type="hidden" name="package_type" value="elementary">
+                   <input type="hidden" name="reports_count" value="10">
                 <div class="reports-pricing__card-content">
-                  <header class="reports-pricing__card-header">
+                  <div class="reports-pricing__card-header">
                     <h3 class="reports-pricing__plan-name">
                       Elementary Package
                     </h3>
@@ -1207,14 +1216,19 @@
                         For frequent buyers of basic reports
                       </p>
                     </div>
-                  </header>
-                  <a href="{{ route('checkout') }}" class="reports-pricing__btn">Request Package</a>
+                  </div>
+                  <button class="reports-pricing__btn">Request Package</button>
                 </div>
+                </form>
               </article>
 
               <article class="reports-pricing__card standard">
+                <form method="POST" action="{{ route('order.package') }}">
+                   @csrf
+                   <input type="hidden" name="package_type" value="composite">
+                   <input type="hidden" name="reports_count" value="5">
                 <div class="reports-pricing__card-content">
-                  <header class="reports-pricing__card-header">
+                  <div class="reports-pricing__card-header">
                     <h3 class="reports-pricing__plan-name">
                       Composite Package
                     </h3>
@@ -1227,9 +1241,10 @@
                         For in-depth analytical projects
                       </p>
                     </div>
-                  </header>
-                  <a href="{{ route('checkout') }}" class="reports-pricing__btn">Request Package</a>
+                  </div>
+                  <button class="reports-pricing__btn">Request Package</button>
                 </div>
+                </form>
               </article>
 
 
@@ -1264,7 +1279,7 @@
                       </p>
                     </div>
                   </div>
-                  <button href="{{ route('checkout') }}" class="reports-pricing__btn">Subscribe Now</button>
+                  <button class="reports-pricing__btn">Subscribe Now</button>
                   
                 </div>
                 </form>
