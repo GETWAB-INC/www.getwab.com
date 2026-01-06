@@ -75,10 +75,8 @@ class RegisterController extends Controller
                 'password' => Hash::make($request->password),
             ]);
 
-            // Автоматически логиним пользователя
             Auth::login($user, true);
 
-            // Перенаправляем на маршрут 'account'
             return redirect()->route('account')
                 ->with('success', 'Registration successful! You are now logged in.');
         } catch (\Exception $e) {
@@ -87,23 +85,21 @@ class RegisterController extends Controller
     }
 
     /**
-     * Регистрирует пользователя из данных заказа (с паролем из формы).
+     * Registers a user from the order data (with the password from the form).
      *
-     * @param array $orderData Данные из формы заказа (включая password и password_confirmation)
+     * @param array $orderData Data from the order form (including password and password_confirmation)
      * @return User
      */
     public function registerThruOrder(array $orderData): User
     {
         $email = $orderData['email'];
 
-        // Проверяем, есть ли пользователь с таким email
         $user = User::where('email', $email)->first();
 
         if ($user) {
-            return $user; // Уже существует — возвращаем
+            return $user;
         }
 
-        // Создаём пользователя с переданным паролем
         $user = User::create([
             'name' => $orderData['name'],
             'surname' => $orderData['surname'] ?? null,
@@ -111,7 +107,6 @@ class RegisterController extends Controller
             'password' => Hash::make($orderData['password']),
         ]);
 
-        // Отправляем письмо для верификации
         try {
             Mail::to($user->email)->send(new VerifyEmail($user));
         } catch (\Exception $e) {
@@ -125,7 +120,7 @@ class RegisterController extends Controller
     }
 
     /**
-     * Обрабатывает верификацию email по ссылке.
+     * Processes email verification via a link.
      *
      * @param Request $request
      * @param int $user
@@ -133,7 +128,6 @@ class RegisterController extends Controller
      */
     public function verify(Request $request, int $user)
     {
-        // Ищем пользователя по ID
         $user = User::find($user);
 
         if (!$user) {
@@ -141,16 +135,13 @@ class RegisterController extends Controller
                 ->with('error', 'User not found.');
         }
 
-        // Проверяем, не верифицирован ли уже
         if ($user->is_verified) {
             return redirect()->route('login')
                 ->with('info', 'Email already verified.');
         }
 
-        // Обновляем статус верификации
         $user->update(['is_verified' => true]);
 
-        // Автоматически логиним пользователя
         Auth::login($user, true);
 
         return redirect()->route('account')
@@ -159,7 +150,6 @@ class RegisterController extends Controller
 
     public function sendMessage(Request $request)
     {
-        // Валидация данных
         $validated = $request->validate([
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
@@ -168,7 +158,6 @@ class RegisterController extends Controller
             'message' => 'required|string',
         ]);
 
-        // Сохранение в БД
         $contactMessage = ContactMessage::create([
             'full_name' => $validated['full_name'],
             'email' => $validated['email'],
@@ -179,9 +168,6 @@ class RegisterController extends Controller
             'user_agent' => $request->userAgent(),
         ]);
 
-        // Здесь можно добавить отправку email, логирование и т. п.
-
-        // Ответ пользователю
         return redirect()->back()->with('success', 'Your message has been sent successfully!');
     }
 }

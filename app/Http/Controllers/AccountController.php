@@ -28,7 +28,6 @@ class AccountController extends Controller
     public function reports(Request $request)
     {
         $user = Auth::user();
-        // Сохраняем текущий URL как последний посещённый
         session(['last_account_section' => route('account.reports')]);
 
         $reports = Report::with('parameters')
@@ -44,13 +43,11 @@ class AccountController extends Controller
     {
         $user = Auth::user();
 
-        // Получаем запись для 'elementary' и берём remaining_reports
         $elementaryPackage = $user->reportPackages()
             ->where('package_type', 'elementary')
             ->first();
         $elementaryCount = $elementaryPackage ? $elementaryPackage->remaining_reports : 0;
 
-        // Аналогично для 'composite'
         $compositePackage = $user->reportPackages()
             ->where('package_type', 'composite')
             ->first();
@@ -68,19 +65,16 @@ class AccountController extends Controller
     {
         $user = Auth::user();
 
-        // Получаем подписки типа 'fpds_query'
         $fpds_query = Subscription::where('user_id', $user->id)
             ->where('subscription_type', 'fpds_query')
             ->orderBy('created_at', 'desc')
             ->first();
 
-        // Получаем подписки типа 'fpds_reports'
         $fpds_reports = Subscription::where('user_id', $user->id)
             ->where('subscription_type', 'fpds_reports')
             ->orderBy('created_at', 'desc')
             ->first();
 
-        // Формируем флаги для fpds_query
         $hasActiveFpdsQuery = false;
         $hasCancelledFpdsQuery = false;
         $hasExpiredFpdsQuery = false;
@@ -91,7 +85,6 @@ class AccountController extends Controller
             $hasExpiredFpdsQuery = ($fpds_query->isExpired());
         }
 
-        // Формируем флаги для fpds_reports
         $hasActiveFpdsReports = false;
         $hasCancelledFpdsReports = false;
         $hasExpiredFpdsReports = false;
@@ -131,10 +124,8 @@ class AccountController extends Controller
 
         $user = Auth::user();
 
-
-        // Получаем историю билинга — ТОЛЬКО из billing_records
         $billingHistory = BillingRecord::where('user_id', $user->id)
-            ->orderBy('billed_at', 'desc') // новые сверху
+            ->orderBy('billed_at', 'desc')
             ->get();
 
         session(['last_account_section' => route('account.billing')]);
@@ -150,7 +141,6 @@ class AccountController extends Controller
 
     public function updateProfile(Request $request)
     {
-        // Валидация входных данных
         $validated = $request->validate([
             'firstName' => 'required|string|max:255',
             'lastName' => 'nullable|string|max:255',
@@ -165,7 +155,6 @@ class AccountController extends Controller
 
         $user = auth()->user();
 
-        // Обновление основных полей профиля
         $user->name = $validated['firstName'] ?? $user->name;
         $user->surname = $validated['lastName'] ?? $user->surname;
         $user->job = $validated['jobTitle'] ?? $user->job;
@@ -173,7 +162,6 @@ class AccountController extends Controller
         $user->email = $validated['email'] ?? $user->email;
         $user->phone = $validated['phone'] ?? $user->phone;
 
-        // Проверка и смена пароля (если указаны)
         if ($validated['currentPassword'] && $validated['newPassword']) {
             if (!Hash::check($validated['currentPassword'], $user->password)) {
                 return back()->withErrors(['currentPassword' => 'The current password is incorrect.']);
@@ -182,7 +170,6 @@ class AccountController extends Controller
             $user->password = Hash::make($validated['newPassword']);
         }
 
-        // Сохранение изменений
         try {
             $user->save();
             return redirect()->back()->with('success', 'Profile updated successfully.');
@@ -194,7 +181,6 @@ class AccountController extends Controller
 
     public function uploadAvatar(Request $request)
     {
-        // Проверка: есть ли файл
         if (!$request->hasFile('avatar')) {
             return response()->json([
                 'success' => false,
@@ -204,20 +190,16 @@ class AccountController extends Controller
 
         $file = $request->file('avatar');
 
-        // Валидация: только изображения
         $request->validate([
             'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // до 2 МБ
         ]);
 
         $user = Auth::user();
 
-        // Генерируем уникальное имя файла
         $filename = Str::uuid() . '.' . $file->extension();
 
-        // Сохраняем в storage/app/public/avatars
         $path = $file->storeAs('avatars', $filename, 'public');
 
-        // Обновляем путь к аватару в модели пользователя
         $user->avatar = $path;
         $user->save();
 
@@ -232,7 +214,6 @@ class AccountController extends Controller
     {
         $user = Auth::user();
 
-        // Проверяем, есть ли у пользователя аватар
         if (!$user->avatar) {
             return response()->json([
                 'success' => false,
@@ -240,13 +221,10 @@ class AccountController extends Controller
             ], 400);
         }
 
-        // Получаем полный путь к файлу в хранилище
         $filePath = storage_path('app/public/' . $user->avatar);
 
-        // Проверяем существование файла перед удалением
         if (file_exists($filePath)) {
             try {
-                // Удаляем файл из хранилища
                 unlink($filePath);
             } catch (\Exception $e) {
                 return response()->json([
@@ -256,7 +234,6 @@ class AccountController extends Controller
             }
         }
 
-        // Очищаем поле avatar в базе данных
         $user->avatar = null;
         $user->save();
 

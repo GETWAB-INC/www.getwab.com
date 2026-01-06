@@ -13,11 +13,9 @@
         </div>
         <div class="dropdown-menu">
           @auth
-            <!-- authorized -->
             <a href="https://fpds.getwab.com/query" class="dropdown-item">FPDS Query</a>
             <a href="{{ route('library')}}" class="dropdown-item">FPDS Reports Library</a>
           @else
-            <!-- not authorized -->
             <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>
             <a href="{{ route('products.fpds-reports')}}" class="dropdown-item">FPDS Reports</a>
           @endauth
@@ -30,8 +28,8 @@
           <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
         </div>
         <div class="dropdown-menu">
-          <li class="footer-link"><a href="{{ route('services.gov') }}">Government Services</a></li>
-          <li class="footer-link"><a href="{{ route('services.biz') }}">Business Solutions</a></li>
+          <a href="{{ route('services.gov') }}" class="dropdown-item">Government Services</a>
+          <a href="{{ route('services.biz') }}" class="dropdown-item">Business Solutions</a>
         </div>
       </div>
     </nav>
@@ -56,12 +54,10 @@
 
     <div class="header-login">
       @auth
-      <!-- authorized -->
       <a href="{{ route('account') }}" class="login-text" id="profile-link">
         <img src="{{ asset('/img/ico/Profile-ico.svg') }}" alt="Profile" />
       </a>
       @else
-      <!-- not authorized -->
       <a href="{{ route('login') }}" class="login-text">Log In</a>
       @endauth
     </div>
@@ -81,11 +77,9 @@
     </div>
     <div class="mobile-submenu">
       @auth
-        <!-- authorized -->
         <a href="https://fpds.getwab.com/query" class="mobile-submenu-item">FPDS Query</a>
         <a href="{{ route('library')}}" class="mobile-submenu-item">FPDS Reports Library</a>
       @else
-        <!-- not authorized -->
         <a href="{{ route('products.fpds-query')}}" class="mobile-submenu-item">FPDS Query</a>
         <a href="{{ route('products.fpds-reports')}}" class="mobile-submenu-item">FPDS Reports</a>
       @endauth      
@@ -99,8 +93,8 @@
         alt="arrow" />
     </div>
     <div class="mobile-submenu">
-      <li class="footer-link"><a href="{{ route('services.gov') }}">Government Services</a></li>
-      <li class="footer-link"><a href="{{ route('services.biz') }}">Business Solutions</a></li>
+      <a href="{{ route('services.gov') }}" class="dropdown-item">Government Services</a>
+      <a href="{{ route('services.biz') }}" class="dropdown-item">Business Solutions</a>
     </div>
 
     <div class="mobile-menu-item">
@@ -130,11 +124,9 @@
         </div>
         <div class="dropdown-menu">
           @auth
-            <!-- authorized -->
             <a href="https://fpds.getwab.com/query" class="dropdown-item">FPDS Query</a>
             <a href="{{ route('library')}}" class="dropdown-item">FPDS Reports Library</a>
           @else
-            <!-- not authorized -->
             <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>
             <a href="{{ route('products.fpds-reports')}}" class="dropdown-item">FPDS Reports</a>
           @endauth
@@ -147,8 +139,8 @@
           <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
         </div>
         <div class="dropdown-menu">
-          <li class="footer-link"><a href="{{ route('services.gov') }}">Government Services</a></li>
-          <li class="footer-link"><a href="{{ route('services.biz') }}">Business Solutions</a></li>
+          <a href="{{ route('services.gov') }}" class="dropdown-item">Government Services</a>
+          <a href="{{ route('services.biz') }}" class="dropdown-item">Business Solutions</a>
         </div>
       </div>
     </nav>
@@ -174,12 +166,10 @@
 
       <div class="header-login">
         @auth
-        <!-- authorized -->
         <a href="{{ route('account') }}" class="login-text" id="profile-link">
           <img src="{{ asset('/img/ico/Profile-ico.svg') }}" alt="Profile" />
         </a>
         @else
-        <!-- not authorized -->
         <a href="{{ route('login') }}" class="login-text">Log In</a>
         @endauth
       </div>
