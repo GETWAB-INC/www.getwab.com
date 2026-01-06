@@ -41,7 +41,7 @@ Route::get('/register', function () {
 })->name('register');
 Route::post('/register-process', [RegisterController::class, 'register'])->name('register-process');
 Route::get('/verify/{user}', [RegisterController::class, 'verify'])->name('verification.verify');
-
+Route::post('/send-message', [RegisterController::class, 'sendMessage'])->name('send.message');
 
 // forgot
 Route::get('/forgot', function () { return view('forgot'); })->name('forgot');
@@ -89,16 +89,13 @@ Route::get('/products/fpds-reports/overview', function () { return view('product
 Route::get('/products/fpds-charts/overview', function () { return view('products.fpds-charts-overview'); });
 
 // Services
-Route::get('/services/consulting-advisory', function () { return view('services.consulting-advisory'); })->name('services.consulting-advisory');
-Route::get('/services/custom-analytics', function () { return view('services.custom-analytics'); })->name('services.custom-analytics');
-Route::get('/services/data-automation', function () { return view('services.data-automation'); })->name('services.data-automation');
-Route::get('/services/gov-contracting', function () { return view('services.gov-contracting'); })->name('services.gov-contracting');
+Route::get('/services/gov', function () { return view('services.gov'); })->name('services.gov');
+Route::get('/services/biz', function () { return view('services.biz'); })->name('services.biz');
 
 // Terms & Conditions
 Route::get('/user-terms-conditions', function () { return view('user-terms-conditions'); })->name('user-terms-conditions');
 Route::get('/privacy-policy', function () { return view('privacy-policy'); })->name('privacy-policy');
 Route::get('/company', function () { return view('company'); })->name('company');
-Route::get('/mission', function () { return view('mission'); })->name('mission');
 
 // checkout page
 Route::get('/checkout', function () { return view('checkout'); })->name('checkout');

@@ -822,42 +822,17 @@
                 <div class="hero-content">
                     <div class="hero-text-container">
                         <h1 class="hero-title">
-                            Smart Data Solutions for Government and Business
+                            Explore getwab super fast engine, when analysing FPDS
                         </h1>
-                        <p class="hero-subtitle">Analytics. Automation. Cybersecurity.</p>
+                        <p class="hero-subtitle">Run powerful SQL-like queries on federal procurement data with unrestricted access to all fields.</p>
                     </div>
                     <a href="{{ route('register') }}" class="hero-button main">
                         Explore the Platform
                     </a>
                 </div>
             </section>
+
         </div>
-
-        <!-- About -->
-        <section class="section">
-            <div class="container">
-                <div class="grid-3-columns">
-                    <div class="grid-item">
-                        <h2 class="title">About<br> GETWAB</h2>
-                    </div>
-                    <div class="grid-item">
-                        <p class="description">
-                            GETWAB INC. is a U.S.-based technology company delivering
-                            analytics, cybersecurity, and automation solutions. We help
-                            government agencies and private businesses make smarter
-                            decisions using real-time federal procurement data.
-                        </p>
-                        <a href="https://www.getwab.com/capability-statement.pdf" class="link">
-                            View Capability Statement <img src="{{ asset('img/ico/arrow-neon.svg') }}" alt="">
-                        </a>
-                    </div>
-                    <div class="grid-item">
-                        <img src="{{ asset('img/main/SectionImage.png') }}" alt="" class="image">
-                    </div>
-                </div>
-            </div>
-        </section>
-
 
         <!-- Products -->
         <section class="products-section">
@@ -904,29 +879,7 @@
             </div>
         </section>
 
-        <!-- Services -->
-        <section class="section">
-            <div class="container">
-                <div class="grid-3-columns">
-                    <div class="grid-item">
-                        <h2 class="title">Our Services</h2>
-                    </div>
-                    <div class="grid-item">
-                        <p class="description">
-                            Strategic consulting in analytics,<br />
-                            cybersecurity, and automation.<br />
-                            For both government and private clients.
-                        </p>
-                        <a href="{{ route('contact-us') }}" class="hero-button request">
-                            Request Consultation
-                        </a>
-                    </div>
-                    <div class="grid-item">
-                        <!-- empty -->
-                    </div>
-                </div>
-            </div>
-        </section>
+        
 
         <!-- scroll container -->
         <section class="services-section">

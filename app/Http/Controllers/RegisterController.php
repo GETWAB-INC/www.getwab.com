@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\VerifyEmail;
+use App\Models\ContactMessage;
 
 class RegisterController extends Controller
 {
@@ -154,5 +155,33 @@ class RegisterController extends Controller
 
         return redirect()->route('account')
             ->with('success', 'Your email has been verified! You are now logged in.');
+    }
+
+    public function sendMessage(Request $request)
+    {
+        // Валидация данных
+        $validated = $request->validate([
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:50',
+            'subject' => 'required|string|max:100',
+            'message' => 'required|string',
+        ]);
+
+        // Сохранение в БД
+        $contactMessage = ContactMessage::create([
+            'full_name' => $validated['full_name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? null,
+            'subject' => $validated['subject'],
+            'message' => $validated['message'],
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+        ]);
+
+        // Здесь можно добавить отправку email, логирование и т. п.
+
+        // Ответ пользователю
+        return redirect()->back()->with('success', 'Your message has been sent successfully!');
     }
 }

@@ -17,10 +17,8 @@
           <div class="footer-column">
             <h3 class="footer-column-title">Services</h3>
             <ul class="footer-links">
-              <li class="footer-link"><a href="{{ route('services.consulting-advisory') }}">Consulting & Advisory</a></li>
-              <li class="footer-link"><a href="{{ route('services.custom-analytics') }}">Custom Analytics</a></li>
-              <li class="footer-link"><a href="{{ route('services.data-automation') }}">Data Automation</a></li>
-              <li class="footer-link"><a href="{{ route('services.gov-contracting') }}">Gov Contracting</a></li>
+              <li class="footer-link"><a href="{{ route('services.gov') }}">Government Services</a></li>
+              <li class="footer-link"><a href="{{ route('services.biz') }}">Business Solutions</a></li>
             </ul>
           </div>
 
@@ -29,7 +27,6 @@
             <ul class="footer-links">
               <li class="footer-link"><a href="{{ route('company') }}">Company</a></li>
               <li class="footer-link"><a href="https://www.getwab.com/capability-statement.pdf">Capability Statement</a></li>
-              <li class="footer-link"><a href="{{ route('mission') }}">Mission</a></li>
               <li class="footer-link"><a href="{{ route('contact-us') }}">Contact Us</a></li>
             </ul>
           </div>
@@ -39,7 +36,6 @@
               <li class="footer-link"><a href="{{ route('login') }}">Log In</a></li>
               <li class="footer-link"><a href="{{ route('register') }}">Register</a></li>
               <li class="footer-link"><a href="{{ route('account') }}">Account</a></li>
-              <li class="footer-link"><a href="/logout">Logout</a></li>
             </ul>
           </div>
         </div>
