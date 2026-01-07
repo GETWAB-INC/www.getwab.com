@@ -13,12 +13,8 @@ use App\Models\ContactMessage;
 
 class RegisterController extends Controller
 {
-    /**
-     * Handle user registration.
-     */
     public function register(Request $request)
     {
-        // Validate incoming request
         $validator = Validator::make($request->all(), [
             'name' => [
                 'required',

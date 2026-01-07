@@ -365,26 +365,32 @@
         <div class="login-card">
             <div class="login-content">
                 <div class="login-header">
-                    <h1 class="login-title">Change or reset your password</h1>
+                    <h1 class="login-title">Change your password</h1>
                 </div>
 
-                <form class="login-form">
+                <form class="login-form" method="POST" action="{{ route('password.email') }}">
+                    @csrf
+                    {{-- <input type="hidden" name="token" value="{{ $token }}"> --}}
+
                     <div class="form-field">
-                        <label class="form-label">Email address</label>
+                        <label class="form-label">New Password</label>
                         <div class="input-wrapper">
-                            <input type="email" class="form-input" placeholder="your@example.com">
+                            <input type="password" name="password" class="form-input">
+                        </div>
+                    </div>
+                    
+                    <div class="form-field">
+                        <label class="form-label">Confirm Password</label>
+                        <div class="input-wrapper">
+                            <input type="password" name="password_confirmation" class="form-input">
                         </div>
                     </div>
                 
 
                 <div class="login-footer">
-                    <div class="register-prompt">
-                        <span class="register-text">Already registered?</span>
-                        <a href="{{ route('login') }}" class="register-link">Log in</a>
-                    </div>
 
                     <button class="login-button">
-                        <span class="button-text">Reset</span>
+                        <span class="button-text">Change</span>
                     </button>
                 </div>
                 </form>

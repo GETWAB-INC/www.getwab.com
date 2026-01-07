@@ -93,8 +93,8 @@
         alt="arrow" />
     </div>
     <div class="mobile-submenu">
-      <a href="{{ route('services.gov') }}" class="dropdown-item">Government Services</a>
-      <a href="{{ route('services.biz') }}" class="dropdown-item">Business Solutions</a>
+      <a href="{{ route('services.gov') }}" class="mobile-submenu-item">Government Services</a>
+      <a href="{{ route('services.biz') }}" class="mobile-submenu-item">Business Solutions</a>
     </div>
 
     <div class="mobile-menu-item">

@@ -297,7 +297,7 @@
           </blockquote>
 
           <p class="article-text-bottom">
-            Ready to transform your data into competitive advantage? <a href="/contact" class="highlight">Schedule a consultation</a> with our data experts today.</p>
+            Ready to transform your data into competitive advantage? <a href="{{ route('contact-us') }}" class="highlight">Schedule a consultation</a> with our data experts today.</p>
         </section>
       </div>
     </div>

@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Article</title>
+    <title>FPDS: Transparency in Public Spending</title>
+    <meta name="description" content="Explore how federal procurement data promotes transparency and accountability in public spending. Access FPDS tools and analytics." />
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <style>
@@ -284,14 +285,14 @@
     <article class="article-container">
         <div class="article-wrapper">
             <div class="article-content">
-                <h1 class="article-title">Article</h1>
+                <h1 class="article-title">The Role of Federal Procurement Data in Building a Stronger Nation</h1>
                 <section class="article-body">
                     <p class="article-text">
                         Federal procurement data helps analysts and agencies understand how taxpayer money is spent. Tracking
                         this information supports transparency and accountability across departments.
                         <br><br>
                         For full access to our analytics tools, visit
-                        <a href="#" class="highlight">FPDS Query</a>
+                        <a href="{{ route('products.fpds-query') }}" class="highlight">FPDS Query</a>
                         and explore interactive dashboards.
                         <br><br>
                         Most contracts are tracked by multiple variables, such as awarding agency, vendor ID, and amount obligated.
@@ -300,7 +301,7 @@
 
                     <blockquote class="quote-block">
                         <span class="quote-mark">"</span>
-                        <p class="quote-text">Transparency in public spending is not a luxury — it's a democratic necessity</p>
+                        <p class="quote-text">Transparency in public spending is not a frill  — it's a democratic necessity</p>
                         <span class="quote-mark">"</span>
                     </blockquote>
 

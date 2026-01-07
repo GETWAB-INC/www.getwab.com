@@ -298,8 +298,8 @@
 
           <p class="article-text-bottom">
             Ready to harness the power of your data?
-            <a href="/contact" class="highlight">Request a demo</a>
-            or <a href="/solutions" class="highlight">explore our solutions</a>.
+            <a href="{{ route('products.fpds-query-overview') }}" class="highlight">Request a demo</a>
+            or <a href="{{ route('products.fpds-reports-overview') }}" class="highlight">explore our solutions</a>.
           </p>
         </section>
       </div>

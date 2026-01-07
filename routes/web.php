@@ -24,6 +24,13 @@ Route::get('/login', function () {
 // Login Process
 Route::post('/login-process', [LoginController::class, 'login'])->name('login-process');
 Route::post('/fpds/query', [LoginController::class, 'fpdsQuery'])->name('fpds.query')->middleware('auth');
+
+// forgot
+Route::get('/password/reset', [LoginController::class, 'showLinkRequestForm'])->name('forgot');
+Route::post('/password/email', [LoginController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/password/reset/{token}', [LoginController::class, 'showResetForm'])->name('password.reset');
+Route::post('/password/reset', [LoginController::class, 'reset'])->name('password.update');
+
 // Logout
 Route::post('/logout', function () {
     Auth::logout();
@@ -43,11 +50,8 @@ Route::post('/register-process', [RegisterController::class, 'register'])->name(
 Route::get('/verify/{user}', [RegisterController::class, 'verify'])->name('verification.verify');
 Route::post('/send-message', [RegisterController::class, 'sendMessage'])->name('send.message');
 
-// forgot
-Route::get('/forgot', function () { return view('forgot'); })->name('forgot');
-
 // article page
-Route::get('/article', function () { return view('article'); })->name('article')->middleware('auth');
+Route::get('/article', function () { return view('article'); })->name('article');
 
 // account page
 Route::get('/account', [AccountController::class, 'account'])->name('account')->middleware('auth');
