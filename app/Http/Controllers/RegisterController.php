@@ -73,6 +73,15 @@ class RegisterController extends Controller
 
             Auth::login($user, true);
 
+            try {
+                Mail::to($user->email)->send(new VerifyEmail($user));
+            } catch (\Exception $e) {
+                \Log::warning('Failed to send verification email', [
+                    'user_id' => $user->id,
+                    'error' => $e->getMessage()
+                ]);
+            }
+
             return redirect()->route('account')
                 ->with('success', 'Registration successful! You are now logged in.');
         } catch (\Exception $e) {
