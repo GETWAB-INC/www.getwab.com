@@ -338,20 +338,29 @@
       justify-content: center;
     }
 
+    .reports-pricing__card-wrapper {
+      border-radius: 7px;
+      overflow: hidden;
+      padding: 1px;
+      box-sizing: border-box;
+      background: linear-gradient(105deg, #b5d9a7, #00aa89);
+    }
+
     .reports-pricing__card {
       background: #333333;
       border-radius: 7px;
-      outline: 1px #B5D9A7 solid;
+      /* outline: 1px #B5D9A7 solid; */
       outline-offset: -1px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       padding: 48px 32px;
+      
     }
 
     .reports-pricing__card.standard {
-      width: 440px;
+      width: 435px;
     }
 
     .reports-pricing__card.wide {
@@ -669,11 +678,11 @@
         padding: 48px 32px;
       }
 
-      .reports-pricing__card.standard,
+      /* .reports-pricing__card.standard,
       .reports-pricing__card.wide {
         width: 100%;
         max-width: 327px;
-      }
+      } */
 
       .reports-pricing__card-content {
         gap: 32px;
@@ -1173,6 +1182,7 @@
           <div class="reports-pricing__cards">
             <div class="reports-pricing__cards-row top-row">
 
+              <div class="reports-pricing__card-wrapper">
               <article class="reports-pricing__card standard">
                 <form method="POST" action="{{ route('order.package') }}">
                    @csrf
@@ -1196,7 +1206,9 @@
                 </div>
                 </form>
               </article>
+              </div>
 
+              <div class="reports-pricing__card-wrapper">
               <article class="reports-pricing__card standard">
                 <form method="POST" action="{{ route('order.package') }}">
                    @csrf
@@ -1221,7 +1233,9 @@
                 </div>
                 </form>
               </article>
+              </div>
 
+              <div class="reports-pricing__card-wrapper">
               <article class="reports-pricing__card standard">
                 <form method="POST" action="{{ route('order.package') }}">
                    @csrf
@@ -1246,10 +1260,12 @@
                 </div>
                 </form>
               </article>
+              </div>
 
 
             </div>
 
+            <div class="reports-pricing__card-wrapper">
             <div class="reports-pricing__cards-row bottom-row">
               <article class="reports-pricing__card wide">
                 <form method="POST" action="{{ route('order.subscription') }}">
@@ -1286,6 +1302,7 @@
               </article>
             </div>
 
+            </div>
           </div>
           
         </div>
