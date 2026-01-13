@@ -89,7 +89,7 @@
           formData.append('avatar', file);
 
           try {
-            const response = await fetch('{{ route("upload.avatar") }}', {
+            const response = await fetch('/account/upload-avatar', {
               method: 'POST',
               body: formData,
               headers: {
@@ -149,7 +149,7 @@
       if (removeBtn) {
         removeBtn.addEventListener('click', async () => {
           try {
-            const response = await fetch('{{ route("remove.avatar") }}', {
+            const response = await fetch('/account/remove-avatar', {
               method: 'DELETE',
               headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
