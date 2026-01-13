@@ -27,7 +27,7 @@ class LoginController extends Controller
         $cacheKey = 'dbviewer.all_tables';
 
         // Булевый рубильник: если true — обновляем кеш, если false — используем существующий
-        $refreshCache = true; // <- меняешь на true, чтобы сбросить кеш
+        $refreshCache = true;
 
         if ($refreshCache) {
             Cache::forget($cacheKey);
