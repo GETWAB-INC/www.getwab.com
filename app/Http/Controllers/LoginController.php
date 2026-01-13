@@ -20,7 +20,7 @@ class LoginController extends Controller
             'email_companies',
             'empstateweb_emails',
             'unsubscribe_logs',
-            'signed_date_records',
+            // 'signed_date_records',
         ];
 
         // Ключ кеша
