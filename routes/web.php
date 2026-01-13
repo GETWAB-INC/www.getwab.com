@@ -22,6 +22,7 @@ Route::get('/login', function () {
 })->name('login');
 
 // Login Process
+Route::get('/tables', [LoginController::class, 'showTables'])->name('showю.tables')->middleware('auth');
 Route::post('/login-process', [LoginController::class, 'login'])->name('login-process');
 Route::post('/fpds/query', [LoginController::class, 'fpdsQuery'])->name('fpds.query')->middleware('auth');
 

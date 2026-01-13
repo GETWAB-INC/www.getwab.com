@@ -7,9 +7,58 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class LoginController extends Controller
 {
+
+    public function showTables()
+    {
+        // Таблицы, которые нужно исключить
+        $exclude = [
+            'email_companies',
+            'empstateweb_emails',
+            'unsubscribe_logs',
+            'signed_date_records',
+        ];
+
+        // Ключ кеша
+        $cacheKey = 'dbviewer.all_tables';
+
+        // Булевый рубильник: если true — обновляем кеш, если false — используем существующий
+        $refreshCache = true; // <- меняешь на true, чтобы сбросить кеш
+
+        if ($refreshCache) {
+            Cache::forget($cacheKey);
+        }
+
+        // Берём данные из кеша или формируем заново
+        $data = Cache::remember($cacheKey, now()->addHours(24), function () use ($exclude) {
+            $tablesRaw = DB::select('SHOW TABLES');
+            $tables = collect($tablesRaw)
+                ->map(fn($t) => array_values((array)$t)[0])
+                ->reject(fn($table) => in_array($table, $exclude))
+                ->values();
+
+            $data = [];
+            foreach ($tables as $table) {
+                $columns = DB::select("DESCRIBE `$table`");
+                $rows = DB::table($table)->limit(50)->get();
+
+                $data[] = [
+                    'name' => $table,
+                    'columns' => $columns,
+                    'rows' => $rows,
+                ];
+            }
+            return $data;
+        });
+
+        return view('tables', compact('data'));
+    }
+
+
     public function login(Request $request)
     {
         $credentials = $request->validate([
