@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>База данных</title>
+    <title>Database</title>
     <style>
         table { border-collapse: collapse; margin-bottom: 20px; width: 100%; }
         th, td { border: 1px solid #ccc; padding: 5px; }
@@ -17,7 +17,7 @@
     </script>
 </head>
 <body>
-    <h1>Все таблицы базы</h1>
+    <h1>All database tables</h1>
 
     @foreach($data as $table)
         <div class="table-section">
@@ -44,7 +44,7 @@
                     @endforeach
                 </table>
 
-                <h3>Данные (первые 50)</h3>
+                <h3>Data (first 50)</h3>
                 <table>
                     <tr>
                         @if($table['rows']->isNotEmpty())
