@@ -2194,7 +2194,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.checkout-delete-button').forEach(button => {
         button.addEventListener('click', function () {
             const itemKey = this.getAttribute('data-item-key');
-            fetch('{{ route("checkout.remove-item") }}', {
+            fetch('/checkout/remove-item', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
