@@ -2,8 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @include('include.head')
     <title>FPDS: Transparency in Public Spending</title>
     <meta name="description" content="Explore how federal procurement data promotes transparency and accountability in public spending. Access FPDS tools and analytics." />
     <link rel="stylesheet" href="{{ asset('css/reset.css') }}">

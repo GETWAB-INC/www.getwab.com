@@ -2,8 +2,7 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  @include('include.head')
   <title>FPDS Reports Overview</title>
 
   <link rel="stylesheet" href="{{ asset('css/reset.css') }}" />
