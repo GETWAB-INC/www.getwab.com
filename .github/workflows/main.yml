@@ -41,7 +41,6 @@ jobs:
             chmod -R 775 /home/userwww/web/getwab.com/public_html/bootstrap/cache
             chown -R userwww:www-data /home/userwww/web/getwab.com/public_html/storage
             chown -R userwww:www-data /home/userwww/web/getwab.com/public_html/bootstrap/cache
-            # Clear and cache configurations
             cd /home/userwww/web/getwab.com/public_html
             php artisan optimize:clear
 
