@@ -5,6 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use App\Http\Middleware\FpdsAccess; // 👈 ДОБАВИЛИ
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -13,16 +14,17 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Регистрация middleware для аутентификации
+
+        // === ALIAS'Ы MIDDLEWARE ===
         $middleware->alias([
-            'auth' => Authenticate::class,
+            'auth'        => Authenticate::class,
+            'fpds.access' => FpdsAccess::class, // 👈 ВОТ ОН
         ]);
 
-        // ❗ CSRF: отключаем проверку для /checkout/callback
+        // === CSRF исключения ===
         $middleware->validateCsrfTokens(except: [
             '/checkout/callback',
             '/payment/result',
-
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

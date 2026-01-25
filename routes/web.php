@@ -24,11 +24,15 @@ Route::middleware('auth')->group(function () {
 });
 
 
-// -------------------- CheckoutController --------------------
 
 
 
 
+// -------------------- ClickHouse --------------------
+
+Route::get('/_auth/fpds', function () {
+    return response('', 204);
+})->middleware(['web', 'fpds.access']);
 
 
 
