@@ -43,11 +43,5 @@ jobs:
             chown -R userwww:www-data /home/userwww/web/getwab.com/public_html/bootstrap/cache
             # Clear and cache configurations
             cd /home/userwww/web/getwab.com/public_html
-            php artisan config:clear
-            php artisan config:cache
-            # Clear and cache routes
-            php artisan route:clear
-            php artisan route:cache
-            # Clear and cache views
-            php artisan view:clear
-            php artisan view:cache
+            php artisan optimize:clear
+
