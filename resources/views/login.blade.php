@@ -13,6 +13,7 @@
             <h1>Login to Your Account</h1>
             <p>Welcome back! Please login to continue.</p>
             <form action="{{ route('login-process') }}" method="post">
+                <input type="hidden" name="redirect" value="{{ request('redirect', '/query') }}">
                 @csrf
                 @if($errors->any())
                 <div class="alert alert-danger">
