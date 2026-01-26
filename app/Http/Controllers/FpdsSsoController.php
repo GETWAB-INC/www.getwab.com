@@ -12,7 +12,7 @@ class FpdsSsoController extends Controller
 
         $ticket = bin2hex(random_bytes(32));
 
-        Redis::setex("fpds:ticket:$ticket", 60, json_encode([
+        Redis::setex("fpds:ticket:$ticket", 600, json_encode([
             'user_id' => $user->id,
             'plan' => 'pro',
             'email' => $user->email,
