@@ -6,11 +6,8 @@ use App\Http\Controllers\EmailCompanyController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ImapController;
 use App\Http\Controllers\DashBoardController;
-use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\CheckoutController;
-use Illuminate\Http\Request;
-
-
+use App\Http\Controllers\FpdsSsoController;
 
 // -------------------- CheckoutController --------------------
 // routes/web.php
@@ -30,9 +27,8 @@ Route::middleware('auth')->group(function () {
 
 // -------------------- ClickHouse --------------------
 
-Route::get('/_auth/fpds', function () {
-    return response('', 204);
-})->middleware(['web', 'fpds.access']);
+Route::middleware('auth')->get('/fpds/sso', [FpdsSsoController::class, 'redirect']);
+
 
 
 
