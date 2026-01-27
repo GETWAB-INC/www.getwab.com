@@ -47,20 +47,11 @@ class LoginController extends Controller
      * Gatekeeper for FPDS Query (Nginx auth_request)
      */
     public function fpdsQueryGate(Request $request)
-    {
-        dd(Auth::check());
-        if (!Auth::check()) {
-            return response('', 401);
-        }
+{
+    // ВСЯ логика уже в middleware fpds.access
+    return response('', 204);
+}
 
-        $hasSubscription = false; // 🔘 твой тумблер
- 
-        if (!$hasSubscription) {
-            return response('', 403);
-        }
-       
-        return response('', 204);
-    }
 
 
 }
