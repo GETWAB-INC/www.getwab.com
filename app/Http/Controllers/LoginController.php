@@ -28,10 +28,10 @@ class LoginController extends Controller
             RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
 
-            if ($request->input('next') === 'fpds') {
-                $redirect = $request->input('redirect', '/query');
-                return redirect()->to('/fpds/sso?redirect=' . urlencode($redirect));
-            }
+            // if ($request->input('next') === 'fpds') {
+            //     $redirect = $request->input('redirect', '/query');
+            //     return redirect()->to('/fpds/sso?redirect=' . urlencode($redirect));
+            // }
 
             return redirect()->intended('dashboard');
         }
