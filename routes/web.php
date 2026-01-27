@@ -29,7 +29,7 @@ Route::middleware('auth')->group(function () {
 // -------------------- ClickHouse --------------------
 
 Route::middleware('auth')->get('/fpds/sso', [FpdsSsoController::class, 'redirect']);
-Route::get('/__auth/fpds-query', [LoginController::class, 'fpdsQueryGate'])->name('auth.fpds-query');
+Route::get('/__auth/fpds-query', [LoginController::class, 'fpdsQueryGate'])->name('auth.fpds-query')->middleware('fpds.access');
 
 
 // -------------------- Static Pages --------------------
