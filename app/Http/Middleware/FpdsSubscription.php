@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class FpdsSubscription
 {
     // 🔘 переключатель подписки
-    private const SUBSCRIPTION_ENABLED = false;
+    private const SUBSCRIPTION_ENABLED = true;
 
     public function handle(Request $request, Closure $next)
     {
