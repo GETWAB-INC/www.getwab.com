@@ -16,7 +16,8 @@ try {
     $redis = new Redis();
     $redis->connect('127.0.0.1', 6379, 1.0);
 
-    $key = "fpds:ticket:$ticket";
+    $key = "laravel_database_fpds:ticket:$ticket";
+
     $data = $redis->get($key);
     if (!$data) {
         http_response_code(403);

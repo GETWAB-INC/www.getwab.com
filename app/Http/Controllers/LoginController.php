@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
+use Symfony\Component\HttpFoundation\Response;
+
 
 class LoginController extends Controller
 {
@@ -39,6 +41,27 @@ class LoginController extends Controller
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
+    }
+
+    /**
+     * Gatekeeper for FPDS Query (Nginx auth_request)
+     */
+    public function fpdsQueryGate(Request $request)
+    {
+        // ❌ Не залогинен
+        if (!Auth::check()) {
+            return response('Unauthorized', Response::HTTP_UNAUTHORIZED);
+        }
+
+        $user = Auth::user();
+
+        // ❌ Залогинен, но нет доступа / подписки
+        // if (!$user->hasFpdsAccess()) {
+        //     return response('Forbidden', Response::HTTP_FORBIDDEN);
+        // }
+
+        // ✅ Всё ок
+        return response('OK', Response::HTTP_OK);
     }
 }
 

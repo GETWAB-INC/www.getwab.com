@@ -6,6 +6,7 @@ use App\Http\Controllers\EmailCompanyController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ImapController;
 use App\Http\Controllers\DashBoardController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FpdsSsoController;
 
@@ -28,10 +29,7 @@ Route::middleware('auth')->group(function () {
 // -------------------- ClickHouse --------------------
 
 Route::middleware('auth')->get('/fpds/sso', [FpdsSsoController::class, 'redirect']);
-
-
-
-
+Route::get('/__auth/fpds-query', [LoginController::class, 'fpdsQueryGate'])->name('auth.fpds-query');
 
 
 // -------------------- Static Pages --------------------
