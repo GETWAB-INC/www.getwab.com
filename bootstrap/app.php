@@ -4,8 +4,6 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Auth\Middleware\Authenticate;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
-use App\Http\Middleware\FpdsAccess; // 👈 ДОБАВИЛИ
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -17,8 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // === ALIAS'Ы MIDDLEWARE ===
         $middleware->alias([
-            'auth'        => Authenticate::class,
-            'fpds.access' => FpdsAccess::class, // 👈 ВОТ ОН
+            'auth'        => Authenticate::class
         ]);
 
         // === CSRF исключения ===

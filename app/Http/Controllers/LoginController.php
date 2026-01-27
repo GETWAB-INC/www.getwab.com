@@ -48,20 +48,20 @@ class LoginController extends Controller
      */
     public function fpdsQueryGate(Request $request)
     {
-        // ❌ Не залогинен
+        dd(Auth::check());
         if (!Auth::check()) {
-            return response('Unauthorized', Response::HTTP_UNAUTHORIZED);
+            return response('', 401);
         }
 
-        $user = Auth::user();
-
-        // ❌ Залогинен, но нет доступа / подписки
-        // if (!$user->hasFpdsAccess()) {
-        //     return response('Forbidden', Response::HTTP_FORBIDDEN);
-        // }
-
-        // ✅ Всё ок
-        return response('OK', Response::HTTP_OK);
+        $hasSubscription = false; // 🔘 твой тумблер
+ 
+        if (!$hasSubscription) {
+            return response('', 403);
+        }
+       
+        return response('', 204);
     }
+
+
 }
 
