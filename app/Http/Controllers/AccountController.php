@@ -1,0 +1,245 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Report;
+use App\Models\BillingRecord;
+use App\Models\Subscription;
+
+class AccountController extends Controller
+{
+    public function account(Request $request)
+    {
+        $user = Auth::user();
+
+        $reports = Report::with('parameters')
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('account.account', compact('user', 'reports'));
+    }
+
+    public function reports(Request $request)
+    {
+        $user = Auth::user();
+        session(['last_account_section' => route('account.reports')]);
+
+        $reports = Report::with('parameters')
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+
+        return view('account.reports', compact('user', 'reports'));
+    }
+
+    public function packages(Request $request)
+    {
+        $user = Auth::user();
+
+        $elementaryPackage = $user->reportPackages()
+            ->where('package_type', 'elementary')
+            ->first();
+        $elementaryCount = $elementaryPackage ? $elementaryPackage->remaining_reports : 0;
+
+        $compositePackage = $user->reportPackages()
+            ->where('package_type', 'composite')
+            ->first();
+        $compositeCount = $compositePackage ? $compositePackage->remaining_reports : 0;
+
+        session(['last_account_section' => route('account.packages')]);
+        return view('account.packages', compact(
+            'user',
+            'elementaryCount',
+            'compositeCount'
+        ));
+    }
+
+    public function subscription(Request $request)
+    {
+        $user = Auth::user();
+
+        $fpds_query = Subscription::where('user_id', $user->id)
+            ->where('subscription_type', 'fpds_query')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $fpds_reports = Subscription::where('user_id', $user->id)
+            ->where('subscription_type', 'fpds_reports')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $hasActiveFpdsQuery = false;
+        $hasCancelledFpdsQuery = false;
+        $hasExpiredFpdsQuery = false;
+
+        if ($fpds_query) {
+            $hasActiveFpdsQuery = ($fpds_query->isActive() || $fpds_query->isTrial());
+            $hasCancelledFpdsQuery = ($fpds_query->isCancelled());
+            $hasExpiredFpdsQuery = ($fpds_query->isExpired());
+        }
+
+        $hasActiveFpdsReports = false;
+        $hasCancelledFpdsReports = false;
+        $hasExpiredFpdsReports = false;
+
+        if ($fpds_reports) {
+            $hasActiveFpdsReports = ($fpds_reports->isActive() || $fpds_reports->isTrial());
+            $hasCancelledFpdsReports = ($fpds_reports->isCancelled());
+            $hasExpiredFpdsReports = ($fpds_reports->isExpired());
+        }
+
+        session(['last_account_section' => route('account.subscription')]);
+
+        return view('account.subscription', compact(
+            'user',
+            'fpds_query',
+            'fpds_reports',
+            'hasActiveFpdsQuery',
+            'hasCancelledFpdsQuery',
+            'hasExpiredFpdsQuery',
+            'hasActiveFpdsReports',
+            'hasCancelledFpdsReports',
+            'hasExpiredFpdsReports'
+        ));
+    }
+
+
+    public function billing(Request $request)
+    {
+        $itemsToShow = [
+            'single_elementary_report' => 'Elementary Report',
+            'single_composite_report' => 'Composite Report',
+            'elementary_report_package' => 'Elementary Package',
+            'composite_report_package' => 'Composite Package',
+            'fpds_query_subscription' => 'FPDS Query Subscription',
+            'fpds_report_subscription' => 'FPDS Report Subscription',
+        ];
+
+        $user = Auth::user();
+
+        $billingHistory = BillingRecord::where('user_id', $user->id)
+            ->orderBy('billed_at', 'desc')
+            ->get();
+
+        session(['last_account_section' => route('account.billing')]);
+        return view('account.billing', compact('user', 'itemsToShow', 'billingHistory'));
+    }
+
+    public function profile(Request $request)
+    {
+        $user = Auth::user();
+        session(['last_account_section' => route('account.profile')]);
+        return view('account.profile', compact('user'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $validated = $request->validate([
+            'firstName' => 'required|string|max:255',
+            'lastName' => 'nullable|string|max:255',
+            'jobTitle' => 'nullable|string|max:255',
+            'organization' => 'nullable|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . auth()->id(),
+            'phone' => 'nullable|string|max:20',
+            'currentPassword' => 'nullable|string',
+            'newPassword' => 'nullable|string|min:8|confirmed',
+            'confirmPassword' => 'nullable|same:newPassword',
+        ]);
+
+        $user = auth()->user();
+
+        $user->name = $validated['firstName'] ?? $user->name;
+        $user->surname = $validated['lastName'] ?? $user->surname;
+        $user->job = $validated['jobTitle'] ?? $user->job;
+        $user->organization = $validated['organization'] ?? $user->organization;
+        $user->email = $validated['email'] ?? $user->email;
+        $user->phone = $validated['phone'] ?? $user->phone;
+
+        if ($validated['currentPassword'] && $validated['newPassword']) {
+            if (!Hash::check($validated['currentPassword'], $user->password)) {
+                return back()->withErrors(['currentPassword' => 'The current password is incorrect.']);
+            }
+
+            $user->password = Hash::make($validated['newPassword']);
+        }
+
+        try {
+            $user->save();
+            return redirect()->back()->with('success', 'Profile updated successfully.');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Error saving: ' . $e->getMessage()]);
+        }
+    }
+
+
+    public function uploadAvatar(Request $request)
+    {
+        if (!$request->hasFile('avatar')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No file selected'
+            ], 400);
+        }
+
+        $file = $request->file('avatar');
+
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // до 2 МБ
+        ]);
+
+        $user = Auth::user();
+
+        $filename = Str::uuid() . '.' . $file->extension();
+
+        $path = $file->storeAs('avatars', $filename, 'public');
+
+        $user->avatar = $path;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Avatar uploaded',
+            'avatar_url' => Storage::url($path)
+        ]);
+    }
+
+    public function removeAvatar(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user->avatar) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No avatar to remove'
+            ], 400);
+        }
+
+        $filePath = storage_path('app/public/' . $user->avatar);
+
+        if (file_exists($filePath)) {
+            try {
+                unlink($filePath);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to delete file: ' . $e->getMessage()
+                ], 500);
+            }
+        }
+
+        $user->avatar = null;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Avatar removed successfully'
+        ]);
+    }
+}
