@@ -183,9 +183,9 @@ Route::get('contact', function () {
 });
 
 // Privacy Policy page
-Route::get('privacy-policy', function () {
-    return view('privacy-policy');
-});
+// Route::get('privacy-policy', function () {
+//     return view('privacy-policy');
+// });
 
 // Cookie Policy page
 Route::get('cookie-policy', function () {
