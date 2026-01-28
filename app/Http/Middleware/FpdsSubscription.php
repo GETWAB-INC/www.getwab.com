@@ -30,8 +30,6 @@ class FpdsSubscription
             })
             ->exists();
 
-        dd( $hasSubscription);
-
         if (!$hasSubscription) {
             return response('Subscription required', 403);
         }
