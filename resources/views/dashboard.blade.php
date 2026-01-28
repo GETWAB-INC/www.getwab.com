@@ -94,6 +94,7 @@
     <div class="container" id="main-container">
         <!-- Навигация -->
         <div class="navigation">
+            <a href="{{ route('adminer') }}">Adminer</a>
             <a href="{{ route('imap') }}">imap</a>
             <a href="{{ route('file.annual.report') }}">Report</a>
             <a href="{{ route('hello-email') }}">Hello Email</a>

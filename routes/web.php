@@ -25,7 +25,6 @@ Route::middleware('auth')->group(function () {
 
 
 
-
 // -------------------- ClickHouse --------------------
 
 Route::middleware('auth')->get('/fpds/sso', [FpdsSsoController::class, 'redirect']);
@@ -146,6 +145,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/logs-again-email', [EmailCompanyController::class, 'showAgainEmailLogs'])->name('show-again-email-logs');
     Route::get('/logs-last-email', [EmailCompanyController::class, 'showLastEmailLogs'])->name('show-last-email-logs');
 
+
+    Route::any('/_me/adminer', [DashBoardController::class, 'adminer'])
+    ->name('adminer');
     // -------------------- Email Views for Sending --------------------
 
     // Hello Email view
