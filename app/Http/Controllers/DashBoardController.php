@@ -3,35 +3,39 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
+use App\Models\Subscription;
+
 
 class DashBoardController extends Controller
 {
     public function index()
     {
-        // Передаём обе переменные в представление
-        return view('dashboard');
+        $user = auth()->user();
+
+        $subscription = Subscription::where('user_id', $user->id)
+        ->where('subscription_type', 'fpds_query')
+        ->orderByDesc('created_at')
+        ->first();
+
+        return view('dashboard', [
+            'subscription' => $subscription,
+        ]);
     }
 
     public function adminer()
     {
         $user = auth()->user();
 
-        // Только ты + подтверждённый email
-        if (
-            !$user ||
-            $user->email !== 'ilia.oborin@getwab.com' ||
-            !$user->email_verified_at
-        ) {
-            abort(404); // можно 403, но 404 лучше скрывает
+        if (!$user || $user->id !== 1) {
+            abort(404);
         }
 
-        $path = storage_path('app/adminer/adminer.php'); // ВНЕ public
+        $path = storage_path('adminer/adminer.php');
 
-        if (!is_file($path)) {
+        if (!is_file($path) || !is_readable($path)) {
             abort(404, 'Adminer not found');
         }
 
-        // ВАЖНО: запускаем PHP-файл, а не “скачиваем”
         return response()->stream(function () use ($path) {
             require $path;
         }, 200, [
@@ -40,4 +44,5 @@ class DashBoardController extends Controller
             'X-Content-Type-Options' => 'nosniff',
         ]);
     }
+
 }

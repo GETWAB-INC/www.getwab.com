@@ -109,6 +109,37 @@
                 <strong><a href="{{ route('add-company') }}" class="link">↳ Add</a></strong>
             </div>
 
+            <h3>Subscription info</h3>
+
+            @if($subscription)
+                <ul>
+                    <li>Type: {{ $subscription->subscription_type }}</li>
+                    <li>Status: {{ $subscription->status }}</li>
+                    <li>Plan: {{ $subscription->plan }}</li>
+                    <li>Amount: {{ $subscription->amount }} {{ $subscription->currency }}</li>
+
+                    <li>Start: {{ $subscription->start_at }}</li>
+                    <li>Expires: {{ $subscription->expires_at ?? 'No expiration' }}</li>
+
+                    @if ($subscription->trial_start_at)
+                        <li>
+                            Trial: {{ $subscription->trial_start_at }}
+                            → {{ $subscription->trial_end_at }}
+                        </li>
+                    @endif
+
+                    @if ($subscription->cancelled_at)
+                        <li>Cancelled at: {{ $subscription->cancelled_at }}</li>
+                    @endif
+                </ul>
+            @else
+                <p style="color:#888;">
+                    No subscription data available.
+                </p>
+            @endif
+
+
+
         </section>
     </div>
 
