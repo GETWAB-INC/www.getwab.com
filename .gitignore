@@ -22,3 +22,5 @@ yarn-error.log
 # Hestia / Nginx templates
 *.tpl
 *.stpl
+# macOS junk
+.DS_Store
