@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    @include('include.head')
+    @include('include-old.head')
     <title>GETWAB INC. - Terms of Use</title>
     <meta name="description" content="Explore the Terms of Use for accessing and utilizing GETWAB INC.'s official website.">
     <link rel="canonical" href="https://www.getwab.com/terms-of-use">
 </head>
 <body>
-@include('include.header')
+@include('include-old.header')
 <main class="container" id="main-container">
     <section class="section">
         <h1>Terms of Use</h1>
@@ -29,7 +29,7 @@
         <p>If you have any questions regarding these Terms of Use, please reach out to us through our <a href="/contact">Contact page</a>. We are eager to assist you.</p>
     </section>
 </main>
-@include('include.footer')
+@include('include-old.footer')
 <script src="{{ asset('js/menu.js') }}" defer></script>
 </body>
 </html>

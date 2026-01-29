@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    @include('include.head')
+    @include('include-old.head')
     <title>GETWAB INC. - Dashboard</title>
     <meta name="description" content="View your dashboard and manage your settings at GETWAB INC.">
     <meta name="robots" content="noindex, nofollow">
@@ -90,7 +90,7 @@
 </head>
 
 <body>
-    @include('include.header')
+    @include('include-old.header')
     <div class="container" id="main-container">
         <!-- Навигация -->
         <div class="navigation">
@@ -143,7 +143,7 @@
         </section>
     </div>
 
-    @include('include.footer')
+    @include('include-old.footer')
     <script src="{{ asset('js/menu.js') }}" defer></script>
 </body>
 

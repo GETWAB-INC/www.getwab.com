@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    @include('include.head')
+    @include('include-old.head')
     <title>GETWAB INC. - Cookie Policy</title>
     <meta name="description" content="Review GETWAB INC.'s Cookie Policy to understand how cookies are used on our website to enhance and secure your browsing experience.">
     <link rel="canonical" href="https://www.getwab.com/cookie-policy"/>
 </head>
 <body>
-@include('include.header')
+@include('include-old.header')
 <div class="container" id="main-container">
     <section class="section">
         <h1>Cookie Policy</h1>
@@ -25,7 +25,7 @@
         <p>For more information or if you have questions about our Cookie Policy, please visit our <a href="/contact">Contact Page</a>.</p>
     </section>
 </div>
-@include('include.footer')
+@include('include-old.footer')
 <script src="{{ asset('js/menu.js') }}" defer></script>
 </body>
 </html>

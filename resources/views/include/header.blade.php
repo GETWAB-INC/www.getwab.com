@@ -13,7 +13,7 @@
         </div>
         <div class="dropdown-menu">
           @auth
-            <a href="https://fpds.getwab.com/query" class="dropdown-item">FPDS Query</a>
+            <a href="https://getwab.com/fpds/query" class="dropdown-item">FPDS Query</a>
             <a href="{{ route('library')}}" class="dropdown-item">FPDS Reports Library</a>
           @else
             <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>
@@ -77,7 +77,7 @@
     </div>
     <div class="mobile-submenu">
       @auth
-        <a href="https://fpds.getwab.com/query" class="mobile-submenu-item">FPDS Query</a>
+        <a href="https://getwab.com/fpds/query" class="mobile-submenu-item">FPDS Query</a>
         <a href="{{ route('library')}}" class="mobile-submenu-item">FPDS Reports Library</a>
       @else
         <a href="{{ route('products.fpds-query')}}" class="mobile-submenu-item">FPDS Query</a>
@@ -124,7 +124,7 @@
         </div>
         <div class="dropdown-menu">
           @auth
-            <a href="https://fpds.getwab.com/query" class="dropdown-item">FPDS Query</a>
+            <a href="https://getwab.com/fpds/query" class="dropdown-item">FPDS Query</a>
             <a href="{{ route('library')}}" class="dropdown-item">FPDS Reports Library</a>
           @else
             <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    @include('include.head')
+    @include('include-old.head')
     <title>GETWAB INC. - About Us</title>
     <meta name="description" content="Learn more about GETWAB INC., a dynamic and innovative IT development company dedicated to providing tailored software solutions.">
     <link rel="canonical" href="https://www.getwab.com/about"/>
 </head>
-@include('include.header')
+@include('include-old.header')
 <div class="container" id="main-container">
     <section class="section">
         <h1>About Us</h1>
@@ -29,7 +29,7 @@
         <p><a href="https://www.getwab.com/capability-statement.pdf">Download Our Capability Statement</a></p>
     </section>
 </div>
-@include('include.footer')
+@include('include-old.footer')
 <script src="{{ asset('js/menu.js') }}" defer></script>
 </body>
 </html>

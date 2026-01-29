@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    @include('include.head')
+    @include('include-old.head')
     <title>GETWAB INC. - Update Annual Report</title>
     <meta name="description" content="Instructions on how to update your Annual Report for GETWAB INC.">
     <link rel="canonical" href="https://www.getwab.com/update-annual-report"/>
@@ -12,7 +12,7 @@
     </style>
 </head>
 <body>
-    @include('include.header')
+    @include('include-old.header')
     <div class="container" id="main-container">
         <h1>Instructions for Updating Annual Report</h1>
         <p>Follow these steps to update your Annual Report for GETWAB INC.:</p>
@@ -49,6 +49,6 @@
         <p>For additional help or to review the full instructions, visit the official <a href="https://dos.fl.gov/sunbiz">Florida Division of Corporations</a> website.</p>
         <a href="{{ route('dashboard') }}">Return to Dashboard</a>
     </div>
-    @include('include.footer')
+    @include('include-old.footer')
 </body>
 </html>

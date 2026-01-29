@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\MainController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AccountController;
@@ -15,9 +16,14 @@ use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\FpdsSsoController;
 
 // -------------------- Static Pages --------------------
- 
+
 // Home page
-Route::get('/', function () { return view('index'); })->name('/');
+Route::get('/', [MainController::class, 'index']);
+
+// Home page
+Route::get('/', function () {
+    return view('index-old');
+});
 
 // login page
 Route::get('/login', function () {
@@ -45,20 +51,20 @@ Route::post('/fpds/query', [LoginController::class, 'fpdsQuery'])->name('fpds.qu
 // // Login Process
 // Route::post('login-process', [LoginController::class, 'login'])->name('login-process');
 
-// // Show login form (redirects to dashboard if already logged in)
-// Route::get('login', function () {
-//     if (Auth::check()) {
-//         return redirect('dashboard');
-//     }
+// Show login form (redirects to dashboard if already logged in)
+Route::get('login', function () {
+    if (Auth::check()) {
+        return redirect('dashboard');
+    }
 
-//     return view('login');
-// })->name('login');
+    return view('login-old');
+})->name('login');
 
 // forgot
-Route::get('/password/reset', [LoginController::class, 'showLinkRequestForm'])->name('forgot');
-Route::post('/password/email', [LoginController::class, 'sendResetLinkEmail'])->name('password.email');
-Route::get('/password/reset/{token}', [LoginController::class, 'showResetForm'])->name('password.reset');
-Route::post('/password/reset', [LoginController::class, 'reset'])->name('password.update');
+Route::get('/password/reset', [LoginController::class, 'showLinkRequestForm'])->name('forgot')->middleware('auth');
+Route::post('/password/email', [LoginController::class, 'sendResetLinkEmail'])->name('password.email')->middleware('auth');
+Route::get('/password/reset/{token}', [LoginController::class, 'showResetForm'])->name('password.reset')->middleware('auth');
+Route::post('/password/reset', [LoginController::class, 'reset'])->name('password.update')->middleware('auth');
 
 // Logout
 Route::post('/logout', function () {
@@ -76,12 +82,12 @@ Route::get('/register', function () {
     return view('register');
 })->name('register');
 
-Route::post('/register-process', [RegisterController::class, 'register'])->name('register-process');
-Route::get('/verify/{user}', [RegisterController::class, 'verify'])->name('verification.verify');
-Route::post('/send-message', [RegisterController::class, 'sendMessage'])->name('send.message');
+Route::post('/register-process', [RegisterController::class, 'register'])->name('register-process')->middleware('auth');
+Route::get('/verify/{user}', [RegisterController::class, 'verify'])->name('verification.verify')->middleware('auth');
+Route::post('/send-message', [RegisterController::class, 'sendMessage'])->name('send.message')->middleware('auth');
 
 // article page
-Route::get('/article', function () { return view('article'); })->name('article');
+Route::get('/article', function () { return view('article'); })->name('article')->middleware('auth');
 
 // account page
 Route::get('/account', [AccountController::class, 'account'])->name('account')->middleware('auth');
@@ -101,38 +107,38 @@ Route::post('/restore/subscription', action: [SubscriptionController::class, 're
 Route::post('/renew/subscription', [SubscriptionController::class, 'renewSubscription'])->name('renew.subscription')->middleware('auth');
 
 // contact page
-Route::get('/contact-us', function () {return view('contact-us');})->name('contact-us');
+Route::get('/contact-us', function () {return view('contact-us');})->name('contact-us')->middleware('auth');
 
 // library
-Route::get('/library', [LibraryController::class, 'index'])->name('library');
+Route::get('/library', [LibraryController::class, 'index'])->name('library')->middleware('auth');
 
 // library/SFPR-GEO-EL-1 page
-Route::get('/library/{report_code}', [LibraryController::class, 'show'])->name('report.show');
+Route::get('/library/{report_code}', [LibraryController::class, 'show'])->name('report.show')->middleware('auth');
 
 // Generate
 Route::post('/report/generate', [ReportController::class, 'generate'])->name('report.generate')->middleware('auth');
 
 // Products
-Route::get('/products/fpds-query', function () { return view('products.fpds-query'); })->name('products.fpds-query');
-Route::get('/products/fpds-reports', function () { return view('products.fpds-reports'); })->name('products.fpds-reports');
-Route::get('/products/fpds-charts', function () { return view('products.fpds-charts'); });
+Route::get('/products/fpds-query', function () { return view('products.fpds-query'); })->name('products.fpds-query')->middleware('auth');
+Route::get('/products/fpds-reports', function () { return view('products.fpds-reports'); })->name('products.fpds-reports')->middleware('auth');
+Route::get('/products/fpds-charts', function () { return view('products.fpds-charts'); })->middleware('auth');
 
 // Products Overview
-Route::get('/products/fpds-query/overview', function () { return view('products.fpds-query-overview'); })->name('products.fpds-query-overview');
-Route::get('/products/fpds-reports/overview', function () { return view('products.fpds-reports-overview'); })->name('products.fpds-reports-overview');
-Route::get('/products/fpds-charts/overview', function () { return view('products.fpds-charts-overview'); });
+Route::get('/products/fpds-query/overview', function () { return view('products.fpds-query-overview'); })->name('products.fpds-query-overview')->middleware('auth');
+Route::get('/products/fpds-reports/overview', function () { return view('products.fpds-reports-overview'); })->name('products.fpds-reports-overview')->middleware('auth');
+Route::get('/products/fpds-charts/overview', function () { return view('products.fpds-charts-overview'); })->middleware('auth');
 
 // Services
-Route::get('/services/gov', function () { return view('services.gov'); })->name('services.gov');
-Route::get('/services/biz', function () { return view('services.biz'); })->name('services.biz');
+Route::get('/services/gov', function () { return view('services.gov'); })->name('services.gov')->middleware('auth');
+Route::get('/services/biz', function () { return view('services.biz'); })->name('services.biz')->middleware('auth');
 
 // Terms & Conditions
-Route::get('/user-terms-conditions', function () { return view('user-terms-conditions'); })->name('user-terms-conditions');
-Route::get('/privacy-policy', function () { return view('privacy-policy'); })->name('privacy-policy');
-Route::get('/company', function () { return view('company'); })->name('company');
+Route::get('/user-terms-conditions', function () { return view('user-terms-conditions'); })->name('user-terms-conditions')->middleware('auth');
+Route::get('/privacy-policy', function () { return view('privacy-policy'); })->name('privacy-policy')->middleware('auth');
+Route::get('/company', function () { return view('company'); })->name('company')->middleware('auth');
 
 // checkout page
-Route::get('/checkout', function () { return view('checkout'); })->name('checkout');
+Route::get('/checkout', function () { return view('checkout'); })->name('checkout')->middleware('auth');
 Route::post('/checkout/remove-item', [CheckoutController::class, 'removeItem'])->name('checkout.remove-item');
 Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
 
@@ -162,10 +168,7 @@ Route::get('/__auth/fpds-query', [LoginController::class, 'fpdsQueryGate'])
 
 // -------------------- Static Pages --------------------
 
-// Home page
-Route::get('/', function () {
-    return view('index');
-});
+
 
 // About page
 Route::get('about', function () {
@@ -183,9 +186,9 @@ Route::get('contact', function () {
 });
 
 // Privacy Policy page
-// Route::get('privacy-policy', function () {
-//     return view('privacy-policy');
-// });
+Route::get('privacy-policy', function () {
+    return view('privacy-policy-old');
+})->name('privacy-policy');
 
 // Cookie Policy page
 Route::get('cookie-policy', function () {
@@ -308,8 +311,8 @@ Route::middleware('auth')->group(function () {
 
 // Unsubscribe route
 // Маршрут для перехода с email (GET-запрос)
-Route::get('/unsubscribe', [EmailCompanyController::class, 'showUnsubscribePage'])->name('unsubscribe');
+Route::get('/unsubscribe', [EmailCompanyController::class, 'showUnsubscribePage'])->name('unsubscribe')->middleware('auth');;
 
 // Маршрут для обработки POST-запроса (реальная отписка)
-Route::post('/unsubscribe', [EmailCompanyController::class, 'unsubscribe'])->name('unsubscribe.post');
-Route::get('/unsubscribe/{company_id}', [EmailCompanyController::class, 'showUnsubscribeDetails'])->name('unsubscribe.details');
+Route::post('/unsubscribe', [EmailCompanyController::class, 'unsubscribe'])->name('unsubscribe.post')->middleware('auth');;
+Route::get('/unsubscribe/{company_id}', [EmailCompanyController::class, 'showUnsubscribeDetails'])->name('unsubscribe.details')->middleware('auth');;

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    @include('include.head')
+    @include('include-old.head')
     <title>GETWAB INC. - Services</title>
     <meta name="description" content="Explore the wide range of services offered by GETWAB INC., including AI implementation, cybersecurity, data analytics, mobile and web application development, and specialized software solutions for various business needs.">
     <link rel="canonical" href="https://www.getwab.com/services"/>
 </head>
 <body>
-@include('include.header')
+@include('include-old.header')
 <div class="container" id="main-container">
     <section class="section">
         <h1>Our Services</h1>
@@ -25,7 +25,7 @@
         <p><a href="https://www.getwab.com/capability-statement.pdf">Download Our Capability Statement</a></p>
     </section>
 </div>
-@include('include.footer')
+@include('include-old.footer')
 <script src="{{ asset('js/menu.js') }}" defer></script>
 </body>
 </html>

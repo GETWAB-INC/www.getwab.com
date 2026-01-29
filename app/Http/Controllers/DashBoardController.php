@@ -26,7 +26,7 @@ class DashBoardController extends Controller
     {
         $user = auth()->user();
 
-        if (!$user || $user->id !== 1) {
+        if (!$user || $user->email !== "ilia.oborin@getwab.com") {
             abort(404);
         }
 
