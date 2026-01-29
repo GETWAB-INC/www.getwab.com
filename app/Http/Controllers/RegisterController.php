@@ -74,8 +74,13 @@ class RegisterController extends Controller
 
             Auth::login($user, true);
 
+            // ===== EMAIL VERIFICATION (same as working controller) =====
+            $secretKey = env('SECRET_KEY_FOR_EMAIL_VERIFICATION');
+            $plainToken = $user->id . "|" . $request->email;
+            $token = hash_hmac('sha256', $plainToken, $secretKey);
+
             try {
-                Mail::to($user->email)->send(new VerifyEmail($user));
+                Mail::to($user->email)->send(new VerifyEmail($user, $token));
             } catch (\Exception $e) {
                 Log::warning('Failed to send verification email', [
                     'user_id' => $user->id,
@@ -113,8 +118,13 @@ class RegisterController extends Controller
             'password' => Hash::make($orderData['password']),
         ]);
 
+        // ===== EMAIL VERIFICATION (same as working controller) =====
+        $secretKey = env('SECRET_KEY_FOR_EMAIL_VERIFICATION');
+        $plainToken = $user->id . "|" . $email;
+        $token = hash_hmac('sha256', $plainToken, $secretKey);
+
         try {
-            Mail::to($user->email)->send(new VerifyEmail($user));
+            Mail::to($user->email)->send(new VerifyEmail($user, $token));
         } catch (\Exception $e) {
             Log::warning('Failed to send verification email', [
                 'user_id' => $user->id,
@@ -134,6 +144,7 @@ class RegisterController extends Controller
      */
     public function verify(Request $request, int $user)
     {
+        // Find user by ID from the route parameter
         $user = User::find($user);
 
         if (!$user) {
@@ -141,18 +152,37 @@ class RegisterController extends Controller
                 ->with('error', 'User not found.');
         }
 
-        if ($user->is_verified) {
+        // 1) Get verification token from query string (?token=...)
+        $token = (string) $request->query('token', '');
+
+        if ($token === '') {
             return redirect()->route('login')
-                ->with('info', 'Email already verified.');
+                ->with('error', 'Invalid verification link.');
         }
 
-        $user->update(['is_verified' => true]);
+        // 2) Recalculate expected token (must match the one used during email sending)
+        $secretKey = env('SECRET_KEY_FOR_EMAIL_VERIFICATION');
+        $plainToken = $user->id . "|" . $user->email;
+        $expected = hash_hmac('sha256', $plainToken, $secretKey);
 
+        // 3) Securely compare tokens to prevent timing attacks
+        if (!hash_equals($expected, $token)) {
+            return redirect()->route('login')
+                ->with('error', 'Invalid verification token.');
+        }
+
+        // 4) Mark email as verified (if not already verified)
+        if (!$user->is_verified) {
+            $user->update(['is_verified' => true]);
+        }
+
+        // Log the user in after successful verification
         Auth::login($user, true);
 
         return redirect()->route('account')
             ->with('success', 'Your email has been verified! You are now logged in.');
     }
+
 
     public function sendMessage(Request $request)
     {
