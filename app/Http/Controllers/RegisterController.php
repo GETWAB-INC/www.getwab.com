@@ -172,8 +172,8 @@ class RegisterController extends Controller
         }
 
         // 4) Mark email as verified (if not already verified)
-        if (!$user->is_verified) {
-            $user->update(['is_verified' => true]);
+        if (!$user->email_verified_at) {
+            $user->update(['email_verified_at' => now()]);
         }
 
         // Log the user in after successful verification
