@@ -82,9 +82,9 @@ Route::get('/register', function () {
     return view('register');
 })->name('register');
 
-Route::post('/register-process', [RegisterController::class, 'register'])->name('register-process')->middleware('auth');
-Route::get('/verify/{user}', [RegisterController::class, 'verify'])->name('verification.verify')->middleware('auth');
-Route::post('/send-message', [RegisterController::class, 'sendMessage'])->name('send.message')->middleware('auth');
+Route::post('/register-process', [RegisterController::class, 'register'])->name('register-process');
+Route::get('/verify/{user}', [RegisterController::class, 'verify'])->name('verification.verify');
+Route::post('/send-message', [RegisterController::class, 'sendMessage'])->name('send.message');
 
 // article page
 Route::get('/article', function () { return view('article'); })->name('article')->middleware('auth');

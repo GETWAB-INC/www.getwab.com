@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\VerifyEmail;
 use App\Models\ContactMessage;
+use Illuminate\Support\Facades\Log;
 
 class RegisterController extends Controller
 {
@@ -76,7 +77,7 @@ class RegisterController extends Controller
             try {
                 Mail::to($user->email)->send(new VerifyEmail($user));
             } catch (\Exception $e) {
-                \Log::warning('Failed to send verification email', [
+                Log::warning('Failed to send verification email', [
                     'user_id' => $user->id,
                     'error' => $e->getMessage()
                 ]);
@@ -115,7 +116,7 @@ class RegisterController extends Controller
         try {
             Mail::to($user->email)->send(new VerifyEmail($user));
         } catch (\Exception $e) {
-            \Log::warning('Failed to send verification email', [
+            Log::warning('Failed to send verification email', [
                 'user_id' => $user->id,
                 'error' => $e->getMessage()
             ]);
