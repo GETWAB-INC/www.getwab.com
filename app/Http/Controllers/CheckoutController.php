@@ -14,7 +14,6 @@ class CheckoutController extends Controller
 {
     public function showCheckout()
     {
-
         $accessKey = env('SECURE_ACCEPTANCE_ACCESS_KEY');
         $profileId = env('SECURE_ACCEPTANCE_PROFILE_ID');
         $secretKey = env('SECURE_ACCEPTANCE_SECRET_KEY');
@@ -32,7 +31,8 @@ class CheckoutController extends Controller
     {
         $data = $request->all();
 
-        Log::info('🔔 Silent POST от BoA', [
+        // Log silent POST callback from Bank of America
+        Log::info('🔔 Silent POST from BoA', [
             'ip' => $request->ip(),
             'raw' => file_get_contents('php://input'),
             'parsed' => $data,
@@ -43,6 +43,7 @@ class CheckoutController extends Controller
 
     public function paymentResult(Request $request)
     {
+        // Log payment result endpoint call
         Log::info("🔔 /payment/result — Method: " . $request->method());
         Log::info('🔔 /payment/result — Payload:', $request->all());
 
@@ -64,19 +65,18 @@ class CheckoutController extends Controller
         return view('checkout.result', compact('data'));
     }
 
-
     /**
-     * Удаляет элемент из сессии по ключу
+     * Remove an item from the session by its key
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function removeItem(Request $request)
     {
-        // Получаем ключ элемента из запроса
+        // Get item key from request
         $itemKey = $request->input('item_key');
 
-        // Проверяем, передан ли ключ
+        // Validate that item key is provided
         if (empty($itemKey)) {
             return response()->json([
                 'success' => false,
@@ -84,7 +84,7 @@ class CheckoutController extends Controller
             ], 400);
         }
 
-        // Проверяем, существует ли элемент в сессии
+        // Check if the item exists in the session
         if (!Session::has($itemKey)) {
             return response()->json([
                 'success' => false,
@@ -92,10 +92,10 @@ class CheckoutController extends Controller
             ], 404);
         }
 
-        // Удаляем элемент из сессии
+        // Remove item from session
         Session::forget($itemKey);
 
-        // Возвращаем успешный ответ
+        // Return success response
         return response()->json([
             'success' => true,
             'message' => 'Item removed successfully'
@@ -105,6 +105,8 @@ class CheckoutController extends Controller
     public function process(Request $request)
     {
         $hasItemsInCart = false;
+
+        // List of supported cart item session keys
         $cartItems = [
             'fpds_query_trial',
             'fpds_query_subscription',
@@ -115,6 +117,7 @@ class CheckoutController extends Controller
             'composite_report_package'
         ];
 
+        // Check if at least one item exists in the cart
         foreach ($cartItems as $itemKey) {
             if (session()->has($itemKey)) {
                 $hasItemsInCart = true;
@@ -122,6 +125,7 @@ class CheckoutController extends Controller
             }
         }
 
+        // Stop checkout if cart is empty
         if (!$hasItemsInCart) {
             return back()
                 ->withErrors(['cart' => 'No items in your cart. Please add products before proceeding.'])
@@ -129,7 +133,7 @@ class CheckoutController extends Controller
         }
 
         if (Auth::check()) {
-            // Пользователь авторизован: проверяем только обязательные поля без пароля
+            // Authenticated user: validate required billing fields only (no password/email)
             $validated = $request->validate([
                 'name' => [
                     'required',
@@ -173,7 +177,7 @@ class CheckoutController extends Controller
                 'surname.regex' => 'Last name may only contain letters, spaces, and hyphens.',
             ]);
         } else {
-            // Пользователь не авторизован: полная валидация (включая email и пароль)
+            // Guest user: full validation including email and password
             $validated = $request->validate([
                 'name' => [
                     'required',
@@ -250,26 +254,27 @@ class CheckoutController extends Controller
             ]);
         }
 
-        // dd(Auth::check(), $request->session()->all(), $request->all());
-
+        // Determine user email
         $email = Auth::check() ? Auth::user()->email : $validated['email'];
 
         if (!Auth::check()) {
+            // Create or fetch user and log them in
             $user = User::where('email', $email)->first();
 
             if (!$user) {
                 $registerController = new \App\Http\Controllers\RegisterController();
                 $user = $registerController->registerThruOrder($validated);
             }
+
             Auth::login($user, true);
         }
 
-        // Переключатель тестового режима
-        $testMode = true; // Меняйте это значение для тестирования
+        // Test mode switch (disable for real payment processing)
+        $testMode = true;
 
         if (!$testMode) {
-            // Здесь будет реальная интеграция с платёжным шлюзом
-            $paymentSuccessful = false; // Заглушка
+            // Real payment gateway integration will be implemented here
+            $paymentSuccessful = false; // Placeholder
         } else {
             $paymentSuccessful = true;
         }
@@ -277,13 +282,13 @@ class CheckoutController extends Controller
         if ($paymentSuccessful) {
             $billingService = new BillingService();
 
-            // 1. Обрабатываем подписки
+            // 1. Process subscriptions
             $subscriptionResult = $billingService->processSubscriptions();
 
-            // 2. Обрабатываем пакеты отчётов
+            // 2. Process report packages
             $packageResult = $billingService->processReportPackage();
 
-            // 3. Собираем общий результат
+            // 3. Combine results
             $success = $subscriptionResult['success'] && $packageResult['success'];
             $messages = array_merge($subscriptionResult['messages'], $packageResult['messages']);
 
@@ -292,8 +297,8 @@ class CheckoutController extends Controller
             } else {
                 return view('cancelled')->with('errors', $messages);
             }
-        } else {
-            return view('cancelled')->with('errors', ['Payment failed']);
         }
+
+        return view('cancelled')->with('errors', ['Payment failed']);
     }
 }

@@ -12,6 +12,12 @@ use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
+    /**
+     * Handle user login attempt with basic rate limiting.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -42,17 +48,27 @@ class LoginController extends Controller
     }
 
     /**
-     * Gatekeeper for FPDS Query (Nginx auth_request)
+     * Gatekeeper endpoint for FPDS Query (used by Nginx auth_request).
+     *
+     * Note: all access control logic is handled by the fpds.access middleware.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
      */
     public function fpdsQueryGate(Request $request)
     {
-        // ВСЯ логика уже в middleware fpds.access
         return response('', 204);
     }
 
+    /**
+     * Display a lightweight database viewer page with table previews.
+     * Loads the list of tables (excluding specific ones), and caches the result for 24 hours.
+     *
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function showTables()
     {
-        // Таблицы, которые нужно исключить
+        // Tables to exclude from the database viewer
         $exclude = [
             'email_companies',
             'empstateweb_emails',
@@ -60,19 +76,22 @@ class LoginController extends Controller
             // 'signed_date_records',
         ];
 
-        // Ключ кеша
+        // Cache key
         $cacheKey = 'dbviewer.all_tables';
 
-        // Булевый рубильник: если true — обновляем кеш, если false — используем существующий
+        // Toggle:
+        // true  — force cache refresh
+        // false — use existing cache
         $refreshCache = true;
 
         if ($refreshCache) {
             Cache::forget($cacheKey);
         }
 
-        // Берём данные из кеша или формируем заново
+        // Retrieve data from cache or rebuild it
         $data = Cache::remember($cacheKey, now()->addHours(24), function () use ($exclude) {
             $tablesRaw = DB::select('SHOW TABLES');
+
             $tables = collect($tablesRaw)
                 ->map(fn($t) => array_values((array)$t)[0])
                 ->reject(fn($table) => in_array($table, $exclude))
@@ -89,24 +108,44 @@ class LoginController extends Controller
                     'rows' => $rows,
                 ];
             }
+
             return $data;
         });
 
         return view('tables', compact('data'));
     }
 
+    /**
+     * Redirect authenticated users to the FPDS Query application.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|null
+     */
     public function fpdsQuery(Request $request)
     {
         if (auth()->check()) {
             return redirect('https://getwab.com/fpds/query');
         }
+
+        return null;
     }
 
+    /**
+     * Show the password reset link request form.
+     *
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function showLinkRequestForm()
     {
         return view('password-request');
     }
 
+    /**
+     * Send a password reset link to the given email address.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function sendResetLinkEmail(Request $request)
     {
         $request->validate(['email' => 'required|email']);
@@ -120,11 +159,23 @@ class LoginController extends Controller
             : back()->withErrors(['email' => 'Email not found or unable to send.']);
     }
 
+    /**
+     * Show the password reset form for a given reset token.
+     *
+     * @param string $token
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function showResetForm($token)
     {
         return view('password-reset', compact('token'));
     }
 
+    /**
+     * Reset the user's password using the provided token.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function reset(Request $request)
     {
         $request->validate([
@@ -135,6 +186,7 @@ class LoginController extends Controller
         $status = Password::reset(
             $request->only('password', 'password_confirmation', 'token'),
             function (User $user, string $password) {
+                // Force password update with hashing
                 $user->forceFill(['password' => Hash::make($password)])->save();
             }
         );

@@ -13,6 +13,13 @@ use App\Models\Subscription;
 
 class AccountController extends Controller
 {
+    /**
+     * Show the main account dashboard page.
+     * Loads the current user and their reports (with parameters).
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function account(Request $request)
     {
         $user = Auth::user();
@@ -25,6 +32,13 @@ class AccountController extends Controller
         return view('account.account', compact('user', 'reports'));
     }
 
+    /**
+     * Show the user's reports section.
+     * Stores the current section URL in session to allow returning to the same tab.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function reports(Request $request)
     {
         $user = Auth::user();
@@ -35,10 +49,16 @@ class AccountController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-
         return view('account.reports', compact('user', 'reports'));
     }
 
+    /**
+     * Show the user's remaining report package counts.
+     * Stores the current section URL in session to allow returning to the same tab.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function packages(Request $request)
     {
         $user = Auth::user();
@@ -54,6 +74,7 @@ class AccountController extends Controller
         $compositeCount = $compositePackage ? $compositePackage->remaining_reports : 0;
 
         session(['last_account_section' => route('account.packages')]);
+
         return view('account.packages', compact(
             'user',
             'elementaryCount',
@@ -61,6 +82,14 @@ class AccountController extends Controller
         ));
     }
 
+    /**
+     * Show the user's subscription status page.
+     * Loads the most recent subscriptions by type (fpds_query, fpds_reports) and derives status flags.
+     * Stores the current section URL in session to allow returning to the same tab.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function subscription(Request $request)
     {
         $user = Auth::user();
@@ -110,7 +139,14 @@ class AccountController extends Controller
         ));
     }
 
-
+    /**
+     * Show the user's billing history page.
+     * Maps internal cart item keys to human-readable names for display.
+     * Stores the current section URL in session to allow returning to the same tab.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function billing(Request $request)
     {
         $itemsToShow = [
@@ -129,16 +165,32 @@ class AccountController extends Controller
             ->get();
 
         session(['last_account_section' => route('account.billing')]);
+
         return view('account.billing', compact('user', 'itemsToShow', 'billingHistory'));
     }
 
+    /**
+     * Show the user's profile page.
+     * Stores the current section URL in session to allow returning to the same tab.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function profile(Request $request)
     {
         $user = Auth::user();
         session(['last_account_section' => route('account.profile')]);
+
         return view('account.profile', compact('user'));
     }
 
+    /**
+     * Update the user's profile and optionally change the password.
+     * If both currentPassword and newPassword are provided, the current password is verified before updating.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function updateProfile(Request $request)
     {
         $validated = $request->validate([
@@ -178,7 +230,13 @@ class AccountController extends Controller
         }
     }
 
-
+    /**
+     * Upload and set the user's avatar image.
+     * Validates image type and size, stores it in the public disk, and returns the public URL.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function uploadAvatar(Request $request)
     {
         if (!$request->hasFile('avatar')) {
@@ -191,7 +249,7 @@ class AccountController extends Controller
         $file = $request->file('avatar');
 
         $request->validate([
-            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // до 2 МБ
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // up to 2 MB
         ]);
 
         $user = Auth::user();
@@ -210,6 +268,12 @@ class AccountController extends Controller
         ]);
     }
 
+    /**
+     * Remove the user's avatar image from disk and clear the avatar field.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function removeAvatar(Request $request)
     {
         $user = Auth::user();

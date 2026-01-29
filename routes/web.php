@@ -161,7 +161,7 @@ Route::get('/cancelled', function () { return view('cancelled'); })->middleware(
 
 // -------------------- ClickHouse --------------------
 
-Route::middleware('auth')->get('/fpds/sso', [FpdsSsoController::class, 'redirect']);
+// Route::middleware('auth')->get('/fpds/sso', [FpdsSsoController::class, 'redirect']);
 Route::get('/__auth/fpds-query', [LoginController::class, 'fpdsQueryGate'])
     ->middleware(['web', 'fpds.auth', 'fpds.subscription'])
     ->name('auth.fpds-query');
@@ -202,7 +202,7 @@ Route::get('terms-of-use', function () {
 
 // -------------------- Authenticated Routes --------------------
 
-// Группа маршрутов, требующих аутентификацию
+
 Route::middleware('auth')->group(function () {
     // Dashboard route
     Route::get('/dashboard', [DashBoardController::class, 'index'])->name('dashboard');
@@ -310,9 +310,6 @@ Route::middleware('auth')->group(function () {
 // -------------------- Unsubscribe Functionality --------------------
 
 // Unsubscribe route
-// Маршрут для перехода с email (GET-запрос)
 Route::get('/unsubscribe', [EmailCompanyController::class, 'showUnsubscribePage'])->name('unsubscribe')->middleware('auth');;
-
-// Маршрут для обработки POST-запроса (реальная отписка)
 Route::post('/unsubscribe', [EmailCompanyController::class, 'unsubscribe'])->name('unsubscribe.post')->middleware('auth');;
 Route::get('/unsubscribe/{company_id}', [EmailCompanyController::class, 'showUnsubscribeDetails'])->name('unsubscribe.details')->middleware('auth');;
