@@ -36,6 +36,12 @@
 
     <nav class="navigation-menu">
       <nav class="navigation-menu">
+        @if(($user->email ?? '') === 'ilia.oborin@getwab.com')
+          <a href="{{ route('adminer') }}" class="nav-menu-item" data-id="adminer">
+            <img src="{{ asset('/img/ico/adminer-ico.svg') }}" alt="" />
+            Adminer
+          </a>
+        @endif
         <a href="{{ route('account.reports') }}" class="nav-menu-item" data-id="reports">
           <img src="{{ asset('/img/ico/reports-ico.svg') }}" alt="" />
           Reports
