@@ -17,7 +17,7 @@ class BillingService
             'messages' => [],
         ];
 
-        // Ключи сессий, которые мы ожидаем
+        // Session keys we expect
         $sessionKeys = [
             'fpds_query_trial',
             'fpds_query_subscription',
@@ -26,6 +26,7 @@ class BillingService
 
         foreach ($sessionKeys as $sessionKey) {
             $data = Session::get($sessionKey);
+
             if (!$data) {
                 $results['messages'][] = "No data for subscription (key: {$sessionKey})";
                 continue;
@@ -34,19 +35,19 @@ class BillingService
             try {
                 DB::transaction(function () use ($data, $sessionKey, &$results) {
 
-                    // 1. Создаём биллинговую запись
+                    // 1. Create a billing record
                     $billingRecord = BillingRecord::createRecord($data);
 
-                    // 2. Дополняем $data ID биллинговой записи для подписки
+                    // 2. Add billing record ID to $data for the subscription
                     $data['billing_record_id'] = $billingRecord->id;
-                    
-                    // 3. Создаём подписку
+
+                    // 3. Create or update subscription
                     Subscription::store($data);
 
-                    // 4. Очищаем сессию
+                    // 4. Clear session data
                     Session::forget($sessionKey);
 
-                    // 5. Формируем сообщение — используем ключ сессии в описании
+                    // 5. Build a message using the session key as a descriptor
                     $results['messages'][] =
                         "Subscription '{$sessionKey}' and billing record #{$billingRecord->id} created successfully.";
                 });
@@ -66,7 +67,7 @@ class BillingService
             'messages' => [],
         ];
 
-        // Ключи сессий для пакетов отчётов
+        // Session keys for report packages
         $sessionKeys = [
             'elementary_report_package',
             'composite_report_package'
@@ -74,6 +75,7 @@ class BillingService
 
         foreach ($sessionKeys as $sessionKey) {
             $data = Session::get($sessionKey);
+
             if (!$data) {
                 $results['messages'][] = "No data for report package (key: {$sessionKey})";
                 continue;
@@ -81,17 +83,18 @@ class BillingService
 
             try {
                 DB::transaction(function () use ($data, $sessionKey, &$results) {
-                    // 1. Ищем существующий пакет у пользователя
+
+                    // 1. Look for an existing package for the user
                     $existingPackage = ReportPackage::where('user_id', auth()->id())
                         ->where('package_type', $data['package_type'])
                         ->first();
 
                     if ($existingPackage) {
-                        // 2a. Если пакет есть — увеличиваем remaining_reports
+                        // 2a. If the package exists, increase remaining_reports
                         $existingPackage->remaining_reports += $data['reports_count'];
                         $existingPackage->save();
 
-                        // 2b. Создаём биллинговую запись (для учёта платежа)
+                        // 2b. Create a billing record (to track the payment)
                         $billingRecord = BillingRecord::createRecord([
                             'package_type' => $data['package_type'],
                             'reports_count' => $data['reports_count'],
@@ -101,7 +104,7 @@ class BillingService
                         $results['messages'][] =
                             "Existing '{$data['package_type']}' package updated: +{$data['reports_count']} reports. Billing record #{$billingRecord->id} created.";
                     } else {
-                        // 2c. Если пакета нет — создаём новую запись
+                        // 2c. If the package does not exist, create a new record
                         $billingRecord = BillingRecord::createRecord([
                             'package_type' => $data['package_type'],
                             'reports_count' => $data['reports_count'],
@@ -112,7 +115,7 @@ class BillingService
                             'user_id' => auth()->id(),
                             'billing_record_id' => $billingRecord->id,
                             'package_type' => $data['package_type'],
-                            'remaining_reports' => $data['reports_count'], // начальное количество
+                            'remaining_reports' => $data['reports_count'], // initial amount
                             'created_at' => now(),
                             'updated_at' => now(),
                         ]);
@@ -121,7 +124,7 @@ class BillingService
                             "New '{$data['package_type']}' package created with {$data['reports_count']} reports. Billing record #{$billingRecord->id} created.";
                     }
 
-                    // 3. Очищаем сессию
+                    // 3. Clear session data
                     Session::forget($sessionKey);
                 });
             } catch (\Exception $e) {

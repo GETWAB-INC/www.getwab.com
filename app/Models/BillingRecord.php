@@ -10,10 +10,10 @@ class BillingRecord extends Model
 {
     use SoftDeletes;
 
-    // Таблица БД
+    // Database table
     protected $table = 'billing_records';
 
-    // Поля, доступные для массового присваивания
+    // Fields available for mass assignment
     protected $fillable = [
         'user_id',
         'billed_at',
@@ -26,7 +26,7 @@ class BillingRecord extends Model
         'gateway_transaction_id',
     ];
 
-    // Касты для автоматического преобразования типов
+    // Casts for automatic type conversion
     protected $casts = [
         'amount' => 'decimal:2',
         'billed_at' => 'datetime',
@@ -35,13 +35,13 @@ class BillingRecord extends Model
         'deleted_at' => 'datetime',
     ];
 
-    // Значения по умолчанию
+    // Default values
     protected $attributes = [
         'currency' => 'USD',
     ];
 
     /**
-     * Связь с пользователем
+     * Communication with the user
      */
     public function user(): BelongsTo
     {
@@ -55,7 +55,7 @@ class BillingRecord extends Model
     }
 
     /**
-     * Проверка, завершена ли транзакция
+     * Checking if the transaction is complete.
      */
     public function isCompleted(): bool
     {
@@ -63,7 +63,7 @@ class BillingRecord extends Model
     }
 
     /**
-     * Проверка, отменена ли транзакция
+     * Checking if a transaction is canceled
      */
     public function isCancelled(): bool
     {
@@ -71,7 +71,7 @@ class BillingRecord extends Model
     }
 
     /**
-     * Проверка, находится ли транзакция в обработке
+     * Checking if the transaction is being processed.
      */
     public function isPending(): bool
     {
@@ -79,7 +79,7 @@ class BillingRecord extends Model
     }
 
     /**
-     * Форматирование суммы для вывода
+     * Formatting the amount for display.
      */
     public function getFormattedAmount(): string
     {
@@ -87,7 +87,7 @@ class BillingRecord extends Model
     }
 
     /**
-     * Получение маскированной карты (например, «Visa •••• 1234»)
+     * Obtaining a masked card number (for example, "Visa •••• 1234")
      */
     public function getMaskedCard(): string
     {
@@ -95,7 +95,7 @@ class BillingRecord extends Model
     }
 
     /**
-     * Обновление статуса транзакции
+     * Transaction status update
      */
     public function updateStatus(string $newStatus): void
     {
@@ -104,7 +104,7 @@ class BillingRecord extends Model
     }
 
     /**
-     * Отмена транзакции (с обновлением статуса)
+     * Transaction cancellation (with status update)
      */
     public function cancel(): void
     {
@@ -112,7 +112,7 @@ class BillingRecord extends Model
     }
 
     /**
-     * Подтверждение транзакции (с обновлением статуса)
+     * Transaction confirmation (with status update)
      */
     public function confirm(): void
     {
@@ -125,14 +125,14 @@ class BillingRecord extends Model
     }
 
     /**
-     * Формирует читаемое описание на основе входных данных (без экземпляра модели).
-     * Используется при создании записи, чтобы избежать двойного запроса в БД.
-     *
-     * @param array $data Исходные данные подписки
-     * @return string Читаемое описание вида:
-     *   - «7‑day FPDS Query trial → Annual subscription» (для trial);
-     *   - «FPDS Reports → Annual subscription» (для не‑trial).
-     */
+    * Generates a human-readable description based on the input data (without a model instance). 
+    * Used when creating a record to avoid a double database query. 
+    *
+    * @param array $data The original subscription data
+    * @return string A human-readable description of the form:
+    *   - "7-day FPDS Query trial → Annual subscription" (for trial); 
+    *   - "FPDS Reports → Annual subscription" (for non-trial). 
+    */
     protected static function getSubscriptionDescription(array $data): string
     {
         $typeNames = [
@@ -152,10 +152,10 @@ class BillingRecord extends Model
         $planName = $planNames[$subscriptionPlan] ?? $subscriptionPlan;
 
         if ($subscriptionStatus === 'trial') {
-            // Для trial: «7‑day [тип] trial → [план] subscription»
+            // For trial: “7‑day [type] trial → [plan] subscription”
             return "7‑day {$typeName} trial → {$planName} subscription";
         } else {
-            // Для не‑trial: «[тип] → [план] subscription»
+            // For non-trial: "[type] → [plan] subscription"
             return "{$typeName} → {$planName} subscription";
         }
     }
@@ -179,7 +179,7 @@ class BillingRecord extends Model
 
     public static function createRecord(array $data): BillingRecord
     {
-        // 1. Определяем тип записи: подписка или пакет
+        // 1. Determine the type of entry: subscription or package
         $isSubscription = isset($data['subscription_type']);
         $isReportPackage = isset($data['package_type']);
 
@@ -187,12 +187,12 @@ class BillingRecord extends Model
             throw new \InvalidArgumentException('Data must contain either subscription_type or package_type');
         }
 
-        // 2. Формируем читаемое описание
+        // 2. We create a readable description.
         $description = $isSubscription
             ? self::getSubscriptionDescription($data)
             : self::getPackageDescription($data);
 
-        // 3. Создаём запись
+        // 3. Creating a record
         return self::create([
             'user_id' => auth()->id(),
             'billed_at' => now(),

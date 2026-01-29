@@ -51,9 +51,6 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Связь с пакетами отчётов
-     */
     public function reportPackages()
     {
         return $this->hasMany(ReportPackage::class, 'user_id', 'id');

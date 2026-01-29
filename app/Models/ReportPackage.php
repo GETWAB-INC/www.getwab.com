@@ -9,32 +9,32 @@ class ReportPackage extends Model
 {
     use HasFactory;
 
-    // Явно указываем имя таблицы в БД
+    // Explicitly specify the database table name
     protected $table = 'report_packages';
 
-    // Первичный ключ (по умолчанию 'id', но для ясности)
+    // Primary key (default is 'id', specified here for clarity)
     protected $primaryKey = 'id';
 
-    // Отключаем авто-управление timestamps, если нужно ручное управление
+    // Disable automatic timestamp management if manual handling is required
     // public $timestamps = false;
 
-    // Разрешённые для массового заполнения поля
+    // Mass-assignable attributes
     protected $fillable = [
         'user_id',
         'package_type',
         'remaining_reports',
-        // При необходимости можно добавить 'created_at', 'updated_at'
+        // 'created_at', 'updated_at' can be added if needed
     ];
 
-    // Поля, которые НЕ будут включены в массив/JSON при выводе
+    // Attributes that should be hidden when converting to array/JSON
     protected $hidden = [
         'created_at',
         'updated_at',
     ];
 
-    // Типы данных для корректной работы с БД и API
+    // Attribute casting for proper database and API handling
     protected $casts = [
-        'id'                  => 'integer',
+        'id'                => 'integer',
         'user_id'           => 'integer',
         'package_type'      => 'string',
         'remaining_reports' => 'integer',
@@ -43,13 +43,15 @@ class ReportPackage extends Model
     ];
 
     /**
-     * Связь с пакетами отчётов (один пользователь — много пакетов)
+     * Relationship: a user can have multiple report packages.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function reportPackages()
     {
         return $this->hasMany(ReportPackage::class, 'user_id', 'id');
     }
 
-    // Можно добавить мутаторы для дополнительной обработки (опционально)
+    // Optional: mutators/accessors can be added for additional processing
     // protected function createdAt(): Attribute { ... }
 }

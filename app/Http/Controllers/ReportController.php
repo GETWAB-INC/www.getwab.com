@@ -10,13 +10,11 @@ use App\Models\ReportParameter;
 
 class ReportController extends Controller
 {
-    // Получаем текущий год
     private function currentYear(): int
     {
         return (int) date('Y');
     }
 
-    // Метод для динамического получения правил валидации
     private function getReportRules(string $reportType): array
     {
         $currentYear = $this->currentYear();
@@ -43,7 +41,6 @@ class ReportController extends Controller
         return 'Unknown Report';
     }
 
-    // Метод для динамического получения сообщений об ошибках
     private function getErrorMessages(): array
     {
         $currentYear = $this->currentYear();
@@ -65,7 +62,6 @@ class ReportController extends Controller
         $reportCode = $request->input('report_code');
         $reports = config('library');
 
-        // Поиск отчёта по report_code
         $found = false;
         foreach ($reports as $report) {
             if ($report['report_code'] === $reportCode) {
@@ -80,7 +76,6 @@ class ReportController extends Controller
             ])->withInput();
         }
 
-        // Получаем правила валидации
         $rules = $this->getReportRules($reportCode);
         if (empty($rules)) {
             return back()->withErrors([
@@ -103,7 +98,6 @@ class ReportController extends Controller
             ->first();
 
         if (!$activePackage) {
-            // Логика для отсутствия пакета (как в вашем коде)
             if ($request->input('report_type') === "EL") {
                 Session::put('single_elementary_report', [
                     'report_code' => $reportCode,
@@ -123,7 +117,6 @@ class ReportController extends Controller
             return redirect()->route('checkout');
         }
 
-        // Создаём отчёт
         $reportRecord = Report::create([
             'user_id' => auth()->id(),
             'report_code' => $reportCode,
@@ -131,7 +124,6 @@ class ReportController extends Controller
             'report_id' => null,
         ]);
 
-        // Сохраняем параметры в report_parameters
         $parameters = $request->except('_token', 'report_code', 'report_type', 'report_price');
         foreach ($parameters as $key => $value) {
             ReportParameter::create([
@@ -141,7 +133,6 @@ class ReportController extends Controller
             ]);
         }
 
-        // Уменьшаем количество оставшихся отчётов в пакете
         $activePackage->decrement('remaining_reports');
 
         return redirect()->route('account')->with([

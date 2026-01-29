@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 
 class Subscription extends Model
 {
@@ -113,8 +114,9 @@ class Subscription extends Model
     }
 
     /**
-     * Проверяет, относится ли подписка к типу 'fpds_query'.
-     * @return bool true — подписка типа 'fpds_query', false — иной тип или null
+     * Checks whether the subscription is of type 'fpds_query'.
+     *
+     * @return bool True if the subscription type is 'fpds_query', otherwise false.
      */
     public function isFpdsQuerySubscription(): bool
     {
@@ -122,14 +124,14 @@ class Subscription extends Model
     }
 
     /**
-     * Проверяет, относится ли подписка к типу 'fpds_reports'.
-     * @return bool true — подписка типа 'fpds_reports', false — иной тип или null
+     * Checks whether the subscription is of type 'fpds_reports'.
+     *
+     * @return bool True if the subscription type is 'fpds_reports', otherwise false.
      */
     public function isFpdsReportsSubscription(): bool
     {
         return $this->subscription_type === 'fpds_reports';
     }
-
 
     public function renew(): void
     {
@@ -138,7 +140,7 @@ class Subscription extends Model
     }
 
     /**
-     * Активация подписки (перевод из trial в active)
+     * Activate the subscription (switch from trial to active).
      */
     public function activate(): void
     {
@@ -147,7 +149,7 @@ class Subscription extends Model
     }
 
     /**
-     * Отмена подписки
+     * Cancel the subscription.
      */
     public function cancel(): void
     {
@@ -156,7 +158,7 @@ class Subscription extends Model
     }
 
     /**
-     * Приостановка подписки
+     * Suspend the subscription.
      */
     public function suspend(): void
     {
@@ -165,7 +167,7 @@ class Subscription extends Model
     }
 
     /**
-     * Пометка подписки как истёкшей
+     * Mark the subscription as expired.
      */
     public function markAsExpired(): void
     {
@@ -173,48 +175,50 @@ class Subscription extends Model
         $this->save();
     }
 
-    // ДОБАВЛЕНО: расчёт даты следующего биллинга
+    // ADDED: calculate next billing date
     public function calculateNextBillingDate(): \Carbon\Carbon
     {
         $startsAt = $this->start_at ?? now();
+
         return match ($this->plan) {
             'Monthly' => $startsAt->addMonth(),
-            'Annual' => $startsAt->addYear(),
-            default => $startsAt->addMonth(), // по умолчанию — месяц
+            'Annual'  => $startsAt->addYear(),
+            default   => $startsAt->addMonth(), // default: one month
         };
     }
 
-    // ДОБАВЛЕНО: расчёт даты истечения подписки
+    // ADDED: calculate subscription expiration date
     public function calculateExpireDate(): \Carbon\Carbon
     {
         $startsAt = $this->start_at ?? now();
+
         return match ($this->plan) {
             'Monthly' => $startsAt->addMonth(),
-            'Annual' => $startsAt->addYear(),
-            default => $startsAt->addMonth(), // по умолчанию — месяц
+            'Annual'  => $startsAt->addYear(),
+            default   => $startsAt->addMonth(), // default: one month
         };
     }
 
     public static function store(array $data): Subscription
     {
-        $subscription_type = $data['subscription_type'];
+        $subscription_type   = $data['subscription_type'];
         $subscription_status = $data['subscription_status'];
-        $subscription_price = $data['subscription_price'];
-        $subscription_plan = $data['subscription_plan'];
-        $billing_record_id = $data['billing_record_id'];
+        $subscription_price  = $data['subscription_price'];
+        $subscription_plan   = $data['subscription_plan'];
+        $billing_record_id   = $data['billing_record_id'];
 
-        // Ищем существующую подписку пользователя для данного типа
+        // Look for an existing user subscription of the given type
         $existingSubscription = Subscription::where('user_id', auth()->id())
             ->where('subscription_type', $subscription_type)
             ->first();
 
         if ($existingSubscription) {
-            // Обновляем существующую подписку
+            // Update existing subscription
             $subscription = $existingSubscription;
             $subscription->billing_record_id = $billing_record_id;
             $subscription->status = $subscription_status;
             $subscription->plan = $subscription_plan;
-            // start_at НЕ меняем — сохраняем первоначальную дату
+            // Do NOT change start_at — keep the original start date
 
             if ($subscription_status == 'trial') {
                 $subscription->next_billing_at = now()->addDays(7);
@@ -226,20 +230,20 @@ class Subscription extends Model
                 $subscription->expires_at = $subscription->calculateExpireDate();
             }
 
-            $subscription->cancelled_at = NULL;
+            $subscription->cancelled_at = null;
             $subscription->amount = self::PRICES[$subscription_type][$subscription_plan];
             $subscription->currency = 'USD';
-            $subscription->payment_gateway_id = NULL;
+            $subscription->payment_gateway_id = null;
             $subscription->notes = "Subscription updated, linked to billing #{$billing_record_id}";
         } else {
-            // Создаём новую подписку
+            // Create a new subscription
             $subscription = new Subscription();
             $subscription->user_id = auth()->id();
             $subscription->billing_record_id = $billing_record_id;
             $subscription->subscription_type = $subscription_type;
             $subscription->status = $subscription_status;
             $subscription->plan = $subscription_plan;
-            $subscription->start_at = now(); // Только для новых подписок
+            $subscription->start_at = now(); // Only for new subscriptions
 
             if ($subscription_status == 'trial') {
                 $subscription->next_billing_at = now()->addDays(7);
@@ -251,17 +255,17 @@ class Subscription extends Model
                 $subscription->expires_at = $subscription->calculateExpireDate();
             }
 
-            $subscription->cancelled_at = NULL;
+            $subscription->cancelled_at = null;
             $subscription->amount = self::PRICES[$subscription_type][$subscription_plan];
             $subscription->currency = 'USD';
-            $subscription->payment_gateway_id = NULL;
+            $subscription->payment_gateway_id = null;
             $subscription->notes = "Subscription linked to billing #{$billing_record_id}";
         }
 
         try {
             $subscription->save();
         } catch (\Exception $e) {
-            \Log::error('Failed to save/update subscription in store', [
+            Log::error('Failed to save/update subscription in store', [
                 'error_message' => $e->getMessage(),
                 'exception_class' => get_class($e),
                 'data_used' => $data,
@@ -275,41 +279,41 @@ class Subscription extends Model
         return $subscription;
     }
 
-
     /**
-     * Обновляет подписку с пересчётом дат и статуса.
-     * @param array $data Данные для обновления: ['plan' => ..., 'status' => ...]
-     * @return bool Успех/неудача обновления
+     * Updates the subscription and recalculates dates and status.
+     *
+     * @param array $data Data to update: ['plan' => ..., 'status' => ...]
+     * @return bool True on success, false on failure
      */
     public function updateSubscription(array $data): bool
     {
         $newPlan = $data['plan'] ?? $this->plan;
         $newStatus = $data['status'] ?? $this->status;
 
-        // Обновляем план
+        // Update plan
         $this->plan = $newPlan;
 
-        // Пересчитываем статус: если trial активен И подписка fpds_query → STATUS_TRIAL, иначе STATUS_ACTIVE
+        // Recalculate status: if trial is active AND subscription is fpds_query → STATUS_TRIAL, otherwise STATUS_ACTIVE
         if ($this->isFpdsQuerySubscription() && $this->isCurrentlyTrial()) {
             $this->status = Subscription::STATUS_TRIAL;
         } else {
             $this->status = $newStatus ?? Subscription::STATUS_ACTIVE;
         }
 
-        // Пересчитываем даты с учётом типа плана (Monthly/Annual)
+        // Recalculate dates based on plan type (Monthly/Annual)
         if ($this->status === Subscription::STATUS_TRIAL) {
-            // Для trial — фиксированные 7 дней
+            // Trial has a fixed 7-day duration
             $this->next_billing_at = now()->addDays(7);
             $this->expires_at = now()->addDays(7);
             $this->trial_start_at = now();
             $this->trial_end_at = now()->addDays(7);
         } else {
-            // Для активных подписок — расчёт по плану (Monthly/Annual)
+            // Active subscriptions: calculate dates based on plan (Monthly/Annual)
             $this->next_billing_at = $this->calculateNextBillingDate();
             $this->expires_at = $this->calculateExpireDate();
         }
 
-        // Общие поля
+        // Common fields
         $this->cancelled_at = null;
         $this->updated_at = now();
         $this->amount = self::PRICES[$this->subscription_type][$this->plan];
@@ -317,8 +321,9 @@ class Subscription extends Model
         try {
             return $this->save();
         } catch (\Exception $e) {
-            \Log::error('Subscription update failed: ' . $e->getMessage());
+            Log::error('Subscription update failed: ' . $e->getMessage());
             throw $e;
         }
     }
+
 }

@@ -52,7 +52,6 @@ class EmailCompanyController extends Controller
         return view('mail.bussines.hello_again', ['company' => $company]);
     }
 
-    // Метод для редактирования компании
     public function edit($id)
     {
         $company = DB::table('email_companies')->where('id', $id)->first();
@@ -64,7 +63,6 @@ class EmailCompanyController extends Controller
         return view('edit-company', ['company' => $company]);
     }
 
-    // Метод для обновления компании
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -101,7 +99,6 @@ class EmailCompanyController extends Controller
         return redirect()->route('dashboard')->with('success', 'Company updated successfully!');
     }
 
-    // Метод для удаления компании
     public function destroy($id)
     {
         DB::table('email_companies')->where('id', $id)->delete();
@@ -109,37 +106,32 @@ class EmailCompanyController extends Controller
     }
 
     /**
-     * Метод для отображения страницы отписки (GET-запрос)
-     * Этот метод будет вызван при переходе по ссылке из письма
-     */
+    * Method for displaying the unsubscribe page (GET request)
+    * This method will be called when clicking on the link in the email.
+    */
     public function showUnsubscribePage(Request $request)
     {
-        // Получаем email из URL-параметра ?email=example@mail.com
         $email = $request->query('email');
 
-        // Проверяем, есть ли email в базе данных
         if (!$email) {
             return redirect()->back()->with('error', 'Email not provided.');
         }
 
-        // Отображаем страницу отписки с email
         return view('mail.unsubscribe', ['email' => $email]);
     }
 
     /**
-     * Метод для обработки отписки (POST-запрос)
-     * Этот метод обрабатывает данные, полученные с JavaScript через POST
-     */
+    * Method for handling unsubscribe requests (POST request)
+    * This method processes data received via JavaScript using a POST request. 
+    */
     public function unsubscribe(Request $request)
     {
-        // Получаем данные из запроса POST
         $email = $request->input('email');
         $screenResolution = $request->input('screen_resolution');
         $timeZone = $request->input('time_zone');
         $browserLanguage = $request->input('browser_language');
-        $referrer = $request->input('referrer'); // Захват реферера
+        $referrer = $request->input('referrer');
 
-        // Логируем все данные для отладки
         Log::info('Unsubscribe Request Data:', [
             'email' => $email,
             'screen_resolution' => $screenResolution,
@@ -150,18 +142,14 @@ class EmailCompanyController extends Controller
             'user_agent' => $request->userAgent()
         ]);
 
-        // Проверка наличия email в таблице email_companies
         $exists = DB::table('email_companies')->where('recipient_email', $email)->exists();
 
         if ($exists) {
-            // Отписываем пользователя (устанавливаем subscribe в 1)
             DB::table('email_companies')->where('recipient_email', $email)->update(['subscribe' => 1]);
 
-            // Проверяем, существует ли запись в unsubscribe_logs
             $unsubscribeLogExists = DB::table('unsubscribe_logs')->where('email', $email)->exists();
 
             if ($unsubscribeLogExists) {
-                // Обновляем запись, если она уже существует
                 DB::table('unsubscribe_logs')->where('email', $email)->update([
                     'ip_address' => $request->ip(),
                     'user_agent' => $request->userAgent(),
@@ -173,7 +161,6 @@ class EmailCompanyController extends Controller
                     'updated_at' => now(),
                 ]);
             } else {
-                // Создаем новую запись, если такой записи нет
                 DB::table('unsubscribe_logs')->insert([
                     'email' => $email,
                     'ip_address' => $request->ip(),
@@ -190,7 +177,6 @@ class EmailCompanyController extends Controller
 
             return view('mail.unsubscribe_success', ['email' => $email])->with('success', 'You have been successfully unsubscribed.');
         } else {
-            // Логируем сообщение, если email не найден
             Log::warning('Email not found for unsubscription:', ['email' => $email]);
             return back()->with('error', 'Email not found.');
         }
@@ -198,52 +184,39 @@ class EmailCompanyController extends Controller
 
     public function showUnsubscribeDetails($company_id)
     {
-        // Fetch the company details by the given ID
         $company = DB::table('email_companies')->where('id', $company_id)->first();
 
-        // Check if the company exists
         if (!$company) {
             return redirect()->back()->with('error', 'Company not found.');
         }
 
-        // Fetch the unsubscribe log for the company based on email
         $unsubscribeLog = DB::table('unsubscribe_logs')->where('email', $company->recipient_email)->first();
 
-        // Check if there's an unsubscribe record
         if (!$unsubscribeLog) {
             return view('mail.unsubscribe_details', ['message' => 'No unsubscription log found for this company.', 'company' => $company]);
         }
 
-        // Pass the company and unsubscribe details to the view
         return view('mail.unsubscribe_details', ['unsubscribeLog' => $unsubscribeLog, 'company' => $company]);
     }
 
     public function logs()
     {
-        // Путь к файлу логов helloemail
         $logPathHelloEmail = storage_path('logs/helloemail.log');
-        // Путь к файлу логов againemail
         $logPathAgainEmail = storage_path('logs/againemail.log');
-        // Путь к файлу логов lastemail
         $logPathLastEmail = storage_path('logs/lastemail.log');
 
-        // Функция для получения последних 15 строк из файла
         $getLastLines = function ($logPath) {
             if (File::exists($logPath)) {
-                // Чтение всех строк файла
                 $lines = file($logPath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-                // Возвращаем последние 15 строк и переворачиваем их, чтобы новые строки были сверху
                 return array_reverse(array_slice($lines, -15));
             }
             return ['Log file not found.'];
         };
 
-        // Получаем последние 15 строк из каждого файла
         $helloEmailLogs = $getLastLines($logPathHelloEmail);
         $againEmailLogs = $getLastLines($logPathAgainEmail);
         $lastEmailLogs = $getLastLines($logPathLastEmail);
 
-        // Передаем логи в шаблон
         return view('logs', [
             'helloEmailLogs' => $helloEmailLogs,
             'againEmailLogs' => $againEmailLogs,
@@ -251,35 +224,26 @@ class EmailCompanyController extends Controller
         ]);
     }
 
-    // Метод для отображения логов HelloEmail
     public function showHelloEmailLogs()
     {
         // Путь к файлу логов
         $logPath = storage_path('logs/helloemail.log');
 
-        // Проверяем, существует ли файл логов
         if (File::exists($logPath)) {
-            // Читаем содержимое файла
             $logs = File::get($logPath);
 
-            // Разделяем содержимое файла по строкам
             $logLines = explode(PHP_EOL, $logs);
 
-            // Убираем пустые строки
             $logLines = array_filter($logLines);
 
-            // Переворачиваем строки для реверсного отображения
             $logLines = array_reverse($logLines);
 
-            // Преобразуем массив строк в коллекцию
             $logsCollection = collect($logLines);
 
-            // Пагинация
-            $perPage = 20; // Количество строк на одной странице
+            $perPage = 20;
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $currentPageLogs = $logsCollection->slice(($currentPage - 1) * $perPage, $perPage)->all();
 
-            // Создаем пагинацию
             $paginatedLogs = new LengthAwarePaginator(
                 $currentPageLogs,
                 $logsCollection->count(),
@@ -294,35 +258,25 @@ class EmailCompanyController extends Controller
         }
     }
 
-    // Метод для отображения логов AgainEmail
     public function showAgainEmailLogs()
     {
-        // Путь к файлу логов
         $logPath = storage_path('logs/againemail.log');
 
-        // Проверяем, существует ли файл логов
         if (File::exists($logPath)) {
-            // Читаем содержимое файла
             $logs = File::get($logPath);
 
-            // Разделяем содержимое файла по строкам
             $logLines = explode(PHP_EOL, $logs);
 
-            // Убираем пустые строки
             $logLines = array_filter($logLines);
 
-            // Переворачиваем строки для реверсного отображения
             $logLines = array_reverse($logLines);
 
-            // Преобразуем массив строк в коллекцию
             $logsCollection = collect($logLines);
 
-            // Пагинация
-            $perPage = 20; // Количество строк на одной странице
+            $perPage = 20;
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $currentPageLogs = $logsCollection->slice(($currentPage - 1) * $perPage, $perPage)->all();
 
-            // Создаем пагинацию
             $paginatedLogs = new LengthAwarePaginator(
                 $currentPageLogs,
                 $logsCollection->count(),
@@ -337,35 +291,25 @@ class EmailCompanyController extends Controller
         }
     }
 
-    // Метод для отображения логов LastEmail
     public function showLastEmailLogs()
     {
-        // Путь к файлу логов
         $logPath = storage_path('logs/lastemail.log');
 
-        // Проверяем, существует ли файл логов
         if (File::exists($logPath)) {
-            // Читаем содержимое файла
             $logs = File::get($logPath);
 
-            // Разделяем содержимое файла по строкам
             $logLines = explode(PHP_EOL, $logs);
 
-            // Убираем пустые строки
             $logLines = array_filter($logLines);
 
-            // Переворачиваем строки для реверсного отображения
             $logLines = array_reverse($logLines);
 
-            // Преобразуем массив строк в коллекцию
             $logsCollection = collect($logLines);
 
-            // Пагинация
-            $perPage = 20; // Количество строк на одной странице
+            $perPage = 20;
             $currentPage = LengthAwarePaginator::resolveCurrentPage();
             $currentPageLogs = $logsCollection->slice(($currentPage - 1) * $perPage, $perPage)->all();
 
-            // Создаем пагинацию
             $paginatedLogs = new LengthAwarePaginator(
                 $currentPageLogs,
                 $logsCollection->count(),

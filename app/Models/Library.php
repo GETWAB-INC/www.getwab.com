@@ -7,21 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class Library extends Model
 {
     /**
-     * Укажите имя таблицы, связанной с моделью.
+     * The name of the table associated with the model.
      *
      * @var string
      */
     protected $table = 'library';
 
     /**
-     * Укажите, следует ли модели автоматически управлять временными метками.
+     * Indicates whether the model should automatically manage timestamps.
      *
      * @var bool
      */
     public $timestamps = true;
 
     /**
-     * Атрибуты, которые можно массово заполнять.
+     * The attributes that are mass assignable.
      *
      * @var array
      */
@@ -39,7 +39,7 @@ class Library extends Model
     ];
 
     /**
-     * Атрибуты, которые должны быть приведены к определённому типу.
+     * The attributes that should be cast to native types.
      *
      * @var array
      */
@@ -50,21 +50,21 @@ class Library extends Model
     ];
 
     /**
-     * Укажите первичный ключ модели.
+     * The primary key associated with the table.
      *
      * @var string
      */
     protected $primaryKey = 'id';
 
     /**
-     * Определите, является ли первичный ключ автоинкрементным.
+     * Indicates whether the primary key is auto-incrementing.
      *
      * @var bool
      */
     public $incrementing = true;
 
     /**
-     * Тип первичного ключа.
+     * The "type" of the primary key ID.
      *
      * @var string
      */

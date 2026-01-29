@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Library;
 
 class LibraryController extends Controller
 {
@@ -17,10 +16,8 @@ class LibraryController extends Controller
     
     public function show(Request $request, string $report_code)
     {
-        // Загружаем все отчёты из файла
         $reports = config('library');
 
-        // Ищем отчёт с нужным report_code
         $report = null;
         foreach ($reports as $item) {
             if ($item['report_code'] === $report_code) {
@@ -29,12 +26,10 @@ class LibraryController extends Controller
             }
         }
 
-        // Если отчёт не найден — 404
         if (!$report) {
             abort(404, 'Report not found');
         }
 
-        // Передаём найденный отчёт в представление
         return view('library.show', compact('report'));
     }
 }

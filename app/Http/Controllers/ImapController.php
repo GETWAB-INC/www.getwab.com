@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Webklex\IMAP\Facades\Client;
 
 class ImapController extends Controller
@@ -10,20 +9,17 @@ class ImapController extends Controller
     public function fetchEmails()
 {
     try {
-        // Подключаемся к IMAP
         $client = Client::account('default');
         $client->connect();
 
-        // Открываем папку INBOX
         $folder = $client->getFolder('INBOX');
 
-        // Получаем письма
         $messages = $folder->query()->all()->get();
 
         $emailList = [];
 
         foreach ($messages as $message) {
-            $rawHeaders = $message->getHeader()->raw ?? ''; // Получаем сырые заголовки
+            $rawHeaders = $message->getHeader()->raw ?? '';
             $emailList[] = [
                 'from' => $this->extractHeaderField($rawHeaders, 'From'),
                 'to' => $this->extractHeaderField($rawHeaders, 'To'),
@@ -40,13 +36,13 @@ class ImapController extends Controller
     }
 }
 
-/**
- * Извлекает значение указанного поля из заголовков.
- *
- * @param string $headers
- * @param string $field
- * @return string|null
- */
+/** 
+* Извлекает указанное значение поля из заголовков. 
+* 
+* @param строка $headers 
+* @param строка $поле 
+* @return string|ноль 
+*/
 private function extractHeaderField($headers, $field)
 {
     if (preg_match('/^' . preg_quote($field, '/') . ': (.+)$/mi', $headers, $matches)) {

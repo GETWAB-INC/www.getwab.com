@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class ReportPackageController extends Controller
@@ -38,7 +37,7 @@ class ReportPackageController extends Controller
     {
         $prices = $this->getPackagePrices($type);
         if (!isset($prices[$count])) {
-            return; // пропускаем, если количество невалидно
+            return;
         }
         $totalPrice = $prices[$count];
         $orderData = [
@@ -53,17 +52,13 @@ class ReportPackageController extends Controller
 
     public function orderPackage(Request $request)
     {
-        // 1. Получаем входные данные
         $packageType = $request->input('package_type');
-        $reportsCount = (int)$request->input('reports_count', 1); // по умолчанию 1
+        $reportsCount = (int)$request->input('reports_count', 1);
 
-        // 2. Проверяем, является ли пакет комбинированным
         if ($packageType === 'elementary_composite') {
-            // Обрабатываем два пакета: elementary и composite
             $this->addPackageToSession('elementary', $reportsCount);
             $this->addPackageToSession('composite', $reportsCount);
         } else {
-            // Обычная логика для одиночного пакета
             $prices = $this->getPackagePrices($packageType);
             if (!isset($prices[$reportsCount])) {
                 return redirect()->back()->withErrors(['reports_count' => 'Incorrect number of reports']);
@@ -77,7 +72,7 @@ class ReportPackageController extends Controller
             $sessionKey = $packageType . '_report_package';
             Session::put($sessionKey, $orderData);
         }
-        // 3. Перенаправляем на страницу checkout
+
         return redirect()->route('checkout');
     }
 }
