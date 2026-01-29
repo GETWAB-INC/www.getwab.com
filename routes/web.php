@@ -151,12 +151,12 @@ Route::get('/cancelled', function () { return view('cancelled'); })->middleware(
 // routes/web.php
  
 
-Route::middleware('auth')->group(function () {
-    Route::get('/checkout', [CheckoutController::class, 'showCheckout']); // форма
-    Route::post('/checkout/pay', [CheckoutController::class, 'processPayment']); // отправка формы
-    Route::match(['get', 'post'], '/checkout/callback', [CheckoutController::class, 'handleCallback']); // от FIS
-    Route::match(['get', 'post'], '/payment/result', [CheckoutController::class, 'paymentResult']);
-});
+// Route::middleware('auth')->group(function () {
+//     Route::get('/checkout', [CheckoutController::class, 'showCheckout']); // форма
+//     Route::post('/checkout/pay', [CheckoutController::class, 'processPayment']); // отправка формы
+//     Route::match(['get', 'post'], '/checkout/callback', [CheckoutController::class, 'handleCallback']); // от FIS
+//     Route::match(['get', 'post'], '/payment/result', [CheckoutController::class, 'paymentResult']);
+// });
 
 
 // -------------------- ClickHouse --------------------

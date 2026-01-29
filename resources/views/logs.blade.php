@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    @include('include.head')
+    @include('include-old.head')
     <title>Logs</title>
     <style>
         /* Custom styling to reduce the spacing between log entries */
@@ -19,7 +19,7 @@
     </style>
 </head>
 <body>
-@include('include.header')
+@include('include-old.header')
 <div class="container" id="main-container">
     <a class="link" href="{{ route('dashboard') }}">◄ Go Back</a>
     <section class="section">
@@ -63,7 +63,7 @@
 
     </section>
 </div>
-@include('include.footer')
+@include('include-old.footer')
 <script src="{{ asset('js/menu.js') }}" defer></script>
 </body>
 </html>

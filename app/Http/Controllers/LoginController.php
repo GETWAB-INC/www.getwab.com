@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
-use Symfony\Component\HttpFoundation\Response;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -96,7 +98,7 @@ class LoginController extends Controller
     public function fpdsQuery(Request $request)
     {
         if (auth()->check()) {
-            return redirect('https://fpds.getwab.com/query');
+            return redirect('https://getwab.com/fpds/query');
         }
     }
 

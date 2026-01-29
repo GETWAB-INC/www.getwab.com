@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    @include('include.head')
+    @include('include-old.head')
     <title>GETWAB INC. - Add Campaign</title>
     <meta name="description" content="Add a new campaign to your dashboard at GETWAB INC.">
     <meta name="robots" content="noindex, nofollow">
@@ -52,7 +52,7 @@
 </head>
 
 <body>
-    @include('include.header')
+    @include('include-old.header')
     <div class="container" id="main-container">
         <a class="link" href="{{ route('dashboard') }}">◄ Go Back</a>
         <!-- Табы -->
@@ -160,7 +160,7 @@
 
 
     </div>
-    @include('include.footer')
+    @include('include-old.footer')
 </body>
 
 </html>
