@@ -13,6 +13,8 @@ use App\Models\Subscription;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\VerifyNewEmail;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
+
 
 class AccountController extends Controller
 {
@@ -262,12 +264,20 @@ class AccountController extends Controller
     }
 
 
+
     public function verifyNewEmail(Request $request)
     {
+        Log::info('verifyNewEmail: request received', [
+            'query' => $request->query(),
+            'ip' => $request->ip(),
+        ]);
+
         $userId = $request->query('user');
         $token  = $request->query('token');
 
         if (!$userId || !$token) {
+            Log::warning('verifyNewEmail: missing user or token', compact('userId', 'token'));
+
             return redirect()->route('account')
                 ->withErrors(['email' => 'Invalid verification link.']);
         }
@@ -275,55 +285,101 @@ class AccountController extends Controller
         $user = User::find($userId);
 
         if (!$user) {
+            Log::warning('verifyNewEmail: user not found', ['user_id' => $userId]);
+
             return redirect()->route('account')
                 ->withErrors(['email' => 'User not found.']);
         }
 
+        Log::info('verifyNewEmail: user loaded', [
+            'user_id' => $user->id,
+            'current_email' => $user->email,
+            'email_pending' => $user->email_pending,
+            'expires_at' => $user->email_pending_expires_at,
+        ]);
+
         // No pending change
         if (!$user->email_pending || !$user->email_pending_token) {
+            Log::warning('verifyNewEmail: no pending email change', [
+                'user_id' => $user->id,
+            ]);
+
             return redirect()->route('account')
                 ->withErrors(['email' => 'No pending email change found.']);
         }
 
         // Expired link
         if ($user->email_pending_expires_at && now()->gt($user->email_pending_expires_at)) {
-            $user->email_pending = null;
-            $user->email_pending_token = null;
-            $user->email_pending_expires_at = null;
-            $user->save();
+            Log::warning('verifyNewEmail: token expired', [
+                'user_id' => $user->id,
+                'expires_at' => $user->email_pending_expires_at,
+                'now' => now(),
+            ]);
+
+            $user->update([
+                'email_pending' => null,
+                'email_pending_token' => null,
+                'email_pending_expires_at' => null,
+            ]);
 
             return redirect()->route('account')
                 ->withErrors(['email' => 'Verification link expired.']);
         }
 
-        // Token mismatch (DB stores sha256)
-        if (!hash_equals($user->email_pending_token, hash('sha256', $token))) {
-            return redirect()->route('account')
-                ->withErrors(['email' => 'Invalid verification token.']);
-        }
+    // Token mismatch
+    $hashedToken = hash('sha256', $token);
 
-        // Ensure pending email is still free
-        if (User::where('email', $user->email_pending)->where('id', '!=', $user->id)->exists()) {
-            return redirect()->route('account')
-                ->withErrors(['email' => 'This email is already in use.']);
-        }
-
-        // Apply email change
-        $user->email = $user->email_pending;
-
-        // Mark as verified via this click (optional)
-        $user->email_verified_at = now();
-
-        // Clear pending fields
-        $user->email_pending = null;
-        $user->email_pending_token = null;
-        $user->email_pending_expires_at = null;
-
-        $user->save();
+    if (!hash_equals($user->email_pending_token, $hashedToken)) {
+        Log::warning('verifyNewEmail: token mismatch', [
+            'user_id' => $user->id,
+            'db_token' => $user->email_pending_token,
+            'incoming_hash' => $hashedToken,
+        ]);
 
         return redirect()->route('account')
-            ->with('success', 'Email updated successfully.');
+            ->withErrors(['email' => 'Invalid verification token.']);
     }
+
+    // Email already used
+    if (
+        User::where('email', $user->email_pending)
+            ->where('id', '!=', $user->id)
+            ->exists()
+    ) {
+        Log::warning('verifyNewEmail: pending email already used', [
+            'user_id' => $user->id,
+            'email_pending' => $user->email_pending,
+        ]);
+
+        return redirect()->route('account')
+            ->withErrors(['email' => 'This email is already in use.']);
+    }
+
+    // Apply email change
+    Log::info('verifyNewEmail: applying email change', [
+        'user_id' => $user->id,
+        'old_email' => $user->email,
+        'new_email' => $user->email_pending,
+    ]);
+
+    $user->email = $user->email_pending;
+    $user->email_verified_at = now();
+    $user->email_pending = null;
+    $user->email_pending_token = null;
+    $user->email_pending_expires_at = null;
+
+    $saved = $user->save();
+
+    Log::info('verifyNewEmail: save result', [
+        'user_id' => $user->id,
+        'saved' => $saved,
+        'final_email' => $user->email,
+    ]);
+
+    return redirect()->route('account')
+        ->with('success', 'Email updated successfully.');
+}
+
 
 
     /**
