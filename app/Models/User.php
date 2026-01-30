@@ -25,6 +25,9 @@ class User extends Authenticatable
         'email_verified_at',
         'phone',
         'avatar',
+        'email_pending',
+        'email_pending_token',
+        'email_pending_expires_at',
         'password',
     ];
 
@@ -49,6 +52,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'phone_verified_at' => 'datetime',
+            'email_pending_expires_at' => 'datetime',
         ];
     }
 

@@ -18,6 +18,6 @@ class MainController extends Controller
 
         $token = 'fake-verification-token-123456';
 
-        return view('emails.verify-email', compact('user', 'token'));
+        return view('emails.change-email', compact('user', 'token'));
     }
 }

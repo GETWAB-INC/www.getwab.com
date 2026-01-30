@@ -524,7 +524,7 @@
                         <div class="profile-field">
                             <label class="field-label" for="phone">Business Phone</label>
                             <input type="tel" id="phone" name="phone" class="field-input"
-                                value="{{ $user->phome ?? '' }}" />
+                                value="{{ $user->phone ?? '' }}" />
                         </div>
 
                         <div class="section-title">Change Password</div>

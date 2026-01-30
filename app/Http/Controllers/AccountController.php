@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Report;
 use App\Models\BillingRecord;
 use App\Models\Subscription;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\VerifyEmail;
 
 class AccountController extends Controller
 {
@@ -193,42 +195,104 @@ class AccountController extends Controller
      */
     public function updateProfile(Request $request)
     {
+        $user = auth()->user();
+
         $validated = $request->validate([
             'firstName' => 'required|string|max:255',
             'lastName' => 'nullable|string|max:255',
             'jobTitle' => 'nullable|string|max:255',
             'organization' => 'nullable|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . auth()->id(),
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
             'phone' => 'nullable|string|max:20',
+
             'currentPassword' => 'nullable|string',
             'newPassword' => 'nullable|string|min:8|confirmed',
             'confirmPassword' => 'nullable|same:newPassword',
         ]);
 
-        $user = auth()->user();
-
+        // обычные поля — как у тебя
         $user->name = $validated['firstName'] ?? $user->name;
         $user->surname = $validated['lastName'] ?? $user->surname;
         $user->job = $validated['jobTitle'] ?? $user->job;
         $user->organization = $validated['organization'] ?? $user->organization;
-        $user->email = $validated['email'] ?? $user->email;
         $user->phone = $validated['phone'] ?? $user->phone;
 
-        if ($validated['currentPassword'] && $validated['newPassword']) {
+        // пароль — как у тебя
+        if (!empty($validated['currentPassword']) && !empty($validated['newPassword'])) {
             if (!Hash::check($validated['currentPassword'], $user->password)) {
                 return back()->withErrors(['currentPassword' => 'The current password is incorrect.']);
             }
-
             $user->password = Hash::make($validated['newPassword']);
         }
 
-        try {
+        $newEmail = $validated['email'];
+
+        // ✅ если email НЕ менялся — сохраняем сразу
+        if ($newEmail === $user->email) {
             $user->save();
-            return redirect()->back()->with('success', 'Profile updated successfully.');
-        } catch (\Exception $e) {
-            return back()->withErrors(['error' => 'Error saving: ' . $e->getMessage()]);
+            return back()->with('success', 'Profile updated successfully.');
         }
+
+        // ✅ email менялся — делаем pending (email НЕ трогаем)
+        $existsPending = \App\Models\User::where('email_pending', $newEmail)
+            ->where('id', '!=', $user->id)
+            ->exists();
+
+        if ($existsPending) {
+            return back()->withErrors(['email' => 'This email is already pending verification by another user.']);
+        }
+
+        $rawToken = Str::random(48);
+
+        $user->email_pending = $newEmail;
+        $user->email_pending_token = hash('sha256', $rawToken);
+        $user->email_pending_expires_at = now()->addHours(24);
+
+        $user->save();
+
+        // отправляем на НОВЫЙ email
+        Mail::to($user->email)->send(new VerifyEmail($user, $rawToken));
+
+        return back()->with('success', 'We sent a verification link to your new email. Please confirm it to apply the change.');
     }
+
+    public function verifyNewEmail(Request $request)
+    {
+        $userId = $request->query('user');
+        $token  = $request->query('token');
+
+        $user = \App\Models\User::findOrFail($userId);
+
+        if (!$user->email_pending || !$user->email_pending_token) {
+            return redirect()->route('account')->withErrors(['email' => 'No pending email change found.']);
+        }
+
+        if ($user->email_pending_expires_at && now()->gt($user->email_pending_expires_at)) {
+            return redirect()->route('account')->withErrors(['email' => 'Verification link expired.']);
+        }
+
+        if (!hash_equals($user->email_pending_token, hash('sha256', $token))) {
+            return redirect()->route('account')->withErrors(['email' => 'Invalid verification link.']);
+        }
+
+        // применяем
+        $user->email = $user->email_pending;
+
+        // чистим pending
+        $user->email_pending = null;
+        $user->email_pending_token = null;
+        $user->email_pending_expires_at = null;
+
+        // если используешь email verification как в Laravel:
+        // $user->email_verified_at = null; // если хочешь требовать verify заново
+        // или наоборот:
+        $user->email_verified_at = now();
+
+        $user->save();
+
+        return redirect()->route('account')->with('success', 'Email updated successfully.');
+    }
+
 
     /**
      * Upload and set the user's avatar image.

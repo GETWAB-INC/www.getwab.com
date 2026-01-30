@@ -98,6 +98,7 @@ Route::get('/account/subscription', [AccountController::class, 'subscription'])-
 Route::get('/account/billing', [AccountController::class, 'billing'])->name('account.billing')->middleware('auth');
 Route::get('/account/profile', [AccountController::class, 'profile'])->name('account.profile')->middleware('auth');
 Route::post('/update-profile', [AccountController::class, 'updateProfile'])->name('update.profile')->middleware('auth');
+Route::get('/email/change/verify', [AccountController::class, 'verifyNewEmail'])->name('email.change.verify');
 Route::post('/account/upload-avatar', [AccountController::class, 'uploadAvatar'])->name('upload.avatar')->middleware('auth');
 Route::delete('/account/remove-avatar', [AccountController::class, 'removeAvatar'])->name('remove.avatar')->middleware('auth');
 
