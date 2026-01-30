@@ -101,7 +101,6 @@ Route::post('/update-profile', [AccountController::class, 'updateProfile'])->nam
 Route::get('/email/change/verify', [AccountController::class, 'verifyNewEmail'])->name('email.change.verify');
 Route::post('/account/upload-avatar', [AccountController::class, 'uploadAvatar'])->name('upload.avatar')->middleware('auth');
 Route::delete('/account/remove-avatar', [AccountController::class, 'removeAvatar'])->name('remove.avatar')->middleware('auth');
-
 Route::post('/order/package', action: [ReportPackageController::class, 'orderPackage'])->name('order.package');
 Route::post('/order/subscription', action: [SubscriptionController::class, 'orderSubscription'])->name('order.subscription');
 Route::post('/cancel/subscription', action: [SubscriptionController::class, 'cancelSubscription'])->name('cancel.subscription')->middleware('auth');

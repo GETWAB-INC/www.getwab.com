@@ -261,37 +261,49 @@ class AccountController extends Controller
         $userId = $request->query('user');
         $token  = $request->query('token');
 
-        $user = \App\Models\User::findOrFail($userId);
+        if (!$userId || !$token) {
+            return redirect('/dashboard')->withErrors(['email' => 'Invalid verification link.']);
+        }
 
+        $user = User::findOrFail($userId);
+
+        // нет pending — нечего подтверждать
         if (!$user->email_pending || !$user->email_pending_token) {
-            return redirect()->route('account')->withErrors(['email' => 'No pending email change found.']);
+            return redirect('/dashboard')->withErrors(['email' => 'No pending email change found.']);
         }
 
+        // истёк
         if ($user->email_pending_expires_at && now()->gt($user->email_pending_expires_at)) {
-            return redirect()->route('account')->withErrors(['email' => 'Verification link expired.']);
+            // чистим мусор
+            $user->email_pending = null;
+            $user->email_pending_token = null;
+            $user->email_pending_expires_at = null;
+            $user->save();
+
+            return redirect('/dashboard')->withErrors(['email' => 'Verification link expired.']);
         }
 
+        // сравнение токена (в БД хранится sha256)
         if (!hash_equals($user->email_pending_token, hash('sha256', $token))) {
-            return redirect()->route('account')->withErrors(['email' => 'Invalid verification link.']);
+            return redirect('/dashboard')->withErrors(['email' => 'Invalid verification token.']);
         }
 
-        // применяем
+        // ✅ применяем смену email
         $user->email = $user->email_pending;
+
+        // если хочешь считать новый email подтвержденным этим кликом:
+        $user->email_verified_at = now();
 
         // чистим pending
         $user->email_pending = null;
         $user->email_pending_token = null;
         $user->email_pending_expires_at = null;
 
-        // если используешь email verification как в Laravel:
-        // $user->email_verified_at = null; // если хочешь требовать verify заново
-        // или наоборот:
-        $user->email_verified_at = now();
-
         $user->save();
 
-        return redirect()->route('account')->with('success', 'Email updated successfully.');
+        return redirect(route('account'))->with('success', 'Email updated successfully.');
     }
+
 
 
     /**
