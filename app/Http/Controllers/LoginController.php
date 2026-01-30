@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
+use App\Mail\ResetPassword as ResetPasswordMail;
+use Illuminate\Support\Facades\Mail;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -98,17 +99,28 @@ class LoginController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-public function sendResetLinkEmail(Request $request)
-{
-    $request->validate(['email' => 'required|email']);
+    public function sendResetLinkEmail(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
 
-    $status = Password::sendResetLink($request->only('email'));
+        $user = User::where('email', $request->email)->first();
 
-    return $status === Password::RESET_LINK_SENT
-        ? back()->with('success', __($status))
-        : back()->withErrors(['email' => __($status)]);
-}
+        // Не палим, есть ли пользователь (чтобы не было user enumeration)
+        if (!$user) {
+            return back()->with('success', 'If the email exists, we sent a reset link.');
+        }
 
+        $token = Password::createToken($user);
+
+        $url = route('password.reset', [
+            'token' => $token,
+            'email' => $user->email,
+        ]);
+
+        Mail::to($user->email)->send(new ResetPasswordMail($user, $url));
+
+        return back()->with('success', 'If the email exists, we sent a reset link.');
+    }
 
     /**
      * Show the password reset form for a given reset token.
