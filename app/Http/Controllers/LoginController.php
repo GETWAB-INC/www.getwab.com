@@ -119,7 +119,8 @@ class LoginController extends Controller
      */
     public function showResetForm($token)
     {
-        return view('password-reset', compact('token'));
+        $email = request()->query('email');
+        return view('password-reset', compact('token', 'email'));
     }
 
     /**
@@ -132,20 +133,25 @@ class LoginController extends Controller
     {
         $request->validate([
             'token' => 'required',
-            'password' => 'required|min:8|confirmed|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/',
+            'email' => 'required|email',
+            'password' => [
+                'required',
+                'min:8',
+                'confirmed',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/',
+            ],
         ]);
 
         $status = Password::reset(
-            $request->only('password', 'password_confirmation', 'token'),
+            $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user, string $password) {
-                // Force password update with hashing
                 $user->forceFill(['password' => Hash::make($password)])->save();
             }
         );
 
         return $status === Password::PASSWORD_RESET
             ? redirect()->route('login')->with('success', 'Password successfully changed!')
-            : back()->withErrors(['error' => 'Failed to reset password.']);
+            : back()->withErrors(['email' => __($status)]);
     }
 
     public function logout(Request $request)

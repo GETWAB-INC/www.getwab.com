@@ -367,9 +367,10 @@
                     <h1 class="login-title">Change your password</h1>
                 </div>
 
-                <form class="login-form" method="POST" action="{{ route('password.email') }}">
+                <form class="login-form" method="POST" action="{{ route('password.update') }}">
                     @csrf
-                    {{-- <input type="hidden" name="token" value="{{ $token }}"> --}}
+                    <input type="hidden" name="token" value="{{ $token }}">
+                    <input type="hidden" name="email" value="{{ $email ?? old('email') }}">
 
                     <div class="form-field">
                         <label class="form-label">New Password</label>

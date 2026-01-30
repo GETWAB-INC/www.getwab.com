@@ -44,11 +44,13 @@ class MainController extends Controller
         $user = (object) [
             'id'   => 123,
             'name' => 'John Doe',
+            
         ];
 
         $token = 'fake-verification-token-123456';
+        $url = 'https://www.getwab.com/';
 
-        return view('emails.change-email', compact('user', 'token'));
+        return view('emails.reset-password', compact('user', 'token', 'url'));
     }
 
     public function adminer()
