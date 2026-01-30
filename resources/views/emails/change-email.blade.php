@@ -13,7 +13,10 @@
   </div>
 
   @php
-    $verifyUrl = route('email.change.verify', ['user' => $user->id]) . '?token=' . $token;
+    $verifyUrl = route('email.change.verify', [
+          'user'  => $user->id,
+          'token' => $token,
+    ]);
   @endphp
 
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#2d2d2d;">

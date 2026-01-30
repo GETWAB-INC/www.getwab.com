@@ -12,6 +12,7 @@ use App\Models\BillingRecord;
 use App\Models\Subscription;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\VerifyEmail;
+use App\Models\User;
 
 class AccountController extends Controller
 {
@@ -210,14 +211,14 @@ class AccountController extends Controller
             'confirmPassword' => 'nullable|same:newPassword',
         ]);
 
-        // обычные поля — как у тебя
+        // Regular fields
         $user->name = $validated['firstName'] ?? $user->name;
         $user->surname = $validated['lastName'] ?? $user->surname;
         $user->job = $validated['jobTitle'] ?? $user->job;
         $user->organization = $validated['organization'] ?? $user->organization;
         $user->phone = $validated['phone'] ?? $user->phone;
 
-        // пароль — как у тебя
+        // Password change (optional)
         if (!empty($validated['currentPassword']) && !empty($validated['newPassword'])) {
             if (!Hash::check($validated['currentPassword'], $user->password)) {
                 return back()->withErrors(['currentPassword' => 'The current password is incorrect.']);
@@ -227,34 +228,39 @@ class AccountController extends Controller
 
         $newEmail = $validated['email'];
 
-        // ✅ если email НЕ менялся — сохраняем сразу
+        // If email not changed, save immediately
         if ($newEmail === $user->email) {
             $user->save();
             return back()->with('success', 'Profile updated successfully.');
         }
 
-        // ✅ email менялся — делаем pending (email НЕ трогаем)
-        $existsPending = \App\Models\User::where('email_pending', $newEmail)
-            ->where('id', '!=', $user->id)
-            ->exists();
+        // Ensure the new email is not already used by someone else
+        if (User::where('email', $newEmail)->where('id', '!=', $user->id)->exists()) {
+            return back()->withErrors(['email' => 'This email is already in use.']);
+        }
 
-        if ($existsPending) {
+        // Ensure the new email is not pending for another user
+        if (User::where('email_pending', $newEmail)->where('id', '!=', $user->id)->exists()) {
             return back()->withErrors(['email' => 'This email is already pending verification by another user.']);
         }
 
         $rawToken = Str::random(48);
 
+        // Set pending fields (do not change email until verified)
         $user->email_pending = $newEmail;
         $user->email_pending_token = hash('sha256', $rawToken);
         $user->email_pending_expires_at = now()->addHours(24);
-
         $user->save();
 
-        // отправляем на НОВЫЙ email
-        Mail::to($user->email)->send(new VerifyEmail($user, $rawToken));
+        // Send verification to the NEW email
+        Mail::to($newEmail)->send(new VerifyEmail($user, $rawToken));
 
-        return back()->with('success', 'We sent a verification link to your new email. Please confirm it to apply the change.');
+        return back()->with(
+            'success',
+            'We sent a verification link to your new email. Please confirm it to apply the change.'
+        );
     }
+
 
     public function verifyNewEmail(Request $request)
     {
@@ -262,48 +268,62 @@ class AccountController extends Controller
         $token  = $request->query('token');
 
         if (!$userId || !$token) {
-            return redirect('/dashboard')->withErrors(['email' => 'Invalid verification link.']);
+            return redirect()->route('account')
+                ->withErrors(['email' => 'Invalid verification link.']);
         }
 
-        $user = User::findOrFail($userId);
+        $user = User::find($userId);
 
-        // нет pending — нечего подтверждать
+        if (!$user) {
+            return redirect()->route('account')
+                ->withErrors(['email' => 'User not found.']);
+        }
+
+        // No pending change
         if (!$user->email_pending || !$user->email_pending_token) {
-            return redirect('/dashboard')->withErrors(['email' => 'No pending email change found.']);
+            return redirect()->route('account')
+                ->withErrors(['email' => 'No pending email change found.']);
         }
 
-        // истёк
+        // Expired link
         if ($user->email_pending_expires_at && now()->gt($user->email_pending_expires_at)) {
-            // чистим мусор
             $user->email_pending = null;
             $user->email_pending_token = null;
             $user->email_pending_expires_at = null;
             $user->save();
 
-            return redirect('/dashboard')->withErrors(['email' => 'Verification link expired.']);
+            return redirect()->route('account')
+                ->withErrors(['email' => 'Verification link expired.']);
         }
 
-        // сравнение токена (в БД хранится sha256)
+        // Token mismatch (DB stores sha256)
         if (!hash_equals($user->email_pending_token, hash('sha256', $token))) {
-            return redirect('/dashboard')->withErrors(['email' => 'Invalid verification token.']);
+            return redirect()->route('account')
+                ->withErrors(['email' => 'Invalid verification token.']);
         }
 
-        // ✅ применяем смену email
+        // Ensure pending email is still free
+        if (User::where('email', $user->email_pending)->where('id', '!=', $user->id)->exists()) {
+            return redirect()->route('account')
+                ->withErrors(['email' => 'This email is already in use.']);
+        }
+
+        // Apply email change
         $user->email = $user->email_pending;
 
-        // если хочешь считать новый email подтвержденным этим кликом:
+        // Mark as verified via this click (optional)
         $user->email_verified_at = now();
 
-        // чистим pending
+        // Clear pending fields
         $user->email_pending = null;
         $user->email_pending_token = null;
         $user->email_pending_expires_at = null;
 
         $user->save();
 
-        return redirect(route('account'))->with('success', 'Email updated successfully.');
+        return redirect()->route('account')
+            ->with('success', 'Email updated successfully.');
     }
-
 
 
     /**
