@@ -17,7 +17,7 @@ use App\Models\User;
 class AccountController extends Controller
 {
     /**
-     * Show the main account dashboard page.
+     * Show the main account page.
      * Loads the current user and their reports (with parameters).
      *
      * @param Request $request

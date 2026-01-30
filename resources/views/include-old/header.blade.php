@@ -10,7 +10,7 @@
     <a href="/about">About Us</a>
     <a href="https://getwab.com/fpds/query">FPDS Query</a>
     <a href="/services">Services</a>
-    <a href="/contact">Contact</a>
+    <a href="{{ route('contact-us') }}">Contact</a>
     <a href="https://webmail.getwab.com/">Mail</a>
 
     @auth

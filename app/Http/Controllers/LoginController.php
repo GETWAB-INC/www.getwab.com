@@ -12,13 +12,20 @@ use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
+    public function login(Request $request)
+    {
+        if (Auth::check()) {
+            return redirect('account');
+        }
+        return view('login');
+    }
     /**
      * Handle user login attempt with basic rate limiting.
      *
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function login(Request $request)
+    public function loginProcess(Request $request)
     {
         $credentials = $request->validate([
             'email' => ['required', 'string', 'email', 'max:255'],
@@ -58,61 +65,6 @@ class LoginController extends Controller
     public function fpdsQueryGate(Request $request)
     {
         return response('', 204);
-    }
-
-    /**
-     * Display a lightweight database viewer page with table previews.
-     * Loads the list of tables (excluding specific ones), and caches the result for 24 hours.
-     *
-     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
-     */
-    public function showTables()
-    {
-        // Tables to exclude from the database viewer
-        $exclude = [
-            'email_companies',
-            'empstateweb_emails',
-            'unsubscribe_logs',
-            // 'signed_date_records',
-        ];
-
-        // Cache key
-        $cacheKey = 'dbviewer.all_tables';
-
-        // Toggle:
-        // true  — force cache refresh
-        // false — use existing cache
-        $refreshCache = true;
-
-        if ($refreshCache) {
-            Cache::forget($cacheKey);
-        }
-
-        // Retrieve data from cache or rebuild it
-        $data = Cache::remember($cacheKey, now()->addHours(24), function () use ($exclude) {
-            $tablesRaw = DB::select('SHOW TABLES');
-
-            $tables = collect($tablesRaw)
-                ->map(fn($t) => array_values((array)$t)[0])
-                ->reject(fn($table) => in_array($table, $exclude))
-                ->values();
-
-            $data = [];
-            foreach ($tables as $table) {
-                $columns = DB::select("DESCRIBE `$table`");
-                $rows = DB::table($table)->limit(50)->get();
-
-                $data[] = [
-                    'name' => $table,
-                    'columns' => $columns,
-                    'rows' => $rows,
-                ];
-            }
-
-            return $data;
-        });
-
-        return view('tables', compact('data'));
     }
 
     /**
@@ -194,5 +146,13 @@ class LoginController extends Controller
         return $status === Password::PASSWORD_RESET
             ? redirect()->route('login')->with('success', 'Password successfully changed!')
             : back()->withErrors(['error' => 'Failed to reset password.']);
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+        return redirect('login');
     }
 }

@@ -16,6 +16,16 @@ class RegisterController extends Controller
 {
     public function register(Request $request)
     {
+
+        if (auth()->check()) {
+            return redirect()->route('account');
+        }
+        
+        return view('register');
+
+    }
+    public function registerProcess(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'name' => [
                 'required',
