@@ -15,7 +15,6 @@ use App\Mail\VerifyNewEmail;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 
-
 class AccountController extends Controller
 {
     /**
@@ -201,61 +200,128 @@ class AccountController extends Controller
         $user = auth()->user();
 
         $validated = $request->validate([
-            'firstName' => 'required|string|max:255',
-            'lastName' => 'nullable|string|max:255',
-            'jobTitle' => 'nullable|string|max:255',
-            'organization' => 'nullable|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-            'phone' => 'nullable|string|max:20',
+            'firstName'     => 'required|string|max:255',
+            'lastName'      => 'nullable|string|max:255',
+            'jobTitle'      => 'nullable|string|max:255',
+            'organization'  => 'nullable|string|max:255',
+            'email'         => 'required|email|max:255|unique:users,email,' . $user->id,
+            'phone'         => 'nullable|string|max:20',
 
             'currentPassword' => 'nullable|string',
-            'newPassword' => 'nullable|string|min:8|confirmed',
+            'newPassword'     => 'nullable|string|min:8|confirmed',
             'confirmPassword' => 'nullable|same:newPassword',
         ]);
 
-        // Regular fields
-        $user->name = $validated['firstName'] ?? $user->name;
-        $user->surname = $validated['lastName'] ?? $user->surname;
-        $user->job = $validated['jobTitle'] ?? $user->job;
-        $user->organization = $validated['organization'] ?? $user->organization;
-        $user->phone = $validated['phone'] ?? $user->phone;
+        /*
+        |----------------------------------------------------------
+        | Required fields
+        |----------------------------------------------------------
+        */
+        $user->name = $validated['firstName'];
 
-        // Password change (optional)
-        if (!empty($validated['currentPassword']) && !empty($validated['newPassword'])) {
-            if (!Hash::check($validated['currentPassword'], $user->password)) {
-                return back()->withErrors(['currentPassword' => 'The current password is incorrect.']);
+        /*
+        |----------------------------------------------------------
+        | Optional fields
+        | If field is present in request:
+        |   - empty string => NULL (clear value)
+        |   - non-empty    => save value
+        |----------------------------------------------------------
+        */
+        foreach ([
+            'lastName'     => 'surname',
+            'jobTitle'     => 'job',
+            'organization' => 'organization',
+            'phone'        => 'phone',
+        ] as $input => $column) {
+            if ($request->has($input)) {
+                $value = $request->input($input);
+
+                // Trim strings and convert empty value to NULL
+                if (is_string($value)) {
+                    $value = trim($value);
+                }
+
+                $user->{$column} = ($value === '' || $value === null) ? null : $value;
             }
-            $user->password = Hash::make($validated['newPassword']);
         }
 
+        /*
+        |----------------------------------------------------------
+        | Optional password change
+        | Both current and new passwords must be provided
+        |----------------------------------------------------------
+        */
+        if ($request->filled('currentPassword') || $request->filled('newPassword')) {
+
+            if (
+                !$request->filled('currentPassword') ||
+                !$request->filled('newPassword')
+            ) {
+                return back()->withErrors([
+                    'newPassword' => 'To change the password, both current and new passwords are required.',
+                ]);
+            }
+
+            if (!Hash::check($request->input('currentPassword'), $user->password)) {
+                return back()->withErrors([
+                    'currentPassword' => 'The current password is incorrect.',
+                ]);
+            }
+
+            $user->password = Hash::make($request->input('newPassword'));
+        }
+
+        /*
+        |----------------------------------------------------------
+        | Email change logic
+        |----------------------------------------------------------
+        */
         $newEmail = $validated['email'];
 
-        // If email not changed, save immediately
+        // If email did not change, save immediately
         if ($newEmail === $user->email) {
             $user->save();
+
             return back()->with('success', 'Profile updated successfully.');
         }
 
-        // Ensure the new email is not already used by someone else
-        if (User::where('email', $newEmail)->where('id', '!=', $user->id)->exists()) {
-            return back()->withErrors(['email' => 'This email is already in use.']);
+        // Ensure email is not already used
+        if (
+            User::where('email', $newEmail)
+                ->where('id', '!=', $user->id)
+                ->exists()
+        ) {
+            return back()->withErrors([
+                'email' => 'This email is already in use.',
+            ]);
         }
 
-        // Ensure the new email is not pending for another user
-        if (User::where('email_pending', $newEmail)->where('id', '!=', $user->id)->exists()) {
-            return back()->withErrors(['email' => 'This email is already pending verification by another user.']);
+        // Ensure email is not pending for another user
+        if (
+            User::where('email_pending', $newEmail)
+                ->where('id', '!=', $user->id)
+                ->exists()
+        ) {
+            return back()->withErrors([
+                'email' => 'This email is already pending verification by another user.',
+            ]);
         }
 
+        /*
+        |----------------------------------------------------------
+        | Set pending email and send verification link
+        |----------------------------------------------------------
+        */
         $rawToken = Str::random(48);
 
-        // Set pending fields (do not change email until verified)
         $user->email_pending = $newEmail;
         $user->email_pending_token = hash('sha256', $rawToken);
         $user->email_pending_expires_at = now()->addHours(24);
         $user->save();
 
-        // Send verification to the NEW email
-        Mail::to($newEmail)->send(new VerifyNewEmail($user, $rawToken));
+        Mail::to($newEmail)->send(
+            new VerifyNewEmail($user, $rawToken)
+        );
 
         return back()->with(
             'success',
@@ -264,19 +330,13 @@ class AccountController extends Controller
     }
 
 
-
     public function verifyNewEmail(Request $request)
     {
-        Log::info('verifyNewEmail: request received', [
-            'query' => $request->query(),
-            'ip' => $request->ip(),
-        ]);
 
         $userId = $request->query('user');
         $token  = $request->query('token');
 
         if (!$userId || !$token) {
-            Log::warning('verifyNewEmail: missing user or token', compact('userId', 'token'));
 
             return redirect()->route('account')
                 ->withErrors(['email' => 'Invalid verification link.']);
@@ -285,24 +345,13 @@ class AccountController extends Controller
         $user = User::find($userId);
 
         if (!$user) {
-            Log::warning('verifyNewEmail: user not found', ['user_id' => $userId]);
 
             return redirect()->route('account')
                 ->withErrors(['email' => 'User not found.']);
         }
 
-        Log::info('verifyNewEmail: user loaded', [
-            'user_id' => $user->id,
-            'current_email' => $user->email,
-            'email_pending' => $user->email_pending,
-            'expires_at' => $user->email_pending_expires_at,
-        ]);
-
         // No pending change
         if (!$user->email_pending || !$user->email_pending_token) {
-            Log::warning('verifyNewEmail: no pending email change', [
-                'user_id' => $user->id,
-            ]);
 
             return redirect()->route('account')
                 ->withErrors(['email' => 'No pending email change found.']);
@@ -310,11 +359,6 @@ class AccountController extends Controller
 
         // Expired link
         if ($user->email_pending_expires_at && now()->gt($user->email_pending_expires_at)) {
-            Log::warning('verifyNewEmail: token expired', [
-                'user_id' => $user->id,
-                'expires_at' => $user->email_pending_expires_at,
-                'now' => now(),
-            ]);
 
             $user->update([
                 'email_pending' => null,
@@ -326,61 +370,37 @@ class AccountController extends Controller
                 ->withErrors(['email' => 'Verification link expired.']);
         }
 
-    // Token mismatch
-    $hashedToken = hash('sha256', $token);
+        // Token mismatch
+        $hashedToken = hash('sha256', $token);
 
-    if (!hash_equals($user->email_pending_token, $hashedToken)) {
-        Log::warning('verifyNewEmail: token mismatch', [
-            'user_id' => $user->id,
-            'db_token' => $user->email_pending_token,
-            'incoming_hash' => $hashedToken,
-        ]);
+        if (!hash_equals($user->email_pending_token, $hashedToken)) {
+
+            return redirect()->route('account')
+                ->withErrors(['email' => 'Invalid verification token.']);
+        }
+
+        // Email already used
+        if (
+            User::where('email', $user->email_pending)
+                ->where('id', '!=', $user->id)
+                ->exists()
+        ) {
+
+            return redirect()->route('account')
+                ->withErrors(['email' => 'This email is already in use.']);
+        }
+
+        $user->email = $user->email_pending;
+        $user->email_verified_at = now();
+        $user->email_pending = null;
+        $user->email_pending_token = null;
+        $user->email_pending_expires_at = null;
+
+        $user->save();
 
         return redirect()->route('account')
-            ->withErrors(['email' => 'Invalid verification token.']);
+            ->with('success', 'Email updated successfully.');
     }
-
-    // Email already used
-    if (
-        User::where('email', $user->email_pending)
-            ->where('id', '!=', $user->id)
-            ->exists()
-    ) {
-        Log::warning('verifyNewEmail: pending email already used', [
-            'user_id' => $user->id,
-            'email_pending' => $user->email_pending,
-        ]);
-
-        return redirect()->route('account')
-            ->withErrors(['email' => 'This email is already in use.']);
-    }
-
-    // Apply email change
-    Log::info('verifyNewEmail: applying email change', [
-        'user_id' => $user->id,
-        'old_email' => $user->email,
-        'new_email' => $user->email_pending,
-    ]);
-
-    $user->email = $user->email_pending;
-    $user->email_verified_at = now();
-    $user->email_pending = null;
-    $user->email_pending_token = null;
-    $user->email_pending_expires_at = null;
-
-    $saved = $user->save();
-
-    Log::info('verifyNewEmail: save result', [
-        'user_id' => $user->id,
-        'saved' => $saved,
-        'final_email' => $user->email,
-    ]);
-
-    return redirect()->route('account')
-        ->with('success', 'Email updated successfully.');
-}
-
-
 
     /**
      * Upload and set the user's avatar image.
