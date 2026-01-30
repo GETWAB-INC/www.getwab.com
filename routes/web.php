@@ -42,20 +42,16 @@ Route::post('/password/email', [LoginController::class, 'sendResetLinkEmail'])->
 Route::get('/password/reset/{token}', [LoginController::class, 'showResetForm'])->name('password.reset');
 Route::post('/password/reset', [LoginController::class, 'reset'])->name('password.update');
 
-
 // contact page
 Route::get('/contact-us', function () {return view('contact-us');})->name('contact-us');
-
-
 
 // AUTH
 Route::middleware('auth')->group(function () {
 
 Route::get('/mail', [MainController::class, 'mail']);
 Route::any('/_me/adminer', [MainController::class, 'adminer'])->name('adminer');
-
 // article page
-Route::get('/article', function () { return view('article'); })->name('article');
+Route::get('/article', [MainController::class, 'article']);
 
 // account page
 Route::get('/account', [AccountController::class, 'account'])->name('account');
@@ -68,10 +64,10 @@ Route::post('/update-profile', [AccountController::class, 'updateProfile'])->nam
 Route::get('/email/change/verify', [AccountController::class, 'verifyNewEmail'])->name('email.change.verify');
 Route::post('/account/upload-avatar', [AccountController::class, 'uploadAvatar'])->name('upload.avatar');
 Route::delete('/account/remove-avatar', [AccountController::class, 'removeAvatar'])->name('remove.avatar');
-Route::post('/order/package', action: [ReportPackageController::class, 'orderPackage'])->name('order.package');
-Route::post('/order/subscription', action: [SubscriptionController::class, 'orderSubscription'])->name('order.subscription');
-Route::post('/cancel/subscription', action: [SubscriptionController::class, 'cancelSubscription'])->name('cancel.subscription');
-Route::post('/restore/subscription', action: [SubscriptionController::class, 'restoreSubscription'])->name('restore.subscription');
+Route::post('/order/package', [ReportPackageController::class, 'orderPackage'])->name('order.package');
+Route::post('/order/subscription', [SubscriptionController::class, 'orderSubscription'])->name('order.subscription');
+Route::post('/cancel/subscription', [SubscriptionController::class, 'cancelSubscription'])->name('cancel.subscription');
+Route::post('/restore/subscription', [SubscriptionController::class, 'restoreSubscription'])->name('restore.subscription');
 Route::post('/renew/subscription', [SubscriptionController::class, 'renewSubscription'])->name('renew.subscription');
 
 // library

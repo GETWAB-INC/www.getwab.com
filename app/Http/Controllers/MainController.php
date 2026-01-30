@@ -34,6 +34,11 @@ class MainController extends Controller
         return view('terms-of-use');
     }
 
+    public function article()
+    {
+        return view('article');
+    }
+
     public function mail()
     {
         $user = (object) [

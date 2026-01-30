@@ -11,7 +11,7 @@ use App\Models\Report;
 use App\Models\BillingRecord;
 use App\Models\Subscription;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\VerifyEmail;
+use App\Mail\VerifyNewEmail;
 use App\Models\User;
 
 class AccountController extends Controller
@@ -253,7 +253,7 @@ class AccountController extends Controller
         $user->save();
 
         // Send verification to the NEW email
-        Mail::to($newEmail)->send(new VerifyEmail($user, $rawToken));
+        Mail::to($newEmail)->send(new VerifyNewEmail($user, $rawToken));
 
         return back()->with(
             'success',
