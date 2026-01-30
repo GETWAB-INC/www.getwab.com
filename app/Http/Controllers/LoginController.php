@@ -98,18 +98,17 @@ class LoginController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function sendResetLinkEmail(Request $request)
-    {
-        $request->validate(['email' => 'required|email']);
+public function sendResetLinkEmail(Request $request)
+{
+    $request->validate(['email' => 'required|email']);
 
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+    $status = Password::sendResetLink($request->only('email'));
 
-        return $status === Password::RESET_LINK_SENT
-            ? back()->with('success', 'Password reset link sent! Check your email.')
-            : back()->withErrors(['email' => 'Email not found or unable to send.']);
-    }
+    return $status === Password::RESET_LINK_SENT
+        ? back()->with('success', __($status))
+        : back()->withErrors(['email' => __($status)]);
+}
+
 
     /**
      * Show the password reset form for a given reset token.
