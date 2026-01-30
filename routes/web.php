@@ -31,7 +31,7 @@ Route::post('/fpds/query', [LoginController::class, 'fpdsQuery'])->name('fpds.qu
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // register page
-Route::post('/register', [RegisterController::class, 'register'])->name('register');
+Route::get('/register', [RegisterController::class, 'register'])->name('register');
 Route::post('/register-process', [RegisterController::class, 'registerProcess'])->name('register-process');
 Route::get('/verify/{user}', [RegisterController::class, 'verify'])->name('verification.verify');
 Route::post('/send-message', [RegisterController::class, 'sendMessage'])->name('send.message');
