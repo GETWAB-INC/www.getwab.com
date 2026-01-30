@@ -14,7 +14,7 @@
     <a href="https://webmail.getwab.com/">Mail</a>
 
     @auth
-        <a href="{{ route('dashboard') }}">
+        <a href="{{ route('account') }}">
             Dashboard
         </a>
         <a href="{{ route('logout') }}"
