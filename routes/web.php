@@ -19,6 +19,7 @@ use App\Http\Controllers\FpdsSsoController;
 
 // Home page
 Route::get('/', [MainController::class, 'index']);
+Route::get('/mail', [MainController::class, 'mail']);
 
 // Home page
 Route::get('/', function () {
