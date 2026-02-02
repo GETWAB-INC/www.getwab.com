@@ -554,7 +554,7 @@
                     <div class="methodology-section">
                         <h1 class="methodology-title">Methodology</h1>
                         <p class="methodology-text">
-                            {{ $report['report_methodology'] }}
+                            {{ $report['report_methodology'] ?? '-' }}
                         </p>
                     </div>
 
@@ -628,13 +628,13 @@
                     <div class="usage-section">
                         <h1 class="usage-title">Usage</h1>
                         <p class="usage-text">
-                            {{ $report['report_usage'] }}
+                            {{ $report['report_usage'] ?? '-' }}
                         </p>
                     </div>
                     <div class="methodology-section-mob">
                         <h1 class="methodology-title">Methodology</h1>
                         <p class="methodology-text">
-                            {{ $report['report_methodology'] }}
+                            {{ $report['report_methodology'] ?? '-'}}
                         </p>
                     </div>
                 </aside>
