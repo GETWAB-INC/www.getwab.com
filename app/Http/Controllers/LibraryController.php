@@ -23,7 +23,6 @@ class LibraryController extends Controller
 
         $data = Yaml::parseFile($file);
 
-        // Нормализуем: должен быть массив отчётов
         if (!is_array($data)) {
             abort(500, 'Catalog file has invalid format (expected array)');
         }
