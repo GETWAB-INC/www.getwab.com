@@ -72,6 +72,7 @@ Route::post('/renew/subscription', [SubscriptionController::class, 'renewSubscri
 
 // library
 Route::get('/library', [LibraryController::class, 'index'])->name('library');
+Route::get('/library-redis', [LibraryController::class, 'libraryReportsCatalogJSON'])->name('library.redis');
 
 // library/SFPR-GEO-EL-1 page
 Route::get('/library/{report_code}', [LibraryController::class, 'show'])->name('report.show');

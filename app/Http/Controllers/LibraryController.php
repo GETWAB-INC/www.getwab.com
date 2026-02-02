@@ -8,13 +8,6 @@ use Symfony\Component\Yaml\Yaml;
 
 class LibraryController extends Controller
 {
-    /**
-     * Load reports catalog from YAML with caching.
-     *
-     * Cache strategy:
-     * - cache key includes filemtime() so any file change auto-invalidates
-     * - optional reset toggle via env('LIBRARY_CACHE_RESET')
-     */
     private function loadReports(): array
     {
         $basePath = config('library.reports_catalog_path');
@@ -27,51 +20,56 @@ class LibraryController extends Controller
             abort(500, "Catalog file not readable: {$file}");
         }
 
-        // Versioned cache key: changes automatically when file changes
-        $version = @filemtime($file) ?: 0;
-        $cacheKey = "library:reports_catalog:v{$version}";
+        $cacheKey = 'library:reports_catalog:json';
 
-        // Toggle reset via .env / config. Set true to force rebuild cache.
-        // Put in .env: LIBRARY_CACHE_RESET=true
+        // Ручной сброс
         $reset = filter_var(env('LIBRARY_CACHE_RESET', false), FILTER_VALIDATE_BOOLEAN);
-
-        // If reset enabled, drop all old catalog keys and rebuild fresh for this version
         if ($reset) {
-            // Best effort cleanup: remove any previous versions
-            // NOTE: This uses Cache store; for redis it will be fast.
-            // If you want to avoid scanning in prod, leave this on dev only.
-            try {
-                foreach (Cache::getRedis()->keys('library:reports_catalog:*') as $key) {
-                    // phpredis returns raw keys; delete them
-                    Cache::getRedis()->del($key);
-                }
-            } catch (\Throwable $e) {
-                // If cache store is not redis or keys() is unavailable, just forget current key
-                Cache::forget($cacheKey);
-            }
-
-            // Also forget current version key explicitly
             Cache::forget($cacheKey);
         }
 
-        return Cache::rememberForever($cacheKey, function () use ($file) {
-            try {
-                $data = Yaml::parseFile($file);
-            } catch (\Throwable $e) {
-                abort(500, "YAML parse error: " . $e->getMessage());
+        // Пытаемся взять JSON из кеша
+        $json = Cache::get($cacheKey);
+        if ($json) {
+            $decoded = json_decode($json, true);
+            if (is_array($decoded)) {
+                return $decoded;
             }
+            // если вдруг битый JSON — пересобираем
+            Cache::forget($cacheKey);
+        }
 
-            if (!isset($data['reports']) || !is_array($data['reports'])) {
-                abort(500, 'Invalid library.yaml format: reports not found');
-            }
+        // Читаем YAML
+        try {
+            $data = Yaml::parseFile($file);
+        } catch (\Throwable $e) {
+            abort(500, 'YAML parse error: ' . $e->getMessage());
+        }
 
-            return $data['reports'];
-        });
+        if (!isset($data['reports']) || !is_array($data['reports'])) {
+            abort(500, 'Invalid library.yaml format: reports not found');
+        }
+
+        // Кладём в Redis как JSON
+        $json = json_encode(
+            $data['reports'],
+            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+        );
+
+        if ($json === false) {
+            abort(500, 'JSON encode error: ' . json_last_error_msg());
+        }
+
+        Cache::forever($cacheKey, $json);
+
+        return $data['reports'];
     }
+
 
     public function index(Request $request)
     {
         $reports = $this->loadReports();
+
         return view('library.index', compact('reports'));
     }
 
@@ -86,4 +84,16 @@ class LibraryController extends Controller
 
         return view('library.show', compact('report'));
     }
+
+    public function libraryReportsCatalogJSON()
+    {
+        $json = Cache::get('library:reports_catalog:json');
+
+        return response(
+            json_encode(json_decode($json, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            200,
+            ['Content-Type' => 'application/json; charset=utf-8']
+        );
+    }
+
 }
