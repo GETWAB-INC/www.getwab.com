@@ -15,7 +15,7 @@ class LibraryController extends Controller
             abort(500, 'REPORTS_CATALOG_PATH is not configured');
         }
 
-        $file = rtrim($basePath, '/') . '/catalog.yaml';
+        $file = rtrim($basePath, '/') . '/library.yaml';
 
         if (!is_readable($file)) {
             abort(500, "Catalog file not readable: {$file}");
