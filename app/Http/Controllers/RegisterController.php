@@ -27,12 +27,22 @@ class RegisterController extends Controller
     public function registerProcess(Request $request)
     {
         $validator = Validator::make($request->all(), [
+
+        // Register Open
+            // 'name' => [
+            //     'required',
+            //     'string',
+            //     'max:255',
+            //     'regex:/^[\pL\s\-]+$/u',
+            // ],
+        // Register Closed
             'name' => [
                 'required',
                 'string',
                 'max:255',
-                'regex:/^[\pL\s\-]+$/u',
+                'in:admin',
             ],
+
             'surname' => [
                 'nullable',
                 'string',
@@ -55,6 +65,11 @@ class RegisterController extends Controller
             ],
         ], [
             // Custom error messages
+            'name.in' => 
+            'FPDS Query is currently in private launch mode. ' .
+            'Public registration is temporarily closed. ' .
+            'Please use the contact form if you would like to get in touch.',
+
             'name.required' => 'First name is required.',
             'name.regex' => 'First name may only contain letters, spaces, and hyphens.',
             'email.required' => 'Email is required.',

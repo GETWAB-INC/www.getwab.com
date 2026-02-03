@@ -7,6 +7,7 @@ use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use App\Http\Middleware\FpdsAuth;
 use App\Http\Middleware\FpdsSubscription;
+use App\Http\Middleware\AdminOnly;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -21,9 +22,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth'        => Authenticate::class,
             'fpds.auth' => FpdsAuth::class,
             'fpds.subscription' => FpdsSubscription::class,
+            'admin' => AdminOnly::class,
         ]);
 
-        // === CSRF исключения ===
+        // === CSRF ===
         $middleware->validateCsrfTokens(except: [
             '/checkout/callback',
             '/payment/result',

@@ -9,16 +9,15 @@
             <ul class="footer-links">
               <li class="footer-link"><a href="{{ route('products.fpds-query') }}">FPDS Query</a></li>
               <li class="footer-link"><a href="{{ route('products.fpds-query-overview') }}">FPDS Query Overview</a></li>
-              <li class="footer-link"><a href="{{ route('products.fpds-reports') }}">FPDS Reports</a></li>
-              <li class="footer-link"><a href="{{ route('products.fpds-reports-overview') }}">FPDS Reports Overview</a></li>
-              <li class="footer-link"><a href="{{ route('library') }}">FPDS Reports Library</a></li>
+              {{-- <li class="footer-link"><a href="{{ route('products.fpds-reports') }}">FPDS Reports</a></li> --}}
+              {{-- <li class="footer-link"><a href="{{ route('products.fpds-reports-overview') }}">FPDS Reports Overview</a></li> --}}
+              {{-- <li class="footer-link"><a href="{{ route('library') }}">FPDS Reports Library</a></li> --}}
             </ul>
           </div>
           <div class="footer-column">
             <h3 class="footer-column-title">Services</h3>
             <ul class="footer-links">
-              <li class="footer-link"><a href="{{ route('services.gov') }}">Government Services</a></li>
-              <li class="footer-link"><a href="{{ route('services.biz') }}">Business Solutions</a></li>
+              <li class="footer-link"><a href="{{ route('services.gov') }}">Solutions</a></li>
             </ul>
           </div>
 
@@ -33,9 +32,14 @@
           <div class="footer-column">
             <h3 class="footer-column-title">Profile</h3>
             <ul class="footer-links">
-              <li class="footer-link"><a href="{{ route('login') }}">Log In</a></li>
-              <li class="footer-link"><a href="{{ route('register') }}">Register</a></li>
-              <li class="footer-link"><a href="{{ route('account') }}">Account</a></li>
+
+              @auth
+                <li class="footer-link"><a href="{{ route('account') }}">My account</a></li>
+              @else
+                <li class="footer-link"><a href="{{ route('login') }}">Log In</a></li>
+                <li class="footer-link"><a href="{{ route('register') }}">Register</a></li>
+              @endauth 
+              
             </ul>
           </div>
         </div>

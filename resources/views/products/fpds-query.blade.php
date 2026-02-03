@@ -71,7 +71,7 @@
             font-size: 48px;
             font-weight: 400;
             width: 900px;
-            line-height: 20px;
+            line-height: 40px;
         }
 
         .fpds-query-btn {
@@ -736,7 +736,7 @@
                     <h1 class="fpds-query-title">FPDS Query</h1>
                     <div class="fpds-query-subtitle-container">
                         <p class="fpds-query-subtitle">High-speed FPDS analytics engine.</p>
-                        <p class="fpds-query-subtitle"> Direct access to raw federal contract data</p>
+                        <p class="fpds-query-subtitle">From FPDS Atom feeds to unrestricted SQL analytics</p>
 
                     </div>
                     <div class="fpds-query-subtitle-container-mobile">

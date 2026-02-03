@@ -6,7 +6,9 @@
         <div class="burger-line"></div>
         <div class="burger-line"></div>
       </div>
-      <div class="menu-item-wrapper">
+
+      {{-- Wnen FPDS Reparts is ready --}}
+      {{-- <div class="menu-item-wrapper">
         <div class="menu-item">
           <span class="menu-text">Products</span>
           <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
@@ -20,9 +22,23 @@
             <a href="{{ route('products.fpds-reports')}}" class="dropdown-item">FPDS Reports</a>
           @endauth
         </div>
-      </div>
+      </div> --}}
+      {{-- Wnen FPDS Reparts is ready --}}
 
+      {{-- Wnen FPDS Reparts is NOT ready --}}
       <div class="menu-item-wrapper">
+        <div class="menu-item">
+          @auth
+            <a href="https://getwab.com/fpds/query" class="menu-text">FPDS Query</a>
+          @else
+            <a href="{{ route('products.fpds-query')}}" class="menu-text">FPDS Query</a>
+          @endauth
+        </div>
+      </div>
+      {{-- Wnen FPDS Reparts is NOT ready --}}
+
+      {{-- Wnen FPDS Reparts is ready --}}
+      {{-- <div class="menu-item-wrapper">
         <div class="menu-item">
           <span class="menu-text">Services</span>
           <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
@@ -31,7 +47,16 @@
           <a href="{{ route('services.gov') }}" class="dropdown-item">Government Services</a>
           <a href="{{ route('services.biz') }}" class="dropdown-item">Business Solutions</a>
         </div>
+      </div> --}}
+      {{-- Wnen FPDS Reparts is ready --}}
+
+
+      {{-- Wnen FPDS Reparts is NOT ready --}}
+      <div class="menu-item-wrapper">
+        <a href="{{ route('services.gov') }}" class="dropdown-item">Services</a>
       </div>
+      {{-- Wnen FPDS Reparts is NOT ready --}}
+
     </nav>
 
     <div class="header-logo-container">
@@ -65,10 +90,13 @@
   </div>
   <div class="header-bottom-line"></div>
 </header>
-<!-- Mobile -->
+
+{{-- Mobile --}}
 <div class="mobile-menu">
   <div class="mobile-menu-container">
-    <div class="mobile-menu-item">
+
+    {{-- Wnen FPDS Reparts is ready --}}
+    {{-- <div class="mobile-menu-item">
       <span>Products</span>
       <img
         class="mobile-menu-arrow"
@@ -83,9 +111,21 @@
         <a href="{{ route('products.fpds-query')}}" class="mobile-submenu-item">FPDS Query</a>
         <a href="{{ route('products.fpds-reports')}}" class="mobile-submenu-item">FPDS Reports</a>
       @endauth      
-    </div>
+    </div> --}}
+    {{-- Wnen FPDS Reparts is ready --}}
 
+    {{-- Wnen FPDS Reparts is NOT ready --}}
     <div class="mobile-menu-item">
+      @auth
+        <a href="https://getwab.com/fpds/query">FPDS Query</a>
+      @else
+        <a href="{{ route('products.fpds-query')}}">FPDS Query</a>
+      @endauth 
+    </div>
+    {{-- Wnen FPDS Reparts is NOT ready --}}
+
+    {{-- Wnen FPDS Reparts is ready --}}
+    {{-- <div class="mobile-menu-item">
       <span>Services</span>
       <img
         class="mobile-menu-arrow"
@@ -95,7 +135,15 @@
     <div class="mobile-submenu">
       <a href="{{ route('services.gov') }}" class="mobile-submenu-item">Government Services</a>
       <a href="{{ route('services.biz') }}" class="mobile-submenu-item">Business Solutions</a>
+    </div> --}}
+    {{-- Wnen FPDS Reparts is ready --}}
+
+    {{-- Wnen FPDS Reparts is NOT ready --}}
+    <div class="mobile-menu-item">
+      <a href="{{ route('services.gov') }}">Services</a>
     </div>
+
+    {{-- Wnen FPDS Reparts is NOT ready --}}
 
     <div class="mobile-menu-item">
       <span>About</span>
@@ -112,12 +160,13 @@
   </div>
 </div>
 
-
-<!-- Fixed -->
+{{-- Fixed --}}
 <header class="fixed-header">
   <div class="header-container">
     <nav class="header-left-menu">
-      <div class="menu-item-wrapper-fixed">
+
+      {{-- Wnen FPDS Reparts is ready --}}
+      {{-- <div class="menu-item-wrapper-fixed">
         <div class="menu-item-fixed">
           <span class="menu-text">Products</span>
           <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
@@ -131,9 +180,24 @@
             <a href="{{ route('products.fpds-reports')}}" class="dropdown-item">FPDS Reports</a>
           @endauth
         </div>
-      </div>
+      </div> --}}
+      {{-- Wnen FPDS Reparts is ready --}}
 
+      {{-- Wnen FPDS Reparts is NOT ready --}}
       <div class="menu-item-wrapper-fixed">
+        <div class="menu-item-fixed">
+          @auth
+            <a href="https://getwab.com/fpds/query" class="dropdown-item">FPDS Query</a>
+          @else
+            <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>
+          @endauth 
+        </div>
+      </div>
+      {{-- Wnen FPDS Reparts is NOT ready --}}
+      
+
+      {{-- Wnen FPDS Reparts is ready --}}
+      {{-- <div class="menu-item-wrapper-fixed">
         <div class="menu-item-fixed">
           <span class="menu-text">Services</span>
           <img class="menu-arrow" src="{{ asset('/img/ico/arrow.svg') }}" alt="arrow" />
@@ -142,7 +206,17 @@
           <a href="{{ route('services.gov') }}" class="dropdown-item">Government Services</a>
           <a href="{{ route('services.biz') }}" class="dropdown-item">Business Solutions</a>
         </div>
+      </div> --}}
+      {{-- Wnen FPDS Reparts is ready --}}
+
+      {{-- Wnen FPDS Reparts is NOT ready --}}
+      <div class="menu-item-wrapper-fixed">
+        <div class="menu-item-fixed">
+          <a href="{{ route('services.gov') }}" class="dropdown-item">Services</a>
+        </div>
       </div>
+      {{-- Wnen FPDS Reparts is NOT ready --}}
+
     </nav>
 
     <div class="header-logo-container">

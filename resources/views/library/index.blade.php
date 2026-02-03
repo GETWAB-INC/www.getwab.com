@@ -441,7 +441,7 @@
 
 <body>
     @include('include.header')
-    {{-- {{ dd($reports) }} --}}
+
     <div class="reports-container">
         <div class="reports-sidebar">
             <div class="reports-filters">
@@ -489,6 +489,20 @@
                             <div class="reports-filter-text">Comparisons</div>
                         </div>
                     </div>
+                    {{-- Library cache reset --}}
+                    @if(auth()->check() && auth()->user()->email === 'ilia.oborin@getwab.com')
+
+                    @if(session('status'))
+                        <div style="padding:10px;background:#e6ffed;border:1px solid #b7f5c8;margin-bottom:12px;">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+                        <form method="POST" action="{{ route('library.reset_cache') }}">
+                            @csrf
+                            <button type="submit" class="hero-button">Reset Library Cache</button>
+                        </form>
+                    @endif
+                    {{-- Library cache reset --}}
                 </div>
 
             </div>

@@ -103,6 +103,8 @@ class AccountController extends Controller
             ->orderBy('created_at', 'desc')
             ->first();
 
+        
+
         $fpds_reports = Subscription::where('user_id', $user->id)
             ->where('subscription_type', 'fpds_reports')
             ->orderBy('created_at', 'desc')
@@ -130,7 +132,7 @@ class AccountController extends Controller
 
         session(['last_account_section' => route('account.subscription')]);
 
-        return view('account.subscription', compact(
+        return view('account.subscription-short', compact(
             'user',
             'fpds_query',
             'fpds_reports',

@@ -469,9 +469,9 @@
 </head>
 
 <body>
+    @include('include.header')
     @include('errors.success')
     @include('errors.error')
-    @include('include.header')
     <div class="dashboard-container">
 
         @include('account.aside')

@@ -837,7 +837,7 @@
         <section class="products-section">
             <div class="products-container">
                 <div class="products-header">
-                    <h2 class="products-title">Our Products</h2>
+                    <h2 class="products-title">Our Product</h2>
                 </div>
 
                 <div class="products-content">
@@ -858,7 +858,7 @@
                         <img src="{{ asset('img/main/ProductImage.png') }}" alt="">
                     </div>
 
-                    <div class="product-row reverse">
+                    {{-- <div class="product-row reverse">
                         <img src="{{ asset('img/main/ProductImage2.png') }}" alt="">
                         <div class="product-card">
                             <div class="product-info">
@@ -873,12 +873,13 @@
                                 </a>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
+
                 </div>
             </div>
         </section>
-
-        
+        <br>
+        <br>
 
         <!-- scroll container -->
         <section class="services-section">
@@ -989,7 +990,9 @@
                 </div>
             </div>
         </section>
-
+        <br>
+        <br>
+        
         <!-- Clients -->
         <section class="section">
             <div class="container">
@@ -1041,7 +1044,7 @@
                 </div>
             </div>
         </section>
-
+        
         <!-- Choose -->
         <section class="choose-getwab-section" id="why-choose-getwab">
             <div class="choose-getwab-container">
@@ -1101,7 +1104,9 @@
                 </div>
             </div>
         </section>
-
+        <br>
+        <br>
+        <br>
         <!-- Contract -->
         <section class="section">
             <div class="container">

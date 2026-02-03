@@ -8,7 +8,9 @@ use Symfony\Component\Yaml\Yaml;
 
 class LibraryController extends Controller
 {
-    private function loadReports(): array
+    private const CACHE_KEY = 'library:reports_catalog:json';
+
+    private function catalogFilePath(): string
     {
         $basePath = config('library.reports_catalog_path');
         if (!$basePath) {
@@ -20,26 +22,25 @@ class LibraryController extends Controller
             abort(500, "Catalog file not readable: {$file}");
         }
 
-        $cacheKey = 'library:reports_catalog:json';
+        return $file;
+    }
 
-        // Ручной сброс
-        $reset = filter_var(env('LIBRARY_CACHE_RESET', false), FILTER_VALIDATE_BOOLEAN);
-        if ($reset) {
-            Cache::forget($cacheKey);
-        }
-
-        // Пытаемся взять JSON из кеша
-        $json = Cache::get($cacheKey);
-        if ($json) {
+    private function loadReports(): array
+    {
+        // 1) Try cache (JSON string)
+        $json = Cache::get(self::CACHE_KEY);
+        if (is_string($json) && $json !== '') {
             $decoded = json_decode($json, true);
             if (is_array($decoded)) {
                 return $decoded;
             }
-            // если вдруг битый JSON — пересобираем
-            Cache::forget($cacheKey);
+            // Corrupted cache, drop it
+            Cache::forget(self::CACHE_KEY);
         }
 
-        // Читаем YAML
+        // 2) Build cache from YAML
+        $file = $this->catalogFilePath();
+
         try {
             $data = Yaml::parseFile($file);
         } catch (\Throwable $e) {
@@ -50,9 +51,10 @@ class LibraryController extends Controller
             abort(500, 'Invalid library.yaml format: reports not found');
         }
 
-        // Кладём в Redis как JSON
+        $reports = $data['reports'];
+
         $json = json_encode(
-            $data['reports'],
+            $reports,
             JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
         );
 
@@ -60,16 +62,14 @@ class LibraryController extends Controller
             abort(500, 'JSON encode error: ' . json_last_error_msg());
         }
 
-        Cache::forever($cacheKey, $json);
+        Cache::forever(self::CACHE_KEY, $json);
 
-        return $data['reports'];
+        return $reports;
     }
-
 
     public function index(Request $request)
     {
         $reports = $this->loadReports();
-
         return view('library.index', compact('reports'));
     }
 
@@ -85,15 +85,30 @@ class LibraryController extends Controller
         return view('library.show', compact('report'));
     }
 
+    // Debug view: pretty JSON in browser
     public function libraryReportsCatalogJSON()
     {
-        $json = Cache::get('library:reports_catalog:json');
+        $reports = $this->loadReports();
 
-        return response(
-            json_encode(json_decode($json, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+        return response()->json(
+            $reports,
             200,
-            ['Content-Type' => 'application/json; charset=utf-8']
+            [],
+            JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
         );
+    }
+
+    public function resetCatalogCache(Request $request)
+    {
+        if (!auth()->check() || auth()->user()->id !== 1) {
+            abort(403);
+        }
+
+        Cache::forget(self::CACHE_KEY);
+
+        return redirect()
+            ->back()
+            ->with('status', 'Library cache reset: OK');
     }
 
 }

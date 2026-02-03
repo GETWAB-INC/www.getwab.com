@@ -6,7 +6,7 @@ class MainController extends Controller
 {
     public function index()
     {
-        return view('index-old');
+        return view('index');
     }
 
     public function about()
@@ -32,6 +32,11 @@ class MainController extends Controller
     public function termsOfUse()
     {
         return view('terms-of-use');
+    }
+
+    public function contactUs()
+    {
+        return view('contact-us');
     }
 
     public function article()
