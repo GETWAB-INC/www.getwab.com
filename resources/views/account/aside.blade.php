@@ -42,14 +42,14 @@
             Adminer
           </a>
         @endif
-        <a href="{{ route('account.reports') }}" class="nav-menu-item" data-id="reports">
+        {{-- <a href="{{ route('account.reports') }}" class="nav-menu-item" data-id="reports">
           <img src="{{ asset('/img/ico/reports-ico.svg') }}" alt="" />
           Reports
-        </a>
-        <a href="{{ route('account.packages') }}" class="nav-menu-item" data-id="packages">
+        </a> --}}
+        {{-- <a href="{{ route('account.packages') }}" class="nav-menu-item" data-id="packages">
           <img src="{{ asset('/img/ico/Report-Packages-ico.svg') }}" alt="" />
           Report Packages
-        </a>
+        </a> --}}
         <a href="{{ route('account.subscription') }}" class="nav-menu-item" data-id="subscription">
           <img src="{{ asset('/img/ico/Subscription-ico.svg') }}" alt="" />
           Subscription
