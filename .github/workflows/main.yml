@@ -21,6 +21,7 @@ jobs:
           username: 'root'
           key: ${{ secrets.PROD_SERVER_PASSWORD }}
           source: |
+            .github/workflows/main.yml
             app/**
             routes/**
             resources/**
