@@ -20,9 +20,15 @@ jobs:
           host: ${{ secrets.PROD_SERVER_IP }}
           username: 'root'
           key: ${{ secrets.PROD_SERVER_PASSWORD }}
-          source: "."
+          source: |
+            app/**
+            routes/**
+            resources/**
+            config/**
+            public/**
           target: "/home/userwww/web/getwab.com/public_html"
-          strip_components: 1
+          strip_components: 0
+
 
       - name: Final Setup on Server
         uses: appleboy/ssh-action@master
