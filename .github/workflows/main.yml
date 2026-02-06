@@ -20,16 +20,9 @@ jobs:
           host: ${{ secrets.PROD_SERVER_IP }}
           username: 'root'
           key: ${{ secrets.PROD_SERVER_PASSWORD }}
-          source: |
-            .github/workflows/main.yml
-            app/**
-            routes/**
-            resources/**
-            config/**
-            public/**
+          source: "."
           target: "/home/userwww/web/getwab.com/public_html"
-          strip_components: 0
-
+          strip_components: 1
 
       - name: Final Setup on Server
         uses: appleboy/ssh-action@master
