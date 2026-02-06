@@ -31,7 +31,7 @@ class CheckoutController extends Controller
         $data = $request->all();
 
         // Log silent POST callback from Bank of America
-        Log::info('🔔 Silent POST from BoA', [
+        Log::channel('checkout')->info('🔔 /checkout/callback — Silent POST from BoA', [
             'ip' => $request->ip(),
             'raw' => file_get_contents('php://input'),
             'parsed' => $data,
@@ -43,8 +43,8 @@ class CheckoutController extends Controller
     public function paymentResult(Request $request)
     {
         // Log payment result endpoint call
-        Log::info("🔔 /payment/result — Method: " . $request->method());
-        Log::info('🔔 /payment/result — Payload:', $request->all());
+        Log::channel('checkout')->info("🔔 /payment/result — Method: " . $request->method());
+        Log::channel('checkout')->info('🔔 /payment/result — Payload:', $request->all());
 
         $data = [
             'status' => $request->get('decision'),
