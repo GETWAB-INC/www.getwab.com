@@ -52,6 +52,18 @@ return [
 
     'channels' => [
 
+        'checkout' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/checkout.log'),
+            'level' => 'info',
+        ],
+
+        'checkout_error' => [
+            'driver' => 'single',
+            'path'   => storage_path('logs/checkout_error.log'),
+            'level'  => 'error',
+        ],
+        
         'stack' => [
             'driver' => 'stack',
             'channels' => explode(',', env('LOG_STACK', 'single')),
@@ -125,24 +137,6 @@ return [
 
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
-        ],
-
-        'helloemail' => [
-        'driver' => 'single',
-        'path' => storage_path('logs/helloemail.log'),  // Указываем путь к новому лог-файлу
-        'level' => 'info',
-        ],
-
-        'againemail' => [
-        'driver' => 'single',
-        'path' => storage_path('logs/againemail.log'),  // Указываем путь к новому лог-файлу
-        'level' => 'info',
-        ],
-
-        'lastemail' => [
-        'driver' => 'single',
-        'path' => storage_path('logs/lastemail.log'),  // Указываем путь к новому лог-файлу
-        'level' => 'info',
         ],
 
     ],

@@ -51,13 +51,11 @@ Route::get('/unsubscribe/{email}', [EmailCompanyController::class, 'showUnsubscr
 
 // -------------------- CheckoutController --------------------
 
-    Route::middleware('auth')->group(function () {
-        Route::get('/checkout-test', [CheckoutController::class, 'showCheckout']); // form
-        Route::post('/checkout/pay', [CheckoutController::class, 'processPayment']); // send form
-        Route::match(['get', 'post'], '/checkout/callback', [CheckoutController::class, 'handleCallback']); // FIS
-        Route::match(['get', 'post'], '/payment/result', [CheckoutController::class, 'paymentResult']);
-    });
-    
+Route::get('/checkout-test', [CheckoutController::class, 'showCheckout']); // form
+Route::post('/checkout/pay', [CheckoutController::class, 'processPayment']); // send form
+Route::match(['get', 'post'], '/checkout/callback', [CheckoutController::class, 'handleCallback']); // FIS
+Route::match(['get', 'post'], '/payment/result', [CheckoutController::class, 'paymentResult']);
+
 // AUTH
 Route::middleware('auth')->group(function () {
 
