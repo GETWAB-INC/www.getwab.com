@@ -28,65 +28,41 @@ class CheckoutController extends Controller
 
     public function handleCallback(Request $request)
     {
-        $raw  = file_get_contents('php://input');
         $data = $request->all();
 
-        // Всегда логируем входящий silent callback
-        Log::channel('checkout')->info('🔔 Silent POST from BoA', [
-            'ip'     => $request->ip(),
-            'raw'    => $raw,
+        // Log silent POST callback from Bank of America
+        Log::info('🔔 Silent POST from BoA', [
+            'ip' => $request->ip(),
+            'raw' => file_get_contents('php://input'),
             'parsed' => $data,
         ]);
 
-        // Ошибочный статус / отсутствие decision
-        if (!isset($data['decision']) || !in_array($data['decision'], ['ACCEPT', 'APPROVED'])) {
-            Log::channel('checkout_error')->error('❌ Silent POST error', [
-                'ip'     => $request->ip(),
-                'raw'    => $raw,
-                'parsed' => $data,
-            ]);
-        }
-
-        return response('OK', 200);
+        return response('OK');
     }
 
     public function paymentResult(Request $request)
     {
-        $payload = $request->all();
-
-        // Always log the incoming callback.
-        Log::channel('checkout')->info('🔔 /payment/result payload', $payload);
-
-        $decision = $request->get('decision');
-
-        // if there is a payment error
-        if (!in_array($decision, ['ACCEPT', 'APPROVED'])) {
-            Log::channel('checkout_error')->error('❌ Payment failed', [
-                'decision' => $decision,
-                'transaction_id' => $request->get('transaction_id'),
-                'order' => $request->get('req_reference_number'),
-                'payload' => $payload,
-            ]);
-        }
+        // Log payment result endpoint call
+        Log::info("🔔 /payment/result — Method: " . $request->method());
+        Log::info('🔔 /payment/result — Payload:', $request->all());
 
         $data = [
-            'status'         => $decision,
-            'amount'         => $request->get('auth_amount'),
-            'currency'       => $request->get('req_currency'),
-            'card_type'      => $request->get('card_type_name'),
-            'name'           => trim($request->get('req_bill_to_forename').' '.$request->get('req_bill_to_surname')),
-            'city'           => $request->get('req_bill_to_address_city'),
-            'state'          => $request->get('req_bill_to_address_state'),
-            'zip'            => $request->get('req_bill_to_address_postal_code'),
+            'status' => $request->get('decision'),
+            'amount' => $request->get('auth_amount'),
+            'currency' => $request->get('req_currency'),
+            'card_type' => $request->get('card_type_name'),
+            'name' => trim($request->get('req_bill_to_forename') . ' ' . $request->get('req_bill_to_surname')),
+            'city' => $request->get('req_bill_to_address_city'),
+            'state' => $request->get('req_bill_to_address_state'),
+            'zip' => $request->get('req_bill_to_address_postal_code'),
             'transaction_id' => $request->get('transaction_id'),
-            'order_number'   => $request->get('req_reference_number'),
-            'auth_code'      => $request->get('auth_code'),
-            'auth_time'      => $request->get('auth_time'),
+            'order_number' => $request->get('req_reference_number'),
+            'auth_code' => $request->get('auth_code'),
+            'auth_time' => $request->get('auth_time'),
         ];
 
         return view('checkout.result', compact('data'));
     }
-
 
     /**
      * Remove an item from the session by its key
