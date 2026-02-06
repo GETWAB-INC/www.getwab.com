@@ -142,9 +142,9 @@
             'payment_method' => 'card',
 
             // Billing Info
-            'bill_to_forename' => 'Ilia',
-            'bill_to_surname' => 'Oborin',
-            'bill_to_email' => 'ilia@getwab.com',
+            'bill_to_forename' => 'Elena',
+            'bill_to_surname' => 'Vaughn',
+            'bill_to_email' => 'admin@getwab.com',
             'bill_to_address_line1' => '4532 Parnell Dr',
             'bill_to_address_city' => 'Sarasota',
             'bill_to_address_postal_code' => '34232',
