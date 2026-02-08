@@ -110,7 +110,7 @@ Route::middleware('auth')->group(function () {
     
 
     // checkout page
-    Route::get('/checkout', function () { return view('checkout'); })->name('checkout');
+    Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
     Route::post('/checkout/remove-item', [CheckoutController::class, 'removeItem'])->name('checkout.remove-item');
     Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
 

@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Session;
 use App\Models\User;
 use App\Services\BillingService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
 {
@@ -62,6 +64,21 @@ class CheckoutController extends Controller
         ];
 
         return view('checkout.result', compact('data'));
+    }
+
+    public function checkout(Request $request)
+    {
+        $accessKey = env('SECURE_ACCEPTANCE_ACCESS_KEY');
+        $profileId = env('SECURE_ACCEPTANCE_PROFILE_ID');
+        $secretKey = env('SECURE_ACCEPTANCE_SECRET_KEY');
+        $apiUrl = env('SECURE_ACCEPTANCE_API_URL');
+
+        return view('checkout', [
+            'access_key' => $accessKey,
+            'profile_id' => $profileId,
+            'secret_key' => $secretKey,
+            'apiUrl' => $apiUrl,
+        ]);
     }
 
     /**
