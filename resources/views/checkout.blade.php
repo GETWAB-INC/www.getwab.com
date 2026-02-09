@@ -1762,57 +1762,63 @@
         </div>
 
 
-    <form method="POST" action="{{ route('checkout.process') }}">
-        @csrf
-        <div class="form-item">
+<form method="POST" action="{{ route('checkout.prepare') }}" id="checkoutForm">
+    @csrf
 
-            <div class="active-step-2-header">
-                <div class="active-step-2-progress-container">
-                    <div class="active-step-2-progress-indicator">
-                        <div class="active-step-2-progress-line"></div>
-                        <div class="active-step-2-progress-step"></div>
-                        <div class="active-step-2-progress-step active-step-2-active-progress-step"></div>
-                        <div class="active-step-2-progress-step"></div>
+    {{-- hidden values for custom dropdowns / expiry --}}
+    <input type="hidden" name="bill_country" id="bill_country" value="{{ old('bill_country', 'US') }}">
+    <input type="hidden" name="bill_state" id="bill_state" value="{{ old('bill_state', 'VA') }}">
+    <input type="hidden" name="card_expiry_date" id="card_expiry_date" value="{{ old('card_expiry_date', '01-2030') }}">
+
+    <div class="form-item">
+
+        <div class="active-step-2-header">
+            <div class="active-step-2-progress-container">
+                <div class="active-step-2-progress-indicator">
+                    <div class="active-step-2-progress-line"></div>
+                    <div class="active-step-2-progress-step"></div>
+                    <div class="active-step-2-progress-step active-step-2-active-progress-step"></div>
+                    <div class="active-step-2-progress-step"></div>
+                </div>
+
+                <div class="active-step-2-step-content">
+                    <div class="active-step-2-step-item">
+                        <span class="active-step-2-step-number">Step 1</span>
+                        <h2 class="active-step-2-step-title">Your Order</h2>
                     </div>
-
-                    <div class="active-step-2-step-content">
-                        <div class="active-step-2-step-item">
-                            <span class="active-step-2-step-number">Step 1</span>
-                            <h2 class="active-step-2-step-title">Your Order</h2>
-                        </div>
-                        <div class="active-step-2-step-item active-step-2-active-item">
-                            <span class="active-step-2-step-number">Step 2</span>
-                            <span class="active-step-2-step-title">Billing Information</span>
-                        </div>
-                        <div class="active-step-2-step-item">
-                            <span class="active-step-2-step-number">Step 3</span>
-                            <span class="active-step-2-step-title">Payment Information</span>
-                        </div>
+                    <div class="active-step-2-step-item active-step-2-active-item">
+                        <span class="active-step-2-step-number">Step 2</span>
+                        <span class="active-step-2-step-title">Billing Information</span>
+                    </div>
+                    <div class="active-step-2-step-item">
+                        <span class="active-step-2-step-number">Step 3</span>
+                        <span class="active-step-2-step-title">Payment Information</span>
                     </div>
                 </div>
             </div>
+        </div>
 
 
-            <div class="form-container">
-                <div class="form-fields">
+        <div class="form-container">
+            <div class="form-fields">
 
-                    {{-- Name --}}
-                    <div class="form-group">
-                        <label class="form-label" for="name">First Name</label>
-                        <input type="text" id="name" name="name" class="input-box"
-                            placeholder="Enter your first name" value="{{ old('name') }}">
-                    </div>
+                {{-- Name --}}
+                <div class="form-group">
+                    <label class="form-label" for="name">First Name</label>
+                    <input type="text" id="name" name="name" class="input-box"
+                        placeholder="Enter your first name" value="{{ old('name') }}">
+                </div>
 
-                    {{-- Surname --}}
-                    <div class="form-group">
-                        <label class="form-label" for="surname">Last Name</label>
-                        <input type="text" id="surname" name="surname" class="input-box"
-                            placeholder="Enter your last name" value="{{ old('surname') }}">
-                    </div>
+                {{-- Surname --}}
+                <div class="form-group">
+                    <label class="form-label" for="surname">Last Name</label>
+                    <input type="text" id="surname" name="surname" class="input-box"
+                        placeholder="Enter your last name" value="{{ old('surname') }}">
+                </div>
 
-                    {{-- Email --}}
-                    @guest
-                    <div class="form-group">
+                {{-- Email --}}
+                @guest
+                <div class="form-group">
                     <label class="form-label" for="email">Email</label>
                     <input
                         type="email"
@@ -1822,9 +1828,9 @@
                         placeholder="Enter email"
                         value="{{ old('email', $email ?? '') }}"
                         autocomplete="email">
-                    </div>
+                </div>
 
-                    <div class="form-group">
+                <div class="form-group">
                     <label class="form-label" for="confirm_email">Confirm email</label>
                     <input
                         type="email"
@@ -1834,10 +1840,10 @@
                         placeholder="Confirm your email"
                         value="{{ old('confirm_email', $confirm_email ?? '') }}"
                         autocomplete="email">
-                    </div>
+                </div>
 
-                    {{-- Password --}}
-                    <div class="form-group">
+                {{-- Password --}}
+                <div class="form-group">
                     <label class="form-label" for="password">Password</label>
                     <input
                         type="password"
@@ -1847,311 +1853,341 @@
                         placeholder="Create a password"
                         value="{{ old('password') }}"
                         autocomplete="new-password">
-                    </div>
+                </div>
 
-                    {{-- Confirm Password --}}
-                    <div class="form-group">
+                {{-- Confirm Password --}}
+                <div class="form-group">
                     <label class="form-label" for="password_confirmation">Confirm password</label>
                     <input
                         type="password"
                         id="password_confirmation"
                         name="password_confirmation"
                         class="input-box"
-                        placeholder="Re‑enter your password"
+                        placeholder="Re-enter your password"
                         value="{{ old('password_confirmation') }}"
                         autocomplete="new-password">
-                    </div>
-                    @endguest
-
-                    {{-- Country --}}
-                    <div class="form-group">
-                        <label class="form-label" for="country">Country</label>
-                        <div class="select-wrapper custom">
-                            <div class="select-box" id="country-select-trigger">
-                                <span class="select-text">United States</span>
-                                <div class="arrow-container">
-                                    <img class="arrow-down" src="{{ asset('img/ico/arrow-chekout.svg') }}"
-                                        alt="Edit Item">
-                                </div>
-                            </div>
-                            <div class="custom-dropdown" id="country-dropdown">
-                                <div class="dropdown-option selected" name="country" data-value="United States">United States</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- State --}}
-                    <div class="form-group">
-                        <label class="form-label" for="state">State</label>
-                        <div class="select-wrapper custom">
-                            <div class="select-box" id="state-select-trigger">
-                                <span class="select-text">Virginia</span>
-                                <div class="arrow-container">
-                                    <img class="arrow-down" src="{{ asset('img/ico/arrow-chekout.svg') }}"
-                                        alt="Edit Item">
-                                </div>
-                            </div>
-                            <div class="custom-dropdown" id="state-dropdown">
-                                <div class="dropdown-option" data-value="Alabama">Alabama</div>
-                                <div class="dropdown-option" data-value="Alaska">Alaska</div>
-                                <div class="dropdown-option" data-value="Arizona">Arizona</div>
-                                <div class="dropdown-option" data-value="Arkansas">Arkansas</div>
-                                <div class="dropdown-option" data-value="California">California</div>
-                                <div class="dropdown-option" data-value="Colorado">Colorado</div>
-                                <div class="dropdown-option" data-value="Connecticut">Connecticut</div>
-                                <div class="dropdown-option" data-value="Delaware">Delaware</div>
-                                <div class="dropdown-option" data-value="Florida">Florida</div>
-                                <div class="dropdown-option" data-value="Georgia">Georgia</div>
-                                <div class="dropdown-option" data-value="Hawaii">Hawaii</div>
-                                <div class="dropdown-option" data-value="Idaho">Idaho</div>
-                                <div class="dropdown-option" data-value="Illinois">Illinois</div>
-                                <div class="dropdown-option" data-value="Indiana">Indiana</div>
-                                <div class="dropdown-option" data-value="Iowa">Iowa</div>
-                                <div class="dropdown-option" data-value="Kansas">Kansas</div>
-                                <div class="dropdown-option" data-value="Kentucky">Kentucky</div>
-                                <div class="dropdown-option" data-value="Louisiana">Louisiana</div>
-                                <div class="dropdown-option" data-value="Maine">Maine</div>
-                                <div class="dropdown-option" data-value="Maryland">Maryland</div>
-                                <div class="dropdown-option" data-value="Massachusetts">Massachusetts</div>
-                                <div class="dropdown-option" data-value="Michigan">Michigan</div>
-                                <div class="dropdown-option" data-value="Minnesota">Minnesota</div>
-                                <div class="dropdown-option" data-value="Mississippi">Mississippi</div>
-                                <div class="dropdown-option" data-value="Missouri">Missouri</div>
-                                <div class="dropdown-option" data-value="Montana">Montana</div>
-                                <div class="dropdown-option" data-value="Nebraska">Nebraska</div>
-                                <div class="dropdown-option" data-value="Nevada">Nevada</div>
-                                <div class="dropdown-option" data-value="New Hampshire">New Hampshire</div>
-                                <div class="dropdown-option" data-value="New Jersey">New Jersey</div>
-                                <div class="dropdown-option" data-value="New Mexico">New Mexico</div>
-                                <div class="dropdown-option" data-value="New York">New York</div>
-                                <div class="dropdown-option" data-value="North Carolina">North Carolina</div>
-                                <div class="dropdown-option" data-value="North Dakota">North Dakota</div>
-                                <div class="dropdown-option" data-value="Ohio">Ohio</div>
-                                <div class="dropdown-option" data-value="Oklahoma">Oklahoma</div>
-                                <div class="dropdown-option" data-value="Oregon">Oregon</div>
-                                <div class="dropdown-option" data-value="Pennsylvania">Pennsylvania</div>
-                                <div class="dropdown-option" data-value="Rhode Island">Rhode Island</div>
-                                <div class="dropdown-option" data-value="South Carolina">South Carolina</div>
-                                <div class="dropdown-option" data-value="South Dakota">South Dakota</div>
-                                <div class="dropdown-option" data-value="Tennessee">Tennessee</div>
-                                <div class="dropdown-option" data-value="Texas">Texas</div>
-                                <div class="dropdown-option" data-value="Utah">Utah</div>
-                                <div class="dropdown-option" data-value="Vermont">Vermont</div>
-                                <div class="dropdown-option" data-value="Virginia">Virginia</div>
-                                <div class="dropdown-option" data-value="Washington">Washington</div>
-                                <div class="dropdown-option" data-value="West Virginia">West Virginia</div>
-                                <div class="dropdown-option" data-value="Wisconsin">Wisconsin</div>
-                                <div class="dropdown-option" data-value="Wyoming">Wyoming</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- City --}}
-                    <div class="form-group">
-                        <label class="form-label" for="city">City</label>
-                        <input type="text" id="city" name="city" class="input-box" placeholder="Enter your city" value="{{ old('city') }}">
-                    </div>
-
-                    {{-- Address 1 --}}
-                    <div class="form-group">
-                        <label class="form-label" for="address1">Address Line 1</label>
-                        <input type="text" id="address1" name="address1" class="input-box" placeholder="Street address" value="{{ old('address1') }}">
-                    </div>
-
-                    {{-- Address 2 --}}
-                    <div class="form-group">
-                        <label class="form-label" for="address2">
-                            Address Line 2 <span class="optional">(optional)</span>
-                        </label>
-                        <input type="text" id="address2" name="address2" class="input-box"
-                            placeholder="Apartment, suite, etc." value="{{ old('address2') }}">
-                    </div>
-
-                    {{-- ZIP --}}
-                    <div class="form-group">
-                        <label class="form-label" for="zip">ZIP Code</label>
-                        <input type="text" id="zip" name="zip" class="input-box" placeholder="ZIP Code" value="{{ old('zip') }}">
-                    </div>
-
                 </div>
-            </div>
+                @endguest
 
+                {{-- Country --}}
+                <div class="form-group">
+                    <label class="form-label" for="country">Country</label>
+                    <div class="select-wrapper custom">
+                        <div class="select-box" id="country-select-trigger">
+                            <span class="select-text">United States</span>
+                            <div class="arrow-container">
+                                <img class="arrow-down" src="{{ asset('img/ico/arrow-chekout.svg') }}"
+                                    alt="Edit Item">
+                            </div>
+                        </div>
+                        <div class="custom-dropdown" id="country-dropdown">
+                            <div class="dropdown-option selected" name="country" data-value="United States">United States</div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- State --}}
+                <div class="form-group">
+                    <label class="form-label" for="state">State</label>
+                    <div class="select-wrapper custom">
+                        <div class="select-box" id="state-select-trigger">
+                            <span class="select-text">Virginia</span>
+                            <div class="arrow-container">
+                                <img class="arrow-down" src="{{ asset('img/ico/arrow-chekout.svg') }}"
+                                    alt="Edit Item">
+                            </div>
+                        </div>
+                        <div class="custom-dropdown" id="state-dropdown">
+                            <div class="dropdown-option" data-value="Alabama">Alabama</div>
+                            <div class="dropdown-option" data-value="Alaska">Alaska</div>
+                            <div class="dropdown-option" data-value="Arizona">Arizona</div>
+                            <div class="dropdown-option" data-value="Arkansas">Arkansas</div>
+                            <div class="dropdown-option" data-value="California">California</div>
+                            <div class="dropdown-option" data-value="Colorado">Colorado</div>
+                            <div class="dropdown-option" data-value="Connecticut">Connecticut</div>
+                            <div class="dropdown-option" data-value="Delaware">Delaware</div>
+                            <div class="dropdown-option" data-value="Florida">Florida</div>
+                            <div class="dropdown-option" data-value="Georgia">Georgia</div>
+                            <div class="dropdown-option" data-value="Hawaii">Hawaii</div>
+                            <div class="dropdown-option" data-value="Idaho">Idaho</div>
+                            <div class="dropdown-option" data-value="Illinois">Illinois</div>
+                            <div class="dropdown-option" data-value="Indiana">Indiana</div>
+                            <div class="dropdown-option" data-value="Iowa">Iowa</div>
+                            <div class="dropdown-option" data-value="Kansas">Kansas</div>
+                            <div class="dropdown-option" data-value="Kentucky">Kentucky</div>
+                            <div class="dropdown-option" data-value="Louisiana">Louisiana</div>
+                            <div class="dropdown-option" data-value="Maine">Maine</div>
+                            <div class="dropdown-option" data-value="Maryland">Maryland</div>
+                            <div class="dropdown-option" data-value="Massachusetts">Massachusetts</div>
+                            <div class="dropdown-option" data-value="Michigan">Michigan</div>
+                            <div class="dropdown-option" data-value="Minnesota">Minnesota</div>
+                            <div class="dropdown-option" data-value="Mississippi">Mississippi</div>
+                            <div class="dropdown-option" data-value="Missouri">Missouri</div>
+                            <div class="dropdown-option" data-value="Montana">Montana</div>
+                            <div class="dropdown-option" data-value="Nebraska">Nebraska</div>
+                            <div class="dropdown-option" data-value="Nevada">Nevada</div>
+                            <div class="dropdown-option" data-value="New Hampshire">New Hampshire</div>
+                            <div class="dropdown-option" data-value="New Jersey">New Jersey</div>
+                            <div class="dropdown-option" data-value="New Mexico">New Mexico</div>
+                            <div class="dropdown-option" data-value="New York">New York</div>
+                            <div class="dropdown-option" data-value="North Carolina">North Carolina</div>
+                            <div class="dropdown-option" data-value="North Dakota">North Dakota</div>
+                            <div class="dropdown-option" data-value="Ohio">Ohio</div>
+                            <div class="dropdown-option" data-value="Oklahoma">Oklahoma</div>
+                            <div class="dropdown-option" data-value="Oregon">Oregon</div>
+                            <div class="dropdown-option" data-value="Pennsylvania">Pennsylvania</div>
+                            <div class="dropdown-option" data-value="Rhode Island">Rhode Island</div>
+                            <div class="dropdown-option" data-value="South Carolina">South Carolina</div>
+                            <div class="dropdown-option" data-value="South Dakota">South Dakota</div>
+                            <div class="dropdown-option" data-value="Tennessee">Tennessee</div>
+                            <div class="dropdown-option" data-value="Texas">Texas</div>
+                            <div class="dropdown-option" data-value="Utah">Utah</div>
+                            <div class="dropdown-option" data-value="Vermont">Vermont</div>
+                            <div class="dropdown-option" data-value="Virginia">Virginia</div>
+                            <div class="dropdown-option" data-value="Washington">Washington</div>
+                            <div class="dropdown-option" data-value="West Virginia">West Virginia</div>
+                            <div class="dropdown-option" data-value="Wisconsin">Wisconsin</div>
+                            <div class="dropdown-option" data-value="Wyoming">Wyoming</div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- City --}}
+                <div class="form-group">
+                    <label class="form-label" for="city">City</label>
+                    <input type="text" id="city" name="city" class="input-box" placeholder="Enter your city" value="{{ old('city') }}">
+                </div>
+
+                {{-- Address 1 --}}
+                <div class="form-group">
+                    <label class="form-label" for="address1">Address Line 1</label>
+                    <input type="text" id="address1" name="address1" class="input-box" placeholder="Street address" value="{{ old('address1') }}">
+                </div>
+
+                {{-- Address 2 --}}
+                <div class="form-group">
+                    <label class="form-label" for="address2">
+                        Address Line 2 <span class="optional">(optional)</span>
+                    </label>
+                    <input type="text" id="address2" name="address2" class="input-box"
+                        placeholder="Apartment, suite, etc." value="{{ old('address2') }}">
+                </div>
+
+                {{-- ZIP --}}
+                <div class="form-group">
+                    <label class="form-label" for="zip">ZIP Code</label>
+                    <input type="text" id="zip" name="zip" class="input-box" placeholder="ZIP Code" value="{{ old('zip') }}">
+                </div>
+
+            </div>
         </div>
 
-        {{-- Payment info --}}
-        <div class="payment-container">
-            <div class="step-3-header">
-                <div class="step-3-progress-container">
-                    <div class="step-3-progress-indicator">
-                        <div class="step-3-progress-line"></div>
-                        <div class="step-3-progress-step"></div>
-                        <div class="step-3-progress-step"></div>
-                        <div class="step-3-progress-step step-3-active-progress-step"></div>
-                    </div>
+    </div>
 
-                    <div class="step-3-step-content">
-                        <div class="step-3-step-item">
-                            <span class="step-3-step-number">Step 1</span>
-                            <h2 class="step-3-step-title">Your Order</h2>
-                        </div>
-                        <div class="step-3-step-item">
-                            <span class="step-3-step-number">Step 2</span>
-                            <span class="step-3-step-title">Billing Information</span>
-                        </div>
-                        <div class="step-3-step-item step-3-active-item">
-                            <span class="step-3-step-number">Step 3</span>
-                            <span class="step-3-step-title">Payment Information</span>
-                        </div>
+    {{-- Payment info --}}
+    <div class="payment-container">
+        <div class="step-3-header">
+            <div class="step-3-progress-container">
+                <div class="step-3-progress-indicator">
+                    <div class="step-3-progress-line"></div>
+                    <div class="step-3-progress-step"></div>
+                    <div class="step-3-progress-step"></div>
+                    <div class="step-3-progress-step step-3-active-progress-step"></div>
+                </div>
+
+                <div class="step-3-step-content">
+                    <div class="step-3-step-item">
+                        <span class="step-3-step-number">Step 1</span>
+                        <h2 class="step-3-step-title">Your Order</h2>
+                    </div>
+                    <div class="step-3-step-item">
+                        <span class="step-3-step-number">Step 2</span>
+                        <span class="step-3-step-title">Billing Information</span>
+                    </div>
+                    <div class="step-3-step-item step-3-active-item">
+                        <span class="step-3-step-number">Step 3</span>
+                        <span class="step-3-step-title">Payment Information</span>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="step-3-payment-form-container">
-                <div class="step-3-payment-form-section">
-                    <div class="step-3-payment-form-card">
-                        <div class="step-3-card-form-content">
+        <div class="step-3-payment-form-container">
+            <div class="step-3-payment-form-section">
+                <div class="step-3-payment-form-card">
+                    <div class="step-3-card-form-content">
 
-                            <div class="step-3-card-brand-selector">
-                                <div class="step-3-custom-select">
-                                    <div class="step-3-select-trigger">
+                        <div class="step-3-card-brand-selector">
+                            <div class="step-3-custom-select">
+                                <div class="step-3-select-trigger">
+                                    <img src="{{ asset('img/ico/visa-ico.png') }}" alt="Edit Item">
+                                    <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
+                                </div>
+
+                                <div class="step-3-select-options">
+
+                                    <div class="step-3-select-option" data-value="visa">
                                         <img src="{{ asset('img/ico/visa-ico.png') }}" alt="Edit Item">
-                                        <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
                                     </div>
 
-                                    <div class="step-3-select-options">
-
-                                        <div class="step-3-select-option" data-value="visa">
-                                            <img src="{{ asset('img/ico/visa-ico.png') }}" alt="Edit Item">
-                                        </div>
-
-                                        <div class="step-3-select-option" data-value="mastercard">
-                                            <img src="{{ asset('img/ico/mastercard-ico.png') }}" alt="Edit Item">
-                                        </div>
-
-                                        <div class="step-3-select-option" data-value="amex">
-                                            <img src="{{ asset('img/ico/amex-ico.png') }}" alt="Edit Item">
-                                        </div>
-
-                                        <div class="step-3-select-option" data-value="discover">
-                                            <img src="{{ asset('img/ico/discover-ico.png') }}" alt="Edit Item">
-                                        </div>
-
-
+                                    <div class="step-3-select-option" data-value="mastercard">
+                                        <img src="{{ asset('img/ico/mastercard-ico.png') }}" alt="Edit Item">
                                     </div>
-                                </div>
-                            </div>
 
-                            <div class="step-3-form-field step-3-card-number-field">
-                                <label class="step-3-field-label">Card Number</label>
-                                <div class="step-3-input-field step-3-card-number-field-input">
-                                    <input type="text" class="step-3-form-input-field step-3-card-number-input" placeholder="0000 0000 0000 0000" maxlength="19">
-                                </div>
-                            </div>
-
-                            <div class="step-3-form-fields-row">
-                                <div class="step-3-form-field step-3-expiry-date-field">
-                                    <label class="step-3-field-label">Expiry Date</label>
-                                    <div class="step-3-date-fields">
-                                        <div class="step-3-custom-select step-3-month-select-field">
-                                            <div class="step-3-select-trigger">
-                                                <span class="step-3-selected-option-text">01</span>
-                                                <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
-                                            </div>
-                                            <div class="step-3-select-options">
-                                                <option class="step-3-select-option" value="01">01</option>
-                                                <option class="step-3-select-option" value="02">02</option>
-                                                <option class="step-3-select-option" value="03">03</option>
-                                                <option class="step-3-select-option" value="04">04</option>
-                                                <option class="step-3-select-option" value="05">05</option>
-                                                <option class="step-3-select-option" value="06">06</option>
-                                                <option class="step-3-select-option" value="07">07</option>
-                                                <option class="step-3-select-option" value="08">08</option>
-                                                <option class="step-3-select-option" value="09">09</option>
-                                                <option class="step-3-select-option" value="10">10</option>
-                                                <option class="step-3-select-option" value="11">11</option>
-                                                <option class="step-3-select-option" value="12">12</option>
-                                            </div>
-                                        </div>
-
-                                        <div class="step-3-custom-select step-3-year-select-field">
-                                            <div class="step-3-select-trigger">
-                                                <span class="step-3-selected-option-text">2025</span>
-                                                <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
-                                            </div>
-                                            <div class="step-3-select-options">
-                                                <option class="step-3-select-option" value="2026">2026</option>
-                                                <option class="step-3-select-option" value="2027">2027</option>
-                                                <option class="step-3-select-option" value="2028">2028</option>
-                                                <option class="step-3-select-option" value="2029">2029</option>
-                                                <option class="step-3-select-option" value="2030">2030</option>
-                                                <option class="step-3-select-option" value="2031">2031</option>
-                                                <option class="step-3-select-option" value="2032">2032</option>
-                                                <option class="step-3-select-option" value="2033">2033</option>
-                                            </div>
-                                        </div>
+                                    <div class="step-3-select-option" data-value="amex">
+                                        <img src="{{ asset('img/ico/amex-ico.png') }}" alt="Edit Item">
                                     </div>
-                                </div>
 
-                                <div class="step-3-form-field step-3-cvv-code-field">
-                                    <label class="step-3-field-label">CVV</label>
-                                    <div class="step-3-input-field step-3-cvv-field-input">
-                                        <input type="password" class="step-3-form-input-field step-3-cvv-code-input" placeholder="000" maxlength="4">
+                                    <div class="step-3-select-option" data-value="discover">
+                                        <img src="{{ asset('img/ico/discover-ico.png') }}" alt="Edit Item">
                                     </div>
+
                                 </div>
                             </div>
-
-                            <div class="step-3-save-card-option">
-                                <input type="checkbox" id="step-3-saveCardOption" class="step-3-option-checkbox"
-                                    checked>
-                                <label for="step-3-saveCardOption" class="step-3-checkbox-text">Save this card for
-                                    future purchases</label>
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="step-3-security-info-section">
-                        <div class="step-3-payment-methods-icons">
-                            <div class="step-3-payment-method-icon">
-                                <img src="{{ asset('img/ico/lock-ico.svg') }}" alt="Edit Item">
-                            </div>
-                            <div class="step-3-payment-method-icon">
-                                <img src="{{ asset('img/ico/protection-ico.svg') }}" alt="Edit Item">
-                            </div>
-                            <div class="step-3-payment-method-icon">
-                                <img src="{{ asset('img/ico/card-ico.svg') }}" alt="Edit Item">
-                            </div>
-                            <div class="step-3-payment-method-icon">
-                                <img src="{{ asset('img/ico/logo-ico.svg') }}" alt="Edit Item">
-                            </div>
-
                         </div>
 
-                        <div class="step-3-security-content">
-                            <p class="step-3-security-description">
-                                We do not store full card numbers or CVV. All transactions are securely processed
-                                through Bank of America's Secure Acceptance platform using encrypted and PCI-compliant
-                                technology. Only encrypted tokens are saved to enable future payments.
-                            </p>
-                            <div class="step-3-legal-terms">
-                                <span>By proceeding, you agree to our </span>
-                                <a href="#" class="step-3-terms-link">Terms of Service</a>
-                                <span>and</span>
-                                <a href="#" class="step-3-terms-link">Privacy Policy.</a>
+                        <div class="step-3-form-field step-3-card-number-field">
+                            <label class="step-3-field-label">Card Number</label>
+                            <div class="step-3-input-field step-3-card-number-field-input">
+                                <input type="text"
+                                       class="step-3-form-input-field step-3-card-number-input"
+                                       name="card_number"
+                                       placeholder="0000 0000 0000 0000"
+                                       maxlength="19">
                             </div>
                         </div>
+
+                        <div class="step-3-form-fields-row">
+                            <div class="step-3-form-field step-3-expiry-date-field">
+                                <label class="step-3-field-label">Expiry Date</label>
+                                <div class="step-3-date-fields">
+                                    <div class="step-3-custom-select step-3-month-select-field">
+                                        <div class="step-3-select-trigger">
+                                            <span class="step-3-selected-option-text">01</span>
+                                            <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
+                                        </div>
+                                        <div class="step-3-select-options">
+                                            <option class="step-3-select-option" value="01">01</option>
+                                            <option class="step-3-select-option" value="02">02</option>
+                                            <option class="step-3-select-option" value="03">03</option>
+                                            <option class="step-3-select-option" value="04">04</option>
+                                            <option class="step-3-select-option" value="05">05</option>
+                                            <option class="step-3-select-option" value="06">06</option>
+                                            <option class="step-3-select-option" value="07">07</option>
+                                            <option class="step-3-select-option" value="08">08</option>
+                                            <option class="step-3-select-option" value="09">09</option>
+                                            <option class="step-3-select-option" value="10">10</option>
+                                            <option class="step-3-select-option" value="11">11</option>
+                                            <option class="step-3-select-option" value="12">12</option>
+                                        </div>
+                                    </div>
+
+                                    <div class="step-3-custom-select step-3-year-select-field">
+                                        <div class="step-3-select-trigger">
+                                            <span class="step-3-selected-option-text">2025</span>
+                                            <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
+                                        </div>
+                                        <div class="step-3-select-options">
+                                            <option class="step-3-select-option" value="2026">2026</option>
+                                            <option class="step-3-select-option" value="2027">2027</option>
+                                            <option class="step-3-select-option" value="2028">2028</option>
+                                            <option class="step-3-select-option" value="2029">2029</option>
+                                            <option class="step-3-select-option" value="2030">2030</option>
+                                            <option class="step-3-select-option" value="2031">2031</option>
+                                            <option class="step-3-select-option" value="2032">2032</option>
+                                            <option class="step-3-select-option" value="2033">2033</option>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="step-3-form-field step-3-cvv-code-field">
+                                <label class="step-3-field-label">CVV</label>
+                                <div class="step-3-input-field step-3-cvv-field-input">
+                                    <input type="password"
+                                           class="step-3-form-input-field step-3-cvv-code-input"
+                                           name="card_cvn"
+                                           placeholder="000"
+                                           maxlength="4">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="step-3-save-card-option">
+                            <input type="checkbox" id="step-3-saveCardOption" class="step-3-option-checkbox"
+                                checked>
+                            <label for="step-3-saveCardOption" class="step-3-checkbox-text">Save this card for
+                                future purchases</label>
+                        </div>
+
                     </div>
                 </div>
 
-                <div class="step-3-payment-submit-section">
-                    <button class="step-3-submit-payment-btn">
-                        Complete Payment
-                    </button>
+                <div class="step-3-security-info-section">
+                    <div class="step-3-payment-methods-icons">
+                        <div class="step-3-payment-method-icon">
+                            <img src="{{ asset('img/ico/lock-ico.svg') }}" alt="Edit Item">
+                        </div>
+                        <div class="step-3-payment-method-icon">
+                            <img src="{{ asset('img/ico/protection-ico.svg') }}" alt="Edit Item">
+                        </div>
+                        <div class="step-3-payment-method-icon">
+                            <img src="{{ asset('img/ico/card-ico.svg') }}" alt="Edit Item">
+                        </div>
+                        <div class="step-3-payment-method-icon">
+                            <img src="{{ asset('img/ico/logo-ico.svg') }}" alt="Edit Item">
+                        </div>
+
+                    </div>
+
+                    <div class="step-3-security-content">
+                        <p class="step-3-security-description">
+                            We do not store full card numbers or CVV. All transactions are securely processed
+                            through Bank of America's Secure Acceptance platform using encrypted and PCI-compliant
+                            technology. Only encrypted tokens are saved to enable future payments.
+                        </p>
+                        <div class="step-3-legal-terms">
+                            <span>By proceeding, you agree to our </span>
+                            <a href="#" class="step-3-terms-link">Terms of Service</a>
+                            <span>and</span>
+                            <a href="#" class="step-3-terms-link">Privacy Policy.</a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
+            <div class="step-3-payment-submit-section">
+                <button class="step-3-submit-payment-btn">
+                    Complete Payment
+                </button>
+            </div>
         </div>
-    </form>
+
+    </div>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('checkoutForm');
+
+  // Before submit: build MM-YYYY from your UI text
+  form.addEventListener('submit', () => {
+    const mm = document.querySelector('.step-3-month-select-field .step-3-selected-option-text')?.textContent?.trim() || '01';
+    const yy = document.querySelector('.step-3-year-select-field .step-3-selected-option-text')?.textContent?.trim() || '2030';
+    document.getElementById('card_expiry_date').value = `${mm}-${yy}`;
+
+    // Country/state: your dropdown currently stores full names.
+    // We'll store UI text into hidden so the server can map to codes if needed.
+    const countryText = document.querySelector('#country-select-trigger .select-text')?.textContent?.trim() || 'United States';
+    const stateText = document.querySelector('#state-select-trigger .select-text')?.textContent?.trim() || 'Virginia';
+
+    // Minimal: keep US; server will convert state name to code
+    document.getElementById('bill_country').value = 'US';
+    document.getElementById('bill_state').value = stateText;
+  });
+});
+</script>
+
     @include('include.footer')
 
     <script src="{{ asset('js/chekout.js') }}"></script>

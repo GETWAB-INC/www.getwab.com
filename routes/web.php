@@ -109,15 +109,19 @@ Route::middleware('auth')->group(function () {
 
     
 
-    // checkout page
+    // checkout
     Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+
+    // 2) Принять UI-форму, сформировать fields+signature, вернуть checkout_post (автосабмит в BoA)
+    Route::post('/checkout/prepare', [CheckoutController::class, 'prepare'])->name('checkout.prepare');
+
+
     Route::post('/checkout/remove-item', [CheckoutController::class, 'removeItem'])->name('checkout.remove-item');
     Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::post('/thank-you', [CheckoutController::class, 'thankYou'])->name('thank-you');
+    Route::post('/cancelled', [CheckoutController::class, 'cancelled'])->name('cancelled');
 
-    // thank-you page
-    Route::get('/thank-you', function () { return view('thank-you'); });
-    // cancelled page
-    Route::get('/cancelled', function () { return view('cancelled'); });
+
 
 
 
