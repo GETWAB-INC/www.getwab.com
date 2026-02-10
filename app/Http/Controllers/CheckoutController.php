@@ -14,6 +14,55 @@ use Illuminate\Support\Str;
 class CheckoutController extends Controller
 {
 
+    /**
+     * Debug #1: Signed fields / signature sanity check.
+     * Use to confirm signed_field_names includes required items (e.g., card_type).
+     */
+    private function ddSigned(array $fields, string $signature): void
+    {
+        dd([
+            'signed_field_names' => $fields['signed_field_names'] ?? null,
+            'has_card_type_in_signed' => isset($fields['signed_field_names'])
+                ? str_contains((string)$fields['signed_field_names'], 'card_type')
+                : false,
+            'card_type' => $fields['card_type'] ?? null,
+            'signature' => $signature,
+        ]);
+    }
+
+    /**
+     * Debug #2: Full payload that will be used to build checkout_post.
+     * Shows apiUrl + fields + signature + card (unsigned).
+     */
+    private function ddPreparePayload(
+        string $apiUrl,
+        array $fields,
+        string $signature,
+        array $validated
+    ): void {
+        dd([
+            'apiUrl' => $apiUrl,
+            'fields' => $fields,
+            'signature' => $signature,
+            'card' => [
+                'card_number' => $validated['card_number'] ?? null,
+                'card_expiry_date' => $validated['card_expiry_date'] ?? null,
+                'card_cvn' => $validated['card_cvn'] ?? null,
+            ],
+        ]);
+    }
+
+    private function ddCheckout(string $mode, string $apiUrl, array $fields, string $signature, array $validated): void
+    {
+        if ($mode === 'signed') {
+            $this->ddSigned($fields, $signature);
+        }
+        if ($mode === 'full') {
+            $this->ddPreparePayload($apiUrl, $fields, $signature, $validated);
+        }
+    }
+
+
     private function saEndpoint(string $key): string
     {
         if (!config('secure_acceptance.enabled')) {
@@ -170,6 +219,10 @@ class CheckoutController extends Controller
         $fields = $this->buildPayFields($order, $validated, $email, $stateCode);
         $signature = $this->signSecureAcceptance($fields, env('SECURE_ACCEPTANCE_SECRET_KEY'));
 
+        // $this->ddSigned($fields, $signature);
+        // $this->ddPreparePayload($apiUrl, $fields, $signature, $validated);
+        // $this->ddCheckout('full', $apiUrl, $fields, $signature, $validated);
+
         // Отдаём прокладку, которая POST'ит в BoA
         return view('checkout_post', [
             'apiUrl' => $apiUrl,
@@ -300,6 +353,7 @@ class CheckoutController extends Controller
             'bill_state' => trim((string) $request->input('bill_state')),
             'zip' => trim((string) $request->input('zip')),
             'card_expiry_date' => trim((string) $request->input('card_expiry_date')),
+            'card_type' => trim((string) $request->input('card_type', '001')),
         ]);
     }
 
@@ -317,6 +371,8 @@ class CheckoutController extends Controller
 
             'bill_country' => ['required','in:US'],
             'bill_state' => ['required','string','min:2','max:50'],
+            'card_type' => ['required', 'in:001,002,003,004'],
+
         ];
 
         $cardRules = [
@@ -482,6 +538,7 @@ class CheckoutController extends Controller
             'bill_to_address_postal_code' => (string) $validated['zip'],
             'bill_to_address_state'       => (string) $stateCode,
             'bill_to_address_country'     => (string) $validated['bill_country'],
+            'card_type'         => (string) ($validated['card_type'] ?? '001'),
         ];
 
         // UNSIGNED: card fields
@@ -508,6 +565,7 @@ class CheckoutController extends Controller
             'bill_to_address_postal_code',
             'bill_to_address_state',
             'bill_to_address_country',
+            'card_type',
             'signed_field_names',
             'unsigned_field_names',
         ]);

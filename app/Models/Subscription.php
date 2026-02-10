@@ -59,7 +59,7 @@ class Subscription extends Model
 
     public const PRICES = [
         'fpds_query' => [
-            'Monthly' => 49.00,
+            'Monthly' => 1.00,
             'Annual' => 490.00,
         ],
         'fpds_reports' => [

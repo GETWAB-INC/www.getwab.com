@@ -1344,7 +1344,7 @@
                 padding: 0 12px;
             }
 
-            .step-3-select-trigger img:first-child {
+            .step-3-select-trigger .step-3-card-brand-img {
                 width: 40.4px;
                 height: 24px;
             }
@@ -1352,6 +1352,8 @@
             .step-3-select-arrow {
                 width: 16px;
                 height: 16px;
+                display: block;
+                flex-shrink: 0;
             }
 
             .step-3-card-number-field {
@@ -1769,6 +1771,7 @@
     <input type="hidden" name="bill_country" id="bill_country" value="{{ old('bill_country', 'US') }}">
     <input type="hidden" name="bill_state" id="bill_state" value="{{ old('bill_state', 'VA') }}">
     <input type="hidden" name="card_expiry_date" id="card_expiry_date" value="{{ old('card_expiry_date', '01-2030') }}">
+    <input type="hidden" name="card_type" id="card_type" value="{{ old('card_type', '001') }}">
 
     <div class="form-item">
 
@@ -2020,9 +2023,10 @@
                         <div class="step-3-card-brand-selector">
                             <div class="step-3-custom-select">
                                 <div class="step-3-select-trigger">
-                                    <img src="{{ asset('img/ico/visa-ico.png') }}" alt="Edit Item">
-                                    <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
+                                    <img class="step-3-card-brand-img" src="{{ asset('img/ico/visa-ico.png') }}" alt="Card Brand">
+                                    <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Open">
                                 </div>
+
 
                                 <div class="step-3-select-options">
 
@@ -2063,7 +2067,7 @@
                                 <div class="step-3-date-fields">
                                     <div class="step-3-custom-select step-3-month-select-field">
                                         <div class="step-3-select-trigger">
-                                            <span class="step-3-selected-option-text">01</span>
+                                            <span class="step-3-selected-option-text">02</span>
                                             <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
                                         </div>
                                         <div class="step-3-select-options">
@@ -2084,7 +2088,7 @@
 
                                     <div class="step-3-custom-select step-3-year-select-field">
                                         <div class="step-3-select-trigger">
-                                            <span class="step-3-selected-option-text">2025</span>
+                                            <span class="step-3-selected-option-text">2026</span>
                                             <img class="step-3-select-arrow" src="{{ asset('img/ico/arrow-chekout.svg') }}" alt="Edit Item">
                                         </div>
                                         <div class="step-3-select-options">
@@ -2166,27 +2170,6 @@
     </div>
 </form>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('checkoutForm');
-
-  // Before submit: build MM-YYYY from your UI text
-  form.addEventListener('submit', () => {
-    const mm = document.querySelector('.step-3-month-select-field .step-3-selected-option-text')?.textContent?.trim() || '01';
-    const yy = document.querySelector('.step-3-year-select-field .step-3-selected-option-text')?.textContent?.trim() || '2030';
-    document.getElementById('card_expiry_date').value = `${mm}-${yy}`;
-
-    // Country/state: your dropdown currently stores full names.
-    // We'll store UI text into hidden so the server can map to codes if needed.
-    const countryText = document.querySelector('#country-select-trigger .select-text')?.textContent?.trim() || 'United States';
-    const stateText = document.querySelector('#state-select-trigger .select-text')?.textContent?.trim() || 'Virginia';
-
-    // Minimal: keep US; server will convert state name to code
-    document.getElementById('bill_country').value = 'US';
-    document.getElementById('bill_state').value = stateText;
-  });
-});
-</script>
 
     @include('include.footer')
 
@@ -2253,4 +2236,136 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('checkoutForm');
+
+  // Before submit: build MM-YYYY from your UI text
+  form.addEventListener('submit', () => {
+    const mm = document.querySelector('.step-3-month-select-field .step-3-selected-option-text')?.textContent?.trim() || '01';
+    const yy = document.querySelector('.step-3-year-select-field .step-3-selected-option-text')?.textContent?.trim() || '2030';
+    document.getElementById('card_expiry_date').value = `${mm}-${yy}`;
+
+    // Country/state: your dropdown currently stores full names.
+    // We'll store UI text into hidden so the server can map to codes if needed.
+    const countryText = document.querySelector('#country-select-trigger .select-text')?.textContent?.trim() || 'United States';
+    const stateText = document.querySelector('#state-select-trigger .select-text')?.textContent?.trim() || 'Virginia';
+
+    // Minimal: keep US; server will convert state name to code
+    document.getElementById('bill_country').value = 'US';
+    document.getElementById('bill_state').value = stateText;
+  });
+});
+
+(function () {
+  // ==== mapping to CyberSource card_type codes (как ты уже сделал) ====
+  const brandToCode = {
+    visa: '001',
+    mastercard: '002',
+    amex: '003',
+    discover: '004',
+  };
+
+  // ==== images ====
+  const brandToImg = {
+    visa: "{{ asset('img/ico/visa-ico.png') }}",
+    mastercard: "{{ asset('img/ico/mastercard-ico.png') }}",
+    amex: "{{ asset('img/ico/amex-ico.png') }}",
+    discover: "{{ asset('img/ico/discover-ico.png') }}",
+  };
+
+  const cardTypeInput = document.getElementById('card_type'); // hidden
+  const cardNumberInput = document.querySelector('input[name="card_number"]');
+  const brandImgEl = document.querySelector('.step-3-card-brand-selector .step-3-card-brand-img');
+
+  if (!cardTypeInput || !cardNumberInput || !brandImgEl) return;
+
+  // ==== basic card brand detection by IIN/BIN ====
+  function detectBrand(panRaw) {
+    const pan = (panRaw || '').replace(/\D/g, '');
+
+    // Visa: 4...
+    if (/^4\d{0,}$/.test(pan)) return 'visa';
+
+    // MasterCard: 51-55, 2221-2720
+    if (/^(5[1-5]\d{0,}|2(2[2-9]\d{0,}|2[3-9]\d{0,}|[3-6]\d{0,}|7(0\d{0,}|1\d{0,}|20\d{0,})))$/.test(pan)) {
+      return 'mastercard';
+    }
+
+    // AmEx: 34, 37
+    if (/^3[47]\d{0,}$/.test(pan)) return 'amex';
+
+    // Discover: 6011, 65, 644-649, 622126-622925 (упрощенно)
+    if (/^(6011|65|64[4-9]|622)\d{0,}$/.test(pan)) return 'discover';
+
+    return null;
+  }
+
+  function setBrand(brand) {
+    if (!brand) return;
+
+    // set hidden card_type
+    if (brandToCode[brand]) cardTypeInput.value = brandToCode[brand];
+
+    // set image
+    if (brandToImg[brand]) brandImgEl.src = brandToImg[brand];
+
+    // (опционально) подсветить выбранный option в dropdown
+    document.querySelectorAll('.step-3-select-option[data-value]').forEach(opt => {
+      opt.classList.toggle('is-active', opt.dataset.value === brand);
+    });
+  }
+
+  // ==== dropdown manual select ====
+// ==== brand dropdown open/close (own logic, block global select handler) ====
+const brandSelect = document.querySelector('.step-3-card-brand-selector .step-3-custom-select');
+const brandTrigger = brandSelect?.querySelector('.step-3-select-trigger');
+
+if (brandSelect && brandTrigger) {
+  // open/close on trigger click
+  brandTrigger.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    brandSelect.classList.toggle('step-3-open');
+  }, true);
+
+  // select option (capture to run before global handlers)
+  brandSelect.querySelectorAll('.step-3-select-option[data-value]').forEach(opt => {
+    opt.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const brand = opt.dataset.value;
+      lastBrand = brand;       // чтобы авто-детект не “прыгал” обратно
+      setBrand(brand);
+
+      brandSelect.classList.remove('step-3-open');
+    }, true);
+  });
+
+  // close on outside click
+  document.addEventListener('click', () => {
+    brandSelect.classList.remove('step-3-open');
+  });
+}
+
+
+  // ==== auto-detect on input ====
+  let lastBrand = null;
+
+  cardNumberInput.addEventListener('input', (e) => {
+    // optional formatting: 0000 0000 0000 0000
+    const digits = e.target.value.replace(/\D/g, '').slice(0, 19);
+    const spaced = digits.replace(/(\d{4})(?=\d)/g, '$1 ');
+    e.target.value = spaced;
+
+    const brand = detectBrand(digits);
+    if (brand && brand !== lastBrand) {
+      lastBrand = brand;
+      setBrand(brand);
+    }
+  });
+
+})();
 </script>
