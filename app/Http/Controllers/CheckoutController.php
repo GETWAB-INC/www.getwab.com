@@ -10,9 +10,24 @@ use App\Services\BillingService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 class CheckoutController extends Controller
 {
+
+    public function handleCallback(Request $request)
+    {
+        $data = $request->all();
+
+        // Log silent POST callback from Bank of America
+        Log::channel('checkout')->info('🔔 /checkout/callback — Silent POST from BoA', [
+            'ip' => $request->ip(),
+            'raw' => file_get_contents('php://input'),
+            'parsed' => $data,
+        ]);
+
+        return response('OK');
+    }
 
     /**
      * Debug #1: Signed fields / signature sanity check.
@@ -76,59 +91,6 @@ class CheckoutController extends Controller
 
         return $url;
     }
-
-    public function showCheckout()
-    {
-        $accessKey = env('SECURE_ACCEPTANCE_ACCESS_KEY');
-        $profileId = env('SECURE_ACCEPTANCE_PROFILE_ID');
-        $secretKey = env('SECURE_ACCEPTANCE_SECRET_KEY');
-        $apiUrl = env('SECURE_ACCEPTANCE_API_URL');
-
-        return view('checkout.form', [
-            'access_key' => $accessKey,
-            'profile_id' => $profileId,
-            'secret_key' => $secretKey,
-            'apiUrl' => $apiUrl,
-        ]);
-    }
-
-    public function handleCallback(Request $request)
-    {
-        $data = $request->all();
-
-        // Log silent POST callback from Bank of America
-        Log::channel('checkout')->info('🔔 /checkout/callback — Silent POST from BoA', [
-            'ip' => $request->ip(),
-            'raw' => file_get_contents('php://input'),
-            'parsed' => $data,
-        ]);
-
-        return response('OK');
-    }
-
-    // public function paymentResult(Request $request)
-    // {
-    //     // Log payment result endpoint call
-    //     Log::channel('checkout')->info("🔔 /payment/result — Method: " . $request->method());
-    //     Log::channel('checkout')->info('🔔 /payment/result — Payload:', $request->all());
-
-    //     $data = [
-    //         'status' => $request->get('decision'),
-    //         'amount' => $request->get('auth_amount'),
-    //         'currency' => $request->get('req_currency'),
-    //         'card_type' => $request->get('card_type_name'),
-    //         'name' => trim($request->get('req_bill_to_forename') . ' ' . $request->get('req_bill_to_surname')),
-    //         'city' => $request->get('req_bill_to_address_city'),
-    //         'state' => $request->get('req_bill_to_address_state'),
-    //         'zip' => $request->get('req_bill_to_address_postal_code'),
-    //         'transaction_id' => $request->get('transaction_id'),
-    //         'order_number' => $request->get('req_reference_number'),
-    //         'auth_code' => $request->get('auth_code'),
-    //         'auth_time' => $request->get('auth_time'),
-    //     ];
-
-    //     return view('checkout.result', compact('data'));
-    // }
 
     public function checkout(Request $request)
     {
@@ -245,6 +207,17 @@ class CheckoutController extends Controller
         Log::channel('checkout')->info("🔔 /payment/result — Method: " . $request->method());
         Log::channel('checkout')->info('🔔 /payment/result — Payload:', $request->all());
 
+        if (!$this->verifySecureAcceptanceResponse($request->all())) {
+            Log::channel('checkout')->warning('Invalid BoA signature on /payment/result', [
+                'req_reference_number' => $request->get('req_reference_number'),
+            ]);
+
+            return view('cancelled', [
+                'data' => $this->formatResultData($request),
+                'errors' => ['Invalid payment signature.'],
+            ]);
+        }
+
         // TODO (очень желательно): verify signature от BoA на входящем ответе
         // TODO: verify that req_reference_number matches our pending order
 
@@ -252,7 +225,8 @@ class CheckoutController extends Controller
         $authResponse = (string) $request->get('auth_response'); // "00" часто = ok
         $referenceNumber = (string) $request->get('req_reference_number');
 
-        $pending = session()->get('pending_payment');
+        // Важно: pull() удалит запись сразу после чтения (защита от повторов)
+        $pending = Cache::pull("pending_payment:{$referenceNumber}");
 
         $isAccepted = ($decision === 'ACCEPT');
         // Некоторые интеграции ориентируются на decision=ACCEPT, некоторые также на auth_response=00
@@ -260,10 +234,17 @@ class CheckoutController extends Controller
         $isAuthorized = ($authResponse === '' || $authResponse === '00'); // если поле не приходит — не ломаем
 
         if (!$pending) {
-            // Нет контекста — не можем безопасно применять биллинг
-            Log::channel('checkout')->warning('No pending_payment in session; cannot finalize billing safely.');
-            return view('cancelled')->with('errors', ['Payment context is missing.']);
+            Log::channel('checkout')->warning('No pending_payment in cache; cannot finalize billing safely.', [
+                'ref' => $referenceNumber
+            ]);
+
+            // Не падаем 500, просто показываем нормальную ошибку
+            return view('cancelled', [
+                'data' => $this->formatResultData($request),
+                'errors' => ['Payment was accepted, but order context was not found (cache expired/missing). Contact support.'],
+            ]);
         }
+
 
         if (!hash_equals((string)$pending['reference_number'], $referenceNumber)) {
             Log::channel('checkout')->warning('Reference number mismatch.', [
@@ -274,29 +255,40 @@ class CheckoutController extends Controller
         }
 
         if (!($isAccepted && $isAuthorized)) {
-            // Платёж не прошёл — биллинг НЕ делаем
             $data = $this->formatResultData($request);
-            return view('checkout.result', [
+
+            // IMPORTANT: keep UX consistent + do NOT call billing
+            return view('cancelled', [
                 'data' => $data,
+                'errors' => ['Payment was not approved.'],
             ]);
         }
 
+
         // OK: Платёж прошёл — делаем биллинг
-        // TODO: сохрани transaction_id, auth_code, token (если есть) в БД (order/payments table)
-        $response = $this->finalizeBillingAndRespond([
+        $data = $this->formatResultData($request);
+
+        // paymentMeta: факты из шлюза (то, что пришло от BoA)
+        $paymentMeta = [
             'type' => 'boa',
             'total' => (string) ($request->get('auth_amount') ?? $pending['total']),
             'reference_number' => $referenceNumber,
             'transaction_id' => (string) $request->get('transaction_id'),
-        ]);
 
-        // очищаем pending контекст
-        session()->forget('pending_payment');
+            // NEW: tokens (в твоём checkout.log они реально приходили)
+            'request_token' => (string) $request->get('request_token'),
+            'payment_token_instrument_identifier_id' => (string) $request->get('payment_token_instrument_identifier_id'),
 
-        // TODO: очистить корзину (session keys)
-        // $this->clearCartSession();
+            // NEW: for debugging and decisioning
+            'decision' => (string) $request->get('decision'),
+            'auth_response' => (string) $request->get('auth_response'),
+        ];
+
+        // IMPORTANT: billing must be based on pending (server-truth) + paymentMeta (gateway facts)
+        $response = $this->finalizeBillingAndRespond($pending, $paymentMeta, $data);
 
         return $response;
+
     }
 
     // =========================================================
@@ -342,6 +334,25 @@ class CheckoutController extends Controller
         }
 
         return [$itemsPresent, number_format((float)$total, 2, '.', '')];
+    }
+
+    /**
+     * Server-truth: what this checkout is meant to do.
+     * Adjust mapping under your real cart keys.
+     */
+    private function detectIntentFromCart(array $itemsPresent): string
+    {
+        // Trial flow (example: you have fpds_query_trial in cart)
+        if (in_array('fpds_query_trial', $itemsPresent, true)) {
+            return 'trial';
+        }
+
+        // Restore flow (пример — если у тебя есть отдельный ключ в сессии/корзине)
+        // if (in_array('fpds_restore', $itemsPresent, true)) {
+        //     return 'restore';
+        // }
+
+        return 'purchase';
     }
 
     private function normalizeRequest(Request $request): void
@@ -481,7 +492,7 @@ class CheckoutController extends Controller
     }
 
     /**
-     * Pending order context хранится в сессии — минимально, без БД.
+     * Pending order context хранится в Cache по reference_number (не в session).
      * TODO: заменить на Order/Payment таблицы (recommended).
      */
     private function createPendingOrderContext(array $itemsPresent, string $total, string $email, array $validated, string $stateCode): array
@@ -494,6 +505,10 @@ class CheckoutController extends Controller
             'total' => $total,
             'email' => $email,
 
+            // NEW: intent and user identity (server-truth)
+            'intent' => $this->detectIntentFromCart($itemsPresent),
+            'user_id' => Auth::id(),
+
             // можно сохранить минимум billing, если надо
             'bill_to_forename' => (string) $validated['name'],
             'bill_to_surname' => (string) $validated['surname'],
@@ -502,7 +517,8 @@ class CheckoutController extends Controller
             'bill_to_zip' => (string) $validated['zip'],
         ];
 
-        session()->put('pending_payment', $pending);
+        // Храним 2 часа — достаточно для завершения оплаты
+        Cache::put("pending_payment:{$referenceNumber}", $pending, now()->addHours(2));
 
         return $pending;
     }
@@ -527,6 +543,11 @@ class CheckoutController extends Controller
             'amount'            => (string) $amount,
             'currency'          => 'USD',
             'payment_method'    => 'card',
+
+            // NEW: merchant-defined fields (signed) to carry your business intent/user
+            'merchant_defined_data1' => (string) ($order['intent'] ?? 'purchase'),
+            'merchant_defined_data2' => (string) ($order['user_id'] ?? ''),
+
 
             // Billing
             'bill_to_forename'            => (string) $validated['name'],
@@ -556,6 +577,8 @@ class CheckoutController extends Controller
             'amount',
             'currency',
             'payment_method',
+            'merchant_defined_data1',
+            'merchant_defined_data2',
             'bill_to_forename',
             'bill_to_surname',
             'bill_to_email',
@@ -587,38 +610,90 @@ class CheckoutController extends Controller
     // Helpers: Billing finalization
     // =========================================================
 
-    private function finalizeBillingAndRespond(array $paymentMeta)
+    /**
+     * Finalize business actions AFTER we have a confirmed payment outcome.
+     *
+     * IMPORTANT:
+     * - Do NOT rely on Laravel session here (BoA callback may arrive without cookies).
+     * - Use $pending (server-truth order context) + $paymentMeta (gateway facts).
+     * - Always pass $data to views (thank-you/cancelled expect it).
+     */
+    private function finalizeBillingAndRespond(array $pending = [], array $paymentMeta = [], array $dataForView = [])
     {
         $billingService = new BillingService();
 
-        $subscriptionResult = $billingService->processSubscriptions();
-        $packageResult = $billingService->processReportPackage();
+        /**
+         * Передавай в BillingService ВСЁ, что ему нужно для принятия решения:
+         * - intent: trial / restore / purchase
+         * - items: что именно было куплено/активировано
+         * - user_id/email: на кого вешаем подписку
+         * - transaction_id + tokens: для идемпотентности/токенизации
+         *
+         * Сейчас у тебя BillingService::processSubscriptions() вызывается без аргументов —
+         * это означает, что он снова будет лазить в session() или “угадывать”.
+         * Это и есть причина “billing не делается надёжно”.
+         */
+        $subscriptionResult = $billingService->processSubscriptions($pending, $paymentMeta);
+        $packageResult      = $billingService->processReportPackage($pending, $paymentMeta);
 
-        $success = $subscriptionResult['success'] && $packageResult['success'];
-        $messagesOut = array_merge($subscriptionResult['messages'], $packageResult['messages']);
+        $success = ($subscriptionResult['success'] ?? false) && ($packageResult['success'] ?? false);
+        $messagesOut = array_merge(
+            $subscriptionResult['messages'] ?? [],
+            $packageResult['messages'] ?? []
+        );
 
         if ($success) {
-            return view('thank-you')->with('messages', $messagesOut);
+            return view('thank-you', [
+                'messages' => $messagesOut,
+                'data'     => $dataForView,
+            ]);
         }
 
-        return view('cancelled')->with('errors', $messagesOut);
+        return view('cancelled', [
+            'errors' => $messagesOut,
+            'data'   => $dataForView,
+        ]);
     }
 
+
+    /**
+     * Делаем нормальный массив данных для вьюх.
+     * (Если у тебя уже есть formatResultData — оставь свой, или сравни и дополни.)
+     */
     private function formatResultData(Request $request): array
     {
+        $forename = (string) $request->get('req_bill_to_forename');
+        $surname  = (string) $request->get('req_bill_to_surname');
+        $name = trim($forename . ' ' . $surname);
+
+        $city = (string) $request->get('req_bill_to_address_city');
+        $state = (string) ($request->get('req_bill_to_address_state') ?: $request->get('score_ip_state'));
+        $zip = (string) $request->get('req_bill_to_address_postal_code');
+
+        $reasonCode = (string) $request->get('reason_code');
+        $decisionMsg = (string) $request->get('decision_rmsg');
+        $message = (string) $request->get('message');
+
+        // Для declined причин можно отобразить reason_code + decision_rmsg/message
+        $declineReason = trim(implode(' — ', array_filter([
+            $reasonCode ? "Reason code: {$reasonCode}" : null,
+            $decisionMsg ?: null,
+            $message ?: null,
+        ])));
+
         return [
-            'status' => $request->get('decision'),
-            'amount' => $request->get('auth_amount'),
-            'currency' => $request->get('req_currency'),
-            'card_type' => $request->get('card_type_name'),
-            'name' => trim($request->get('req_bill_to_forename') . ' ' . $request->get('req_bill_to_surname')),
-            'city' => $request->get('req_bill_to_address_city'),
-            'state' => $request->get('req_bill_to_address_state'),
-            'zip' => $request->get('req_bill_to_address_postal_code'),
-            'transaction_id' => $request->get('transaction_id'),
-            'order_number' => $request->get('req_reference_number'),
-            'auth_code' => $request->get('auth_code'),
-            'auth_time' => $request->get('auth_time'),
+            'decision' => (string) $request->get('decision'),
+            'amount' => (string) ($request->get('auth_amount') ?? $request->get('req_amount') ?? ''),
+            'currency' => (string) ($request->get('req_currency') ?? ''),
+            'card_type' => (string) ($request->get('card_type_name') ?? ''),
+            'card_last4' => (string) ($request->get('req_card_number') ?? ''), // обычно masked
+            'name' => $name,
+            'location' => trim($city . ($state ? ", {$state}" : '') . ($zip ? " {$zip}" : '')),
+            'order_number' => (string) ($request->get('req_reference_number') ?? ''),
+            'transaction_id' => (string) ($request->get('transaction_id') ?? ''),
+            'auth_code' => (string) ($request->get('auth_code') ?? ''),
+            'auth_time' => (string) ($request->get('auth_time') ?? $request->get('signed_date_time') ?? ''),
+            'decline_reason' => $declineReason,
         ];
     }
 
@@ -671,6 +746,32 @@ class CheckoutController extends Controller
         return $map[$upper] ?? null;
     }
 
+    /**
+     * Verify Secure Acceptance response signature from BoA/CyberSource.
+     * We rebuild the signed string using "signed_field_names" from the incoming payload.
+     */
+    private function verifySecureAcceptanceResponse(array $payload): bool
+    {
+        $secretKey = (string) env('SECURE_ACCEPTANCE_SECRET_KEY');
+        $signedNames = (string) ($payload['signed_field_names'] ?? '');
+        $incomingSig = (string) ($payload['signature'] ?? '');
+
+        if ($secretKey === '' || $signedNames === '' || $incomingSig === '') {
+            return false;
+        }
+
+        $signed = explode(',', $signedNames);
+
+        $dataToSign = collect($signed)
+            ->map(function ($name) use ($payload) {
+                return $name . '=' . ($payload[$name] ?? '');
+            })
+            ->implode(',');
+
+        $computed = base64_encode(hash_hmac('sha256', $dataToSign, $secretKey, true));
+
+        return hash_equals($computed, $incomingSig);
+    }
 
     /**
      * Remove an item from the session by its key
@@ -707,206 +808,6 @@ class CheckoutController extends Controller
             'success' => true,
             'message' => 'Item removed successfully'
         ]);
-    }
-
-    public function process(Request $request)
-    {
-        $hasItemsInCart = false;
-
-        // List of supported cart item session keys
-        $cartItems = [
-            'fpds_query_trial',
-            'fpds_query_subscription',
-            'fpds_report_subscription',
-            'single_elementary_report',
-            'single_composite_report',
-            'elementary_report_package',
-            'composite_report_package'
-        ];
-
-        // Check if at least one item exists in the cart
-        foreach ($cartItems as $itemKey) {
-            if (session()->has($itemKey)) {
-                $hasItemsInCart = true;
-                break;
-            }
-        }
-
-        // Stop checkout if cart is empty
-        if (!$hasItemsInCart) {
-            return back()
-                ->withErrors(['cart' => 'No items in your cart. Please add products before proceeding.'])
-                ->withInput();
-        }
-
-        if (Auth::check()) {
-            // Authenticated user: validate required billing fields only (no password/email)
-            $validated = $request->validate([
-                'name' => [
-                    'required',
-                    'string',
-                    'max:255',
-                    'regex:/^[\pL\s\-]+$/u',
-                ],
-                'surname' => [
-                    'required',
-                    'string',
-                    'max:255',
-                    'regex:/^[\pL\s\-]*$/u',
-                ],
-                'city' => [
-                    'required',
-                    'nullable',
-                    'string',
-                    'max:255',
-                ],
-                'address1' => [
-                    'required',
-                    'nullable',
-                    'string',
-                    'max:255',
-                ],
-                'address2' => [
-                    'nullable',
-                    'string',
-                    'max:255',
-                ],
-                'zip' => [
-                    'required',
-                    'nullable',
-                    'string',
-                    'max:20',
-                ],
-            ], [
-                'name.required' => 'First name is required.',
-                'name.regex' => 'First name may only contain letters, spaces, and hyphens.',
-                'surname.required' => 'Last name is required.',
-                'surname.regex' => 'Last name may only contain letters, spaces, and hyphens.',
-            ]);
-        } else {
-            // Guest user: full validation including email and password
-            $validated = $request->validate([
-                'name' => [
-                    'required',
-                    'string',
-                    'max:255',
-                    'regex:/^[\pL\s\-]+$/u',
-                ],
-                'surname' => [
-                    'required',
-                    'string',
-                    'max:255',
-                    'regex:/^[\pL\s\-]*$/u',
-                ],
-                'email' => [
-                    'required',
-                    'string',
-                    'email',
-                    'max:255',
-                    'unique:users,email',
-                ],
-                'confirm_email' => [
-                    'required',
-                    'email',
-                    'same:email',
-                ],
-                'password' => [
-                    'required',
-                    'string',
-                    'min:8',
-                    'confirmed',
-                    'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
-                ],
-                'password_confirmation' => [
-                    'required',
-                ],
-                'city' => [
-                    'required',
-                    'nullable',
-                    'string',
-                    'max:255',
-                ],
-                'address1' => [
-                    'required',
-                    'nullable',
-                    'string',
-                    'max:255',
-                ],
-                'address2' => [
-                    'nullable',
-                    'string',
-                    'max:255',
-                ],
-                'zip' => [
-                    'required',
-                    'nullable',
-                    'string',
-                    'max:20',
-                ],
-            ], [
-                'name.required' => 'First name is required.',
-                'name.regex' => 'First name may only contain letters, spaces, and hyphens.',
-                'surname.required' => 'Last name is required.',
-                'surname.regex' => 'Last name may only contain letters, spaces, and hyphens.',
-                'email.required' => 'Email is required.',
-                'email.email' => 'Please enter a valid email address.',
-                'email.unique' => 'A user with this email already exists.',
-                'confirm_email.required' => 'Please confirm your email address.',
-                'confirm_email.same' => 'The email confirmation does not match the email.',
-                'password.required' => 'Password is required.',
-                'password.min' => 'Password must be at least 8 characters long.',
-                'password.confirmed' => 'The passwords do not match.',
-                'password.regex' => 'Password must contain: uppercase letter, lowercase letter, number, and special character.',
-                'password_confirmation.required' => 'Please confirm your password.',
-            ]);
-        }
-
-        // Determine user email
-        $email = Auth::check() ? Auth::user()->email : $validated['email'];
-
-        if (!Auth::check()) {
-            // Create or fetch user and log them in
-            $user = User::where('email', $email)->first();
-
-            if (!$user) {
-                $registerController = new \App\Http\Controllers\RegisterController();
-                $user = $registerController->registerThruOrder($validated);
-            }
-
-            Auth::login($user, true);
-        }
-
-        // Test mode switch (disable for real payment processing)
-        $testMode = true;
-
-        if (!$testMode) {
-            // Real payment gateway integration will be implemented here
-            $paymentSuccessful = false; // Placeholder
-        } else {
-            $paymentSuccessful = true;
-        }
-
-        if ($paymentSuccessful) {
-            $billingService = new BillingService();
-
-            // 1. Process subscriptions
-            $subscriptionResult = $billingService->processSubscriptions();
-
-            // 2. Process report packages
-            $packageResult = $billingService->processReportPackage();
-
-            // 3. Combine results
-            $success = $subscriptionResult['success'] && $packageResult['success'];
-            $messages = array_merge($subscriptionResult['messages'], $packageResult['messages']);
-
-            if ($success) {
-                return view('thank-you')->with('messages', $messages);
-            } else {
-                return view('cancelled')->with('errors', $messages);
-            }
-        }
-
-        return view('cancelled')->with('errors', ['Payment failed']);
     }
 
     public function thankYou()

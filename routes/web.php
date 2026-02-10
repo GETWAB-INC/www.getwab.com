@@ -51,10 +51,17 @@ Route::get('/unsubscribe/{email}', [EmailCompanyController::class, 'showUnsubscr
 
 // -------------------- CheckoutController --------------------
 
-Route::get('/checkout-test', [CheckoutController::class, 'showCheckout']); // form
-Route::post('/checkout/pay', [CheckoutController::class, 'processPayment']); // send form
+// checkout
+Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+// 1) 
+Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+// 2) Принять UI-форму, сформировать fields+signature, вернуть checkout_post (автосабмит в BoA)
+Route::post('/checkout/prepare', [CheckoutController::class, 'prepare'])->name('checkout.prepare');
+Route::post('/checkout/remove-item', [CheckoutController::class, 'removeItem'])->name('checkout.remove-item');
 Route::match(['get', 'post'], '/checkout/callback', [CheckoutController::class, 'handleCallback']); // FIS
 Route::match(['get', 'post'], '/payment/result', [CheckoutController::class, 'paymentResult']);
+Route::post('/thank-you', [CheckoutController::class, 'thankYou'])->name('thank-you');
+Route::post('/cancelled', [CheckoutController::class, 'cancelled'])->name('cancelled');
 
 // AUTH
 Route::middleware('auth')->group(function () {
@@ -109,19 +116,10 @@ Route::middleware('auth')->group(function () {
 
     
 
-    // checkout
-    Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
-
-    // 2) Принять UI-форму, сформировать fields+signature, вернуть checkout_post (автосабмит в BoA)
-    Route::post('/checkout/prepare', [CheckoutController::class, 'prepare'])->name('checkout.prepare');
-
-
-    Route::post('/checkout/remove-item', [CheckoutController::class, 'removeItem'])->name('checkout.remove-item');
-    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
-    Route::post('/thank-you', [CheckoutController::class, 'thankYou'])->name('thank-you');
-    Route::post('/cancelled', [CheckoutController::class, 'cancelled'])->name('cancelled');
-
-
+    
+// Old checkout
+// Route::get('/checkout-test', [CheckoutController::class, 'showCheckout']); // form
+// Route::post('/checkout/pay', [CheckoutController::class, 'processPayment']); // send form
 
 
 

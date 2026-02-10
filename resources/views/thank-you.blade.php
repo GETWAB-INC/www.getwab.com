@@ -203,61 +203,84 @@
 
     @include('include.header')
 
-    </head>
-
-    <body>
-
         <main class="thank-you-container">
             <section class="thank-you-content">
                 <div class="thank-you-header">
                     <div class="thank-you-icon">
                         <div class="thank-you-icon-inner"></div>
                     </div>
+
                     <h1 class="thank-you-title">Payment Successful</h1>
 
                     <table class="thank-you-details">
                         <tr class="thank-you-detail-row">
                             <td class="thank-you-detail-label">Amount</td>
-                            <td class="thank-you-detail-value">$1.00 USD</td>
+                            <td class="thank-you-detail-value">
+                                ${{ $data['amount'] ?? '' }} {{ $data['currency'] ?? '' }}
+                            </td>
                         </tr>
+
                         <tr class="thank-you-detail-row">
                             <td class="thank-you-detail-label">Card Type</td>
-                            <td class="thank-you-detail-value">Visa</td>
+                            <td class="thank-you-detail-value">
+                                {{ $data['card_type'] ?? '' }}
+                            </td>
                         </tr>
+
                         <tr class="thank-you-detail-row">
                             <td class="thank-you-detail-label">Name</td>
-                            <td class="thank-you-detail-value">Ilia Oborin</td>
+                            <td class="thank-you-detail-value">
+                                {{ $data['name'] ?? '' }}
+                            </td>
                         </tr>
+
                         <tr class="thank-you-detail-row">
                             <td class="thank-you-detail-label">Location</td>
-                            <td class="thank-you-detail-value">Sarasota, FL 34232</td>
+                            <td class="thank-you-detail-value">
+                                {{ $data['location'] ?? '' }}
+                            </td>
                         </tr>
+
                         <tr class="thank-you-detail-row">
                             <td class="thank-you-detail-label">Order Number</td>
-                            <td class="thank-you-detail-value">ORDER-1753979763</td>
+                            <td class="thank-you-detail-value">
+                                {{ $data['order_number'] ?? '' }}
+                            </td>
                         </tr>
+
                         <tr class="thank-you-detail-row">
                             <td class="thank-you-detail-label">Transaction ID</td>
-                            <td class="thank-you-detail-value">7539797800096715203616</td>
+                            <td class="thank-you-detail-value">
+                                {{ $data['transaction_id'] ?? '' }}
+                            </td>
                         </tr>
+
                         <tr class="thank-you-detail-row">
                             <td class="thank-you-detail-label">Authorization Code</td>
-                            <td class="thank-you-detail-value">08434C</td>
+                            <td class="thank-you-detail-value">
+                                {{ $data['auth_code'] ?? '' }}
+                            </td>
                         </tr>
+
                         <tr class="thank-you-detail-row">
                             <td class="thank-you-detail-label">Authorized Time</td>
-                            <td class="thank-you-detail-value">2025-07-31T163620Z</td>
+                            <td class="thank-you-detail-value">
+                                {{ $data['auth_time'] ?? '' }}
+                            </td>
                         </tr>
                     </table>
                 </div>
 
                 <div class="thank-you-actions">
-                    <a class="thank-you-button thank-you-button-primary" href="{{ route('account.billing') }}">Return to Account</a>
-                    <a class="thank-you-button thank-you-button-secondary" onclick="window.print()">Print or Save Receipt</a>
+                    <a class="thank-you-button thank-you-button-primary" href="{{ route('account.billing') }}">
+                        Return to Account
+                    </a>
+                    <a class="thank-you-button thank-you-button-secondary" onclick="window.print()">
+                        Print or Save Receipt
+                    </a>
                 </div>
             </section>
         </main>
-
         @include('include.footer')
 
     </body>

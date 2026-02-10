@@ -10,7 +10,7 @@ use App\Models\ReportPackage;
 
 class BillingService
 {
-    public function processSubscriptions(): array
+    public function processSubscriptions(array $pending = [], array $paymentMeta = []): array
     {
         $results = [
             'success' => true,
@@ -60,7 +60,7 @@ class BillingService
         return $results;
     }
 
-    public function processReportPackage(): array
+    public function processReportPackage(array $pending = [], array $paymentMeta = []): array
     {
         $results = [
             'success' => true,

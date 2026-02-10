@@ -226,11 +226,6 @@
 
     @include('include.header')
 
-    </head>
-
-    <body>
-
-
         <main class="cancelled-container">
             <section class="cancelled-content">
                 <div class="cancelled-header">
@@ -240,40 +235,67 @@
 
                     <div class="cancelled-title-section">
                         <h1 class="cancelled-title">Payment Declined</h1>
-                        <p class="cancelled-reason">Reason: Decline for CVV2 failure</p>
+                        <p class="cancelled-reason">
+                            Reason: {{ $data['decline_reason'] ?? 'Payment was not approved.' }}
+                        </p>
                     </div>
 
                     <table class="cancelled-details">
                         <tr class="cancelled-detail-row">
                             <td class="cancelled-detail-label">Amount</td>
-                            <td class="cancelled-detail-value">$1.00 USD</td>
+                            <td class="cancelled-detail-value">
+                                ${{ $data['amount'] ?? '' }} {{ $data['currency'] ?? '' }}
+                            </td>
                         </tr>
+
                         <tr class="cancelled-detail-row">
                             <td class="cancelled-detail-label">Card Type</td>
-                            <td class="cancelled-detail-value">Visa ending in 8869</td>
+                            <td class="cancelled-detail-value">
+                                {{ $data['card_type'] ?? '' }}
+                                @if(!empty($data['card_last4']))
+                                    ({{ $data['card_last4'] }})
+                                @endif
+                            </td>
                         </tr>
+
                         <tr class="cancelled-detail-row">
                             <td class="cancelled-detail-label">Name</td>
-                            <td class="cancelled-detail-value">Ilia Oborin</td>
+                            <td class="cancelled-detail-value">
+                                {{ $data['name'] ?? '' }}
+                            </td>
                         </tr>
+
                         <tr class="cancelled-detail-row">
                             <td class="cancelled-detail-label">Location</td>
-                            <td class="cancelled-detail-value">4532 Parnell Dr, Sarasota, FL 34232</td>
+                            <td class="cancelled-detail-value">
+                                {{ $data['location'] ?? '' }}
+                            </td>
                         </tr>
+
                         <tr class="cancelled-detail-row">
                             <td class="cancelled-detail-label">Order Number</td>
-                            <td class="cancelled-detail-value">ORDER-1754147204</td>
+                            <td class="cancelled-detail-value">
+                                {{ $data['order_number'] ?? '' }}
+                            </td>
                         </tr>
+
                         <tr class="cancelled-detail-row">
                             <td class="cancelled-detail-label">Transaction ID</td>
-                            <td class="cancelled-detail-value">7541472296866474203252</td>
+                            <td class="cancelled-detail-value">
+                                {{ $data['transaction_id'] ?? '' }}
+                            </td>
                         </tr>
                     </table>
                 </div>
 
                 <div class="cancelled-actions">
-                    <a class="cancelled-button cancelled-button-primary" href="{{ route('checkout') }}">Try Again</a>
-                    <a class="cancelled-button cancelled-button-secondary" href="{{ route('/') }}">Return to Home</a>
+                    <a class="cancelled-button cancelled-button-primary" href="{{ route('checkout') }}">
+                        Try Again
+                    </a>
+
+                    <a class="cancelled-button cancelled-button-secondary" href="{{ route('index') }}">
+                        Return to Home
+                    </a>
                 </div>
             </section>
         </main>
