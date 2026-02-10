@@ -1884,7 +1884,7 @@
                             </div>
                         </div>
                         <div class="custom-dropdown" id="country-dropdown">
-                            <div class="dropdown-option selected" name="country" data-value="United States">United States</div>
+                            <div class="dropdown-option selected" data-value="United States">United States</div>
                         </div>
                     </div>
                 </div>
@@ -2161,7 +2161,7 @@
             </div>
 
             <div class="step-3-payment-submit-section">
-                <button class="step-3-submit-payment-btn">
+                <button type="submit" class="step-3-submit-payment-btn">
                     Complete Payment
                 </button>
             </div>
