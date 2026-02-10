@@ -499,9 +499,16 @@ class CheckoutController extends Controller
     {
         $referenceNumber = 'ORDER-' . now()->format('YmdHis') . '-' . Str::random(6);
 
+        // ✅ Слепок session-данных по каждому товару/ключу корзины
+        $payloads = [];
+        foreach ($itemsPresent as $k) {
+            $payloads[$k] = session()->get($k); // важно: именно snapshot
+        }
+        
         $pending = [
             'reference_number' => $referenceNumber,
             'items' => $itemsPresent,
+            'payloads' => $payloads,
             'total' => $total,
             'email' => $email,
 

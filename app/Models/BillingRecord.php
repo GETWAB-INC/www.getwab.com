@@ -179,7 +179,6 @@ class BillingRecord extends Model
 
     public static function createRecord(array $data): BillingRecord
     {
-        // 1. Determine the type of entry: subscription or package
         $isSubscription = isset($data['subscription_type']);
         $isReportPackage = isset($data['package_type']);
 
@@ -187,22 +186,26 @@ class BillingRecord extends Model
             throw new \InvalidArgumentException('Data must contain either subscription_type or package_type');
         }
 
-        // 2. We create a readable description.
+        $userId = $data['user_id'] ?? null;
+        if (!$userId) {
+            throw new \InvalidArgumentException('Missing user_id for BillingRecord');
+        }
+
         $description = $isSubscription
             ? self::getSubscriptionDescription($data)
             : self::getPackageDescription($data);
 
-        // 3. Creating a record
         return self::create([
-            'user_id' => auth()->id(),
+            'user_id' => $userId,
             'billed_at' => now(),
             'description' => $description,
             'card_last_four' => $data['card_last_four'] ?? '0000',
             'card_brand' => $data['card_brand'] ?? 'Unknown',
-            'amount' => $isSubscription ? $data['subscription_price'] : $data['package_price'],
+            'amount' => $isSubscription ? ($data['subscription_price'] ?? 0) : ($data['package_price'] ?? 0),
             'currency' => $data['currency'] ?? 'USD',
             'status' => 'completed',
             'gateway_transaction_id' => $data['transaction_id'] ?? null,
         ]);
     }
+
 }

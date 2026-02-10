@@ -175,28 +175,36 @@ class Subscription extends Model
         $this->save();
     }
 
+    public function billingBaseDate(): \Carbon\Carbon
+    {
+        $now = now();
+
+        // если подписка ещё активна — продляем от текущего expires_at
+        if ($this->expires_at && $this->expires_at->greaterThan($now)) {
+            return $this->expires_at->copy();
+        }
+
+        // если истекла — продляем от сейчас
+        return $now;
+    }
+
     // ADDED: calculate next billing date
     public function calculateNextBillingDate(): \Carbon\Carbon
     {
-        $startsAt = $this->start_at ?? now();
+        $base = $this->billingBaseDate();
 
         return match ($this->plan) {
-            'Monthly' => $startsAt->addMonth(),
-            'Annual'  => $startsAt->addYear(),
-            default   => $startsAt->addMonth(), // default: one month
+            'Monthly' => $base->copy()->addMonth(),
+            'Annual'  => $base->copy()->addYear(),
+            default   => $base->copy()->addMonth(),
         };
     }
 
     // ADDED: calculate subscription expiration date
     public function calculateExpireDate(): \Carbon\Carbon
     {
-        $startsAt = $this->start_at ?? now();
-
-        return match ($this->plan) {
-            'Monthly' => $startsAt->addMonth(),
-            'Annual'  => $startsAt->addYear(),
-            default   => $startsAt->addMonth(), // default: one month
-        };
+        // expires_at обычно совпадает с next_billing_at (если у тебя так задумано)
+        return $this->calculateNextBillingDate();
     }
 
     public static function store(array $data): Subscription
@@ -208,7 +216,12 @@ class Subscription extends Model
         $billing_record_id   = $data['billing_record_id'];
 
         // Look for an existing user subscription of the given type
-        $existingSubscription = Subscription::where('user_id', auth()->id())
+
+        $userId = $data['user_id'] ?? null;
+        if (!$userId) {
+            throw new \InvalidArgumentException('Missing user_id for Subscription::store');
+        }
+        $existingSubscription = Subscription::where('user_id', $userId)
             ->where('subscription_type', $subscription_type)
             ->first();
 
@@ -238,7 +251,7 @@ class Subscription extends Model
         } else {
             // Create a new subscription
             $subscription = new Subscription();
-            $subscription->user_id = auth()->id();
+            $subscription->user_id = $userId;
             $subscription->billing_record_id = $billing_record_id;
             $subscription->subscription_type = $subscription_type;
             $subscription->status = $subscription_status;
@@ -269,7 +282,7 @@ class Subscription extends Model
                 'error_message' => $e->getMessage(),
                 'exception_class' => get_class($e),
                 'data_used' => $data,
-                'user_id' => auth()->id(),
+                'user_id' => $userId,
                 'subscription_type' => $subscription_type,
                 'timestamp' => now()->toDateTimeString()
             ]);

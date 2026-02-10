@@ -12,110 +12,113 @@ class BillingService
 {
     public function processSubscriptions(array $pending = [], array $paymentMeta = []): array
     {
-        $results = [
-            'success' => true,
-            'messages' => [],
-        ];
+        $results = ['success' => true, 'messages' => []];
 
-        // Session keys we expect
-        $sessionKeys = [
-            'fpds_query_trial',
-            'fpds_query_subscription',
-            'fpds_report_subscription',
-        ];
+        $userId = $pending['user_id'] ?? null;
+        $payloads = $pending['payloads'] ?? [];
 
-        foreach ($sessionKeys as $sessionKey) {
-            $data = Session::get($sessionKey);
+        if (!$userId) {
+            return ['success' => false, 'messages' => ['Missing user_id in pending context.']];
+        }
+
+        $keys = ['fpds_query_trial','fpds_query_subscription','fpds_report_subscription'];
+
+        $processedAny = false;
+
+        foreach ($keys as $key) {
+            $data = $payloads[$key] ?? null;
 
             if (!$data) {
-                $results['messages'][] = "No data for subscription (key: {$sessionKey})";
+                // это НЕ ошибка, просто нет такого товара в pending
                 continue;
             }
 
-            try {
-                DB::transaction(function () use ($data, $sessionKey, &$results) {
+            $processedAny = true;
 
-                    // 1. Create a billing record
+            // ✅ обогащаем данными платежа и пользователя (для BillingRecord/Subscription)
+            $data['user_id'] = $userId;
+            $data['email'] = $pending['email'] ?? null;
+
+            $data['payment_provider'] = $paymentMeta['type'] ?? 'unknown';
+            $data['reference_number'] = $paymentMeta['reference_number'] ?? ($pending['reference_number'] ?? null);
+            $data['transaction_id'] = $paymentMeta['transaction_id'] ?? null;
+            $data['request_token'] = $paymentMeta['request_token'] ?? null;
+            $data['payment_token_instrument_identifier_id'] = $paymentMeta['payment_token_instrument_identifier_id'] ?? null;
+            $data['paid_amount'] = $paymentMeta['total'] ?? ($pending['total'] ?? null);
+
+            try {
+                DB::transaction(function () use ($data, $key, &$results) {
                     $billingRecord = BillingRecord::createRecord($data);
 
-                    // 2. Add billing record ID to $data for the subscription
                     $data['billing_record_id'] = $billingRecord->id;
 
-                    // 3. Create or update subscription
                     Subscription::store($data);
 
-                    // 4. Clear session data
-                    Session::forget($sessionKey);
-
-                    // 5. Build a message using the session key as a descriptor
-                    $results['messages'][] =
-                        "Subscription '{$sessionKey}' and billing record #{$billingRecord->id} created successfully.";
+                    $results['messages'][] = "Subscription '{$key}' and billing record #{$billingRecord->id} created successfully.";
                 });
             } catch (\Exception $e) {
                 $results['success'] = false;
-                $results['messages'][] = "Failed to process subscription (key: {$sessionKey}): {$e->getMessage()}";
+                $results['messages'][] = "Failed to process subscription (key: {$key}): {$e->getMessage()}";
             }
+        }
+
+        // Если вообще ничего не обработали — это сигнал, что pending пустой/не тот
+        if (!$processedAny) {
+            $results['success'] = false;
+            $results['messages'][] = 'No subscription payloads found in pending context.';
         }
 
         return $results;
     }
 
+
     public function processReportPackage(array $pending = [], array $paymentMeta = []): array
     {
-        $results = [
-            'success' => true,
-            'messages' => [],
-        ];
+        $results = ['success' => true, 'messages' => []];
 
-        // Session keys for report packages
-        $sessionKeys = [
-            'elementary_report_package',
-            'composite_report_package'
-        ];
+        $userId = $pending['user_id'] ?? null;
+        $payloads = $pending['payloads'] ?? [];
 
-        foreach ($sessionKeys as $sessionKey) {
-            $data = Session::get($sessionKey);
+        if (!$userId) {
+            return ['success' => false, 'messages' => ['Missing user_id in pending context.']];
+        }
 
-            if (!$data) {
-                $results['messages'][] = "No data for report package (key: {$sessionKey})";
-                continue;
-            }
+        $keys = ['elementary_report_package','composite_report_package'];
+
+        $processedAny = false;
+
+        foreach ($keys as $key) {
+            $data = $payloads[$key] ?? null;
+            if (!$data) continue;
+
+            $processedAny = true;
 
             try {
-                DB::transaction(function () use ($data, $sessionKey, &$results) {
+                DB::transaction(function () use ($data, $userId, &$results) {
 
-                    // 1. Look for an existing package for the user
-                    $existingPackage = ReportPackage::where('user_id', auth()->id())
+                    $existingPackage = ReportPackage::where('user_id', $userId)
                         ->where('package_type', $data['package_type'])
                         ->first();
 
+                    $billingRecord = BillingRecord::createRecord([
+                        'user_id' => $userId,
+                        'package_type' => $data['package_type'],
+                        'reports_count' => $data['reports_count'],
+                        'package_price' => $data['package_price'],
+                    ]);
+
                     if ($existingPackage) {
-                        // 2a. If the package exists, increase remaining_reports
                         $existingPackage->remaining_reports += $data['reports_count'];
                         $existingPackage->save();
-
-                        // 2b. Create a billing record (to track the payment)
-                        $billingRecord = BillingRecord::createRecord([
-                            'package_type' => $data['package_type'],
-                            'reports_count' => $data['reports_count'],
-                            'package_price' => $data['package_price'],
-                        ]);
 
                         $results['messages'][] =
                             "Existing '{$data['package_type']}' package updated: +{$data['reports_count']} reports. Billing record #{$billingRecord->id} created.";
                     } else {
-                        // 2c. If the package does not exist, create a new record
-                        $billingRecord = BillingRecord::createRecord([
-                            'package_type' => $data['package_type'],
-                            'reports_count' => $data['reports_count'],
-                            'package_price' => $data['package_price'],
-                        ]);
-
-                        $reportPackage = ReportPackage::create([
-                            'user_id' => auth()->id(),
+                        ReportPackage::create([
+                            'user_id' => $userId,
                             'billing_record_id' => $billingRecord->id,
                             'package_type' => $data['package_type'],
-                            'remaining_reports' => $data['reports_count'], // initial amount
+                            'remaining_reports' => $data['reports_count'],
                             'created_at' => now(),
                             'updated_at' => now(),
                         ]);
@@ -123,16 +126,15 @@ class BillingService
                         $results['messages'][] =
                             "New '{$data['package_type']}' package created with {$data['reports_count']} reports. Billing record #{$billingRecord->id} created.";
                     }
-
-                    // 3. Clear session data
-                    Session::forget($sessionKey);
                 });
             } catch (\Exception $e) {
                 $results['success'] = false;
-                $results['messages'][] = "Failed to process report package (key: {$sessionKey}): {$e->getMessage()}";
+                $results['messages'][] = "Failed to process report package (key: {$key}): {$e->getMessage()}";
             }
         }
 
+        // пакеты не обязаны быть в заказе — но если ты хочешь строгую проверку, оставь как в subscriptions
         return $results;
     }
+
 }
