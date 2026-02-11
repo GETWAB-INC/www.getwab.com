@@ -29,19 +29,19 @@ class RegisterController extends Controller
         $validator = Validator::make($request->all(), [
 
         // Register Open
-            // 'name' => [
-            //     'required',
-            //     'string',
-            //     'max:255',
-            //     'regex:/^[\pL\s\-]+$/u',
-            // ],
-        // Register Closed
             'name' => [
                 'required',
                 'string',
                 'max:255',
-                'in:admin',
+                'regex:/^[\pL\s\-]+$/u',
             ],
+        // Register Closed
+            // 'name' => [
+            //     'required',
+            //     'string',
+            //     'max:255',
+            //     'in:admin',
+            // ],
 
             'surname' => [
                 'nullable',
