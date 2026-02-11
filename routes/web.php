@@ -60,8 +60,8 @@ Route::post('/checkout/prepare', [CheckoutController::class, 'prepare'])->name('
 Route::post('/checkout/remove-item', [CheckoutController::class, 'removeItem'])->name('checkout.remove-item');
 Route::match(['get', 'post'], '/checkout/callback', [CheckoutController::class, 'handleCallback']); // FIS
 Route::match(['get', 'post'], '/payment/result', [CheckoutController::class, 'paymentResult']);
-Route::post('/thank-you', [CheckoutController::class, 'thankYou'])->name('thank-you');
-Route::post('/cancelled', [CheckoutController::class, 'cancelled'])->name('cancelled');
+Route::match(['get','post'],'/thank-you', [CheckoutController::class, 'thankYou'])->name('thank-you');
+Route::match(['get','post'], '/cancelled', [CheckoutController::class, 'cancelled'])->name('cancelled');
 
 // AUTH
 Route::middleware('auth')->group(function () {

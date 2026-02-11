@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller; // ✅ FIX #1: гарантируем, что Controller импортирован
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -14,7 +15,6 @@ use Illuminate\Support\Facades\Cache;
 
 class CheckoutController extends Controller
 {
-
     public function handleCallback(Request $request)
     {
         $data = $request->all();
@@ -77,7 +77,6 @@ class CheckoutController extends Controller
         }
     }
 
-
     private function saEndpoint(string $key): string
     {
         if (!config('secure_acceptance.enabled')) {
@@ -107,27 +106,30 @@ class CheckoutController extends Controller
         ]);
     }
 
-    /**
-     * 1) Принимаем данные с твоей дизайнерской формы
-     * 2) Проверяем корзину (server-truth)
-     * 3) Валидируем billing (+ card если нужно платить)
-     * 4) Для guest — создаём/логиним пользователя
-     * 5) Если $total == 0: сразу запускаем BillingService (free trial)
-     * 6) Если $total > 0: готовим Secure Acceptance fields + signature и отдаём checkout_post.blade.php
-     */
     public function prepare(Request $request)
     {
         // ----------------------------
         // A) Cart truth
         // ----------------------------
         [$itemsPresent, $total] = $this->calculateCartTotalFromSession();
+
+        // Intent: trial / purchase / restore (server-truth by cart)
+        $intent = $this->detectIntentFromCart($itemsPresent);
+
+        // trial: идём в token_create даже при total=0
+        $needsTokenization = ($intent === 'trial');
+
+        // деньги > 0 => обычный платёж
+        $requiresPayment = ((float)$total) > 0.0;
+
+        // карта нужна если платёж ИЛИ токенизация
+        $needsCard = $requiresPayment || $needsTokenization;
+
         if (empty($itemsPresent)) {
             return back()
                 ->withErrors(['cart' => 'No items in your cart. Please add products before proceeding.'])
                 ->withInput();
         }
-
-        $requiresPayment = ((float)$total) > 0.0;
 
         // ----------------------------
         // B) Normalize inputs (card + billing)
@@ -137,7 +139,8 @@ class CheckoutController extends Controller
         // ----------------------------
         // C) Validate (billing always, card only if requiresPayment)
         // ----------------------------
-        [$validated, $stateCode] = $this->validateCheckout($request, $requiresPayment);
+        [$validated, $stateCode] = $this->validateCheckout($request, $needsCard);
+
         if ($stateCode === null) {
             return back()->withErrors(['bill_state' => 'Invalid US state.'])->withInput();
         }
@@ -147,10 +150,10 @@ class CheckoutController extends Controller
         // ----------------------------
         $email = $this->ensureUserAndGetEmail($validated);
 
-        // ----------------------------
-        // E) FREE FLOW: total == 0 => без шлюза, можно сразу биллинг
-        // ----------------------------
-        if (!$requiresPayment) {
+        // E) Gateway needed?
+        $needsGateway = $requiresPayment || $needsTokenization;
+
+        if (!$needsGateway) {
             return $this->finalizeBillingAndRespond([
                 'type' => 'free',
                 'total' => number_format((float)$total, 2, '.', ''),
@@ -165,25 +168,26 @@ class CheckoutController extends Controller
         }
 
         if ($this->isStubMode()) {
-            // STUB mode: не ходим в BoA, как будто платёж прошёл
-            // Важно: для реала держи live и убери это из прода.
             return $this->finalizeBillingAndRespond([
                 'type' => 'stub',
                 'total' => number_format((float)$total, 2, '.', ''),
             ]);
         }
 
-        // Создаём контекст "ожидаем оплату"
+        // Создаём контекст "ожидаем оплату/токенизацию" — ОБЯЗАТЕЛЬНО до запроса в BoA
         $order = $this->createPendingOrderContext($itemsPresent, $total, $email, $validated, $stateCode);
 
-        // Собираем поля + подпись для pay
-        $apiUrl = env('SECURE_ACCEPTANCE_API_URL');
-        $fields = $this->buildPayFields($order, $validated, $email, $stateCode);
-        $signature = $this->signSecureAcceptance($fields, env('SECURE_ACCEPTANCE_SECRET_KEY'));
+        // Выбираем endpoint и поля по intent
+        if ($needsTokenization) {
+            $apiUrl = $this->saEndpoint('token_create');
+            $fields = $this->buildTokenCreateFields($order, $validated, $email, $stateCode);
+        } else {
+            $apiUrl = $this->saEndpoint('pay');
+            $fields = $this->buildPayFields($order, $validated, $email, $stateCode);
+        }
 
-        // $this->ddSigned($fields, $signature);
-        // $this->ddPreparePayload($apiUrl, $fields, $signature, $validated);
-        // $this->ddCheckout('full', $apiUrl, $fields, $signature, $validated);
+        // Подпись
+        $signature = $this->signSecureAcceptance($fields, env('SECURE_ACCEPTANCE_SECRET_KEY'));
 
         // Отдаём прокладку, которая POST'ит в BoA
         return view('checkout_post', [
@@ -192,16 +196,12 @@ class CheckoutController extends Controller
             'signature' => $signature,
 
             // UNSIGNED поля карты — добавятся hidden в форме
-            'card_number' => (string) $validated['card_number'],
-            'card_expiry_date' => (string) $validated['card_expiry_date'],
-            'card_cvn' => (string) $validated['card_cvn'],
+            'card_number' => (string) ($validated['card_number'] ?? ''),
+            'card_expiry_date' => (string) ($validated['card_expiry_date'] ?? ''),
+            'card_cvn' => (string) ($validated['card_cvn'] ?? ''),
         ]);
     }
 
-    /**
-     * Callback/Return URL от BoA (silent post).
-     * Здесь и только здесь запускаем BillingService для paid.
-     */
     public function paymentResult(Request $request)
     {
         Log::channel('checkout')->info("🔔 /payment/result — Method: " . $request->method());
@@ -218,77 +218,90 @@ class CheckoutController extends Controller
             ]);
         }
 
-        // TODO (очень желательно): verify signature от BoA на входящем ответе
-        // TODO: verify that req_reference_number matches our pending order
-
         $decision = (string) $request->get('decision');
         $authResponse = (string) $request->get('auth_response'); // "00" часто = ok
         $referenceNumber = (string) $request->get('req_reference_number');
 
-        // Важно: pull() удалит запись сразу после чтения (защита от повторов)
-        $pending = Cache::pull("pending_payment:{$referenceNumber}");
+        // ✅ FIX #2: защита от пустого reference_number (чтобы не было ключа pending_payment:)
+        if ($referenceNumber === '') {
+            return view('cancelled', [
+                'data' => $this->formatResultData($request),
+                'errors' => ['Missing reference number in payment response.'],
+            ]);
+        }
 
-        $isAccepted = ($decision === 'ACCEPT');
-        // Некоторые интеграции ориентируются на decision=ACCEPT, некоторые также на auth_response=00
-        // Я бы проверял оба.
-        $isAuthorized = ($authResponse === '' || $authResponse === '00'); // если поле не приходит — не ломаем
+        $pendingKey = "pending_payment:{$referenceNumber}";
+        $pending = Cache::get($pendingKey);
 
         if (!$pending) {
             Log::channel('checkout')->warning('No pending_payment in cache; cannot finalize billing safely.', [
                 'ref' => $referenceNumber
             ]);
 
-            // Не падаем 500, просто показываем нормальную ошибку
             return view('cancelled', [
                 'data' => $this->formatResultData($request),
                 'errors' => ['Payment was accepted, but order context was not found (cache expired/missing). Contact support.'],
             ]);
         }
 
+        $intent = (string) ($pending['intent'] ?? 'purchase');
+        $isTokenFlow = ($intent === 'trial');
 
-        if (!hash_equals((string)$pending['reference_number'], $referenceNumber)) {
+        $isAccepted = ($decision === 'ACCEPT');
+        $isAuthorized = ($authResponse === '' || $authResponse === '00');
+
+        if (!hash_equals((string) ($pending['reference_number'] ?? ''), $referenceNumber)) {
             Log::channel('checkout')->warning('Reference number mismatch.', [
-                'pending' => $pending['reference_number'],
+                'pending' => $pending['reference_number'] ?? null,
                 'incoming' => $referenceNumber,
             ]);
-            return view('cancelled')->with('errors', ['Payment reference mismatch.']);
+
+            return view('cancelled', [
+                'data' => $this->formatResultData($request),
+                'errors' => ['Payment reference mismatch.'],
+            ]);
         }
 
         if (!($isAccepted && $isAuthorized)) {
-            $data = $this->formatResultData($request);
-
-            // IMPORTANT: keep UX consistent + do NOT call billing
             return view('cancelled', [
-                'data' => $data,
+                'data' => $this->formatResultData($request),
                 'errors' => ['Payment was not approved.'],
             ]);
         }
 
-
-        // OK: Платёж прошёл — делаем биллинг
         $data = $this->formatResultData($request);
 
-        // paymentMeta: факты из шлюза (то, что пришло от BoA)
+        $paymentToken =
+            (string) $request->get('payment_token')
+            ?: (string) $request->get('request_token')
+            ?: '';
+
+        $instrumentId =
+            (string) $request->get('payment_token_instrument_identifier_id')
+            ?: (string) $request->get('instrument_identifier_id')
+            ?: '';
+
         $paymentMeta = [
             'type' => 'boa',
-            'total' => (string) ($request->get('auth_amount') ?? $pending['total']),
+            'flow' => $isTokenFlow ? 'token_create' : 'pay',
+
+            'total' => (string) ($request->get('auth_amount') ?? ($pending['total'] ?? '')),
             'reference_number' => $referenceNumber,
             'transaction_id' => (string) $request->get('transaction_id'),
 
-            // NEW: tokens (в твоём checkout.log они реально приходили)
-            'request_token' => (string) $request->get('request_token'),
-            'payment_token_instrument_identifier_id' => (string) $request->get('payment_token_instrument_identifier_id'),
+            'payment_token' => $paymentToken,
+            'instrument_identifier_id' => $instrumentId,
 
-            // NEW: for debugging and decisioning
             'decision' => (string) $request->get('decision'),
             'auth_response' => (string) $request->get('auth_response'),
         ];
 
-        // IMPORTANT: billing must be based on pending (server-truth) + paymentMeta (gateway facts)
         $response = $this->finalizeBillingAndRespond($pending, $paymentMeta, $data);
 
-        return $response;
+        // ВРЕМЕННО: забудь pending здесь всегда после успешного ACCEPT.
+        Cache::forget($pendingKey);
 
+        return $response;
     }
 
     // =========================================================
@@ -336,21 +349,11 @@ class CheckoutController extends Controller
         return [$itemsPresent, number_format((float)$total, 2, '.', '')];
     }
 
-    /**
-     * Server-truth: what this checkout is meant to do.
-     * Adjust mapping under your real cart keys.
-     */
     private function detectIntentFromCart(array $itemsPresent): string
     {
-        // Trial flow (example: you have fpds_query_trial in cart)
         if (in_array('fpds_query_trial', $itemsPresent, true)) {
             return 'trial';
         }
-
-        // Restore flow (пример — если у тебя есть отдельный ключ в сессии/корзине)
-        // if (in_array('fpds_restore', $itemsPresent, true)) {
-        //     return 'restore';
-        // }
 
         return 'purchase';
     }
@@ -383,7 +386,6 @@ class CheckoutController extends Controller
             'bill_country' => ['required','in:US'],
             'bill_state' => ['required','string','min:2','max:50'],
             'card_type' => ['required', 'in:001,002,003,004'],
-
         ];
 
         $cardRules = [
@@ -473,13 +475,8 @@ class CheckoutController extends Controller
         return $email;
     }
 
-    // =========================================================
-    // Helpers: Secure Acceptance build/sign
-    // =========================================================
-
     private function secureAcceptanceEnabled(): bool
     {
-        // простая проверка, чтобы не падать тихо
         return (bool) env('SECURE_ACCEPTANCE_ACCESS_KEY')
             && (bool) env('SECURE_ACCEPTANCE_PROFILE_ID')
             && (bool) env('SECURE_ACCEPTANCE_SECRET_KEY')
@@ -491,20 +488,15 @@ class CheckoutController extends Controller
         return env('BOA_SA_MODE', 'live') === 'stub';
     }
 
-    /**
-     * Pending order context хранится в Cache по reference_number (не в session).
-     * TODO: заменить на Order/Payment таблицы (recommended).
-     */
     private function createPendingOrderContext(array $itemsPresent, string $total, string $email, array $validated, string $stateCode): array
     {
         $referenceNumber = 'ORDER-' . now()->format('YmdHis') . '-' . Str::random(6);
 
-        // ✅ Слепок session-данных по каждому товару/ключу корзины
         $payloads = [];
         foreach ($itemsPresent as $k) {
-            $payloads[$k] = session()->get($k); // важно: именно snapshot
+            $payloads[$k] = session()->get($k);
         }
-        
+
         $pending = [
             'reference_number' => $referenceNumber,
             'items' => $itemsPresent,
@@ -512,11 +504,9 @@ class CheckoutController extends Controller
             'total' => $total,
             'email' => $email,
 
-            // NEW: intent and user identity (server-truth)
             'intent' => $this->detectIntentFromCart($itemsPresent),
             'user_id' => Auth::id(),
 
-            // можно сохранить минимум billing, если надо
             'bill_to_forename' => (string) $validated['name'],
             'bill_to_surname' => (string) $validated['surname'],
             'bill_to_city' => (string) $validated['city'],
@@ -524,16 +514,11 @@ class CheckoutController extends Controller
             'bill_to_zip' => (string) $validated['zip'],
         ];
 
-        // Храним 2 часа — достаточно для завершения оплаты
         Cache::put("pending_payment:{$referenceNumber}", $pending, now()->addHours(2));
 
         return $pending;
     }
 
-    /**
-     * Build fields for /silent/pay
-     * card fields НЕ включаем в $fields (они unsigned и пойдут отдельными hidden input)
-     */
     private function buildPayFields(array $order, array $validated, string $email, string $stateCode): array
     {
         $amount = $order['total'];
@@ -551,12 +536,9 @@ class CheckoutController extends Controller
             'currency'          => 'USD',
             'payment_method'    => 'card',
 
-            // NEW: merchant-defined fields (signed) to carry your business intent/user
             'merchant_defined_data1' => (string) ($order['intent'] ?? 'purchase'),
             'merchant_defined_data2' => (string) ($order['user_id'] ?? ''),
 
-
-            // Billing
             'bill_to_forename'            => (string) $validated['name'],
             'bill_to_surname'             => (string) $validated['surname'],
             'bill_to_email'               => (string) $email,
@@ -569,10 +551,8 @@ class CheckoutController extends Controller
             'card_type'         => (string) ($validated['card_type'] ?? '001'),
         ];
 
-        // UNSIGNED: card fields
         $fields['unsigned_field_names'] = 'card_number,card_expiry_date,card_cvn';
 
-        // SIGNED: список должен включать self-references signed_field_names/unsigned_field_names
         $fields['signed_field_names'] = implode(',', [
             'access_key',
             'profile_id',
@@ -613,41 +593,27 @@ class CheckoutController extends Controller
         return base64_encode(hash_hmac('sha256', $dataToSign, $secretKey, true));
     }
 
-    // =========================================================
-    // Helpers: Billing finalization
-    // =========================================================
-
-    /**
-     * Finalize business actions AFTER we have a confirmed payment outcome.
-     *
-     * IMPORTANT:
-     * - Do NOT rely on Laravel session here (BoA callback may arrive without cookies).
-     * - Use $pending (server-truth order context) + $paymentMeta (gateway facts).
-     * - Always pass $data to views (thank-you/cancelled expect it).
-     */
     private function finalizeBillingAndRespond(array $pending = [], array $paymentMeta = [], array $dataForView = [])
     {
         $billingService = new BillingService();
 
-        /**
-         * Передавай в BillingService ВСЁ, что ему нужно для принятия решения:
-         * - intent: trial / restore / purchase
-         * - items: что именно было куплено/активировано
-         * - user_id/email: на кого вешаем подписку
-         * - transaction_id + tokens: для идемпотентности/токенизации
-         *
-         * Сейчас у тебя BillingService::processSubscriptions() вызывается без аргументов —
-         * это означает, что он снова будет лазить в session() или “угадывать”.
-         * Это и есть причина “billing не делается надёжно”.
-         */
-        $subscriptionResult = $billingService->processSubscriptions($pending, $paymentMeta);
-        $packageResult      = $billingService->processReportPackage($pending, $paymentMeta);
+        $flow = (string) ($paymentMeta['flow'] ?? 'pay');
 
-        $success = ($subscriptionResult['success'] ?? false) && ($packageResult['success'] ?? false);
-        $messagesOut = array_merge(
-            $subscriptionResult['messages'] ?? [],
-            $packageResult['messages'] ?? []
-        );
+        if ($flow === 'token_create') {
+            $subscriptionResult = $billingService->processTrialTokenization($pending, $paymentMeta);
+
+            $success = (bool) ($subscriptionResult['success'] ?? false);
+            $messagesOut = $subscriptionResult['messages'] ?? [];
+        } else {
+            $subscriptionResult = $billingService->processSubscriptions($pending, $paymentMeta);
+            $packageResult      = $billingService->processReportPackage($pending, $paymentMeta);
+
+            $success = (bool) ($subscriptionResult['success'] ?? false) && (bool) ($packageResult['success'] ?? false);
+            $messagesOut = array_merge(
+                $subscriptionResult['messages'] ?? [],
+                $packageResult['messages'] ?? []
+            );
+        }
 
         if ($success) {
             return view('thank-you', [
@@ -662,11 +628,6 @@ class CheckoutController extends Controller
         ]);
     }
 
-
-    /**
-     * Делаем нормальный массив данных для вьюх.
-     * (Если у тебя уже есть formatResultData — оставь свой, или сравни и дополни.)
-     */
     private function formatResultData(Request $request): array
     {
         $forename = (string) $request->get('req_bill_to_forename');
@@ -681,7 +642,6 @@ class CheckoutController extends Controller
         $decisionMsg = (string) $request->get('decision_rmsg');
         $message = (string) $request->get('message');
 
-        // Для declined причин можно отобразить reason_code + decision_rmsg/message
         $declineReason = trim(implode(' — ', array_filter([
             $reasonCode ? "Reason code: {$reasonCode}" : null,
             $decisionMsg ?: null,
@@ -693,7 +653,7 @@ class CheckoutController extends Controller
             'amount' => (string) ($request->get('auth_amount') ?? $request->get('req_amount') ?? ''),
             'currency' => (string) ($request->get('req_currency') ?? ''),
             'card_type' => (string) ($request->get('card_type_name') ?? ''),
-            'card_last4' => (string) ($request->get('req_card_number') ?? ''), // обычно masked
+            'card_last4' => (string) ($request->get('req_card_number') ?? ''),
             'name' => $name,
             'location' => trim($city . ($state ? ", {$state}" : '') . ($zip ? " {$zip}" : '')),
             'order_number' => (string) ($request->get('req_reference_number') ?? ''),
@@ -703,10 +663,6 @@ class CheckoutController extends Controller
             'decline_reason' => $declineReason,
         ];
     }
-
-    // =========================================================
-    // Existing helpers (твои)
-    // =========================================================
 
     private function luhnCheck(string $number): bool
     {
@@ -753,10 +709,6 @@ class CheckoutController extends Controller
         return $map[$upper] ?? null;
     }
 
-    /**
-     * Verify Secure Acceptance response signature from BoA/CyberSource.
-     * We rebuild the signed string using "signed_field_names" from the incoming payload.
-     */
     private function verifySecureAcceptanceResponse(array $payload): bool
     {
         $secretKey = (string) env('SECURE_ACCEPTANCE_SECRET_KEY');
@@ -780,18 +732,10 @@ class CheckoutController extends Controller
         return hash_equals($computed, $incomingSig);
     }
 
-    /**
-     * Remove an item from the session by its key
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function removeItem(Request $request)
     {
-        // Get item key from request
         $itemKey = $request->input('item_key');
 
-        // Validate that item key is provided
         if (empty($itemKey)) {
             return response()->json([
                 'success' => false,
@@ -799,7 +743,6 @@ class CheckoutController extends Controller
             ], 400);
         }
 
-        // Check if the item exists in the session
         if (!Session::has($itemKey)) {
             return response()->json([
                 'success' => false,
@@ -807,39 +750,100 @@ class CheckoutController extends Controller
             ], 404);
         }
 
-        // Remove item from session
         Session::forget($itemKey);
 
-        // Return success response
         return response()->json([
             'success' => true,
             'message' => 'Item removed successfully'
         ]);
     }
 
-    public function thankYou()
+    public function thankYou(Request $request)
     {
-        return view('thank-you');
+        return view('thank-you', [
+            'data' => $this->formatResultData($request),
+            'messages' => [],
+        ]);
     }
 
-    public function cancelled()
+    public function cancelled(Request $request)
     {
-        return view('cancelled');
+        Log::channel('checkout')->info("🔔 /cancelled — Method: " . $request->method());
+        Log::channel('checkout')->info("🔔 /cancelled — Payload:", $request->all());
+
+        return view('cancelled', [
+            'data' => $this->formatResultData($request),
+            'errors' => ['Payment was not approved.'],
+        ]);
+    }
+
+    private function buildTokenCreateFields(array $order, array $validated, string $email, string $stateCode): array
+    {
+        $fields = [
+            'access_key'       => env('SECURE_ACCEPTANCE_ACCESS_KEY'),
+            'profile_id'       => env('SECURE_ACCEPTANCE_PROFILE_ID'),
+            'transaction_uuid' => (string) Str::uuid(),
+            'signed_date_time' => gmdate("Y-m-d\\TH:i:s\\Z"),
+            'locale'           => 'en',
+
+            'transaction_type' => 'create_payment_token',
+            'payment_method'   => 'card',
+
+            'amount'   => '0.00',
+            'currency' => 'USD',
+
+            'reference_number' => (string) $order['reference_number'],
+
+            'override_custom_receipt_page' => url('/payment/result'),
+            'override_custom_cancel_page'  => url('/cancelled'),
+
+            'merchant_defined_data1' => (string) ($order['intent'] ?? 'trial'),
+            'merchant_defined_data2' => (string) ($order['user_id'] ?? ''),
+
+            'bill_to_forename'            => (string) $validated['name'],
+            'bill_to_surname'             => (string) $validated['surname'],
+            'bill_to_email'               => (string) $email,
+            'bill_to_address_line1'       => (string) $validated['address1'],
+            'bill_to_address_line2'       => (string) ($validated['address2'] ?? ''),
+            'bill_to_address_city'        => (string) $validated['city'],
+            'bill_to_address_state'       => (string) $stateCode,
+            'bill_to_address_country'     => 'US',
+            'bill_to_address_postal_code' => (string) $validated['zip'],
+
+            'card_type' => (string) ($validated['card_type'] ?? '001'),
+        ];
+
+        $fields['unsigned_field_names'] = 'card_number,card_expiry_date,card_cvn';
+
+        $fields['signed_field_names'] = implode(',', [
+            'access_key',
+            'profile_id',
+            'transaction_uuid',
+            'signed_date_time',
+            'locale',
+            'transaction_type',
+            'payment_method',
+            'reference_number',
+            'amount',
+            'currency',
+            'override_custom_receipt_page',
+            'override_custom_cancel_page',
+            'merchant_defined_data1',
+            'merchant_defined_data2',
+            'bill_to_forename',
+            'bill_to_surname',
+            'bill_to_email',
+            'bill_to_address_line1',
+            'bill_to_address_line2',
+            'bill_to_address_city',
+            'bill_to_address_state',
+            'bill_to_address_country',
+            'bill_to_address_postal_code',
+            'card_type',
+            'signed_field_names',
+            'unsigned_field_names',
+        ]);
+
+        return $fields;
     }
 }
-
-
-// 3) TODO список (чтобы дальше довести до “правильно”)
-// Подтверждение ответа банка (verify response signature)
-// Сейчас ты доверяешь входящему POST. Это нельзя оставлять на проде.
-// Сохранение order/payment в БД
-// Сессия может потеряться (мобильные/другие браузеры). Надо таблицы:
-// orders (reference_number, user_id, status)
-// payments (order_id, transaction_id, decision, auth_response, amount)
-// Tokenization для trial
-// У тебя отдельные endpoints:
-// /silent/token/create
-// /silent/token/update
-// Для “trial + запомнить карту” нужно отдельный builder buildTokenCreateFields() и отдельный return handler, который сохранит token.
-// Очистка корзины после успеха
-// Сейчас TODO.

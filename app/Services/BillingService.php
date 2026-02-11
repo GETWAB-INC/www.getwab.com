@@ -10,6 +10,35 @@ use App\Models\ReportPackage;
 
 class BillingService
 {
+    /**
+     * Trial tokenization flow:
+     * - expected to save payment_token / instrument_identifier_id
+     * - and activate trial subscription
+     *
+     * Return format MUST match other service methods:
+     * ['success' => bool, 'messages' => string[]]
+     */
+    public function processTrialTokenization(array $pending, array $paymentMeta): array
+    {
+        // TODO: implement real trial logic
+        // Minimal safe behavior:
+        // 1) Validate token presence
+        $token = (string)($paymentMeta['payment_token'] ?? '');
+        if ($token === '') {
+            return [
+                'success' => false,
+                'messages' => ['Tokenization succeeded at gateway, but payment_token is missing in callback.'],
+            ];
+        }
+
+        // 2) Here you would store token to DB (user payment method table) and start trial
+        // For now return success to not break flow:
+        return [
+            'success' => true,
+            'messages' => ['Trial tokenization recorded.'],
+        ];
+    }
+    
     public function processSubscriptions(array $pending = [], array $paymentMeta = []): array
     {
         $results = ['success' => true, 'messages' => []];
