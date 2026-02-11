@@ -219,8 +219,11 @@ class CheckoutController extends Controller
         }
 
         $decision = (string) $request->get('decision');
-        $authResponse = (string) $request->get('auth_response'); // "00" часто = ok
+        $reasonCode = (string) $request->get('reason_code');          // ✅ 100 = OK
+        $authResponse = (string) $request->get('auth_response');       // ✅ для SALE часто "00"
+        $txType = (string) $request->get('req_transaction_type');      // ✅ create_payment_token / sale / authorization
         $referenceNumber = (string) $request->get('req_reference_number');
+
 
         // ✅ FIX #2: защита от пустого reference_number (чтобы не было ключа pending_payment:)
         if ($referenceNumber === '') {
@@ -245,10 +248,26 @@ class CheckoutController extends Controller
         }
 
         $intent = (string) ($pending['intent'] ?? 'purchase');
-        $isTokenFlow = ($intent === 'trial');
+
+        // ✅ Token-flow определяем надежно: либо intent=trial, либо txType=create_payment_token
+        $isTokenFlow = ($intent === 'trial') || ($txType === 'create_payment_token');
 
         $isAccepted = ($decision === 'ACCEPT');
+
+        // ✅ reason_code=100 означает успех (в твоём логе именно так)
+        $isReasonOk = ($reasonCode === '' || $reasonCode === '100');
+
+        /**
+         * ✅ ВАЖНО:
+         * - Для create_payment_token НЕ проверяем auth_response как "00"
+         * - Для реальной оплаты (sale/authorization) auth_response обычно должен быть "00"
+         */
         $isAuthorized = ($authResponse === '' || $authResponse === '00');
+
+        $isOk = $isTokenFlow
+            ? ($isAccepted && $isReasonOk)                // ✅ trial tokenization success rule
+            : ($isAccepted && $isReasonOk && $isAuthorized); // ✅ real charge success rule
+
 
         if (!hash_equals((string) ($pending['reference_number'] ?? ''), $referenceNumber)) {
             Log::channel('checkout')->warning('Reference number mismatch.', [
@@ -262,7 +281,7 @@ class CheckoutController extends Controller
             ]);
         }
 
-        if (!($isAccepted && $isAuthorized)) {
+        if (!$isOk) {
             return view('cancelled', [
                 'data' => $this->formatResultData($request),
                 'errors' => ['Payment was not approved.'],
@@ -271,30 +290,31 @@ class CheckoutController extends Controller
 
         $data = $this->formatResultData($request);
 
-        $paymentToken =
-            (string) $request->get('payment_token')
-            ?: (string) $request->get('request_token')
-            ?: '';
-
-        $instrumentId =
-            (string) $request->get('payment_token_instrument_identifier_id')
-            ?: (string) $request->get('instrument_identifier_id')
-            ?: '';
-
         $paymentMeta = [
             'type' => 'boa',
             'flow' => $isTokenFlow ? 'token_create' : 'pay',
 
-            'total' => (string) ($request->get('auth_amount') ?? ($pending['total'] ?? '')),
+            // ✅ суммы: для trial будет 0.00, для оплаты будет реальная
+            'total' => (string) ($request->get('auth_amount') ?? $request->get('req_amount') ?? ($pending['total'] ?? '')),
             'reference_number' => $referenceNumber,
             'transaction_id' => (string) $request->get('transaction_id'),
 
-            'payment_token' => $paymentToken,
-            'instrument_identifier_id' => $instrumentId,
+            // ✅ ВАЖНО: сохраняем поля именно под BillingService
+            'request_token' => (string) $request->get('request_token'),
 
+            // ✅ tokenization IDs (будущие списания / привязка карты)
+            'payment_token' => (string) $request->get('payment_token'),
+            'payment_token_customer_id' => (string) $request->get('payment_token_customer_id'),
+            'payment_token_payment_instrument_id' => (string) $request->get('payment_token_payment_instrument_id'),
+            'payment_token_instrument_identifier_id' => (string) $request->get('payment_token_instrument_identifier_id'),
+            'payment_account_reference' => (string) $request->get('payment_account_reference'),
+
+            // ✅ статус
             'decision' => (string) $request->get('decision'),
+            'reason_code' => (string) $request->get('reason_code'),
             'auth_response' => (string) $request->get('auth_response'),
         ];
+
 
         $response = $this->finalizeBillingAndRespond($pending, $paymentMeta, $data);
 
@@ -642,11 +662,17 @@ class CheckoutController extends Controller
         $decisionMsg = (string) $request->get('decision_rmsg');
         $message = (string) $request->get('message');
 
-        $declineReason = trim(implode(' — ', array_filter([
-            $reasonCode ? "Reason code: {$reasonCode}" : null,
-            $decisionMsg ?: null,
-            $message ?: null,
+        $statusMessage = trim(implode(' — ', array_filter([
+        $reasonCode ? "Reason code: {$reasonCode}" : null,
+        $decisionMsg ?: null,
+        $message ?: null,
         ])));
+
+        $decision = (string) $request->get('decision');
+
+        // ✅ decline_reason только если не ACCEPT
+        $declineReason = ($decision === 'ACCEPT') ? '' : $statusMessage;
+
 
         return [
             'decision' => (string) $request->get('decision'),
@@ -660,6 +686,7 @@ class CheckoutController extends Controller
             'transaction_id' => (string) ($request->get('transaction_id') ?? ''),
             'auth_code' => (string) ($request->get('auth_code') ?? ''),
             'auth_time' => (string) ($request->get('auth_time') ?? $request->get('signed_date_time') ?? ''),
+            'status_message' => $statusMessage,
             'decline_reason' => $declineReason,
         ];
     }
