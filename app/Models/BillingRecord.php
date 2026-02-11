@@ -91,7 +91,9 @@ class BillingRecord extends Model
      */
     public function getMaskedCard(): string
     {
-        return $this->card_brand . ' •••• ' . $this->card_last_four;
+        $brand = $this->card_brand ?: 'Unknown';
+        $last4 = $this->card_last_four ?: '----';
+        return $brand . ' •••• ' . $last4;
     }
 
     /**
@@ -196,15 +198,15 @@ class BillingRecord extends Model
             : self::getPackageDescription($data);
 
         return self::create([
-            'user_id' => $userId,
-            'billed_at' => now(),
-            'description' => $description,
-            'card_last_four' => $data['card_last_four'] ?? '0000',
-            'card_brand' => $data['card_brand'] ?? 'Unknown',
-            'amount' => $isSubscription ? ($data['subscription_price'] ?? 0) : ($data['package_price'] ?? 0),
-            'currency' => $data['currency'] ?? 'USD',
-            'status' => 'completed',
-            'gateway_transaction_id' => $data['transaction_id'] ?? null,
+            'user_id'                   => $userId,
+            'billed_at'                 => now(),
+            'description'               => $description,
+            'card_last_four'            => $data['card_last_four'] ?? null,
+            'card_brand'                => $data['card_brand'] ?? null,
+            'amount'                    => $isSubscription ? ($data['subscription_price'] ?? 0) : ($data['package_price'] ?? 0),
+            'currency'                  => $data['currency'] ?? 'USD',
+            'status'                    => 'completed',
+            'gateway_transaction_id'    => $data['transaction_id'] ?? null,
         ]);
     }
 

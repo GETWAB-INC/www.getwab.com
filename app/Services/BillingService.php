@@ -163,12 +163,48 @@ class BillingService
             $data['user_id'] = $userId;
             $data['email'] = $pending['email'] ?? null;
 
-            $data['payment_provider'] = $paymentMeta['type'] ?? 'unknown';
+            $data['payment_provider'] = $paymentMeta['provider'] ?? 'boa';
             $data['reference_number'] = $paymentMeta['reference_number'] ?? ($pending['reference_number'] ?? null);
             $data['transaction_id'] = $paymentMeta['transaction_id'] ?? null;
             $data['request_token'] = $paymentMeta['request_token'] ?? null;
             $data['payment_token_instrument_identifier_id'] = $paymentMeta['payment_token_instrument_identifier_id'] ?? null;
+            $data['payment_token_payment_instrument_id'] = $paymentMeta['payment_token_payment_instrument_id'] ?? null;
             $data['paid_amount'] = $paymentMeta['total'] ?? ($pending['total'] ?? null);
+
+            // =========================
+            // ✅ Card UI data for BillingRecord
+            // Prefer payment_methods (saved tokenized card), fallback to gateway response
+            // =========================
+
+            // 0) get gateway last4/brand if present
+            $gwBrand = (string)($paymentMeta['card_type_name'] ?? '');
+            $gwLast4 = null;
+            $masked = (string)($paymentMeta['req_card_number'] ?? '');
+            if ($masked !== '' && preg_match('/(\d{4})$/', $masked, $m)) {
+                $gwLast4 = $m[1];
+            }
+
+            // 1) try from payment_methods (exact by payment_instrument_id if provided; else default)
+            $pmQuery = DB::table('payment_methods')
+                ->where('user_id', $userId)
+                ->where('provider', $data['payment_provider'])
+                ->whereNull('deleted_at')
+                ->where('is_active', 1);
+
+            $piid = (string)($data['payment_token_payment_instrument_id'] ?? ''); // IMPORTANT: this is what you store as payment_instrument_id
+            if ($piid !== '') {
+                $pmQuery->where('payment_instrument_id', $piid);
+            } else {
+                $pmQuery->orderByDesc('is_default')
+                    ->orderByDesc('verified_at')
+                    ->orderByDesc('id');
+            }
+
+            $pm = $pmQuery->first();
+
+            // 2) final values
+            $data['card_last_four'] = $pm?->last_four ?: ($gwLast4 ?: null);
+            $data['card_brand']     = $pm?->brand ?: ($gwBrand ?: null);
 
             try {
                 DB::transaction(function () use ($data, $key, &$results) {
@@ -218,17 +254,49 @@ class BillingService
             $processedAny = true;
 
             try {
-                DB::transaction(function () use ($data, $userId, &$results) {
+                DB::transaction(function () use ($data, $userId, $paymentMeta, &$results) {
+
 
                     $existingPackage = ReportPackage::where('user_id', $userId)
                         ->where('package_type', $data['package_type'])
                         ->first();
 
+                        // =========================
+                        // Resolve card UI data for billing (same logic as subscriptions)
+                        // =========================
+
+                        $provider = (string)($paymentMeta['provider'] ?? 'boa');
+
+                        $pmQuery = DB::table('payment_methods')
+                            ->where('user_id', $userId)
+                            ->where('provider', $provider)
+                            ->whereNull('deleted_at')
+                            ->where('is_active', 1);
+
+                        $piid = (string)($paymentMeta['payment_token_payment_instrument_id'] ?? '');
+
+                        if ($piid !== '') {
+                            $pmQuery->where('payment_instrument_id', $piid);
+                        } else {
+                            $pmQuery->orderByDesc('is_default')
+                                ->orderByDesc('verified_at')
+                                ->orderByDesc('id');
+                        }
+
+                        $pm = $pmQuery->first();
+
                     $billingRecord = BillingRecord::createRecord([
-                        'user_id' => $userId,
-                        'package_type' => $data['package_type'],
-                        'reports_count' => $data['reports_count'],
-                        'package_price' => $data['package_price'],
+                        'user_id'        => $userId,
+                        'package_type'   => $data['package_type'],
+                        'reports_count'  => $data['reports_count'],
+                        'package_price'  => $data['package_price'],
+
+                        // ✅ add card data
+                        'card_last_four' => $pm?->last_four,
+                        'card_brand'     => $pm?->brand,
+
+                        // желательно сохранить и transaction_id
+                        'transaction_id' => $paymentMeta['transaction_id'] ?? null,
                     ]);
 
                     if ($existingPackage) {
