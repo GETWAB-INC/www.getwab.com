@@ -232,6 +232,16 @@
                     <div class="cancelled-icon">
                         <div class="cancelled-icon-inner"></div>
                     </div>
+                    @if(!empty($errorsOut))
+                        <div style="margin-top:14px; text-align:left; background:#fff3f3; border:1px solid #f1b5b5; padding:12px; border-radius:10px;">
+                            <div style="font-weight:600; margin-bottom:6px;">Debug:</div>
+                            <ul style="margin:0; padding-left:18px;">
+                                @foreach($errorsOut as $e)
+                                    <li style="font-size:14px; line-height:1.35;">{{ $e }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
                     <div class="cancelled-title-section">
                         <h1 class="cancelled-title">Payment Declined</h1>

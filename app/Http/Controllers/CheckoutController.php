@@ -214,7 +214,7 @@ class CheckoutController extends Controller
 
             return view('cancelled', [
                 'data' => $this->formatResultData($request),
-                'errors' => ['Invalid payment signature.'],
+                'errorsOut' => ['Invalid payment signature.'],
             ]);
         }
 
@@ -229,7 +229,7 @@ class CheckoutController extends Controller
         if ($referenceNumber === '') {
             return view('cancelled', [
                 'data' => $this->formatResultData($request),
-                'errors' => ['Missing reference number in payment response.'],
+                'errorsOut' => ['Missing reference number in payment response.'],
             ]);
         }
 
@@ -243,7 +243,7 @@ class CheckoutController extends Controller
 
             return view('cancelled', [
                 'data' => $this->formatResultData($request),
-                'errors' => ['Payment was accepted, but order context was not found (cache expired/missing). Contact support.'],
+                'errorsOut' => ['Payment was accepted, but order context was not found (cache expired/missing). Contact support.'],
             ]);
         }
 
@@ -277,14 +277,14 @@ class CheckoutController extends Controller
 
             return view('cancelled', [
                 'data' => $this->formatResultData($request),
-                'errors' => ['Payment reference mismatch.'],
+                'errorsOut' => ['Payment reference mismatch.'],
             ]);
         }
 
         if (!$isOk) {
             return view('cancelled', [
                 'data' => $this->formatResultData($request),
-                'errors' => ['Payment was not approved.'],
+                'errorsOut' => ['Payment was not approved.'],
             ]);
         }
 
@@ -313,6 +313,10 @@ class CheckoutController extends Controller
             'decision' => (string) $request->get('decision'),
             'reason_code' => (string) $request->get('reason_code'),
             'auth_response' => (string) $request->get('auth_response'),
+
+            'card_type_name' => (string)$request->get('card_type_name'),
+            'req_card_number' => (string)$request->get('req_card_number'),
+            'req_card_expiry_date' => (string)$request->get('req_card_expiry_date'),
         ];
 
 
@@ -620,10 +624,18 @@ class CheckoutController extends Controller
         $flow = (string) ($paymentMeta['flow'] ?? 'pay');
 
         if ($flow === 'token_create') {
-            $subscriptionResult = $billingService->processTrialTokenization($pending, $paymentMeta);
+                // 1) сохраняем payment method (tokenization)
+                $pmResult = $billingService->processTrialTokenization($pending, $paymentMeta);
 
-            $success = (bool) ($subscriptionResult['success'] ?? false);
-            $messagesOut = $subscriptionResult['messages'] ?? [];
+                // 2) создаём trial-подписку (fpds_query_trial) + billing record
+                $subResult = $billingService->processSubscriptions($pending, $paymentMeta);
+
+                $success = (bool)($pmResult['success'] ?? false) && (bool)($subResult['success'] ?? false);
+
+                $messagesOut = array_merge(
+                    $pmResult['messages'] ?? [],
+                            $subResult['messages'] ?? []
+                );
         } else {
             $subscriptionResult = $billingService->processSubscriptions($pending, $paymentMeta);
             $packageResult      = $billingService->processReportPackage($pending, $paymentMeta);
@@ -643,7 +655,7 @@ class CheckoutController extends Controller
         }
 
         return view('cancelled', [
-            'errors' => $messagesOut,
+            'errorsOut' => $messagesOut,
             'data'   => $dataForView,
         ]);
     }
@@ -800,7 +812,7 @@ class CheckoutController extends Controller
 
         return view('cancelled', [
             'data' => $this->formatResultData($request),
-            'errors' => ['Payment was not approved.'],
+            'errorsOut' => ['Payment was not approved.'],
         ]);
     }
 
