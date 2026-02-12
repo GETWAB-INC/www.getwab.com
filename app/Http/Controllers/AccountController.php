@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\VerifyNewEmail;
 use App\Models\User;
 use App\Models\PaymentMethod;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class AccountController extends Controller
@@ -212,6 +213,29 @@ class AccountController extends Controller
         $paymentMethod->delete(); // soft delete
 
         return back()->with('success', 'Payment method deleted successfully.');
+    }
+
+    public function setDefaultPaymentMethod($id)
+    {
+        $user = Auth::user();
+
+        DB::transaction(function () use ($user, $id) {
+
+            $method = PaymentMethod::where('id', $id)
+                ->where('user_id', $user->id)
+                ->whereNull('deleted_at')
+                ->where('is_active', 1)
+                ->firstOrFail();
+
+            // 1. Сбросить все default у пользователя
+            PaymentMethod::where('user_id', $user->id)
+                ->update(['is_default' => 0]);
+
+            // 2. Установить новый default
+            $method->update(['is_default' => 1]);
+        });
+
+        return back()->with('success', 'Default payment method updated.');
     }
 
 

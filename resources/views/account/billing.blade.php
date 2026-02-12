@@ -496,7 +496,7 @@
             full card data is stored.
           </p>
         </div> 
-
+        
         <div class="billing-info-container">
           @forelse ($paymentMethods as $pm)
             <div class="billing-card-item">
@@ -523,16 +523,32 @@
 
                 </div>
 
-                @if(!$pm->is_default)
-                  <form method="POST" 
-                        action="{{ route('account.payment-method.delete', $pm->id) }}"
-                        onsubmit="return confirm('Delete this payment method?');">
-                      @csrf
-                      <button type="submit" class="token-upgrade-btn">
-                          Delete Payment Method
-                      </button>
-                  </form>
-                @endif
+                <div style="display:flex; gap:10px;">
+
+                  {{-- SET DEFAULT --}}
+                  @if(!$pm->is_default)
+                    <form method="POST"
+                          action="{{ route('account.payment-method.default', $pm->id) }}">
+                        @csrf
+                        <button type="submit" class="token-upgrade-btn">
+                          Set as Default
+                        </button>
+                    </form>
+                  @endif
+
+                  {{-- DELETE --}}
+                  @if(!$pm->is_default)
+                    <form method="POST"
+                          action="{{ route('account.payment-method.delete', $pm->id) }}"
+                          onsubmit="return confirm('Delete this payment method?');">
+                        @csrf
+                        <button type="submit" class="token-upgrade-btn">
+                          Delete
+                        </button>
+                    </form>
+                  @endif
+
+                </div>
 
               </div>
             </div>
@@ -548,6 +564,7 @@
             </div>
           @endforelse
         </div>
+
 
 
         <div class="billing-history-container">

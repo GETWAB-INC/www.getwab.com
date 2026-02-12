@@ -75,6 +75,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/account/subscription', [AccountController::class, 'subscription'])->name('account.subscription');
     Route::get('/account/billing', [AccountController::class, 'billing'])->name('account.billing');
     Route::post('/account/payment-method/{id}/delete', [AccountController::class, 'deletePaymentMethod'])->name('account.payment-method.delete');
+    Route::post('/account/payment-method/{id}/default', [AccountController::class, 'setDefaultPaymentMethod'])->name('account.payment-method.default');
     Route::get('/account/profile', [AccountController::class, 'profile'])->name('account.profile');
     Route::post('/update-profile', [AccountController::class, 'updateProfile'])->name('update.profile');
     Route::get('/email/change/verify', [AccountController::class, 'verifyNewEmail'])->name('email.change.verify');
