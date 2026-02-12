@@ -130,7 +130,7 @@
       font-size: 32px;
       font-family: Overused Grotesk;
       font-weight: 600;
-      line-height: 18px;
+      line-height: 1.1;
       word-wrap: break-word;
     }
 
@@ -469,6 +469,89 @@
         color: #ccc;
         white-space: nowrap;
       }
+
+      /* ACTIONS WRAPPER */
+      .billing-actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        justify-content: flex-end;
+        flex: 0 0 auto;
+      }
+
+      /* Make card layout stable */
+      .billing-card-content {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      /* Badge for Default */
+      .badge-default {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        line-height: 1;
+        margin-left: 10px;
+        background: rgba(0, 173, 140, 0.15);
+        color: #00ad8c;
+        border: 1px solid rgba(0, 173, 140, 0.35);
+      }
+
+      /* === FIX BUTTONS === */
+      /* Replace your current token-upgrade-btn width/height/font-size rules */
+      .token-upgrade-btn {
+        position: relative;
+        padding: 12px 16px;
+        background: linear-gradient(360deg, #00ad8c 0%, #00755f 51%);
+        border: none;
+        border-radius: 7px;
+        color: white;
+        font-size: 16px;        /* was 24 */
+        font-weight: 600;
+        line-height: 1;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+        min-width: 140px;       /* was 120 + huge width */
+        width: auto;            /* instead of 315px */
+        height: 44px;           /* instead of 65px */
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-family: Overused Grotesk;
+      }
+
+      .token-upgrade-btn::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(360deg, #00624f 0%, #005d4b 97%);
+        opacity: 0;
+        z-index: -1;
+        transition: opacity 0.4s ease;
+        border-radius: 7px;
+      }
+
+      .token-upgrade-btn:hover::before {
+        opacity: 1;
+      }
+
+      /* Secondary style for Delete */
+      .token-upgrade-btn.delete {
+        background: #3a3a3a;
+        border: 1px solid #555;
+      }
+
+      .token-upgrade-btn.delete::before {
+        background: #2f2f2f;
+      }
+
     }
   </style>
 </head>
@@ -496,58 +579,52 @@
             full card data is stored.
           </p>
         </div> 
-        
+
         <div class="billing-info-container">
           @forelse ($paymentMethods as $pm)
             <div class="billing-card-item">
               <div class="billing-card-content">
-                <div class="billing-details">
 
+                <div class="billing-details">
                   <div class="billing-card-number">
                     {{ $pm->brand ?? strtoupper($pm->provider ?? 'Card') }}
-                    •••• {{ $pm->last_four }}
+                    •••• {{ $pm->last_four ?? '----' }}
 
                     @if($pm->is_default)
-                      <span style="margin-left:8px; font-size:12px; color:green;">
-                        Default
-                      </span>
+                      <span class="badge-default">Default</span>
                     @endif
                   </div>
 
                   <div class="billing-expiry">
                     <span>Expires: </span>
                     <span>
-                      {{ str_pad($pm->exp_month, 2, '0', STR_PAD_LEFT) }}/{{ $pm->exp_year }}
+                      {{ str_pad((string)($pm->exp_month ?? ''), 2, '0', STR_PAD_LEFT) }}/{{ $pm->exp_year ?? '' }}
                     </span>
                   </div>
-
                 </div>
 
-                <div style="display:flex; gap:10px;">
-
+                <div class="billing-actions">
                   {{-- SET DEFAULT --}}
-                  @if(!$pm->is_default)
-                    <form method="POST"
-                          action="{{ route('account.payment-method.default', $pm->id) }}">
-                        @csrf
-                        <button type="submit" class="token-upgrade-btn">
-                          Set as Default
-                        </button>
+                  @if(!(bool)$pm->is_default)
+                    <form method="POST" action="{{ route('account.payment-method.default', $pm->id) }}">
+                      @csrf
+                      <button type="submit" class="token-upgrade-btn">
+                        Set as Default
+                      </button>
                     </form>
                   @endif
 
                   {{-- DELETE --}}
-                  @if(!$pm->is_default)
+                  @if(!(bool)$pm->is_default)
                     <form method="POST"
                           action="{{ route('account.payment-method.delete', $pm->id) }}"
                           onsubmit="return confirm('Delete this payment method?');">
-                        @csrf
-                        <button type="submit" class="token-upgrade-btn">
-                          Delete
-                        </button>
+                      @csrf
+                      <button type="submit" class="token-upgrade-btn delete">
+                        Delete
+                      </button>
                     </form>
                   @endif
-
                 </div>
 
               </div>
@@ -556,14 +633,14 @@
             <div class="billing-card-item">
               <div class="billing-card-content">
                 <div class="billing-details">
-                  <div class="billing-card-number">
-                    No saved payment methods.
-                  </div>
+                  <div class="billing-card-number">No saved payment methods.</div>
+                  <div class="billing-expiry">Add a payment method during checkout.</div>
                 </div>
               </div>
             </div>
           @endforelse
         </div>
+
 
 
 
