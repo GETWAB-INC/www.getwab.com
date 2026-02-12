@@ -156,6 +156,17 @@ class AccountController extends Controller
      */
     public function billing(Request $request)
     {
+        $itemsToShow = [
+            'single_elementary_report' => 'Elementary Report',
+            'single_composite_report' => 'Composite Report',
+            'elementary_report_package' => 'Elementary Package',
+            'composite_report_package' => 'Composite Package',
+            'fpds_query_subscription' => 'FPDS Query Subscription',
+            'fpds_report_subscription' => 'FPDS Report Subscription',
+        ];
+
+        $user = Auth::user();
+
         // ✅ payment_methods напрямую
         $paymentMethods = DB::table('payment_methods')
             ->where('user_id', $user->id)
@@ -177,17 +188,6 @@ class AccountController extends Controller
                 'created_at',
             ])
             ->get();
-
-        $itemsToShow = [
-            'single_elementary_report' => 'Elementary Report',
-            'single_composite_report' => 'Composite Report',
-            'elementary_report_package' => 'Elementary Package',
-            'composite_report_package' => 'Composite Package',
-            'fpds_query_subscription' => 'FPDS Query Subscription',
-            'fpds_report_subscription' => 'FPDS Report Subscription',
-        ];
-
-        $user = Auth::user();
 
         $billingHistory = BillingRecord::where('user_id', $user->id)
             ->orderBy('billed_at', 'desc')
