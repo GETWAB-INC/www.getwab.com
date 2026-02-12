@@ -80,4 +80,19 @@ class MainController extends Controller
             'X-Content-Type-Options' => 'nosniff',
         ]);
     }
+
+    public function productsFpdsQuery()
+    {
+        return view('products.fpds-query');
+    }
+
+    public function productsFpdsQueryOverview()
+    {
+        return view('products.fpds-query-overview');
+    }
+
+    public function servicesGov()
+    {
+        return view('services.gov');
+    }
 }

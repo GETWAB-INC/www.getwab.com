@@ -19,6 +19,10 @@ Route::get('/privacy-policy', [MainController::class, 'privacyPolicy'])->name('p
 Route::get('/cookie-policy', [MainController::class, 'cookiePolicy'])->name('cookie-policy');
 Route::get('/terms-of-use', [MainController::class, 'termsOfUse'])->name('terms-of-use');
 Route::get('/contact-us', [MainController::class, 'contactUs'])->name('contact-us');
+Route::get('/products/fpds-query', [MainController::class, 'productsFpdsQuery'])->name('products.fpds-query');
+Route::get('/products/fpds-query/overview', action: [MainController::class, 'productsFpdsQueryOverview'])->name('products.fpds-query-overview');
+Route::get('/services/gov', action: [MainController::class, 'servicesGov'])->name('services.gov');
+
 // Terms & Conditions
 Route::get('/user-terms-conditions', function () { return view('user-terms-conditions'); })->name('user-terms-conditions');
 Route::get('/privacy-policy', function () { return view('privacy-policy'); })->name('privacy-policy');
@@ -53,9 +57,7 @@ Route::get('/unsubscribe/{email}', [EmailCompanyController::class, 'showUnsubscr
 
 // checkout
 Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
-// 1) 
 Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
-// 2) Принять UI-форму, сформировать fields+signature, вернуть checkout_post (автосабмит в BoA)
 Route::post('/checkout/prepare', [CheckoutController::class, 'prepare'])->name('checkout.prepare');
 Route::post('/checkout/remove-item', [CheckoutController::class, 'removeItem'])->name('checkout.remove-item');
 Route::match(['get', 'post'], '/checkout/callback', [CheckoutController::class, 'handleCallback']); // FIS
@@ -65,11 +67,6 @@ Route::match(['get','post'], '/cancelled', [CheckoutController::class, 'cancelle
 
 // AUTH
 Route::middleware('auth')->group(function () {
-
-    Route::get('/mail', [MainController::class, 'mail']);
-    Route::any('/_me/adminer', [MainController::class, 'adminer'])->name('adminer');
-    // article page
-    Route::get('/article', [MainController::class, 'article']);
 
     // account page
     Route::get('/account', [AccountController::class, 'account'])->name('account');
@@ -83,11 +80,21 @@ Route::middleware('auth')->group(function () {
     Route::post('/account/upload-avatar', [AccountController::class, 'uploadAvatar'])->name('upload.avatar');
     Route::delete('/account/remove-avatar', [AccountController::class, 'removeAvatar'])->name('remove.avatar');
     Route::post('/order/package', [ReportPackageController::class, 'orderPackage'])->name('order.package');
-    Route::post('/order/subscription', [SubscriptionController::class, 'orderSubscription'])->name('order.subscription');
+    Route::post('/order/subscription', [SubscriptionController::class, 'orderSubscription'])->name('order.subscription')->withoutMiddleware('auth');
     Route::post('/cancel/subscription', [SubscriptionController::class, 'cancelSubscription'])->name('cancel.subscription');
     Route::post('/restore/subscription', [SubscriptionController::class, 'restoreSubscription'])->name('restore.subscription');
     Route::post('/renew/subscription', [SubscriptionController::class, 'renewSubscription'])->name('renew.subscription');
+    
+});
 
+// AUTH
+Route::middleware('admin')->group(function () {
+
+
+    Route::get('/mail', [MainController::class, 'mail']);
+    Route::any('/_me/adminer', [MainController::class, 'adminer'])->name('adminer');
+    
+    
     // library
     Route::get('/library', [LibraryController::class, 'index'])->name('library');
     Route::get('/library/{report_code}', [LibraryController::class, 'show'])->name('library.show');
@@ -101,27 +108,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/report/generate', [ReportController::class, 'generate'])->name('report.generate');
 
     // Products
-    Route::get('/products/fpds-query', function () { return view('products.fpds-query'); })->name('products.fpds-query')->withoutMiddleware('auth');
     Route::get('/products/fpds-reports', function () { return view('products.fpds-reports'); })->name('products.fpds-reports');
     Route::get('/products/fpds-charts', function () { return view('products.fpds-charts'); });
 
-    // Products Overview
-    Route::get('/products/fpds-query/overview', function () { return view('products.fpds-query-overview'); })->name('products.fpds-query-overview')->withoutMiddleware('auth');
+    // Archive
     Route::get('/products/fpds-reports/overview', function () { return view('products.fpds-reports-overview'); })->name('products.fpds-reports-overview');
-    Route::get('/products/fpds-charts/overview', function () { return view('products.fpds-charts-overview'); });
+    Route::get('/products/fpds-charts/overview', function () { return view('products.fpds-charts-overview'); })->name('products.fpds-charts-overview');
 
-    // Services
-    Route::get('/services/gov', function () { return view('services.gov'); })->name('services.gov')->withoutMiddleware('auth');
-    Route::get('/services/biz', function () { return view('services.biz'); })->name('services.biz');
-
-    
-
-    
-// Old checkout
-// Route::get('/checkout-test', [CheckoutController::class, 'showCheckout']); // form
-// Route::post('/checkout/pay', [CheckoutController::class, 'processPayment']); // send form
-
-
-
-    
+    Route::get('/article', [MainController::class, 'article']);
+ 
 });
