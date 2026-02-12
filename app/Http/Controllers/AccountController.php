@@ -13,7 +13,7 @@ use App\Models\Subscription;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\VerifyNewEmail;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
+use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\Log;
 
 class AccountController extends Controller
@@ -167,15 +167,14 @@ class AccountController extends Controller
 
         $user = Auth::user();
 
-        // ✅ payment_methods напрямую
-        $paymentMethods = DB::table('payment_methods')
+        $paymentMethods = PaymentMethod::query()
             ->where('user_id', $user->id)
-            ->whereNull('deleted_at')     // если используешь soft delete
+            ->whereNull('deleted_at')
             ->where('is_active', 1)
             ->orderByDesc('is_default')
             ->orderByDesc('verified_at')
             ->orderByDesc('created_at')
-            ->select([
+            ->get([
                 'id',
                 'provider',
                 'brand',
@@ -186,8 +185,7 @@ class AccountController extends Controller
                 'is_active',
                 'verified_at',
                 'created_at',
-            ])
-            ->get();
+            ]);
 
         $billingHistory = BillingRecord::where('user_id', $user->id)
             ->orderBy('billed_at', 'desc')
@@ -197,6 +195,25 @@ class AccountController extends Controller
 
         return view('account.billing', compact('user', 'paymentMethods', 'itemsToShow', 'billingHistory'));
     }
+
+    public function deletePaymentMethod($id)
+    {
+        $user = Auth::user();
+
+        $paymentMethod = PaymentMethod::where('id', $id)
+            ->where('user_id', $user->id)
+            ->firstOrFail();
+
+        // Если метод default — запрещаем удаление (по желанию)
+        if ($paymentMethod->is_default) {
+            return back()->with('error', 'Default payment method cannot be deleted.');
+        }
+
+        $paymentMethod->delete(); // soft delete
+
+        return back()->with('success', 'Payment method deleted successfully.');
+    }
+
 
     /**
      * Show the user's profile page.

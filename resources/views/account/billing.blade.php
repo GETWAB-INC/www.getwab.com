@@ -505,9 +505,9 @@
 
                   <div class="billing-card-number">
                     {{ $pm->brand ?? strtoupper($pm->provider ?? 'Card') }}
-                    •••• {{ $pm->last_four ?? '----' }}
+                    •••• {{ $pm->last_four }}
 
-                    @if((int)$pm->is_default === 1)
+                    @if($pm->is_default)
                       <span style="margin-left:8px; font-size:12px; color:green;">
                         Default
                       </span>
@@ -517,17 +517,22 @@
                   <div class="billing-expiry">
                     <span>Expires: </span>
                     <span>
-                      {{ str_pad((string)($pm->exp_month ?? ''), 2, '0', STR_PAD_LEFT) }}/{{ $pm->exp_year ?? '' }}
+                      {{ str_pad($pm->exp_month, 2, '0', STR_PAD_LEFT) }}/{{ $pm->exp_year }}
                     </span>
                   </div>
 
                 </div>
 
-                <button class="token-upgrade-btn"
-                        type="button"
-                        data-payment-method-id="{{ $pm->id }}">
-                  Delete Payment Method
-                </button>
+                @if(!$pm->is_default)
+                  <form method="POST" 
+                        action="{{ route('account.payment-method.delete', $pm->id) }}"
+                        onsubmit="return confirm('Delete this payment method?');">
+                      @csrf
+                      <button type="submit" class="token-upgrade-btn">
+                          Delete Payment Method
+                      </button>
+                  </form>
+                @endif
 
               </div>
             </div>
