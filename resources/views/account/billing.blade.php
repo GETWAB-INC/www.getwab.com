@@ -346,6 +346,89 @@
       color: #FFBE5C;
     }
 
+    /* ACTIONS WRAPPER */
+    .billing-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: flex-end;
+      flex: 0 0 auto;
+    }
+
+    /* Make card layout stable */
+    .billing-card-content {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    /* Badge for Default */
+    .badge-default {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      line-height: 1;
+      margin-left: 10px;
+      background: rgba(0, 173, 140, 0.15);
+      color: #00ad8c;
+      border: 1px solid rgba(0, 173, 140, 0.35);
+    }
+
+    /* === FIX BUTTONS === */
+    /* Replace your current token-upgrade-btn width/height/font-size rules */
+    .token-upgrade-btn {
+      position: relative;
+      padding: 12px 16px;
+      background: linear-gradient(360deg, #00ad8c 0%, #00755f 51%);
+      border: none;
+      border-radius: 7px;
+      color: white;
+      font-size: 16px;        /* was 24 */
+      font-weight: 600;
+      line-height: 1;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      min-width: 140px;       /* was 120 + huge width */
+      width: auto;            /* instead of 315px */
+      height: 44px;           /* instead of 65px */
+      box-sizing: border-box;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: Overused Grotesk;
+    }
+
+    .token-upgrade-btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(360deg, #00624f 0%, #005d4b 97%);
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.4s ease;
+      border-radius: 7px;
+    }
+
+    .token-upgrade-btn:hover::before {
+      opacity: 1;
+    }
+
+    /* Secondary style for Delete */
+    .token-upgrade-btn.delete {
+      background: #3a3a3a;
+      border: 1px solid #555;
+    }
+
+    .token-upgrade-btn.delete::before {
+      background: #2f2f2f;
+    }
+
+
 
     @media (max-width: 767px) {
       .dashboard-sidebar {
@@ -469,89 +552,7 @@
         color: #ccc;
         white-space: nowrap;
       }
-
-      /* ACTIONS WRAPPER */
-      .billing-actions {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-        justify-content: flex-end;
-        flex: 0 0 auto;
-      }
-
-      /* Make card layout stable */
-      .billing-card-content {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-      }
-
-      /* Badge for Default */
-      .badge-default {
-        display: inline-flex;
-        align-items: center;
-        padding: 4px 10px;
-        border-radius: 999px;
-        font-size: 12px;
-        line-height: 1;
-        margin-left: 10px;
-        background: rgba(0, 173, 140, 0.15);
-        color: #00ad8c;
-        border: 1px solid rgba(0, 173, 140, 0.35);
-      }
-
-      /* === FIX BUTTONS === */
-      /* Replace your current token-upgrade-btn width/height/font-size rules */
-      .token-upgrade-btn {
-        position: relative;
-        padding: 12px 16px;
-        background: linear-gradient(360deg, #00ad8c 0%, #00755f 51%);
-        border: none;
-        border-radius: 7px;
-        color: white;
-        font-size: 16px;        /* was 24 */
-        font-weight: 600;
-        line-height: 1;
-        cursor: pointer;
-        transition: transform 0.2s ease;
-        min-width: 140px;       /* was 120 + huge width */
-        width: auto;            /* instead of 315px */
-        height: 44px;           /* instead of 65px */
-        box-sizing: border-box;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        font-family: Overused Grotesk;
-      }
-
-      .token-upgrade-btn::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(360deg, #00624f 0%, #005d4b 97%);
-        opacity: 0;
-        z-index: -1;
-        transition: opacity 0.4s ease;
-        border-radius: 7px;
-      }
-
-      .token-upgrade-btn:hover::before {
-        opacity: 1;
-      }
-
-      /* Secondary style for Delete */
-      .token-upgrade-btn.delete {
-        background: #3a3a3a;
-        border: 1px solid #555;
-      }
-
-      .token-upgrade-btn.delete::before {
-        background: #2f2f2f;
-      }
-
+      
     }
   </style>
 </head>
