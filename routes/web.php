@@ -90,10 +90,8 @@ Route::middleware('auth')->group(function () {
 // AUTH
 Route::middleware('admin')->group(function () {
 
-
     Route::get('/mail', [MainController::class, 'mail']);
     Route::any('/_me/adminer', [MainController::class, 'adminer'])->name('adminer');
-    
     
     // library
     Route::get('/library', [LibraryController::class, 'index'])->name('library');

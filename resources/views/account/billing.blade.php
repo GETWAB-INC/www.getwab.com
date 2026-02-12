@@ -495,48 +495,55 @@
             payment tokens. No<br>
             full card data is stored.
           </p>
-        </div>
+        </div> 
 
         <div class="billing-info-container">
-          <div class="billing-card-item">
-            <div class="billing-card-content">
-              <div class="billing-details">
-                <div class="billing-card-number">Visa •••• 1111</div>
-                <div class="billing-expiry">
-                  <span>Expires: </span>
-                  <span>12/30</span>
-                </div>
-              </div>
-              <button class="token-upgrade-btn">Delete Payment Method</button>
-            </div>
-          </div>
+          @forelse ($paymentMethods as $pm)
+            <div class="billing-card-item">
+              <div class="billing-card-content">
+                <div class="billing-details">
 
-          <div class="billing-card-item">
-            <div class="billing-card-content">
-              <div class="billing-details">
-                <div class="billing-card-number">MasterCard •••• 2222</div>
-                <div class="billing-expiry">
-                  <span>Expires: </span>
-                  <span>08/26</span>
-                </div>
-              </div>
-              <button class="token-upgrade-btn">Delete Payment Method</button>
-            </div>
-          </div>
+                  <div class="billing-card-number">
+                    {{ $pm->brand ?? strtoupper($pm->provider ?? 'Card') }}
+                    •••• {{ $pm->last_four ?? '----' }}
 
-          <div class="billing-card-item">
-            <div class="billing-card-content">
-              <div class="billing-details">
-                <div class="billing-card-number">Amex •••• 3456</div>
-                <div class="billing-expiry">
-                  <span>Expires: </span>
-                  <span>03/28</span>
+                    @if((int)$pm->is_default === 1)
+                      <span style="margin-left:8px; font-size:12px; color:green;">
+                        Default
+                      </span>
+                    @endif
+                  </div>
+
+                  <div class="billing-expiry">
+                    <span>Expires: </span>
+                    <span>
+                      {{ str_pad((string)($pm->exp_month ?? ''), 2, '0', STR_PAD_LEFT) }}/{{ $pm->exp_year ?? '' }}
+                    </span>
+                  </div>
+
+                </div>
+
+                <button class="token-upgrade-btn"
+                        type="button"
+                        data-payment-method-id="{{ $pm->id }}">
+                  Delete Payment Method
+                </button>
+
+              </div>
+            </div>
+          @empty
+            <div class="billing-card-item">
+              <div class="billing-card-content">
+                <div class="billing-details">
+                  <div class="billing-card-number">
+                    No saved payment methods.
+                  </div>
                 </div>
               </div>
-              <button class="token-upgrade-btn">Delete Payment Method</button>
             </div>
-          </div>
+          @endforelse
         </div>
+
 
         <div class="billing-history-container">
           <div class="billing-header-row">

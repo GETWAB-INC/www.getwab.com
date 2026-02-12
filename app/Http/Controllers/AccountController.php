@@ -13,6 +13,7 @@ use App\Models\Subscription;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\VerifyNewEmail;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class AccountController extends Controller
@@ -155,6 +156,28 @@ class AccountController extends Controller
      */
     public function billing(Request $request)
     {
+        // ✅ payment_methods напрямую
+        $paymentMethods = DB::table('payment_methods')
+            ->where('user_id', $user->id)
+            ->whereNull('deleted_at')     // если используешь soft delete
+            ->where('is_active', 1)
+            ->orderByDesc('is_default')
+            ->orderByDesc('verified_at')
+            ->orderByDesc('created_at')
+            ->select([
+                'id',
+                'provider',
+                'brand',
+                'last_four',
+                'exp_month',
+                'exp_year',
+                'is_default',
+                'is_active',
+                'verified_at',
+                'created_at',
+            ])
+            ->get();
+
         $itemsToShow = [
             'single_elementary_report' => 'Elementary Report',
             'single_composite_report' => 'Composite Report',
@@ -172,7 +195,7 @@ class AccountController extends Controller
 
         session(['last_account_section' => route('account.billing')]);
 
-        return view('account.billing', compact('user', 'itemsToShow', 'billingHistory'));
+        return view('account.billing', compact('user', 'paymentMethods', 'itemsToShow', 'billingHistory'));
     }
 
     /**
