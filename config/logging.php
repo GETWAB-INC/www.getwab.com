@@ -12,9 +12,8 @@ return [
     | Default Log Channel
     |--------------------------------------------------------------------------
     |
-    | This option defines the default log channel that is utilized to write
-    | messages to your logs. The value provided here should match one of
-    | the channels present in the list of "channels" configured below.
+    | Default channel used when you call Log::info()/error() without specifying
+    | a channel. "stack" is common for combining multiple channels.
     |
     */
 
@@ -24,16 +23,11 @@ return [
     |--------------------------------------------------------------------------
     | Deprecations Log Channel
     |--------------------------------------------------------------------------
-    |
-    | This option controls the log channel that should be used to log warnings
-    | regarding deprecated PHP and library features. This allows you to get
-    | your application ready for upcoming major versions of dependencies.
-    |
     */
 
     'deprecations' => [
         'channel' => env('LOG_DEPRECATIONS_CHANNEL', 'null'),
-        'trace' => env('LOG_DEPRECATIONS_TRACE', false),
+        'trace'   => env('LOG_DEPRECATIONS_TRACE', false),
     ],
 
     /*
@@ -41,21 +35,26 @@ return [
     | Log Channels
     |--------------------------------------------------------------------------
     |
-    | Here you may configure the log channels for your application. Laravel
-    | utilizes the Monolog PHP logging library, which includes a variety
-    | of powerful log handlers and formatters that you're free to use.
-    |
-    | Available drivers: "single", "daily", "slack", "syslog",
-    |                    "errorlog", "monolog", "custom", "stack"
+    | For billing we want:
+    | - separate files by process branch (gateway/webhook/cron/security)
+    | - daily rotation
+    | - JSON formatting (easy to search and parse)
+    | - sane retention (30-60 days)
     |
     */
 
     'channels' => [
 
+        /*
+        |--------------------------------------------------------------------------
+        | Legacy / existing checkout logs (kept as-is)
+        |--------------------------------------------------------------------------
+        */
+
         'checkout' => [
             'driver' => 'single',
-            'path' => storage_path('logs/checkout.log'),
-            'level' => 'info',
+            'path'   => storage_path('logs/checkout.log'),
+            'level'  => 'info',
         ],
 
         'checkout_error' => [
@@ -63,12 +62,92 @@ return [
             'path'   => storage_path('logs/checkout_error.log'),
             'level'  => 'error',
         ],
-        
+
+        /*
+        |--------------------------------------------------------------------------
+        | Billing / Payments: structured, branch-separated logs
+        |--------------------------------------------------------------------------
+        */
+
+        // Main billing lifecycle: subscription activation/renewal/expiry decisions.
+        'billing' => [
+            'driver'  => 'daily',
+            'path'    => storage_path('logs/billing/billing.log'),
+            'level'   => env('LOG_LEVEL_BILLING', 'info'),
+            'days'    => env('LOG_DAYS_BILLING', 30),
+            'replace_placeholders' => true,
+        ],
+
+        // Raw-ish gateway interaction logs (requests/responses metadata, masked).
+        // Use this to debug provider-specific fields without polluting main billing.log.
+        'billing_gateway' => [
+            'driver'  => 'daily',
+            'path'    => storage_path('logs/billing/gateway.log'),
+            'level'   => env('LOG_LEVEL_BILLING_GATEWAY', 'info'),
+            'days'    => env('LOG_DAYS_BILLING_GATEWAY', 30),
+            'replace_placeholders' => true,
+        ],
+
+        // Incoming callbacks/webhooks: always log "received/validated/deduped/processed".
+        // This is the first place to look when "user says paid but no subscription".
+        'billing_webhook' => [
+            'driver'  => 'daily',
+            'path'    => storage_path('logs/billing/webhook.log'),
+            'level'   => env('LOG_LEVEL_BILLING_WEBHOOK', 'info'),
+            'days'    => env('LOG_DAYS_BILLING_WEBHOOK', 30),
+            'replace_placeholders' => true,
+        ],
+
+        // Scheduled jobs (expire trials, mark subscriptions expired, renewal automation, etc.)
+        'billing_cron' => [
+            'driver'  => 'daily',
+            'path'    => storage_path('logs/billing/cron.log'),
+            'level'   => env('LOG_LEVEL_BILLING_CRON', 'info'),
+            'days'    => env('LOG_DAYS_BILLING_CRON', 30),
+            'replace_placeholders' => true,
+        ],
+
+        // Security-sensitive events: invalid signatures, replay attempts, missing required fields, etc.
+        // Keep longer retention and higher minimum level.
+        'security' => [
+            'driver'  => 'daily',
+            'path'    => storage_path('logs/security/security.log'),
+            'level'   => env('LOG_LEVEL_SECURITY', 'warning'),
+            'days'    => env('LOG_DAYS_SECURITY', 60),
+            'replace_placeholders' => true,
+        ],
+
+        // Optional: high-level business events only (good for quick dashboards/grep).
+        // Example: "trial_started", "subscription_activated", "payment_failed".
+        'billing_audit' => [
+            'driver'  => 'daily',
+            'path'    => storage_path('logs/billing/audit.log'),
+            'level'   => env('LOG_LEVEL_BILLING_AUDIT', 'info'),
+            'days'    => env('LOG_DAYS_BILLING_AUDIT', 60),
+            'replace_placeholders' => true,
+        ],
+
+        /*
+        |--------------------------------------------------------------------------
+        | Stack: combine channels for convenience
+        |--------------------------------------------------------------------------
+        |
+        | Tip: Set LOG_CHANNEL=stack and LOG_STACK=billing,billing_webhook,security
+        | in .env to get the most useful default behavior.
+        |
+        */
+
         'stack' => [
             'driver' => 'stack',
             'channels' => explode(',', env('LOG_STACK', 'single')),
             'ignore_exceptions' => false,
         ],
+
+        /*
+        |--------------------------------------------------------------------------
+        | Default Laravel channels (unchanged)
+        |--------------------------------------------------------------------------
+        */
 
         'single' => [
             'driver' => 'single',

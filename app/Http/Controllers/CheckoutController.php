@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller; // ✅ FIX #1: гарантируем, что Controller импортирован
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class CheckoutController extends Controller
 {
@@ -620,45 +622,79 @@ class CheckoutController extends Controller
     private function finalizeBillingAndRespond(array $pending = [], array $paymentMeta = [], array $dataForView = [])
     {
         $billingService = new BillingService();
-
         $flow = (string) ($paymentMeta['flow'] ?? 'pay');
 
-        if ($flow === 'token_create') {
-                // 1) сохраняем payment method (tokenization)
-                $pmResult = $billingService->processTrialTokenization($pending, $paymentMeta);
+        // Context for logs (same keys everywhere)
+        $ctx = [
+            'flow' => $flow,
+            'user_id' => $pending['user_id'] ?? null,
+            'reference_number' => $pending['reference_number'] ?? ($paymentMeta['reference_number'] ?? null),
+            'transaction_id' => $paymentMeta['transaction_id'] ?? null,
+            'intent' => $pending['intent'] ?? null,
+        ];
 
-                // 2) создаём trial-подписку (fpds_query_trial) + billing record
-                $subResult = $billingService->processSubscriptions($pending, $paymentMeta);
+        try {
+            $result = DB::transaction(function () use ($billingService, $pending, $paymentMeta, $flow, $ctx) {
 
-                $success = (bool)($pmResult['success'] ?? false) && (bool)($subResult['success'] ?? false);
+                Log::channel('billing')->info('Billing finalize: begin', $ctx);
 
-                $messagesOut = array_merge(
-                    $pmResult['messages'] ?? [],
-                            $subResult['messages'] ?? []
-                );
-        } else {
-            $subscriptionResult = $billingService->processSubscriptions($pending, $paymentMeta);
-            $packageResult      = $billingService->processReportPackage($pending, $paymentMeta);
+                if ($flow === 'token_create') {
+                    Log::channel('billing_webhook')->info('Tokenization: processing payment method', $ctx);
+                    $pmResult = $billingService->processTrialTokenization($pending, $paymentMeta);
+                    if (!($pmResult['success'] ?? false)) {
+                        Log::channel('billing')->error('Tokenization: payment method failed', $ctx + ['errors' => $pmResult['messages'] ?? []]);
+                        throw new \RuntimeException('Tokenization payment method failed.');
+                    }
 
-            $success = (bool) ($subscriptionResult['success'] ?? false) && (bool) ($packageResult['success'] ?? false);
-            $messagesOut = array_merge(
-                $subscriptionResult['messages'] ?? [],
-                $packageResult['messages'] ?? []
-            );
-        }
+                    Log::channel('billing')->info('Tokenization: creating trial subscription', $ctx);
+                    $subResult = $billingService->processSubscriptions($pending, $paymentMeta);
+                    if (!($subResult['success'] ?? false)) {
+                        Log::channel('billing')->error('Tokenization: trial subscription failed', $ctx + ['errors' => $subResult['messages'] ?? []]);
+                        throw new \RuntimeException('Tokenization subscription failed.');
+                    }
 
-        if ($success) {
+                    $messagesOut = array_merge($pmResult['messages'] ?? [], $subResult['messages'] ?? []);
+                } else {
+                    Log::channel('billing')->info('Payment: creating subscriptions', $ctx);
+                    $subscriptionResult = $billingService->processSubscriptions($pending, $paymentMeta);
+                    if (!($subscriptionResult['success'] ?? false)) {
+                        Log::channel('billing')->error('Payment: subscriptions failed', $ctx + ['errors' => $subscriptionResult['messages'] ?? []]);
+                        throw new \RuntimeException('Subscriptions failed.');
+                    }
+
+                    Log::channel('billing')->info('Payment: creating packages', $ctx);
+                    $packageResult = $billingService->processReportPackage($pending, $paymentMeta);
+                    if (!($packageResult['success'] ?? false)) {
+                        Log::channel('billing')->error('Payment: packages failed', $ctx + ['errors' => $packageResult['messages'] ?? []]);
+                        throw new \RuntimeException('Packages failed.');
+                    }
+
+                    $messagesOut = array_merge($subscriptionResult['messages'] ?? [], $packageResult['messages'] ?? []);
+                }
+
+                Log::channel('billing')->info('Billing finalize: commit', $ctx);
+
+                return ['success' => true, 'messagesOut' => $messagesOut];
+            });
+
             return view('thank-you', [
-                'messages' => $messagesOut,
-                'data'     => $dataForView,
+                'messages' => $result['messagesOut'],
+                'data' => $dataForView,
+            ]);
+
+        } catch (Throwable $e) {
+            Log::channel('checkout_error')->error('Billing finalize: rollback', $ctx + [
+                'exception' => get_class($e),
+                'message' => $e->getMessage(),
+            ]);
+
+            return view('cancelled', [
+                'errorsOut' => ['Billing failed. Please contact support.'],
+                'data' => $dataForView,
             ]);
         }
-
-        return view('cancelled', [
-            'errorsOut' => $messagesOut,
-            'data'   => $dataForView,
-        ]);
     }
+
 
     private function formatResultData(Request $request): array
     {

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 
 class BillingRecord extends Model
 {
@@ -181,33 +182,142 @@ class BillingRecord extends Model
 
     public static function createRecord(array $data): BillingRecord
     {
-        $isSubscription = isset($data['subscription_type']);
-        $isReportPackage = isset($data['package_type']);
-
-        if (!$isSubscription && !$isReportPackage) {
-            throw new \InvalidArgumentException('Data must contain either subscription_type or package_type');
-        }
-
+        // ---------------------------------------------------------------------
+        // Required: billing record must always belong to a user
+        // ---------------------------------------------------------------------
         $userId = $data['user_id'] ?? null;
         if (!$userId) {
+            Log::channel('billing')->error('BillingRecord: missing user_id', [
+                'transaction_id' => $data['transaction_id'] ?? null,
+            ]);
+
             throw new \InvalidArgumentException('Missing user_id for BillingRecord');
         }
 
+        // ---------------------------------------------------------------------
+        // Idempotency key from the gateway (may be empty/null in some flows)
+        // ---------------------------------------------------------------------
+        $tx = (string)($data['transaction_id'] ?? '');
+
+        // ---------------------------------------------------------------------
+        // Soft idempotency: quick lookup to avoid unnecessary insert attempts
+        // ---------------------------------------------------------------------
+        if ($tx !== '') {
+            $existing = self::where('user_id', $userId)
+                ->where('gateway_transaction_id', $tx)
+                ->first();
+
+            if ($existing) {
+                Log::channel('billing_webhook')->info('BillingRecord: dedupe hit (already exists)', [
+                    'user_id' => $userId,
+                    'transaction_id' => $tx,
+                    'billing_record_id' => $existing->id,
+                ]);
+
+                return $existing;
+            }
+        }
+
+        // ---------------------------------------------------------------------
+        // Determine billing type (subscription or package)
+        // ---------------------------------------------------------------------
+        $isSubscription  = isset($data['subscription_type']);
+        $isReportPackage = isset($data['package_type']);
+
+        if (!$isSubscription && !$isReportPackage) {
+            Log::channel('billing')->error('BillingRecord: invalid payload (no type flags)', [
+                'user_id' => $userId,
+                'transaction_id' => $tx ?: null,
+            ]);
+
+            throw new \InvalidArgumentException('Data must contain either subscription_type or package_type');
+        }
+
+        // ---------------------------------------------------------------------
+        // Build human-readable description
+        // ---------------------------------------------------------------------
         $description = $isSubscription
             ? self::getSubscriptionDescription($data)
             : self::getPackageDescription($data);
 
-        return self::create([
-            'user_id'                   => $userId,
-            'billed_at'                 => now(),
-            'description'               => $description,
-            'card_last_four'            => $data['card_last_four'] ?? null,
-            'card_brand'                => $data['card_brand'] ?? null,
-            'amount'                    => $isSubscription ? ($data['subscription_price'] ?? 0) : ($data['package_price'] ?? 0),
-            'currency'                  => $data['currency'] ?? 'USD',
-            'status'                    => 'completed',
-            'gateway_transaction_id'    => $data['transaction_id'] ?? null,
-        ]);
+        // ---------------------------------------------------------------------
+        // Attempt to create billing record.
+        // DB-level protection: UNIQUE (user_id, gateway_transaction_id)
+        // prevents duplicates in race conditions / concurrent callbacks.
+        // ---------------------------------------------------------------------
+        try {
+            $record = self::create([
+                'user_id'                => $userId,
+                'billed_at'              => now(),
+                'description'            => $description,
+                'card_last_four'         => $data['card_last_four'] ?? null,
+                'card_brand'             => $data['card_brand'] ?? null,
+                'amount'                 => $isSubscription
+                    ? ($data['subscription_price'] ?? 0)
+                    : ($data['package_price'] ?? 0),
+                'currency'               => $data['currency'] ?? 'USD',
+                'status'                 => 'completed',
+                'gateway_transaction_id' => $tx !== '' ? $tx : null,
+            ]);
+
+            Log::channel('billing')->info('BillingRecord: created', [
+                'billing_record_id' => $record->id,
+                'user_id'           => $userId,
+                'transaction_id'    => $tx ?: null,
+                'amount'            => (string)$record->amount,
+                'currency'          => $record->currency,
+                'type'              => $isSubscription ? 'subscription' : 'package',
+            ]);
+
+            return $record;
+
+        } catch (\Illuminate\Database\QueryException $e) {
+
+            // -----------------------------------------------------------------
+            // If duplicate key happens, return the existing record instead of 500.
+            // MySQL duplicate unique key usually uses error code 1062.
+            // -----------------------------------------------------------------
+            $errorCode = (int)($e->errorInfo[1] ?? 0);
+
+            if ($errorCode === 1062 && $tx !== '') {
+                $existing = self::where('user_id', $userId)
+                    ->where('gateway_transaction_id', $tx)
+                    ->first();
+
+                if ($existing) {
+                    Log::channel('billing_webhook')->warning('BillingRecord: DB duplicate prevented (unique index)', [
+                        'user_id' => $userId,
+                        'transaction_id' => $tx,
+                        'billing_record_id' => $existing->id,
+                    ]);
+
+                    return $existing;
+                }
+
+                // Extremely rare edge-case: duplicate error but record not found (replication lag etc.)
+                Log::channel('billing')->error('BillingRecord: duplicate error but existing record not found', [
+                    'user_id' => $userId,
+                    'transaction_id' => $tx,
+                    'db_error_code' => $errorCode,
+                ]);
+
+                // Fallback: rethrow (this should not happen normally)
+                throw $e;
+            }
+
+            // Non-duplicate DB error: log and rethrow
+            Log::channel('billing')->error('BillingRecord: DB error during create', [
+                'user_id' => $userId,
+                'transaction_id' => $tx ?: null,
+                'db_error_code' => $errorCode,
+                'exception' => get_class($e),
+                'message' => $e->getMessage(),
+            ]);
+
+            throw $e;
+        }
     }
+
+
 
 }
