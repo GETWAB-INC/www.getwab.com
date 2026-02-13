@@ -2117,12 +2117,12 @@
                             </div>
                         </div>
 
-                        <div class="step-3-save-card-option">
+                        {{-- <div class="step-3-save-card-option">
                             <input type="checkbox" id="step-3-saveCardOption" class="step-3-option-checkbox"
                                 checked>
                             <label for="step-3-saveCardOption" class="step-3-checkbox-text">Save this card for
                                 future purchases</label>
-                        </div>
+                        </div> --}}
 
                     </div>
                 </div>
