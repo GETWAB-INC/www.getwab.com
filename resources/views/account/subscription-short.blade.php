@@ -92,8 +92,8 @@
                         @php
                     $currentPlan = $fpds_query->plan;
                 @endphp
-                <option value="Monthly" {{ $currentPlan === 'Monthly' ? 'selected' : '' }}>Monthly ($49.00/month)</option>
-                <option value="Annual" {{ $currentPlan === 'Annual' ? 'selected' : '' }}>Yearly ($390.00/year) — Save 32%</option>
+                <option value="monthly" {{ $currentPlan === 'monthly' ? 'selected' : '' }}>Monthly ($49.00/month)</option>
+                <option value="annual" {{ $currentPlan === 'annual' ? 'selected' : '' }}>Yearly ($390.00/year) — Save 32%</option>
                     </select>
                 </div>
 
@@ -123,8 +123,8 @@
 
                       <div class="selector-desktop">
                           <select class="dropdown-trigger" name="new_plan" id="renew-plan-select" required>
-                              <option value="Monthly">Monthly ($49.00/month)</option>
-                              <option value="Annual">Yearly ($390.00/year) — Save 32%</option>
+                              <option value="monthly">Monthly ($49.00/month)</option>
+                              <option value="annual">Yearly ($390.00/year) — Save 32%</option>
                           </select>
                       </div>
 
@@ -152,8 +152,8 @@
 
                   <div class="selector-desktop">
                     <select class="dropdown-trigger" name="subscription_plan" id="elem-reports-select" required>
-                      <option value="Monthly" data-price="49.00">Monthly ($49.00/month)</option>
-                      <option value="Annual" data-price="390.00">Yearly ($390.00/year) — Save 32%</option>
+                      <option value="monthly" data-price="49.00">Monthly ($49.00/month)</option>
+                      <option value="annual" data-price="390.00">Yearly ($390.00/year) — Save 32%</option>
                     </select>
 
                   </div>
@@ -240,8 +240,8 @@
                         @php
                         $currentPlan = $fpds_query->plan;
                         @endphp
-                        <option value="Monthly" {{ $currentPlan === 'Monthly' ? 'selected' : '' }}>Monthly ($49.00/month)</option>
-                        <option value="Annual" {{ $currentPlan === 'Annual' ? 'selected' : '' }}>Yearly ($490.00/year) — Save 16%</option>
+                        <option value="monthly" {{ $currentPlan === 'monthly' ? 'selected' : '' }}>Monthly ($49.00/month)</option>
+                        <option value="annual" {{ $currentPlan === 'annual' ? 'selected' : '' }}>Yearly ($490.00/year) — Save 16%</option>
                       </select>
                     </div>
                     <div class="price-mobile">
@@ -272,8 +272,8 @@
 
                     <div class="selector-desktop">
                 <select class="dropdown-trigger" name="new_plan" id="mobile-renew-plan-select" required>
-                    <option value="Monthly">Monthly ($49.00/month)</option>
-                    <option value="Annual">Yearly ($490.00/year) — Save 16%</option>
+                    <option value="monthly">Monthly ($49.00/month)</option>
+                    <option value="annual">Yearly ($490.00/year) — Save 16%</option>
                 </select>
                     </div>
 
@@ -304,8 +304,8 @@
 
                       <div class="selector-desktop">
                         <select class="dropdown-trigger" name="subscription_plan" id="mobile-elem-select" required>
-                          <option value="Monthly" data-price="49.00">Monthly ($49.00/month)</option>
-                          <option value="Annual" data-price="490.00">Yearly ($490.00/year) — Save 16%</option>
+                          <option value="monthly" data-price="49.00">Monthly ($49.00/month)</option>
+                          <option value="annual" data-price="490.00">Yearly ($490.00/year) — Save 16%</option>
                         </select>
                       </div>
 

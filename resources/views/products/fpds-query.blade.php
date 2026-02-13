@@ -747,7 +747,7 @@
                     <form action="{{ route('order.subscription') }}" method="post">
                         @csrf
                         <input type="hidden" name="subscription_type" value="fpds_query">
-                        <input type="hidden" name="subscription_plan" value="Monthly">
+                        <input type="hidden" name="subscription_plan" value="monthly">
                         
                         <button class="fpds-query-btn">
                             Launch FPDS Query Demo
@@ -902,7 +902,7 @@
                     <form action="{{ route('order.subscription') }}" method="post">
                         @csrf
                         <input type="hidden" name="subscription_type" value="fpds_query">
-                        <input type="hidden" name="subscription_plan" value="Monthly">
+                        <input type="hidden" name="subscription_plan" value="monthly">
                         <button class="btn-primary">
                             Launch FPDS Query Demo
                         </button>

@@ -206,12 +206,24 @@ class CheckoutController extends Controller
 
     public function paymentResult(Request $request)
     {
-        Log::channel('checkout')->info("🔔 /payment/result — Method: " . $request->method());
-        Log::channel('checkout')->info('🔔 /payment/result — Payload:', $request->all());
+        Log::channel('checkout')->info('/payment/result hit', [
+            'method' => $request->method(),
+        ]);
 
+        // Do NOT log full payload in production (it may contain sensitive data).
+        // Log only minimal routing identifiers.
+        Log::channel('checkout')->info('/payment/result meta', [
+            'req_reference_number' => (string)$request->get('req_reference_number'),
+            'transaction_id'       => (string)$request->get('transaction_id'),
+            'req_transaction_type' => (string)$request->get('req_transaction_type'),
+            'decision'             => (string)$request->get('decision'),
+            'reason_code'          => (string)$request->get('reason_code'),
+        ]);
+
+        // 1) Verify Secure Acceptance signature first.
         if (!$this->verifySecureAcceptanceResponse($request->all())) {
             Log::channel('checkout')->warning('Invalid BoA signature on /payment/result', [
-                'req_reference_number' => $request->get('req_reference_number'),
+                'req_reference_number' => (string)$request->get('req_reference_number'),
             ]);
 
             return view('cancelled', [
@@ -220,62 +232,201 @@ class CheckoutController extends Controller
             ]);
         }
 
-        $decision = (string) $request->get('decision');
-        $reasonCode = (string) $request->get('reason_code');          // ✅ 100 = OK
-        $authResponse = (string) $request->get('auth_response');       // ✅ для SALE часто "00"
-        $txType = (string) $request->get('req_transaction_type');      // ✅ create_payment_token / sale / authorization
-        $referenceNumber = (string) $request->get('req_reference_number');
+        $provider         = 'boa';
+        $decision         = (string)$request->get('decision');
+        $reasonCode       = (string)$request->get('reason_code');          // 100 = OK
+        $authResponse     = (string)$request->get('auth_response');        // often "00" for charge
+        $txType           = (string)$request->get('req_transaction_type'); // create_payment_token / sale / authorization
+        $referenceNumber  = (string)$request->get('req_reference_number');
 
-
-        // ✅ FIX #2: защита от пустого reference_number (чтобы не было ключа pending_payment:)
         if ($referenceNumber === '') {
+            Log::channel('checkout')->warning('Missing reference number on /payment/result');
+
             return view('cancelled', [
                 'data' => $this->formatResultData($request),
                 'errorsOut' => ['Missing reference number in payment response.'],
             ]);
         }
 
+        // 2) Record callback into payment_events (raw + parsed) for audit + idempotency on входе.
+        // NOTE: transaction_id may be empty on some gateway flows; create a deterministic fallback ID.
+        $rawPayload = (string)$request->getContent();
+        $txId = (string)$request->get('transaction_id');
+
+        if ($txId === '') {
+            // Fallback transaction id must be stable enough to deduplicate retries for the same callback.
+            $seed = $referenceNumber . '|' .
+                (string)$request->get('request_token') . '|' .
+                (string)$request->get('signed_date_time') . '|' .
+                $rawPayload;
+
+            $txId = 'missing:' . sha1($seed); // 48 chars max
+            Log::channel('checkout')->warning('Missing transaction_id; using fallback hash id', [
+                'reference_number' => $referenceNumber,
+                'fallback_txid' => $txId,
+            ]);
+        }
+
+        $parsedPayloadJson = json_encode($request->all(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        if ($parsedPayloadJson === false) {
+            $parsedPayloadJson = json_encode([
+                '_error' => 'json_encode_failed',
+                'message' => json_last_error_msg(),
+            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        }
+
+        $flow = ($txType === 'create_payment_token') ? 'token_create' : 'pay';
+
+        // Insert payment event with UNIQUE(provider, transaction_id).
+        $shouldProcess = true;
+        try {
+            DB::table('payment_events')->insert([
+                'provider'         => $provider,
+                'reference_number' => $referenceNumber,
+                'transaction_id'   => $txId,
+                'flow'             => $flow,
+                'decision'         => $decision,
+                'reason_code'      => $reasonCode,
+                'auth_response'    => $authResponse,
+                'amount'           => (string)($request->get('auth_amount') ?? $request->get('req_amount') ?? ''),
+                'currency'         => (string)($request->get('req_currency') ?? 'USD'),
+                'raw_payload'      => $rawPayload,
+                'parsed_payload'   => $parsedPayloadJson,
+                'received_at'      => now(),
+                'created_at'       => now(),
+                'updated_at'       => now(),
+            ]);
+
+            Log::channel('checkout')->info('Payment event recorded', [
+                'reference_number' => $referenceNumber,
+                'transaction_id' => $txId,
+                'flow' => $flow,
+            ]);
+        } catch (\Throwable $e) {
+            // SQLSTATE 23000 = integrity constraint violation (duplicate unique).
+            $sqlState = (string)($e->getCode() ?? '');
+            if ($sqlState !== '23000') {
+                Log::channel('checkout')->error('Failed to insert payment_event', [
+                    'reference_number' => $referenceNumber,
+                    'transaction_id' => $txId,
+                    'error' => $e->getMessage(),
+                ]);
+                throw $e;
+            }
+
+            $existing = DB::table('payment_events')
+                ->where('provider', $provider)
+                ->where('transaction_id', $txId)
+                ->first();
+
+            Log::channel('checkout')->warning('Duplicate payment callback detected (idempotent gate)', [
+                'reference_number' => $referenceNumber,
+                'transaction_id' => $txId,
+                'existing_processed_at' => $existing->processed_at ?? null,
+                'existing_status' => $existing->process_status ?? null,
+            ]);
+
+            // If already processed successfully, do not run business logic again.
+            if ($existing && (($existing->process_status ?? null) === 'ok' || !empty($existing->processed_at))) {
+                return view('thank-you', [
+                    'messages' => ['Callback already processed.'],
+                    'data' => $this->formatResultData($request),
+                ]);
+            }
+
+            // Otherwise allow re-processing (useful if previous attempt crashed).
+            $shouldProcess = true;
+        }
+
+        // 3) Load pending order context: Cache first, DB fallback (pending_orders).
         $pendingKey = "pending_payment:{$referenceNumber}";
         $pending = Cache::get($pendingKey);
 
         if (!$pending) {
-            Log::channel('checkout')->warning('No pending_payment in cache; cannot finalize billing safely.', [
-                'ref' => $referenceNumber
+            $row = DB::table('pending_orders')->where('reference_number', $referenceNumber)->first();
+
+            if ($row) {
+                $decodedPayloads = [];
+                if (!empty($row->payloads)) {
+                    $decodedPayloads = json_decode((string)$row->payloads, true);
+                    if (!is_array($decodedPayloads)) {
+                        $decodedPayloads = [];
+                    }
+                }
+
+                $pending = [
+                    'reference_number' => (string)$row->reference_number,
+                    'user_id' => (int)$row->user_id,
+                    'intent' => (string)$row->intent,
+                    'payloads' => $decodedPayloads,
+                    'items' => array_keys($decodedPayloads),
+                    'total' => (string)$row->total,
+                    // email/billing fields are not required for finalize; keep null-safe
+                    'email' => null,
+                ];
+
+                Log::channel('checkout')->info('Pending order restored from DB', [
+                    'reference_number' => $referenceNumber,
+                    'user_id' => $pending['user_id'] ?? null,
+                    'intent' => $pending['intent'] ?? null,
+                ]);
+            }
+        }
+
+        if (!$pending) {
+            Log::channel('checkout')->error('Pending order not found in cache nor DB', [
+                'reference_number' => $referenceNumber,
+                'transaction_id' => $txId,
             ]);
+
+            // Update payment_events processing status for forensic visibility.
+            DB::table('payment_events')
+                ->where('provider', $provider)
+                ->where('transaction_id', $txId)
+                ->update([
+                    'process_status' => 'error',
+                    'process_error' => 'Pending order context not found (cache/DB).',
+                    'processed_at' => now(),
+                    'updated_at' => now(),
+                ]);
 
             return view('cancelled', [
                 'data' => $this->formatResultData($request),
-                'errorsOut' => ['Payment was accepted, but order context was not found (cache expired/missing). Contact support.'],
+                'errorsOut' => ['Payment was accepted, but order context was not found. Contact support.'],
             ]);
         }
 
-        $intent = (string) ($pending['intent'] ?? 'purchase');
-
-        // ✅ Token-flow определяем надежно: либо intent=trial, либо txType=create_payment_token
+        // 4) Determine flow reliably.
+        $intent = (string)($pending['intent'] ?? 'purchase');
         $isTokenFlow = ($intent === 'trial') || ($txType === 'create_payment_token');
 
+        // 5) Validate gateway success rules.
         $isAccepted = ($decision === 'ACCEPT');
-
-        // ✅ reason_code=100 означает успех (в твоём логе именно так)
         $isReasonOk = ($reasonCode === '' || $reasonCode === '100');
 
-        /**
-         * ✅ ВАЖНО:
-         * - Для create_payment_token НЕ проверяем auth_response как "00"
-         * - Для реальной оплаты (sale/authorization) auth_response обычно должен быть "00"
-         */
+        // For tokenization flow, do not require auth_response.
+        // For real charge flows, auth_response should usually be "00".
         $isAuthorized = ($authResponse === '' || $authResponse === '00');
 
         $isOk = $isTokenFlow
-            ? ($isAccepted && $isReasonOk)                // ✅ trial tokenization success rule
-            : ($isAccepted && $isReasonOk && $isAuthorized); // ✅ real charge success rule
+            ? ($isAccepted && $isReasonOk)
+            : ($isAccepted && $isReasonOk && $isAuthorized);
 
-
-        if (!hash_equals((string) ($pending['reference_number'] ?? ''), $referenceNumber)) {
-            Log::channel('checkout')->warning('Reference number mismatch.', [
+        if (!hash_equals((string)($pending['reference_number'] ?? ''), $referenceNumber)) {
+            Log::channel('checkout')->warning('Reference number mismatch', [
                 'pending' => $pending['reference_number'] ?? null,
                 'incoming' => $referenceNumber,
             ]);
+
+            DB::table('payment_events')
+                ->where('provider', $provider)
+                ->where('transaction_id', $txId)
+                ->update([
+                    'process_status' => 'error',
+                    'process_error' => 'Reference number mismatch (pending vs incoming).',
+                    'processed_at' => now(),
+                    'updated_at' => now(),
+                ]);
 
             return view('cancelled', [
                 'data' => $this->formatResultData($request),
@@ -284,50 +435,112 @@ class CheckoutController extends Controller
         }
 
         if (!$isOk) {
+            Log::channel('checkout')->info('Payment not approved by gateway', [
+                'reference_number' => $referenceNumber,
+                'decision' => $decision,
+                'reason_code' => $reasonCode,
+                'auth_response' => $authResponse,
+                'tx_type' => $txType,
+                'is_token_flow' => $isTokenFlow,
+            ]);
+
+            DB::table('payment_events')
+                ->where('provider', $provider)
+                ->where('transaction_id', $txId)
+                ->update([
+                    'process_status' => 'skipped',
+                    'process_error' => 'Gateway decision not approved.',
+                    'processed_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
             return view('cancelled', [
                 'data' => $this->formatResultData($request),
                 'errorsOut' => ['Payment was not approved.'],
             ]);
         }
 
+        if (!$shouldProcess) {
+            // Safety fallback (should not normally happen).
+            return view('thank-you', [
+                'messages' => ['Callback received.'],
+                'data' => $this->formatResultData($request),
+            ]);
+        }
+
+        // 6) Build paymentMeta for BillingService.
         $data = $this->formatResultData($request);
 
         $paymentMeta = [
             'type' => 'boa',
             'flow' => $isTokenFlow ? 'token_create' : 'pay',
 
-            // ✅ суммы: для trial будет 0.00, для оплаты будет реальная
-            'total' => (string) ($request->get('auth_amount') ?? $request->get('req_amount') ?? ($pending['total'] ?? '')),
+            'total' => (string)($request->get('auth_amount') ?? $request->get('req_amount') ?? ($pending['total'] ?? '')),
             'reference_number' => $referenceNumber,
-            'transaction_id' => (string) $request->get('transaction_id'),
+            'transaction_id' => $txId,
 
-            // ✅ ВАЖНО: сохраняем поля именно под BillingService
-            'request_token' => (string) $request->get('request_token'),
+            'request_token' => (string)$request->get('request_token'),
 
-            // ✅ tokenization IDs (будущие списания / привязка карты)
-            'payment_token' => (string) $request->get('payment_token'),
-            'payment_token_customer_id' => (string) $request->get('payment_token_customer_id'),
-            'payment_token_payment_instrument_id' => (string) $request->get('payment_token_payment_instrument_id'),
-            'payment_token_instrument_identifier_id' => (string) $request->get('payment_token_instrument_identifier_id'),
-            'payment_account_reference' => (string) $request->get('payment_account_reference'),
+            // Tokenization identifiers (future charges / stored card)
+            'payment_token' => (string)$request->get('payment_token'),
+            'payment_token_customer_id' => (string)$request->get('payment_token_customer_id'),
+            'payment_token_payment_instrument_id' => (string)$request->get('payment_token_payment_instrument_id'),
+            'payment_token_instrument_identifier_id' => (string)$request->get('payment_token_instrument_identifier_id'),
+            'payment_account_reference' => (string)$request->get('payment_account_reference'),
 
-            // ✅ статус
-            'decision' => (string) $request->get('decision'),
-            'reason_code' => (string) $request->get('reason_code'),
-            'auth_response' => (string) $request->get('auth_response'),
+            // Status fields
+            'decision' => $decision,
+            'reason_code' => $reasonCode,
+            'auth_response' => $authResponse,
 
+            // Card meta (do not log/store PAN; req_card_number is masked)
             'card_type_name' => (string)$request->get('card_type_name'),
             'req_card_number' => (string)$request->get('req_card_number'),
             'req_card_expiry_date' => (string)$request->get('req_card_expiry_date'),
         ];
 
+        // 7) Run business logic (Step 4 later will wrap everything into one transaction).
+        try {
+            $response = $this->finalizeBillingAndRespond($pending, $paymentMeta, $data);
 
-        $response = $this->finalizeBillingAndRespond($pending, $paymentMeta, $data);
+            // Mark event processed successfully.
+            DB::table('payment_events')
+                ->where('provider', $provider)
+                ->where('transaction_id', $txId)
+                ->update([
+                    'process_status' => 'ok',
+                    'process_error' => null,
+                    'processed_at' => now(),
+                    'updated_at' => now(),
+                ]);
 
-        // ВРЕМЕННО: забудь pending здесь всегда после успешного ACCEPT.
-        Cache::forget($pendingKey);
+            // Cleanup cache after success (DB remains the source of truth).
+            Cache::forget($pendingKey);
 
-        return $response;
+            return $response;
+        } catch (\Throwable $e) {
+            Log::channel('checkout')->error('Finalize billing failed', [
+                'reference_number' => $referenceNumber,
+                'transaction_id' => $txId,
+                'error' => $e->getMessage(),
+            ]);
+
+            // Mark event processing error for later retry/inspection.
+            DB::table('payment_events')
+                ->where('provider', $provider)
+                ->where('transaction_id', $txId)
+                ->update([
+                    'process_status' => 'error',
+                    'process_error' => $e->getMessage(),
+                    'processed_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+            return view('cancelled', [
+                'data' => $this->formatResultData($request),
+                'errorsOut' => ['Payment was accepted, but internal processing failed. Contact support.'],
+            ]);
+        }
     }
 
     // =========================================================
@@ -514,10 +727,24 @@ class CheckoutController extends Controller
         return env('BOA_SA_MODE', 'live') === 'stub';
     }
 
-    private function createPendingOrderContext(array $itemsPresent, string $total, string $email, array $validated, string $stateCode): array
-    {
+    private function createPendingOrderContext(
+        array $itemsPresent,
+        string $total,
+        string $email,
+        array $validated,
+        string $stateCode
+    ): array {
+        // Checkout must be tied to an authenticated user.
+        // Otherwise we cannot reliably finalize subscriptions/packages on callback.
+        $userId = Auth::id();
+        if (!$userId) {
+            abort(403, 'User must be authenticated to start checkout.');
+        }
+
         $referenceNumber = 'ORDER-' . now()->format('YmdHis') . '-' . Str::random(6);
 
+        // Collect cart payloads from session (subscription/package contexts).
+        // IMPORTANT: Keep payloads minimal and serializable (arrays/scalars only).
         $payloads = [];
         foreach ($itemsPresent as $k) {
             $payloads[$k] = session()->get($k);
@@ -525,25 +752,103 @@ class CheckoutController extends Controller
 
         $pending = [
             'reference_number' => $referenceNumber,
-            'items' => $itemsPresent,
-            'payloads' => $payloads,
-            'total' => $total,
-            'email' => $email,
+            'items'            => $itemsPresent,
+            'payloads'          => $payloads,
+            'total'            => $total,
+            'email'            => $email,
 
-            'intent' => $this->detectIntentFromCart($itemsPresent),
-            'user_id' => Auth::id(),
+            'intent'           => $this->detectIntentFromCart($itemsPresent),
+            'user_id'          => $userId,
 
-            'bill_to_forename' => (string) $validated['name'],
-            'bill_to_surname' => (string) $validated['surname'],
-            'bill_to_city' => (string) $validated['city'],
-            'bill_to_state' => (string) $stateCode,
-            'bill_to_zip' => (string) $validated['zip'],
+            'bill_to_forename' => (string)($validated['name'] ?? ''),
+            'bill_to_surname'  => (string)($validated['surname'] ?? ''),
+            'bill_to_city'     => (string)($validated['city'] ?? ''),
+            'bill_to_state'    => (string)$stateCode,
+            'bill_to_zip'      => (string)($validated['zip'] ?? ''),
         ];
 
-        Cache::put("pending_payment:{$referenceNumber}", $pending, now()->addHours(2));
+        // Persist pending order in DB to survive cache eviction / restarts.
+        // This guarantees we can finalize billing even if:
+        // - the user is logged out
+        // - the session is lost
+        // - the callback arrives later (minutes/hours)
+        $payloadsJson = json_encode(
+            $pending['payloads'] ?? [],
+            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+        );
+
+        if ($payloadsJson === false) {
+            Log::channel('checkout')->error('Failed to JSON-encode pending payloads', [
+                'reference_number' => $referenceNumber,
+                'json_error' => json_last_error_msg(),
+            ]);
+            abort(500, 'Internal error: unable to prepare checkout payload.');
+        }
+
+        // Safety guard: do not allow huge payloads to break DB writes.
+        // If you hit this, reduce what you store in session payloads.
+        $maxBytes = 500000; // 500 KB
+        if (strlen($payloadsJson) > $maxBytes) {
+            Log::channel('checkout')->warning('Pending payloads too large; storing minimal marker', [
+                'reference_number' => $referenceNumber,
+                'bytes' => strlen($payloadsJson),
+                'max_bytes' => $maxBytes,
+            ]);
+            $payloadsJson = json_encode(
+                ['_error' => 'payloads_too_large'],
+                JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+            );
+        }
+
+        // Use insert-first strategy to preserve original created_at.
+        try {
+            DB::table('pending_orders')->insert([
+                'reference_number' => $referenceNumber,
+                'user_id'          => (int)$userId,
+                'intent'           => (string)($pending['intent'] ?? 'purchase'),
+                'payloads'         => $payloadsJson,
+                'total'            => (string)($pending['total'] ?? '0.00'),
+                'currency'         => 'USD',
+                'status'           => 'pending',
+                'created_at'       => now(),
+                'updated_at'       => now(),
+            ]);
+        } catch (\Throwable $e) {
+            // Only swallow duplicate key errors; everything else should surface.
+            // SQLSTATE 23000 = Integrity constraint violation (duplicate key, etc).
+            $sqlState = (string)($e->getCode() ?? '');
+            if ($sqlState !== '23000') {
+                Log::channel('checkout')->error('Failed to persist pending order', [
+                    'reference_number' => $referenceNumber,
+                    'user_id' => $userId,
+                    'error' => $e->getMessage(),
+                ]);
+                throw $e;
+            }
+
+            DB::table('pending_orders')
+                ->where('reference_number', $referenceNumber)
+                ->update([
+                    'user_id'    => (int)$userId,
+                    'intent'     => (string)($pending['intent'] ?? 'purchase'),
+                    'payloads'   => $payloadsJson,
+                    'total'      => (string)($pending['total'] ?? '0.00'),
+                    'currency'   => 'USD',
+                    'status'     => 'pending',
+                    'updated_at' => now(),
+                ]);
+        }
+
+        Log::channel('checkout')->info('Pending order persisted in DB', [
+            'reference_number' => $referenceNumber,
+            'user_id'          => $userId,
+            'intent'           => $pending['intent'] ?? null,
+            'items'            => $itemsPresent,
+        ]);
 
         return $pending;
     }
+
 
     private function buildPayFields(array $order, array $validated, string $email, string $stateCode): array
     {
@@ -622,7 +927,7 @@ class CheckoutController extends Controller
     private function finalizeBillingAndRespond(array $pending = [], array $paymentMeta = [], array $dataForView = [])
     {
         $billingService = new BillingService();
-        $flow = (string) ($paymentMeta['flow'] ?? 'pay');
+        $flow = (string)($paymentMeta['flow'] ?? 'pay');
 
         // Context for logs (same keys everywhere)
         $ctx = [
@@ -633,43 +938,100 @@ class CheckoutController extends Controller
             'intent' => $pending['intent'] ?? null,
         ];
 
+        $referenceNumber = (string)($ctx['reference_number'] ?? '');
+
         try {
-            $result = DB::transaction(function () use ($billingService, $pending, $paymentMeta, $flow, $ctx) {
+            $result = DB::transaction(function () use ($billingService, $pending, $paymentMeta, $flow, $ctx, $referenceNumber) {
 
                 Log::channel('billing')->info('Billing finalize: begin', $ctx);
 
+                // =========================
+                // TOKENIZATION FLOW
+                // =========================
                 if ($flow === 'token_create') {
-                    Log::channel('billing_webhook')->info('Tokenization: processing payment method', $ctx);
+
+                    Log::channel('billing')->info('Tokenization: processing payment method', $ctx);
                     $pmResult = $billingService->processTrialTokenization($pending, $paymentMeta);
                     if (!($pmResult['success'] ?? false)) {
-                        Log::channel('billing')->error('Tokenization: payment method failed', $ctx + ['errors' => $pmResult['messages'] ?? []]);
+                        Log::channel('billing')->error('Tokenization: payment method failed', $ctx + [
+                            'errors' => $pmResult['messages'] ?? []
+                        ]);
                         throw new \RuntimeException('Tokenization payment method failed.');
                     }
 
                     Log::channel('billing')->info('Tokenization: creating trial subscription', $ctx);
                     $subResult = $billingService->processSubscriptions($pending, $paymentMeta);
                     if (!($subResult['success'] ?? false)) {
-                        Log::channel('billing')->error('Tokenization: trial subscription failed', $ctx + ['errors' => $subResult['messages'] ?? []]);
+                        Log::channel('billing')->error('Tokenization: trial subscription failed', $ctx + [
+                            'errors' => $subResult['messages'] ?? []
+                        ]);
                         throw new \RuntimeException('Tokenization subscription failed.');
                     }
 
                     $messagesOut = array_merge($pmResult['messages'] ?? [], $subResult['messages'] ?? []);
-                } else {
-                    Log::channel('billing')->info('Payment: creating subscriptions', $ctx);
+                }
+
+                // =========================
+                // PAY FLOW (subscription OPTIONAL)
+                // =========================
+                else {
+
+                    // 1) Subscriptions (optional)
+                    Log::channel('billing')->info('Payment: creating subscriptions (optional)', $ctx);
                     $subscriptionResult = $billingService->processSubscriptions($pending, $paymentMeta);
-                    if (!($subscriptionResult['success'] ?? false)) {
-                        Log::channel('billing')->error('Payment: subscriptions failed', $ctx + ['errors' => $subscriptionResult['messages'] ?? []]);
+
+                    $subOk   = (bool)($subscriptionResult['success'] ?? false);
+                    $subMsgs = is_array($subscriptionResult['messages'] ?? null) ? $subscriptionResult['messages'] : [];
+
+                    // Если просто нет подписки в корзине — это НЕ ошибка
+                    $noSubPayload = (!$subOk && in_array('No subscription payloads found in pending context.', $subMsgs, true));
+
+                    // Любая другая ошибка подписок — это ошибка и должна откатывать транзакцию
+                    if (!$subOk && !$noSubPayload) {
+                        Log::channel('billing')->error('Payment: subscriptions failed', $ctx + ['errors' => $subMsgs]);
                         throw new \RuntimeException('Subscriptions failed.');
                     }
 
-                    Log::channel('billing')->info('Payment: creating packages', $ctx);
+                    // 2) Packages / Reports (optional, но если есть payload — должны обработаться)
+                    Log::channel('billing')->info('Payment: creating packages/reports (optional)', $ctx);
                     $packageResult = $billingService->processReportPackage($pending, $paymentMeta);
-                    if (!($packageResult['success'] ?? false)) {
-                        Log::channel('billing')->error('Payment: packages failed', $ctx + ['errors' => $packageResult['messages'] ?? []]);
-                        throw new \RuntimeException('Packages failed.');
+
+                    $pkgOk   = (bool)($packageResult['success'] ?? false);
+                    $pkgMsgs = is_array($packageResult['messages'] ?? null) ? $packageResult['messages'] : [];
+
+                    // Аналогично: если нет package/report payload — это НЕ ошибка
+                    $noPkgPayload = (!$pkgOk && in_array('No report package payload found in pending context.', $pkgMsgs, true));
+
+                    if (!$pkgOk && !$noPkgPayload) {
+                        Log::channel('billing')->error('Payment: packages/reports failed', $ctx + ['errors' => $pkgMsgs]);
+                        throw new \RuntimeException('Packages/reports failed.');
                     }
 
-                    $messagesOut = array_merge($subscriptionResult['messages'] ?? [], $packageResult['messages'] ?? []);
+                    // 3) Safety: нельзя допускать ситуацию "оплата пришла, но корзина пустая"
+                    // Т.е. если ни подписки, ни пакета/отчета не было — это ошибка.
+                    if ($noSubPayload && $noPkgPayload) {
+                        Log::channel('billing')->error('Payment: nothing to process (empty pending context)', $ctx);
+                        throw new \RuntimeException('Nothing to process.');
+                    }
+
+                    $messagesOut = array_merge(
+                        $noSubPayload ? [] : $subMsgs,
+                        $noPkgPayload ? [] : $pkgMsgs
+                    );
+                }
+
+                // ✅ STEP 6: mark pending order as processed atomically with writes
+                if ($referenceNumber !== '') {
+                    DB::table('pending_orders')
+                        ->where('reference_number', $referenceNumber)
+                        ->update([
+                            'status' => 'processed',
+                            'processed_at' => now(),
+                            'last_error' => null,
+                            'updated_at' => now(),
+                        ]);
+                } else {
+                    Log::channel('billing')->warning('Billing finalize: reference_number missing; pending_orders not updated', $ctx);
                 }
 
                 Log::channel('billing')->info('Billing finalize: commit', $ctx);
@@ -683,6 +1045,26 @@ class CheckoutController extends Controller
             ]);
 
         } catch (Throwable $e) {
+
+            // ✅ STEP 6: mark pending order failed OUTSIDE transaction
+            if ($referenceNumber !== '') {
+                try {
+                    DB::table('pending_orders')
+                        ->where('reference_number', $referenceNumber)
+                        ->update([
+                            'status' => 'failed',
+                            'processed_at' => now(),
+                            'last_error' => mb_substr($e->getMessage(), 0, 2000),
+                            'updated_at' => now(),
+                        ]);
+                } catch (Throwable $inner) {
+                    Log::channel('checkout_error')->error('Pending order status update failed', $ctx + [
+                        'inner_exception' => get_class($inner),
+                        'inner_message' => $inner->getMessage(),
+                    ]);
+                }
+            }
+
             Log::channel('checkout_error')->error('Billing finalize: rollback', $ctx + [
                 'exception' => get_class($e),
                 'message' => $e->getMessage(),

@@ -10,6 +10,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ReportPackageController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\EmailCompanyController;
+use App\Http\Controllers\DashBoardController;
 
 // Home page
 Route::get('/', [MainController::class, 'index'])->name('index');
@@ -20,8 +21,8 @@ Route::get('/cookie-policy', [MainController::class, 'cookiePolicy'])->name('coo
 Route::get('/terms-of-use', [MainController::class, 'termsOfUse'])->name('terms-of-use');
 Route::get('/contact-us', [MainController::class, 'contactUs'])->name('contact-us');
 Route::get('/products/fpds-query', [MainController::class, 'productsFpdsQuery'])->name('products.fpds-query');
-Route::get('/products/fpds-query/overview', action: [MainController::class, 'productsFpdsQueryOverview'])->name('products.fpds-query-overview');
-Route::get('/services/gov', action: [MainController::class, 'servicesGov'])->name('services.gov');
+Route::get('/products/fpds-query/overview', [MainController::class, 'productsFpdsQueryOverview'])->name('products.fpds-query-overview');
+Route::get('/services/gov', [MainController::class, 'servicesGov'])->name('services.gov');
 
 // Terms & Conditions
 Route::get('/user-terms-conditions', function () { return view('user-terms-conditions'); })->name('user-terms-conditions');
@@ -94,6 +95,8 @@ Route::middleware('admin')->group(function () {
 
     Route::get('/mail', [MainController::class, 'mail']);
     Route::any('/_me/adminer', [MainController::class, 'adminer'])->name('adminer');
+
+    Route::get('/billing-monitor', [DashBoardController::class, 'index'])->name('admin.billing-monitor');
     
     // library
     Route::get('/library', [LibraryController::class, 'index'])->name('library');

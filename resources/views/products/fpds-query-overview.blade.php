@@ -1008,7 +1008,7 @@
                             <form action="{{ route('order.subscription') }}" method="post">
                                 @csrf
                                 <input type="hidden" name="subscription_type" value="fpds_query">
-                                <input type="hidden" name="subscription_plan" value="Monthly">
+                                <input type="hidden" name="subscription_plan" value="monthly">
                                 
                                 <div class="card-content">
 
@@ -1037,7 +1037,7 @@
                             <form action="{{ route('order.subscription') }}" method="post">
                                 @csrf
                                 <input type="hidden" name="subscription_type" value="fpds_query">
-                                <input type="hidden" name="subscription_plan" value="Annual">
+                                <input type="hidden" name="subscription_plan" value="annual">
                                 <div class="card-content">
 
                                     <div class="card-header">

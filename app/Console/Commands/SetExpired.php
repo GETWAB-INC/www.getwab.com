@@ -2,47 +2,84 @@
 
 namespace App\Console\Commands;
 
-
 use Illuminate\Console\Command;
 use App\Models\Subscription;
 use Carbon\Carbon;
 
 class SetExpired extends Command
 {
-    protected $signature = 'subscription:set-expired';
-    protected $description = 'Set subscription status to "expired" for trial, monthly, and yearly plans if their end date has passed';
+    protected $signature = 'subscription:set-expired {--dry-run : Show counts only, do not update rows}';
+    protected $description = 'Set subscription status to "expired" for trial, monthly, and annual plans if their end date has passed';
 
-    public function handle()
+    public function handle(): int
     {
         $now = Carbon::now();
+        $dryRun = (bool)$this->option('dry-run');
 
-        // 1. Проверяем триал (trial_end_at)
-        $trialUpdated = Subscription::where('trial_end_at', '<', $now)
-            ->where('status', '!=', 'expired')
-            ->update(['status' => 'expired']);
+        // =========================
+        // 1) TRIAL: expire by trial_end_at
+        // =========================
+        $trialQuery = Subscription::query()
+            ->whereNotNull('trial_end_at')
+            ->where('trial_end_at', '<', $now)
+            ->where('status', '!=', 'expired');
 
+        $trialCount = (clone $trialQuery)->count();
 
-        $this->info("Trial subscriptions updated: {$trialUpdated}");
+        $trialUpdated = 0;
+        if (!$dryRun && $trialCount > 0) {
+            $trialUpdated = $trialQuery->update([
+                'status'     => 'expired',
+                'updated_at' => $now,
+            ]);
+        }
 
-        // 2. Проверяем месячные подписки (expires_at, тип 'Monthly')
-        $monthlyUpdated = Subscription::where('expires_at', '<', $now)
-            ->where('plan', 'Monthly')
-            ->where('status', '!=', 'expired')
-            ->update(['status' => 'expired']);
+        $this->info("Trial subscriptions " . ($dryRun ? "to update" : "updated") . ": " . ($dryRun ? $trialCount : $trialUpdated));
 
+        // =========================
+        // 2) MONTHLY: expire by expires_at and plan=monthly
+        // =========================
+        $monthlyQuery = Subscription::query()
+            ->whereNotNull('expires_at')
+            ->where('expires_at', '<', $now)
+            ->where('plan', Subscription::PLAN_MONTHLY)   // ✅ normalized plan
+            ->where('status', '!=', 'expired');
 
-        $this->info("Monthly subscriptions updated: {$monthlyUpdated}");
+        $monthlyCount = (clone $monthlyQuery)->count();
 
-        // 3. Проверяем годовые подписки (expires_at, тип 'Annual')
-        $yearlyUpdated = Subscription::where('expires_at', '<', $now)
-            ->where('plan', 'Annual')
-            ->where('status', '!=', 'expired')
-            ->update(['status' => 'expired']);
+        $monthlyUpdated = 0;
+        if (!$dryRun && $monthlyCount > 0) {
+            $monthlyUpdated = $monthlyQuery->update([
+                'status'     => 'expired',
+                'updated_at' => $now,
+            ]);
+        }
 
-        $this->info("Annual subscriptions updated: {$yearlyUpdated}");
+        $this->info("Monthly subscriptions " . ($dryRun ? "to update" : "updated") . ": " . ($dryRun ? $monthlyCount : $monthlyUpdated));
 
-        $total = $trialUpdated + $monthlyUpdated + $yearlyUpdated;
-        $this->info("Total subscriptions updated: {$total}");
+        // =========================
+        // 3) ANNUAL: expire by expires_at and plan=annual
+        // =========================
+        $annualQuery = Subscription::query()
+            ->whereNotNull('expires_at')
+            ->where('expires_at', '<', $now)
+            ->where('plan', Subscription::PLAN_ANNUAL)    // ✅ normalized plan
+            ->where('status', '!=', 'expired');
+
+        $annualCount = (clone $annualQuery)->count();
+
+        $annualUpdated = 0;
+        if (!$dryRun && $annualCount > 0) {
+            $annualUpdated = $annualQuery->update([
+                'status'     => 'expired',
+                'updated_at' => $now,
+            ]);
+        }
+
+        $this->info("Annual subscriptions " . ($dryRun ? "to update" : "updated") . ": " . ($dryRun ? $annualCount : $annualUpdated));
+
+        $total = ($dryRun ? ($trialCount + $monthlyCount + $annualCount) : ($trialUpdated + $monthlyUpdated + $annualUpdated));
+        $this->info("Total subscriptions " . ($dryRun ? "to update" : "updated") . ": {$total}");
 
         return 0;
     }

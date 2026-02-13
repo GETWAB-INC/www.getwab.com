@@ -144,8 +144,12 @@ class BillingRecord extends Model
         ];
         $planNames = [
             'Monthly' => 'Monthly',
-            'Annual' => 'Annual',
+            'Annual'  => 'Annual',
+            'monthly' => 'Monthly',
+            'annual'  => 'Annual',
+            'trial'   => 'Trial',
         ];
+
 
         $subscriptionType = $data['subscription_type'] ?? '';
         $subscriptionStatus = $data['subscription_status'] ?? '';

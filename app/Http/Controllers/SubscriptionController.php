@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Models\Subscription;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class SubscriptionController extends Controller
 {
@@ -14,11 +15,11 @@ class SubscriptionController extends Controller
 
         $validated = $request->validate([
             'subscription_type' => 'required|in:fpds_query,fpds_reports',
-            'subscription_plan' => 'required|in:Monthly,Annual',
+            'subscription_plan' => 'required|in:monthly,annual',
         ]);
 
 
-        $user = auth()->user();
+        $user = Auth::user();
         $existingSubscription = null;
 
         // Check if the user is logged in.
@@ -47,10 +48,11 @@ class SubscriptionController extends Controller
         }
 
         $subscriptionType = $validated['subscription_type'];
-        $subscriptionPlan = $validated['subscription_plan'];
+        $subscriptionPlan = Subscription::normalizePlan($validated['subscription_plan']);
 
         $prices = Subscription::PRICES;
-        $totalPrice = $prices[$subscriptionType][$subscriptionPlan];
+        $totalPrice = $prices[$subscriptionType][$subscriptionPlan] ?? 0.00;
+
 
         // CRITICAL CHANGE: always set the status to 'active' for fpds_reports
         if ($subscriptionType === 'fpds_reports') {
@@ -95,7 +97,7 @@ class SubscriptionController extends Controller
         ]);
 
         $subscriptionType = $validated['subscription_type'];
-        $userId = auth()->id();
+        $userId = Auth::id();
 
         // 2. Searching for the user's active subscription
         $subscription = Subscription::where('user_id', $userId)
@@ -125,39 +127,46 @@ class SubscriptionController extends Controller
 
     public function restoreSubscription(Request $request)
     {
-
-        // 1. Input data validation
+        // 1) Validate: only lowercase
         $validated = $request->validate([
             'subscription_type' => 'required|in:fpds_query,fpds_reports',
-            'new_plan' => 'required|in:Monthly,Annual',
+            'new_plan'          => 'required|in:monthly,annual',
         ]);
 
         $subscriptionType = $validated['subscription_type'];
-        $newPlan = $validated['new_plan']; // 'Monthly'/'Annual'
-        $userId = auth()->id();
+        $newPlan = Subscription::normalizePlan($validated['new_plan']); // always lowercase
+        $userId = Auth::id();
 
-        // 2. Searching for an existing subscription
+        // 2) Find subscription
         $subscription = Subscription::where('user_id', $userId)
             ->where('subscription_type', $subscriptionType)
             ->first();
 
-        // 3. Check if the subscription has expired (including the trial period)
+        if (!$subscription) {
+            return redirect()->back()->withErrors(['subscription' => 'Subscription not found.']);
+        }
+
+        // 3) Expired check (includes trial)
         if ($subscription->isExpired()) {
             return redirect()->back()->withErrors(['subscription' => 'Subscription has expired. Please renew it.']);
         }
 
-        // 4. We get the prices from the centralized model constant.
+        // 4) Prices (safe)
         $prices = Subscription::PRICES;
-        // 5. Normalize the current plan from the database
-        $currentPlan = $subscription->plan;
+        $currentPlan = Subscription::normalizePlan((string) $subscription->plan);
 
-        // 6. Get the price and frequency for the new plan.
-        $currentPrice = $prices[$subscriptionType][$newPlan];
-        $subscriptionPlan = $newPlan; // 'Monthly' or 'Annual' - already in the correct format
+        $currentPrice = $prices[$subscriptionType][$newPlan] ?? null;
+        if ($currentPrice === null) {
+            Log::error("restoreSubscription: price not found", [
+                'subscription_type' => $subscriptionType,
+                'new_plan' => $newPlan,
+            ]);
+            return redirect()->back()->withErrors(['subscription' => 'Pricing configuration error.']);
+        }
 
-        // 7. Recovery logic
+        // 5) Recovery logic
         if ($currentPlan === $newPlan) {
-            // CASE 1: The plan has not changed
+            // CASE 1: same plan
             try {
                 $subscription->updateSubscription(['status' => Subscription::STATUS_ACTIVE]);
                 return redirect()->back()->withSuccess('Subscription restored successfully');
@@ -165,79 +174,79 @@ class SubscriptionController extends Controller
                 Log::error('Subscription restore failed: ' . $e->getMessage());
                 return redirect()->back()->withErrors(['subscription' => 'Failed to restore subscription']);
             }
-        } else {
-            // CASE 2: The plan has changed
-            if ($subscription->isFpdsQuerySubscription() && $subscription->isCurrentlyTrial()) {
-                // SUBCASE 2.1: fpds_query in trial - update without checkout
-                try {
-                    $subscription->updateSubscription(['plan' => $newPlan]);
-                    return redirect()->back()->withSuccess('Trial plan updated successfully');
-                } catch (\Exception $e) {
-                    Log::error('Trial plan update failed: ' . $e->getMessage());
-                    return redirect()->back()->withErrors(['subscription' => 'Failed to update trial plan']);
-                }
-            } elseif ($currentPlan !== $newPlan) {
-                // SUBCASE 2.2: plan changed (not trial or not fpds_query) → to checkout
-                $orderData = [
-                    'subscription_type' => $subscriptionType,
-                    'subscription_price' => $currentPrice,
-                    'subscription_plan' => $subscriptionPlan,
-                ];
-                $sessionKey = match ($subscriptionType) {
-                    'fpds_query' => 'fpds_query_subscription',
-                    'fpds_reports' => 'fpds_report_subscription',
-                    default => throw new \Exception('Unknown subscription type'),
-                };
-                Session::put($sessionKey, $orderData);
-                return redirect()->route('checkout');
-            } else {
-                // SUBCASE 2.3: Subscription is already active - error
-                return redirect()->back()->withErrors(['subscription' => 'Subscription is already active']);
+        }
+
+        // CASE 2: plan changed
+        if ($subscription->isFpdsQuerySubscription() && $subscription->isCurrentlyTrial()) {
+            // SUBCASE 2.1: fpds_query in trial - update without checkout
+            try {
+                $subscription->updateSubscription(['plan' => $newPlan]);
+                return redirect()->back()->withSuccess('Trial plan updated successfully');
+            } catch (\Exception $e) {
+                Log::error('Trial plan update failed: ' . $e->getMessage());
+                return redirect()->back()->withErrors(['subscription' => 'Failed to update trial plan']);
             }
         }
+
+        // SUBCASE 2.2: plan changed (not trial or not fpds_query) → checkout
+        $orderData = [
+            'subscription_type'  => $subscriptionType,
+            'subscription_price' => $currentPrice,
+            'subscription_plan'  => $newPlan,
+        ];
+
+        $sessionKey = match ($subscriptionType) {
+            'fpds_query'   => 'fpds_query_subscription',
+            'fpds_reports' => 'fpds_report_subscription',
+            default => null,
+        };
+
+        if (!$sessionKey) {
+            return redirect()->back()->withErrors(['subscription' => 'Unknown subscription type.']);
+        }
+
+        Session::put($sessionKey, $orderData);
+        return redirect()->route('checkout');
     }
+
 
     public function renewSubscription(Request $request)
     {
         $validated = $request->validate([
             'subscription_type' => 'required|in:fpds_query,fpds_reports',
-            'new_plan' => 'required|in:Monthly,Annual',
+            'new_plan'          => 'required|in:monthly,annual',
         ]);
 
-        $subscriptionType = $validated['subscription_type']; // 'fpds_query' or 'fpds_reports'
-        $newPlan = $validated['new_plan']; // 'Monthly' or 'Annual'
+        $subscriptionType = $validated['subscription_type'];
+        $newPlan = Subscription::normalizePlan($validated['new_plan']); // always lowercase
 
-        // Trial is not allowed for fpds_query
-        if ($subscriptionType === 'fpds_query') {
-            $subscriptionStatus = 'active';
-        } else {
-            // Trial may be allowed for fpds_reports in the future (if needed)
-            $subscriptionStatus = 'trial'; // or 'active' depending on business logic
-        }
-
-        // In the current logic, subscription is always set to 'active' for both types
+        // Current logic: renew is always paid
         $subscriptionStatus = 'active';
 
-        // Get pricing from the Subscription model
         $prices = Subscription::PRICES;
-        $totalPrice = $prices[$subscriptionType][$newPlan];
+        $totalPrice = $prices[$subscriptionType][$newPlan] ?? null;
 
-        // Trial is not allowed for fpds_query → full price always applies
+        if ($totalPrice === null) {
+            Log::error("renewSubscription: price not found", [
+                'subscription_type' => $subscriptionType,
+                'new_plan' => $newPlan,
+            ]);
+            return redirect()->back()->withErrors(['subscription' => 'Pricing configuration error.']);
+        }
 
         $orderData = [
-            'subscription_type' => $subscriptionType,
+            'subscription_type'   => $subscriptionType,
             'subscription_status' => $subscriptionStatus,
-            'subscription_price' => $totalPrice,
-            'subscription_plan' => $newPlan,
+            'subscription_price'  => $totalPrice,
+            'subscription_plan'   => $newPlan,
         ];
 
         if ($subscriptionType === 'fpds_query') {
             Session::put('fpds_query_subscription', $orderData);
-        } elseif ($subscriptionType === 'fpds_reports') {
+        } else { // fpds_reports
             Session::put('fpds_report_subscription', $orderData);
         }
 
         return redirect()->route('checkout');
     }
-
 }
