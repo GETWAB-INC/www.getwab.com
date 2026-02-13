@@ -2152,9 +2152,9 @@
                         </p>
                         <div class="step-3-legal-terms">
                             <span>By proceeding, you agree to our </span>
-                            <a href="#" class="step-3-terms-link">Terms of Service</a>
+                            <a href="{{ route('terms-of-use') }}" class="step-3-terms-link">Terms of Service</a>
                             <span>and</span>
-                            <a href="#" class="step-3-terms-link">Privacy Policy.</a>
+                            <a href="{{ route('privacy-policy') }}" class="step-3-terms-link">Privacy Policy.</a>
                         </div>
                     </div>
                 </div>
