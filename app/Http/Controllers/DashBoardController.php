@@ -111,6 +111,7 @@ class DashBoardController extends Controller
         }
 
         return view('account.billing-monitor', [
+            'user'    => $user,
             'events'  => $events,
             'filters' => compact('reference', 'txid', 'decision', 'status', 'flow', 'days'),
             'metrics' => [
@@ -121,5 +122,6 @@ class DashBoardController extends Controller
             'pending' => $pending,
             'renew'   => $renew,
         ]);
+
     }
 }
