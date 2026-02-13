@@ -326,16 +326,27 @@ class CheckoutController extends Controller
                 'existing_status' => $existing->process_status ?? null,
             ]);
 
-            // If already processed successfully, do not run business logic again.
-            if ($existing && (($existing->process_status ?? null) === 'ok' || !empty($existing->processed_at))) {
+            $status = $existing->process_status ?? null;
+
+            if ($status === 'ok') {
+                // Уже успешно обработали — повтор не нужен
                 return view('thank-you', [
                     'messages' => ['Callback already processed.'],
                     'data' => $this->formatResultData($request),
                 ]);
             }
 
-            // Otherwise allow re-processing (useful if previous attempt crashed).
+            if ($status === 'skipped') {
+                // Уже решено, что не обрабатываем (например, DECLINE) — повтор не нужен
+                return view('cancelled', [
+                    'data' => $this->formatResultData($request),
+                    'errorsOut' => ['Callback already processed (previously skipped).'],
+                ]);
+            }
+
+            // status === 'error' OR NULL → разрешаем retry (например, прошлый раз упали по DB/коду)
             $shouldProcess = true;
+
         }
 
         // 3) Load pending order context: Cache first, DB fallback (pending_orders).
