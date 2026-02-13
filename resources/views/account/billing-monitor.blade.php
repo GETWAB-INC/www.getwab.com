@@ -36,7 +36,7 @@
   <h1>Billing Monitor</h1>
 
   {{-- Filters --}}
-  <form method="GET" action="{{ route('account.billing-monitor') }}" style="margin: 16px 0; padding: 12px; border: 1px solid #ddd;">
+  <form method="GET" action="{{ route('billing-monitor') }}" style="margin: 16px 0; padding: 12px; border: 1px solid #ddd;">
     <div style="display:flex; flex-wrap:wrap; gap:12px;">
       <div>
         <label>Days</label><br/>
@@ -70,7 +70,7 @@
 
       <div style="align-self:end;">
         <button type="submit">Apply</button>
-        <a href="{{ route('account.billing-monitor') }}" style="margin-left:10px;">Reset</a>
+        <a href="{{ route('billing-monitor') }}" style="margin-left:10px;">Reset</a>
       </div>
     </div>
   </form>
