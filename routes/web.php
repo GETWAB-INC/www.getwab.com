@@ -96,7 +96,7 @@ Route::middleware('admin')->group(function () {
     Route::get('/mail', [MainController::class, 'mail']);
     Route::any('/_me/adminer', [MainController::class, 'adminer'])->name('adminer');
 
-    Route::get('/billing-monitor', [DashBoardController::class, 'index'])->name('admin.billing-monitor');
+    Route::get('/billing-monitor', [DashBoardController::class, 'index'])->name('billing-monitor');
     
     // library
     Route::get('/library', [LibraryController::class, 'index'])->name('library');

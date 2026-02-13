@@ -42,6 +42,12 @@
             Adminer
           </a>
         @endif
+        @if(($user->email ?? '') === 'ilia.oborin@getwab.com')
+          <a href="{{ route('billing-monitor') }}" class="nav-menu-item" data-id="billing-monitor">
+            <img src="{{ asset('/img/ico/billing-monitor.svg') }}" alt="" />
+            Billing Monitor
+          </a>
+        @endif
         {{-- <a href="{{ route('account.reports') }}" class="nav-menu-item" data-id="reports">
           <img src="{{ asset('/img/ico/reports-ico.svg') }}" alt="" />
           Reports

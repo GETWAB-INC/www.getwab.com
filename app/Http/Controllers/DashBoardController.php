@@ -110,7 +110,7 @@ class DashBoardController extends Controller
             $renew['error'] = $e->getMessage();
         }
 
-        return view('billing-monitor', [
+        return view('account.billing-monitor', [
             'events'  => $events,
             'filters' => compact('reference', 'txid', 'decision', 'status', 'flow', 'days'),
             'metrics' => [
