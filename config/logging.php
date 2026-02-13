@@ -127,6 +127,18 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'boa_token' => [
+        'driver' => 'single',
+        'path' => storage_path('logs/boa_token.log'),
+        'level' => 'info',
+        ],
+
+        'boa_token_http' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/boa_token_http.log'),
+            'level' => 'debug',
+        ],
+
         /*
         |--------------------------------------------------------------------------
         | Stack: combine channels for convenience

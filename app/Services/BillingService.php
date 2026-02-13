@@ -145,7 +145,7 @@ class BillingService
                 $instrumentIdentifierId, $par, $requestToken,
                 $brand, $last4, $expMonth, $expYear, $paymentMeta
             ) {
-                // Decide whether this method should become default for the user.
+                // Compute whether user already has an active default.
                 $hasDefault = DB::table('payment_methods')
                     ->where('user_id', $userId)
                     ->where('provider', $provider)
@@ -156,7 +156,16 @@ class BillingService
 
                 $isDefault = $hasDefault ? 0 : 1;
 
-                // Insert-first strategy preserves created_at reliably and avoids COALESCE(created_at,...)
+                // ✅ SANITY: if we are about to set default=1, clear other defaults first (atomic inside transaction)
+                if ($isDefault === 1) {
+                    DB::table('payment_methods')
+                        ->where('user_id', $userId)
+                        ->where('provider', $provider)
+                        ->whereNull('deleted_at')
+                        ->update(['is_default' => 0]);
+                }
+
+                // Insert-first strategy preserves created_at reliably.
                 try {
                     DB::table('payment_methods')->insert([
                         'user_id' => $userId,
@@ -189,6 +198,26 @@ class BillingService
                         throw $e;
                     }
 
+                    // Duplicate means (provider, payment_instrument_id) already exists.
+                    // We should NOT blow away someone else's default unless we intend to make THIS one default.
+                    // Re-check default at the moment of update (safer under concurrency).
+                    $hasDefaultNow = DB::table('payment_methods')
+                        ->where('user_id', $userId)
+                        ->where('provider', $provider)
+                        ->whereNull('deleted_at')
+                        ->where('is_active', 1)
+                        ->where('is_default', 1)
+                        ->exists();
+
+                    if (!$hasDefaultNow) {
+                        // ✅ No default exists now → make this one default and clear others first.
+                        DB::table('payment_methods')
+                            ->where('user_id', $userId)
+                            ->where('provider', $provider)
+                            ->whereNull('deleted_at')
+                            ->update(['is_default' => 0]);
+                    }
+
                     DB::table('payment_methods')
                         ->where('provider', $provider)
                         ->where('payment_instrument_id', $paymentInstrumentId)
@@ -206,9 +235,9 @@ class BillingService
                             'exp_month' => $expMonth,
                             'exp_year' => $expYear,
 
-                            // If a default already exists, do not overwrite it.
-                            // If none exists, allow this one to become default.
-                            'is_default' => $hasDefault ? DB::raw('is_default') : 1,
+                            // If a default already exists, keep whatever is currently stored.
+                            // If none exists, force this one to become default.
+                            'is_default' => $hasDefaultNow ? DB::raw('is_default') : 1,
 
                             'is_active' => 1,
                             'verified_at' => now(),
@@ -237,6 +266,7 @@ class BillingService
             ];
         }
     }
+
 
     /**
      * Subscription purchase flow:

@@ -27,7 +27,12 @@ class Subscription extends Model
         'amount',
         'currency',
         'payment_gateway_id',
-        'notes'
+        'notes',
+        'renew_attempts',
+        'renew_next_attempt_at',
+        'renew_last_error',
+        'past_due_at',
+        'grace_until',
     ];
 
     protected $casts = [
@@ -38,10 +43,15 @@ class Subscription extends Model
         'trial_start_at' => 'datetime',
         'trial_end_at' => 'datetime',
         'cancelled_at' => 'datetime',
+        'renew_attempts' => 'integer',
+        'renew_next_attempt_at' => 'datetime',
+        'past_due_at' => 'datetime',
+        'grace_until' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
+
 
     public const PLAN_TRIAL   = 'trial';
     public const PLAN_MONTHLY = 'monthly';
