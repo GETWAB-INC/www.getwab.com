@@ -674,52 +674,6 @@
             </div>
           </div>
 
-          @foreach ($itemsToShow as $sessionKey => $displayName)
-            @if (Session::has($sessionKey))
-                  @php $item = Session::get($sessionKey); @endphp
-                  <div class="billing-data-row">
-                    <div class="billing-cell-data billing-cell-date">
-                      <div class="billing-cell-content">
-                        <div class="billing-cell-data-text">
-                          {{ substr(now()->format('F'), 0, 3) . ' ' . now()->format('d, Y') }}
-
-                        </div>
-                      </div>
-                    </div>
-                    <div class="billing-cell-data billing-cell-description">
-                      <div class="billing-cell-content">
-                        <div class="billing-cell-data-text">
-                          {{ $displayName }}
-                        </div>
-                      </div>
-                    </div>
-                    <div class="billing-cell-data billing-cell-card">
-                      <div class="billing-cell-content">
-                        <div class="billing-cell-data-center">N/A</div>
-                      </div>
-                    </div>
-                    <div class="billing-cell-data billing-cell-amount">
-                      <div class="billing-cell-content">
-                        <div class="billing-cell-data-center">
-                        ${{ number_format(
-                        isset($item['report_price']) ? $item['report_price'] :
-                              (isset($item['package_price']) ? $item['package_price'] : $item['subscription_price']),
-                           2, '.', ''
-                        ) }}
-                        </div>
-
-                      </div>
-                    </div>
-                    <div class="billing-cell-data billing-cell-status">
-                      <div class="billing-status-cell">
-                        <div class="billing-cell-data-center">
-                          <a href="{{ route('checkout') }}" class="checkout-link">Checkout</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-            @endif
-          @endforeach
 
 {{-- TRIAL / SUBSCRIPTION SUMMARY (NOT a billing transaction) --}}
 @if(isset($fpdsQuerySub) && $fpdsQuerySub)
