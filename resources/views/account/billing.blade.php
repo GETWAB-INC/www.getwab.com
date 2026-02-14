@@ -387,14 +387,18 @@
       border: none;
       border-radius: 7px;
       color: white;
-      font-size: 16px;        /* was 24 */
+      font-size: 16px;
+      /* was 24 */
       font-weight: 600;
       line-height: 1;
       cursor: pointer;
       transition: transform 0.2s ease;
-      min-width: 140px;       /* was 120 + huge width */
-      width: auto;            /* instead of 315px */
-      height: 44px;           /* instead of 65px */
+      min-width: 140px;
+      /* was 120 + huge width */
+      width: auto;
+      /* instead of 315px */
+      height: 44px;
+      /* instead of 65px */
       box-sizing: border-box;
       display: inline-flex;
       align-items: center;
@@ -552,7 +556,7 @@
         color: #ccc;
         white-space: nowrap;
       }
-      
+
     }
   </style>
 </head>
@@ -579,7 +583,7 @@
             payment tokens. No<br>
             full card data is stored.
           </p>
-        </div> 
+        </div>
 
         <div class="billing-info-container">
           @forelse ($paymentMethods as $pm)
@@ -599,14 +603,14 @@
                   <div class="billing-expiry">
                     <span>Expires: </span>
                     <span>
-                      {{ str_pad((string)($pm->exp_month ?? ''), 2, '0', STR_PAD_LEFT) }}/{{ $pm->exp_year ?? '' }}
+                      {{ str_pad((string) ($pm->exp_month ?? ''), 2, '0', STR_PAD_LEFT) }}/{{ $pm->exp_year ?? '' }}
                     </span>
                   </div>
                 </div>
 
                 <div class="billing-actions">
                   {{-- SET DEFAULT --}}
-                  @if(!(bool)$pm->is_default)
+                  @if(!(bool) $pm->is_default)
                     <form method="POST" action="{{ route('account.payment-method.default', $pm->id) }}">
                       @csrf
                       <button type="submit" class="token-upgrade-btn">
@@ -616,10 +620,9 @@
                   @endif
 
                   {{-- DELETE --}}
-                  @if(!(bool)$pm->is_default)
-                    <form method="POST"
-                          action="{{ route('account.payment-method.delete', $pm->id) }}"
-                          onsubmit="return confirm('Delete this payment method?');">
+                  @if(!(bool) $pm->is_default)
+                    <form method="POST" action="{{ route('account.payment-method.delete', $pm->id) }}"
+                      onsubmit="return confirm('Delete this payment method?');">
                       @csrf
                       <button type="submit" class="token-upgrade-btn delete">
                         Delete
@@ -676,98 +679,99 @@
 
 
           @foreach ($billingHistory as $record)
-    <div class="billing-data-row">
-        <div class="billing-cell-data billing-cell-date">
-            <div class="billing-cell-content">
-                <div class="billing-cell-data-text">
+            <div class="billing-data-row">
+              <div class="billing-cell-data billing-cell-date">
+                <div class="billing-cell-content">
+                  <div class="billing-cell-data-text">
                     {{ $record->getFormattedDate() }}
+                  </div>
                 </div>
-            </div>
-        </div>
-        <div class="billing-cell-data billing-cell-description">
-            <div class="billing-cell-content">
-                <div class="billing-cell-data-text">
+              </div>
+              <div class="billing-cell-data billing-cell-description">
+                <div class="billing-cell-content">
+                  <div class="billing-cell-data-text">
                     {{ $record->description }}
+                  </div>
                 </div>
-            </div>
-        </div>
-        <div class="billing-cell-data billing-cell-card">
-            <div class="billing-cell-content">
-                <div class="billing-cell-data-center">
+              </div>
+              <div class="billing-cell-data billing-cell-card">
+                <div class="billing-cell-content">
+                  <div class="billing-cell-data-center">
                     {{ $record->getMaskedCard() }}
+                  </div>
                 </div>
-            </div>
-        </div>
-        <div class="billing-cell-data billing-cell-amount">
-            <div class="billing-cell-content">
-                <div class="billing-cell-data-center">
+              </div>
+              <div class="billing-cell-data billing-cell-amount">
+                <div class="billing-cell-content">
+                  <div class="billing-cell-data-center">
                     {{ $record->getFormattedAmount() }}
+                  </div>
                 </div>
-            </div>
-        </div>
-        <div class="billing-cell-data billing-cell-status">
-            <div class="billing-status-cell">
-                <div class="billing-cell-data-center {{ $record->status }}">
+              </div>
+              <div class="billing-cell-data billing-cell-status">
+                <div class="billing-status-cell">
+                  <div class="billing-cell-data-center {{ $record->status }}">
                     {{ ucfirst($record->status) }}
+                  </div>
                 </div>
+              </div>
             </div>
-        </div>
-    </div>
-@endforeach
+          @endforeach
 
-{{-- TRIAL / SUBSCRIPTION SUMMARY (NOT a billing transaction) --}}
-@if(isset($fpdsQuerySub) && $fpdsQuerySub)
-  @php
-    $isTrial = ($fpdsQuerySub->status === 'trial' || $fpdsQuerySub->plan === 'trial');
-  @endphp
+          {{-- TRIAL / SUBSCRIPTION SUMMARY (NOT a billing transaction) --}}
+          @if(isset($fpdsQuerySub) && $fpdsQuerySub)
+            @php
+              $isTrial = ($fpdsQuerySub->status === 'trial' || $fpdsQuerySub->plan === 'trial');
+            @endphp
 
-  @if($isTrial)
-    <div class="billing-data-row">
-      <div class="billing-cell-data billing-cell-date">
-        <div class="billing-cell-content">
-          <div class="billing-cell-data-text">
-            {{ optional($fpdsQuerySub->trial_start_at)->format('M d, Y') ?? '—' }}
-          </div>
-        </div>
-      </div>
+            @if($isTrial)
+              <div class="billing-data-row">
+                <div class="billing-cell-data billing-cell-date">
+                  <div class="billing-cell-content">
+                    <div class="billing-cell-data-text">
+                      {{ optional($fpdsQuerySub->trial_start_at)->format('M d, Y') ?? '—' }}
+                    </div>
+                  </div>
+                </div>
 
-      <div class="billing-cell-data billing-cell-description">
-        <div class="billing-cell-content">
-          <div class="billing-cell-data-text">
-            FPDS Query Trial (no charge)
-            @if($fpdsQuerySub->trial_end_at)
-              <span class="text-muted">— ends {{ \Carbon\Carbon::parse($fpdsQuerySub->trial_end_at)->format('M d, Y') }}</span>
+                <div class="billing-cell-data billing-cell-description">
+                  <div class="billing-cell-content">
+                    <div class="billing-cell-data-text">
+                      FPDS Query Trial (no charge)
+                      @if($fpdsQuerySub->trial_end_at)
+                        <span class="text-muted">— ends
+                          {{ \Carbon\Carbon::parse($fpdsQuerySub->trial_end_at)->format('M d, Y') }}</span>
+                      @endif
+                    </div>
+                  </div>
+                </div>
+
+                <div class="billing-cell-data billing-cell-card">
+                  <div class="billing-cell-content">
+                    <div class="billing-cell-data-center">
+                      —
+                    </div>
+                  </div>
+                </div>
+
+                <div class="billing-cell-data billing-cell-amount">
+                  <div class="billing-cell-content">
+                    <div class="billing-cell-data-center">
+                      —
+                    </div>
+                  </div>
+                </div>
+
+                <div class="billing-cell-data billing-cell-status">
+                  <div class="billing-status-cell">
+                    <div class="billing-cell-data-center trial">
+                      Trial
+                    </div>
+                  </div>
+                </div>
+              </div>
             @endif
-          </div>
-        </div>
-      </div>
-
-      <div class="billing-cell-data billing-cell-card">
-        <div class="billing-cell-content">
-          <div class="billing-cell-data-center">
-            —
-          </div>
-        </div>
-      </div>
-
-      <div class="billing-cell-data billing-cell-amount">
-        <div class="billing-cell-content">
-          <div class="billing-cell-data-center">
-            —
-          </div>
-        </div>
-      </div>
-
-      <div class="billing-cell-data billing-cell-status">
-        <div class="billing-status-cell">
-          <div class="billing-cell-data-center trial">
-            Trial
-          </div>
-        </div>
-      </div>
-    </div>
-  @endif
-@endif
+          @endif
 
 
         </div>

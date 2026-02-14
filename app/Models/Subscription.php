@@ -273,20 +273,18 @@ class Subscription extends Model
         // Normalize status + plan
         $subscriptionStatus = strtolower(trim($subscriptionStatus));
 
-        // ✅ Plan normalization (always store lowercase: trial/monthly/annual)
-        // Trial forces plan=trial even if incoming is Monthly/Annual.
-        if ($subscriptionStatus === self::STATUS_TRIAL || $subscriptionStatus === 'trial') {
-            $subscriptionPlan = self::PLAN_TRIAL;
-        } else {
-            if ($subscriptionPlanIn === '') {
-                throw new \InvalidArgumentException('Missing subscription_plan for Subscription::store');
-            }
-            $subscriptionPlan = self::normalizePlan($subscriptionPlanIn);
-
-            if (!in_array($subscriptionPlan, self::VALID_PLANS, true) || $subscriptionPlan === self::PLAN_TRIAL) {
-                throw new \InvalidArgumentException('Invalid subscription_plan for Subscription::store: ' . $subscriptionPlanIn);
-            }
+        // ✅ Plan normalization (always store lowercase: monthly|annual even for trial)
+        // Trial is a STATUS, not a PLAN. We must keep the chosen paid plan to know what to charge after trial.
+        if ($subscriptionPlanIn === '') {
+            throw new \InvalidArgumentException('Missing subscription_plan for Subscription::store');
         }
+
+        $subscriptionPlan = self::normalizePlan($subscriptionPlanIn);
+
+        if (!in_array($subscriptionPlan, [self::PLAN_MONTHLY, self::PLAN_ANNUAL], true)) {
+            throw new \InvalidArgumentException('Invalid subscription_plan for Subscription::store: ' . $subscriptionPlanIn);
+        }
+
 
         $now = now();
 
@@ -338,12 +336,8 @@ class Subscription extends Model
             // trial_* можно не трогать (история), либо обнулять — я оставляю как есть
         }
 
-        // Amount
-        if ($subscriptionPlan === self::PLAN_TRIAL || $subscriptionStatus === self::STATUS_TRIAL || $subscriptionStatus === 'trial') {
-            $subscription->amount = 0.00;
-        } else {
-            $subscription->amount = (float)(self::PRICES[$subscriptionType][$subscriptionPlan] ?? 0.00);
-        }
+        // Amount must reflect the plan price even during trial (charge happens later).
+        $subscription->amount = (float)(self::PRICES[$subscriptionType][$subscriptionPlan] ?? 0.00);
 
         $subscription->currency = 'USD';
 
