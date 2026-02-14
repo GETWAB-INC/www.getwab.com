@@ -475,7 +475,6 @@ class Subscription extends Model
         } else {
             $this->next_billing_at = $this->calculateNextBillingDate();
             $this->expires_at      = $this->calculateExpireDate();
-            // trial_* fields keep history; if хочешь обнулять — делай отдельно явным действием
         }
 
         // Common fields
