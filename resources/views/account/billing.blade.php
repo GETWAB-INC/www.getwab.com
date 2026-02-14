@@ -675,6 +675,46 @@
           </div>
 
 
+          @foreach ($billingHistory as $record)
+    <div class="billing-data-row">
+        <div class="billing-cell-data billing-cell-date">
+            <div class="billing-cell-content">
+                <div class="billing-cell-data-text">
+                    {{ $record->getFormattedDate() }}
+                </div>
+            </div>
+        </div>
+        <div class="billing-cell-data billing-cell-description">
+            <div class="billing-cell-content">
+                <div class="billing-cell-data-text">
+                    {{ $record->description }}
+                </div>
+            </div>
+        </div>
+        <div class="billing-cell-data billing-cell-card">
+            <div class="billing-cell-content">
+                <div class="billing-cell-data-center">
+                    {{ $record->getMaskedCard() }}
+                </div>
+            </div>
+        </div>
+        <div class="billing-cell-data billing-cell-amount">
+            <div class="billing-cell-content">
+                <div class="billing-cell-data-center">
+                    {{ $record->getFormattedAmount() }}
+                </div>
+            </div>
+        </div>
+        <div class="billing-cell-data billing-cell-status">
+            <div class="billing-status-cell">
+                <div class="billing-cell-data-center {{ $record->status }}">
+                    {{ ucfirst($record->status) }}
+                </div>
+            </div>
+        </div>
+    </div>
+@endforeach
+
 {{-- TRIAL / SUBSCRIPTION SUMMARY (NOT a billing transaction) --}}
 @if(isset($fpdsQuerySub) && $fpdsQuerySub)
   @php
@@ -728,46 +768,6 @@
     </div>
   @endif
 @endif
-
-          @foreach ($billingHistory as $record)
-    <div class="billing-data-row">
-        <div class="billing-cell-data billing-cell-date">
-            <div class="billing-cell-content">
-                <div class="billing-cell-data-text">
-                    {{ $record->getFormattedDate() }}
-                </div>
-            </div>
-        </div>
-        <div class="billing-cell-data billing-cell-description">
-            <div class="billing-cell-content">
-                <div class="billing-cell-data-text">
-                    {{ $record->description }}
-                </div>
-            </div>
-        </div>
-        <div class="billing-cell-data billing-cell-card">
-            <div class="billing-cell-content">
-                <div class="billing-cell-data-center">
-                    {{ $record->getMaskedCard() }}
-                </div>
-            </div>
-        </div>
-        <div class="billing-cell-data billing-cell-amount">
-            <div class="billing-cell-content">
-                <div class="billing-cell-data-center">
-                    {{ $record->getFormattedAmount() }}
-                </div>
-            </div>
-        </div>
-        <div class="billing-cell-data billing-cell-status">
-            <div class="billing-status-cell">
-                <div class="billing-cell-data-center {{ $record->status }}">
-                    {{ ucfirst($record->status) }}
-                </div>
-            </div>
-        </div>
-    </div>
-@endforeach
 
 
         </div>
