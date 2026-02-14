@@ -9,91 +9,65 @@ use Carbon\Carbon;
 class SetExpired extends Command
 {
     protected $signature = 'subscription:set-expired {--dry-run : Show counts only, do not update rows}';
-    protected $description = 'Set subscription status to "expired" for trial, monthly, and annual plans if their end date (and grace) has passed';
+    protected $description = 'Expire TRIAL subscriptions after trial_end_at; expire PAST_DUE subscriptions after grace_until. Does NOT expire ACTIVE subscriptions by time.';
 
     public function handle(): int
     {
         $now = Carbon::now();
         $dryRun = (bool) $this->option('dry-run');
 
-        $liveStatuses = ['trial', 'active'];
-
-        $graceExpiredFilter = function ($q) use ($now) {
-            $q->whereNull('grace_until')
-              ->orWhere('grace_until', '<', $now);
-        };
+        // Canonical rule alignment:
+        // - ACTIVE subscriptions are not expired by "time passed" (expires_at can drift / is informational).
+        // - Renew job owns ACTIVE -> PAST_DUE/SUSPENDED transitions.
+        // - This command only:
+        //   (1) expires trial when trial_end_at passed
+        //   (2) expires past_due/suspended when grace_until passed
 
         // =========================
-        // 1) TRIAL: expire by trial_end_at (+ grace)
+        // 1) TRIAL: expire by trial_end_at (no grace concept here unless you explicitly want it)
         // =========================
         $trialQuery = Subscription::query()
+            ->where('plan', 'trial')
+            ->where('status', 'trial')
             ->whereNotNull('trial_end_at')
-            ->where('trial_end_at', '<', $now)
-            ->whereIn('status', $liveStatuses)
-            ->where($graceExpiredFilter);
+            ->where('trial_end_at', '<', $now);
 
         $trialCount = (clone $trialQuery)->count();
 
         $trialUpdated = 0;
         if (!$dryRun && $trialCount > 0) {
             $trialUpdated = $trialQuery->update([
-                'status'          => 'expired',
-                'next_billing_at' => null,
-                'updated_at'      => $now,
+                'status'     => 'expired',
+                'updated_at' => $now,
             ]);
         }
 
         $this->info("Trial subscriptions " . ($dryRun ? "to update" : "updated") . ": " . ($dryRun ? $trialCount : $trialUpdated));
 
         // =========================
-        // 2) MONTHLY: expire by expires_at and plan=monthly (+ grace)
+        // 2) PAST_DUE / SUSPENDED: expire when grace_until passed
         // =========================
-        $monthlyQuery = Subscription::query()
-            ->whereNotNull('expires_at')
-            ->where('expires_at', '<', $now)
-            ->where('plan', Subscription::PLAN_MONTHLY)   // normalized plan
-            ->whereIn('status', $liveStatuses)
-            ->where($graceExpiredFilter);
+        $graceQuery = Subscription::query()
+            ->whereIn('plan', ['monthly', 'annual'])
+            ->whereIn('status', ['past_due', 'suspended'])
+            ->whereNotNull('grace_until')
+            ->where('grace_until', '<', $now);
 
-        $monthlyCount = (clone $monthlyQuery)->count();
+        $graceCount = (clone $graceQuery)->count();
 
-        $monthlyUpdated = 0;
-        if (!$dryRun && $monthlyCount > 0) {
-            $monthlyUpdated = $monthlyQuery->update([
-                'status'          => 'expired',
-                'next_billing_at' => null,
-                'updated_at'      => $now,
+        $graceUpdated = 0;
+        if (!$dryRun && $graceCount > 0) {
+            $graceUpdated = $graceQuery->update([
+                'status'     => 'expired',
+                'updated_at' => $now,
             ]);
         }
 
-        $this->info("Monthly subscriptions " . ($dryRun ? "to update" : "updated") . ": " . ($dryRun ? $monthlyCount : $monthlyUpdated));
-
-        // =========================
-        // 3) ANNUAL: expire by expires_at and plan=annual (+ grace)
-        // =========================
-        $annualQuery = Subscription::query()
-            ->whereNotNull('expires_at')
-            ->where('expires_at', '<', $now)
-            ->where('plan', Subscription::PLAN_ANNUAL)    // normalized plan
-            ->whereIn('status', $liveStatuses)
-            ->where($graceExpiredFilter);
-
-        $annualCount = (clone $annualQuery)->count();
-
-        $annualUpdated = 0;
-        if (!$dryRun && $annualCount > 0) {
-            $annualUpdated = $annualQuery->update([
-                'status'          => 'expired',
-                'next_billing_at' => null,
-                'updated_at'      => $now,
-            ]);
-        }
-
-        $this->info("Annual subscriptions " . ($dryRun ? "to update" : "updated") . ": " . ($dryRun ? $annualCount : $annualUpdated));
+        $this->info("Past-due/suspended subscriptions " . ($dryRun ? "to update" : "updated") . ": " . ($dryRun ? $graceCount : $graceUpdated));
 
         $total = $dryRun
-            ? ($trialCount + $monthlyCount + $annualCount)
-            : ($trialUpdated + $monthlyUpdated + $annualUpdated);
+            ? ($trialCount + $graceCount)
+            : ($trialUpdated + $graceUpdated);
 
         $this->info("Total subscriptions " . ($dryRun ? "to update" : "updated") . ": {$total}");
 

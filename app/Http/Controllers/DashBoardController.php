@@ -96,8 +96,8 @@ class DashBoardController extends Controller
         try {
             $renewAgg = DB::table('billing_records')
                 ->selectRaw("COUNT(*) as total")
-                ->selectRaw("SUM(status IN ('completed','Paid')) as paid")
-                ->selectRaw("SUM(status IN ('failed','Declined','Failed')) as failed")
+                ->selectRaw("SUM(status = 'Paid') as paid")
+                ->selectRaw("SUM(status IN ('Declined','Failed')) as failed")
                 ->where('created_at', '>=', $fromTs)
                 ->where('description', 'like', 'RENEW:%')
                 ->first();

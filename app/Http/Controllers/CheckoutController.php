@@ -316,14 +316,41 @@ class CheckoutController extends Controller
 
             $existing = DB::table('payment_events')
                 ->where('provider', $provider)
-                ->where('transaction_id', $txId)
+                ->where(function ($q) use ($txId, $flow, $referenceNumber) {
+                    // UNIQUE(provider, transaction_id)
+                    $q->where('transaction_id', $txId)
+
+                    // UNIQUE(provider, flow, reference_number)
+                    ->orWhere(function ($q2) use ($flow, $referenceNumber) {
+                        $q2->where('flow', $flow)
+                            ->where('reference_number', $referenceNumber);
+                    });
+                })
+                ->orderByDesc('id')
                 ->first();
 
+            if (!$existing) {
+                Log::channel('checkout')->critical('Duplicate payment callback but existing payment_event not found (unique conflict mismatch)', [
+                    'reference_number' => $referenceNumber,
+                    'transaction_id'   => $txId,
+                    'flow'             => $flow,
+                ]);
+
+                // Важно: НЕ продолжаем обработку, чтобы не было двойной финализации.
+                return view('thank-you', [
+                    'messages' => ['Callback already received.'],
+                    'data' => $this->formatResultData($request),
+                ]);
+            }
+
             Log::channel('checkout')->warning('Duplicate payment callback detected (idempotent gate)', [
-                'reference_number' => $referenceNumber,
-                'transaction_id' => $txId,
-                'existing_processed_at' => $existing->processed_at ?? null,
-                'existing_status' => $existing->process_status ?? null,
+                'reference_number'       => $referenceNumber,
+                'transaction_id'         => $txId,
+                'flow'                   => $flow,
+                'existing_id'            => $existing->id ?? null,
+                'existing_transaction_id'=> $existing->transaction_id ?? null,
+                'existing_processed_at'  => $existing->processed_at ?? null,
+                'existing_status'        => $existing->process_status ?? null,
             ]);
 
             $status = $existing->process_status ?? null;
@@ -970,14 +997,15 @@ class CheckoutController extends Controller
                         throw new \RuntimeException('Tokenization payment method failed.');
                     }
 
-                    Log::channel('billing')->info('Tokenization: creating trial subscription', $ctx);
-                    $subResult = $billingService->processSubscriptions($pending, $paymentMeta);
+                    Log::channel('billing')->info('Tokenization: creating TRIAL subscription (no billing record)', $ctx);
+                    $subResult = $billingService->processTrialSubscriptions($pending, $paymentMeta);
                     if (!($subResult['success'] ?? false)) {
                         Log::channel('billing')->error('Tokenization: trial subscription failed', $ctx + [
                             'errors' => $subResult['messages'] ?? []
                         ]);
                         throw new \RuntimeException('Tokenization subscription failed.');
                     }
+
 
                     $messagesOut = array_merge($pmResult['messages'] ?? [], $subResult['messages'] ?? []);
                 }

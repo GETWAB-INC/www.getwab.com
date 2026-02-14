@@ -14,6 +14,21 @@ class BillingRecord extends Model
     // Database table
     protected $table = 'billing_records';
 
+    /**
+     * Canonical dictionary (per billing canon / docs)
+     * billing_records.status MUST be one of:
+     *   Paid | Pending | Declined | Failed
+     *
+     * NOTE: We keep backward-compat reads for legacy lowercase values:
+     *   completed -> Paid
+     *   pending   -> Pending
+     *   cancelled -> Declined
+     */
+    public const STATUS_PAID     = 'Paid';
+    public const STATUS_PENDING  = 'Pending';
+    public const STATUS_DECLINED = 'Declined';
+    public const STATUS_FAILED   = 'Failed';
+
     // Fields available for mass assignment
     protected $fillable = [
         'user_id',
@@ -51,10 +66,33 @@ class BillingRecord extends Model
         return $this->belongsTo(User::class);
     }
 
-
-    public function items()
+    /**
+     * Normalize legacy statuses -> canonical.
+     */
+    public static function normalizeStatus(?string $status): string
     {
-        return $this->hasMany(BillingRecord::class, 'billing_record_id');
+        $s = trim((string)$status);
+
+        if ($s === '') {
+            return self::STATUS_PAID;
+        }
+
+        // Canonical pass-through
+        if (in_array($s, [self::STATUS_PAID, self::STATUS_PENDING, self::STATUS_DECLINED, self::STATUS_FAILED], true)) {
+            return $s;
+        }
+
+        // Legacy mappings (do NOT write these going forward)
+        $lower = strtolower($s);
+        return match ($lower) {
+            'completed' => self::STATUS_PAID,
+            'pending'   => self::STATUS_PENDING,
+            'cancelled' => self::STATUS_DECLINED,
+            'canceled'  => self::STATUS_DECLINED,
+            'declined'  => self::STATUS_DECLINED,
+            'failed'    => self::STATUS_FAILED,
+            default     => self::STATUS_FAILED,
+        };
     }
 
     /**
@@ -62,7 +100,7 @@ class BillingRecord extends Model
      */
     public function isCompleted(): bool
     {
-        return $this->status === 'completed';
+        return self::normalizeStatus($this->status) === self::STATUS_PAID;
     }
 
     /**
@@ -70,7 +108,7 @@ class BillingRecord extends Model
      */
     public function isCancelled(): bool
     {
-        return $this->status === 'cancelled';
+        return self::normalizeStatus($this->status) === self::STATUS_DECLINED;
     }
 
     /**
@@ -78,7 +116,7 @@ class BillingRecord extends Model
      */
     public function isPending(): bool
     {
-        return $this->status === 'pending';
+        return self::normalizeStatus($this->status) === self::STATUS_PENDING;
     }
 
     /**
@@ -86,7 +124,7 @@ class BillingRecord extends Model
      */
     public function getFormattedAmount(): string
     {
-        return number_format($this->amount, 2) . ' ' . $this->currency;
+        return number_format((float)$this->amount, 2) . ' ' . $this->currency;
     }
 
     /**
@@ -100,11 +138,11 @@ class BillingRecord extends Model
     }
 
     /**
-     * Transaction status update
+     * Transaction status update (canonical)
      */
     public function updateStatus(string $newStatus): void
     {
-        $this->status = $newStatus;
+        $this->status = self::normalizeStatus($newStatus);
         $this->save();
     }
 
@@ -113,7 +151,7 @@ class BillingRecord extends Model
      */
     public function cancel(): void
     {
-        $this->updateStatus('cancelled');
+        $this->updateStatus(self::STATUS_DECLINED);
     }
 
     /**
@@ -121,7 +159,7 @@ class BillingRecord extends Model
      */
     public function confirm(): void
     {
-        $this->updateStatus('completed');
+        $this->updateStatus(self::STATUS_PAID);
     }
 
     public function getFormattedDate(): string
@@ -130,14 +168,14 @@ class BillingRecord extends Model
     }
 
     /**
-    * Generates a human-readable description based on the input data (without a model instance). 
-    * Used when creating a record to avoid a double database query. 
-    *
-    * @param array $data The original subscription data
-    * @return string A human-readable description of the form:
-    *   - "7-day FPDS Query trial → Annual subscription" (for trial); 
-    *   - "FPDS Reports → Annual subscription" (for non-trial). 
-    */
+     * Generates a human-readable description based on the input data (without a model instance).
+     * Used when creating a record to avoid a double database query.
+     *
+     * @param array $data The original subscription data
+     * @return string A human-readable description of the form:
+     *   - "7-day FPDS Query trial → Annual subscription" (for trial);
+     *   - "FPDS Reports → Annual subscription" (for non-trial).
+     */
     protected static function getSubscriptionDescription(array $data): string
     {
         $typeNames = [
@@ -152,7 +190,6 @@ class BillingRecord extends Model
             'trial'   => 'Trial',
         ];
 
-
         $subscriptionType = $data['subscription_type'] ?? '';
         $subscriptionStatus = $data['subscription_status'] ?? '';
         $subscriptionPlan = $data['subscription_plan'] ?? '';
@@ -161,12 +198,10 @@ class BillingRecord extends Model
         $planName = $planNames[$subscriptionPlan] ?? $subscriptionPlan;
 
         if ($subscriptionStatus === 'trial') {
-            // For trial: “7‑day [type] trial → [plan] subscription”
-            return "7‑day {$typeName} trial → {$planName} subscription";
-        } else {
-            // For non-trial: "[type] → [plan] subscription"
-            return "{$typeName} → {$planName} subscription";
+            return "7-day {$typeName} trial → {$planName} subscription";
         }
+
+        return "{$typeName} → {$planName} subscription";
     }
 
     private static function getPackageDescription(array $data): string
@@ -184,8 +219,10 @@ class BillingRecord extends Model
         return "{$packageName} ({$reportsCount} reports)";
     }
 
-
-
+    /**
+     * Canonical: billing_records idempotency is (user_id, flow, reference_number).
+     * We still store gateway_transaction_id for traceability, but it is not the ledger key.
+     */
     public static function createRecord(array $data): BillingRecord
     {
         // ---------------------------------------------------------------------
@@ -196,48 +233,65 @@ class BillingRecord extends Model
             Log::channel('billing')->error('BillingRecord: missing user_id', [
                 'transaction_id' => $data['transaction_id'] ?? null,
             ]);
-
             throw new \InvalidArgumentException('Missing user_id for BillingRecord');
-        }
-
-        // ---------------------------------------------------------------------
-        // Idempotency key from the gateway (may be empty/null in some flows)
-        // ---------------------------------------------------------------------
-        $tx = (string)($data['transaction_id'] ?? '');
-
-        // ---------------------------------------------------------------------
-        // Soft idempotency: quick lookup to avoid unnecessary insert attempts
-        // ---------------------------------------------------------------------
-        if ($tx !== '') {
-            $existing = self::where('user_id', $userId)
-                ->where('gateway_transaction_id', $tx)
-                ->first();
-
-            if ($existing) {
-                Log::channel('billing_webhook')->info('BillingRecord: dedupe hit (already exists)', [
-                    'user_id' => $userId,
-                    'transaction_id' => $tx,
-                    'billing_record_id' => $existing->id,
-                ]);
-
-                return $existing;
-            }
         }
 
         // ---------------------------------------------------------------------
         // Determine billing type (subscription or package)
         // ---------------------------------------------------------------------
-        $isSubscription  = isset($data['subscription_type']);
-        $isReportPackage = isset($data['package_type']);
+        $isSubscription  = array_key_exists('subscription_type', $data);
+        $isReportPackage = array_key_exists('package_type', $data);
 
         if (!$isSubscription && !$isReportPackage) {
             Log::channel('billing')->error('BillingRecord: invalid payload (no type flags)', [
                 'user_id' => $userId,
-                'transaction_id' => $tx ?: null,
+                'transaction_id' => $data['transaction_id'] ?? null,
             ]);
-
             throw new \InvalidArgumentException('Data must contain either subscription_type or package_type');
         }
+
+        // ---------------------------------------------------------------------
+        // Canonical flow (token_create | pay | renew)
+        // - In checkout flows, this is typically: token_create (trial tokenization) or pay (one-time / initial purchase)
+        // - Renew should set flow=renew from renew job (not from here)
+        // ---------------------------------------------------------------------
+        $flow = (string)($data['flow'] ?? '');
+        if ($flow === '') {
+            Log::channel('billing')->error('BillingRecord: missing flow (must be explicit)', [
+                'user_id' => $userId,
+                'transaction_id' => $data['transaction_id'] ?? null,
+                'reference_number' => $data['reference_number'] ?? null,
+            ]);
+            throw new \InvalidArgumentException('Missing flow for BillingRecord (must be token_create|pay|renew)');
+        }
+
+        $allowed = ['token_create', 'pay', 'renew'];
+        if (!in_array($flow, $allowed, true)) {
+            Log::channel('billing')->error('BillingRecord: invalid flow', [
+                'user_id' => $userId,
+                'flow' => $flow,
+                'transaction_id' => $data['transaction_id'] ?? null,
+                'reference_number' => $data['reference_number'] ?? null,
+            ]);
+            throw new \InvalidArgumentException("Invalid flow '{$flow}' for BillingRecord");
+        }
+
+
+        // ---------------------------------------------------------------------
+        // Canonical reference_number (ledger cycle key)
+        // MUST be stable for the given business operation.
+        // If not provided, we generate a deterministic-enough fallback to avoid breaking.
+        // ---------------------------------------------------------------------
+        $referenceNumber = (string)($data['reference_number'] ?? '');
+        if ($referenceNumber === '') {
+            Log::channel('billing')->error('BillingRecord: missing reference_number (must be explicit)', [
+                'user_id' => $userId,
+                'flow' => $flow,
+                'transaction_id' => $data['transaction_id'] ?? null,
+            ]);
+            throw new \InvalidArgumentException('Missing reference_number for BillingRecord (must be explicit and stable)');
+        }
+
 
         // ---------------------------------------------------------------------
         // Build human-readable description
@@ -247,74 +301,66 @@ class BillingRecord extends Model
             : self::getPackageDescription($data);
 
         // ---------------------------------------------------------------------
-        // Attempt to create billing record.
-        // DB-level protection: UNIQUE (user_id, gateway_transaction_id)
-        // prevents duplicates in race conditions / concurrent callbacks.
+        // Amount + status (canonical)
+        // createRecord() is called on finalized/accepted flows -> default Paid.
+        // Caller may override by passing 'status' (e.g., Pending) if needed.
+        // ---------------------------------------------------------------------
+        $amount = $isSubscription
+            ? ($data['subscription_price'] ?? 0)
+            : ($data['package_price'] ?? 0);
+
+        $status = self::normalizeStatus($data['status'] ?? self::STATUS_PAID);
+
+        // ---------------------------------------------------------------------
+        // Gateway transaction id for traceability (not the ledger key)
+        // ---------------------------------------------------------------------
+        $gatewayTx = trim((string)($data['transaction_id'] ?? ''));
+        $gatewayTx = $gatewayTx !== '' ? $gatewayTx : null;
+
+        // ---------------------------------------------------------------------
+        // Idempotent upsert by (user_id, flow, reference_number)
         // ---------------------------------------------------------------------
         try {
-            $record = self::create([
-                'user_id'                => $userId,
-                'billed_at'              => now(),
-                'description'            => $description,
-                'card_last_four'         => $data['card_last_four'] ?? null,
-                'card_brand'             => $data['card_brand'] ?? null,
-                'amount'                 => $isSubscription
-                    ? ($data['subscription_price'] ?? 0)
-                    : ($data['package_price'] ?? 0),
-                'currency'               => $data['currency'] ?? 'USD',
-                'status'                 => 'completed',
-                'gateway_transaction_id' => $tx !== '' ? $tx : null,
-            ]);
+            $record = self::updateOrCreate(
+                [
+                    'user_id' => $userId,
+                    'flow' => $flow,
+                    'reference_number' => $referenceNumber,
+                ],
+                [
+                    'billed_at'              => $data['billed_at'] ?? now(),
+                    'description'            => $description,
+                    'card_last_four'         => ($data['card_last_four'] ?? null) ?: '----',
+                    'card_brand'             => ($data['card_brand'] ?? null) ?: 'Unknown',
+                    'amount'                 => $amount,
+                    'currency'               => $data['currency'] ?? 'USD',
+                    'status'                 => $status,
+                    'gateway_transaction_id' => $gatewayTx,
+                ]
+            );
 
-            Log::channel('billing')->info('BillingRecord: created', [
+            Log::channel('billing')->info('BillingRecord: upserted', [
                 'billing_record_id' => $record->id,
-                'user_id'           => $userId,
-                'transaction_id'    => $tx ?: null,
-                'amount'            => (string)$record->amount,
-                'currency'          => $record->currency,
-                'type'              => $isSubscription ? 'subscription' : 'package',
+                'user_id' => $userId,
+                'flow' => $flow,
+                'reference_number' => $referenceNumber,
+                'transaction_id' => $gatewayTx,
+                'amount' => (string)$record->amount,
+                'currency' => $record->currency,
+                'status' => $record->status,
+                'type' => $isSubscription ? 'subscription' : 'package',
             ]);
 
             return $record;
 
         } catch (\Illuminate\Database\QueryException $e) {
-
-            // -----------------------------------------------------------------
-            // If duplicate key happens, return the existing record instead of 500.
-            // MySQL duplicate unique key usually uses error code 1062.
-            // -----------------------------------------------------------------
             $errorCode = (int)($e->errorInfo[1] ?? 0);
 
-            if ($errorCode === 1062 && $tx !== '') {
-                $existing = self::where('user_id', $userId)
-                    ->where('gateway_transaction_id', $tx)
-                    ->first();
-
-                if ($existing) {
-                    Log::channel('billing_webhook')->warning('BillingRecord: DB duplicate prevented (unique index)', [
-                        'user_id' => $userId,
-                        'transaction_id' => $tx,
-                        'billing_record_id' => $existing->id,
-                    ]);
-
-                    return $existing;
-                }
-
-                // Extremely rare edge-case: duplicate error but record not found (replication lag etc.)
-                Log::channel('billing')->error('BillingRecord: duplicate error but existing record not found', [
-                    'user_id' => $userId,
-                    'transaction_id' => $tx,
-                    'db_error_code' => $errorCode,
-                ]);
-
-                // Fallback: rethrow (this should not happen normally)
-                throw $e;
-            }
-
-            // Non-duplicate DB error: log and rethrow
-            Log::channel('billing')->error('BillingRecord: DB error during create', [
+            Log::channel('billing')->error('BillingRecord: DB error during upsert', [
                 'user_id' => $userId,
-                'transaction_id' => $tx ?: null,
+                'flow' => $flow,
+                'reference_number' => $referenceNumber,
+                'transaction_id' => $gatewayTx,
                 'db_error_code' => $errorCode,
                 'exception' => get_class($e),
                 'message' => $e->getMessage(),
@@ -323,7 +369,4 @@ class BillingRecord extends Model
             throw $e;
         }
     }
-
-
-
 }

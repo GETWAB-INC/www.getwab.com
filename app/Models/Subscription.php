@@ -80,6 +80,8 @@ class Subscription extends Model
     public const STATUS_CANCELLED = 'cancelled';
     public const STATUS_EXPIRED = 'expired';
     public const STATUS_SUSPENDED = 'suspended';
+    public const STATUS_PAST_DUE = 'past_due';
+
 
     public const VALID_STATUSES = [
         self::STATUS_ACTIVE,
@@ -87,6 +89,7 @@ class Subscription extends Model
         self::STATUS_CANCELLED,
         self::STATUS_EXPIRED,
         self::STATUS_SUSPENDED,
+        self::STATUS_PAST_DUE,
     ];
 
     public const PRICES = [
@@ -137,7 +140,9 @@ class Subscription extends Model
 
     public function isCurrentlyTrial(): bool
     {
-        return !$this->trial_end_at || now() <= $this->trial_end_at;
+        return $this->status === self::STATUS_TRIAL
+            && $this->trial_end_at !== null
+            && now()->lte($this->trial_end_at);
     }
 
     public function isCurrentlyActive(): bool
@@ -251,6 +256,12 @@ class Subscription extends Model
         $subscriptionPlanIn = (string)($data['subscription_plan'] ?? $data['plan'] ?? '');
         $billingRecordId    = $data['billing_record_id'] ?? null;
 
+        // NEW: keep gateway transaction id if provided (do NOT wipe it)
+        $gatewayId = (string)($data['payment_gateway_id']
+            ?? $data['gateway_transaction_id']
+            ?? $data['transaction_id']
+            ?? '');
+
         $userId = (int)($data['user_id'] ?? 0);
         if ($userId <= 0) {
             throw new \InvalidArgumentException('Missing user_id for Subscription::store');
@@ -299,6 +310,22 @@ class Subscription extends Model
         $subscription->plan = $subscriptionPlan; // ✅ always lowercase
         $subscription->cancelled_at = null;
 
+        // ✅ CANON: успешная оплата (pay/renew success) должна “очистить хвосты” delinquency.
+        // store() вызывается на успешной оплате, поэтому для non-trial принудительно сбрасываем.
+        if ($subscriptionPlan !== self::PLAN_TRIAL && $subscriptionStatus !== self::STATUS_TRIAL && $subscriptionStatus !== 'trial') {
+            // статус должен быть active (если оплата прошла)
+            $subscription->status = self::STATUS_ACTIVE;
+
+            // сброс retry/delinquency
+            $subscription->renew_attempts = 0;
+            $subscription->renew_next_attempt_at = null;
+            $subscription->renew_last_error = null;
+
+            $subscription->past_due_at = null;
+            $subscription->grace_until = null;
+        }
+
+
         // Dates
         if ($subscriptionPlan === self::PLAN_TRIAL || $subscriptionStatus === self::STATUS_TRIAL || $subscriptionStatus === 'trial') {
             $subscription->trial_start_at   = $now;
@@ -319,10 +346,16 @@ class Subscription extends Model
         }
 
         $subscription->currency = 'USD';
-        $subscription->payment_gateway_id = null;
+
+        // NEW: only set if provided, otherwise keep previous value
+        if ($gatewayId !== '') {
+            $subscription->payment_gateway_id = $gatewayId;
+        }
+
         $subscription->notes = $isNew
             ? "Subscription linked to billing #{$billingRecordId}"
             : "Subscription updated, linked to billing #{$billingRecordId}";
+
 
         try {
             $subscription->save();
@@ -336,10 +369,24 @@ class Subscription extends Model
                     ->first();
 
                 if ($existing) {
+
                     $existing->billing_record_id = $billingRecordId;
                     $existing->status = $subscriptionStatus;
                     $existing->plan = $subscriptionPlan; // ✅ lowercase
                     $existing->cancelled_at = null;
+
+                    // ✅ CANON: успешная оплата очищает delinquency-поля
+                    if ($subscriptionPlan !== self::PLAN_TRIAL && $subscriptionStatus !== self::STATUS_TRIAL && $subscriptionStatus !== 'trial') {
+                        $existing->status = self::STATUS_ACTIVE;
+
+                        $existing->renew_attempts = 0;
+                        $existing->renew_next_attempt_at = null;
+                        $existing->renew_last_error = null;
+
+                        $existing->past_due_at = null;
+                        $existing->grace_until = null;
+                    }
+
 
                     if ($subscriptionPlan === self::PLAN_TRIAL || $subscriptionStatus === self::STATUS_TRIAL || $subscriptionStatus === 'trial') {
                         $existing->trial_start_at   = $now;
@@ -354,8 +401,14 @@ class Subscription extends Model
                     }
 
                     $existing->currency = 'USD';
-                    $existing->payment_gateway_id = null;
+
+                    // NEW: only set if provided, otherwise keep previous value
+                    if ($gatewayId !== '') {
+                        $existing->payment_gateway_id = $gatewayId;
+                    }
+
                     $existing->notes = "Subscription updated after unique race, linked to billing #{$billingRecordId}";
+
                     $existing->save();
 
                     return $existing;

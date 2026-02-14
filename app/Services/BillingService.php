@@ -286,7 +286,7 @@ class BillingService
         $payloads = (array)($pending['payloads'] ?? []);
         $provider = $this->resolveProvider($paymentMeta);
 
-        $keys = ['fpds_query_trial', 'fpds_query_subscription', 'fpds_report_subscription'];
+        $keys = ['fpds_query_subscription', 'fpds_report_subscription'];
 
         try {
             return $this->inTransaction(function () use ($keys, $payloads, $pending, $paymentMeta, $userId, $provider) {
@@ -305,14 +305,22 @@ class BillingService
                     $data['user_id'] = $userId;
                     $data['email'] = $pending['email'] ?? null;
 
-                    $data['payment_provider'] = $provider;
-                    $data['reference_number'] = $paymentMeta['reference_number'] ?? ($pending['reference_number'] ?? null);
-                    $data['transaction_id'] = $paymentMeta['transaction_id'] ?? null;
-                    $data['request_token'] = $paymentMeta['request_token'] ?? null;
+                    $ref = (string)($paymentMeta['reference_number'] ?? ($pending['reference_number'] ?? ''));
+                    if ($ref === '') {
+                        throw new \RuntimeException('Missing reference_number for checkout purchase (flow=pay).');
+                    }
+
+                    $data['payment_provider']  = $provider;
+                    $data['flow']              = 'pay';          // ✅ canonical: checkout purchase
+                    $data['reference_number']  = $ref;           // ✅ single source of truth
+
+                    $data['transaction_id']    = $paymentMeta['transaction_id'] ?? null;
+                    $data['request_token']     = $paymentMeta['request_token'] ?? null;
 
                     $data['payment_token_instrument_identifier_id'] = $paymentMeta['payment_token_instrument_identifier_id'] ?? null;
-                    $data['payment_token_payment_instrument_id'] = $paymentMeta['payment_token_payment_instrument_id'] ?? null;
-                    $data['paid_amount'] = $paymentMeta['total'] ?? ($pending['total'] ?? null);
+                    $data['payment_token_payment_instrument_id']    = $paymentMeta['payment_token_payment_instrument_id'] ?? null;
+                    $data['paid_amount']       = $paymentMeta['total'] ?? ($pending['total'] ?? null);
+
 
                     // Resolve card UI data for BillingRecord (payment_methods -> gateway fallback).
                     $piid = (string)($data['payment_token_payment_instrument_id'] ?? '');
@@ -372,7 +380,7 @@ class BillingService
         $keys = ['elementary_report_package', 'composite_report_package'];
 
         try {
-            return $this->inTransaction(function () use ($keys, $payloads, $userId, $paymentMeta, $provider) {
+            return $this->inTransaction(function () use ($keys, $payloads, $pending, $userId, $paymentMeta, $provider) {
                 $messages = [];
                 $processedAny = false;
 
@@ -394,6 +402,12 @@ class BillingService
 
                     // Resolve card UI data (payment_methods -> gateway fallback).
                     $piid = (string)($paymentMeta['payment_token_payment_instrument_id'] ?? '');
+
+                    $ref = (string)($paymentMeta['reference_number'] ?? ($pending['reference_number'] ?? ''));
+                    if ($ref === '') {
+                        throw new \RuntimeException('Missing reference_number for report package purchase (flow=pay).');
+                    }
+
                     $ui = $this->resolveCardUiFromPaymentMethods(
                         $userId,
                         $provider,
@@ -402,6 +416,11 @@ class BillingService
                     );
 
                     // Create billing record for the package.
+                    $ref = (string)($paymentMeta['reference_number'] ?? ($pending['reference_number'] ?? ''));
+                    if ($ref === '') {
+                        throw new \RuntimeException('Missing reference_number for report package purchase (flow=pay).');
+                    }
+
                     $billingRecord = BillingRecord::createRecord([
                         'user_id'           => $userId,
                         'package_type'      => $packageType,
@@ -411,9 +430,11 @@ class BillingService
                         'card_last_four'    => $ui['card_last_four'],
                         'card_brand'        => $ui['card_brand'],
 
-                        'transaction_id'    => $paymentMeta['transaction_id'] ?? null,
-                        'reference_number'  => $paymentMeta['reference_number'] ?? null,
                         'payment_provider'  => $provider,
+                        'flow'              => 'pay',   // ✅ canonical
+                        'reference_number'  => $ref,    // ✅ canonical
+
+                        'transaction_id'    => $paymentMeta['transaction_id'] ?? null,
                     ]);
 
                     // Upsert report package (add remaining reports).
@@ -457,6 +478,68 @@ class BillingService
             ]);
 
             return ['success' => false, 'messages' => ['Failed to process report package: ' . $e->getMessage()]];
+        }
+    }
+
+    /**
+     * TRIAL subscription flow (NO MONEY):
+     * - create/update Subscription with status='trial', plan='trial'
+     * - DO NOT create BillingRecord
+     * Atomicity: same inTransaction contract as others.
+     */
+    public function processTrialSubscriptions(array $pending = [], array $paymentMeta = []): array
+    {
+        $userId = (int)($pending['user_id'] ?? 0);
+        if ($userId <= 0) {
+            return ['success' => false, 'messages' => ['Missing user_id in pending context.']];
+        }
+
+        $payloads = (array)($pending['payloads'] ?? []);
+        $keys = ['fpds_query_trial']; // trial only
+
+        try {
+            return $this->inTransaction(function () use ($keys, $payloads, $pending, $userId) {
+                $messages = [];
+                $processedAny = false;
+
+                foreach ($keys as $key) {
+                    $data = $payloads[$key] ?? null;
+                    if (!$data) {
+                        continue;
+                    }
+
+                    $processedAny = true;
+
+                    // minimal required fields for Subscription::store
+                    $data['user_id'] = $userId;
+
+                    // Force TRIAL canonical status/plan
+                    $data['subscription_status'] = 'trial';
+                    $data['status'] = 'trial';
+                    $data['subscription_plan'] = 'trial';
+                    $data['plan'] = 'trial';
+
+                    // Critical: NO billing record for trial
+                    $data['billing_record_id'] = null;
+
+                    Subscription::store($data);
+
+                    $messages[] = "Trial subscription '{$key}' created successfully (no billing record).";
+                }
+
+                if (!$processedAny) {
+                    return ['success' => false, 'messages' => ['No trial subscription payload found in pending context.']];
+                }
+
+                return ['success' => true, 'messages' => $messages];
+            });
+        } catch (\Throwable $e) {
+            Log::channel('checkout')->error('processTrialSubscriptions failed', [
+                'user_id' => $userId,
+                'error' => $e->getMessage(),
+            ]);
+
+            return ['success' => false, 'messages' => ['Failed to process trial subscription: ' . $e->getMessage()]];
         }
     }
 
