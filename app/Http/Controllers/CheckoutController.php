@@ -277,6 +277,18 @@ class CheckoutController extends Controller
 
         $flow = ($txType === 'create_payment_token') ? 'token_create' : 'pay';
 
+        $amountRaw = $request->get('auth_amount') ?? $request->get('req_amount');
+
+        if ($flow === 'token_create') {
+            // Trial — нет денежной операции
+            $amount = '0.00';
+        } else {
+            // Обычный платёж
+            $amount = ($amountRaw !== null && $amountRaw !== '')
+                ? (string)$amountRaw
+                : null;
+        }
+
         // Insert payment event with UNIQUE(provider, transaction_id).
         $shouldProcess = true;
         try {
@@ -288,7 +300,7 @@ class CheckoutController extends Controller
                 'decision'         => $decision,
                 'reason_code'      => $reasonCode,
                 'auth_response'    => $authResponse,
-                'amount'           => (string)($request->get('auth_amount') ?? $request->get('req_amount') ?? ''),
+                'amount'           => $amount,
                 'currency'         => (string)($request->get('req_currency') ?? 'USD'),
                 'raw_payload'      => $rawPayload,
                 'parsed_payload'   => $parsedPayloadJson,
@@ -1286,7 +1298,7 @@ class CheckoutController extends Controller
             'payment_method'   => 'card',
 
             // 'amount'   => '0.00',
-            // 'currency' => 'USD',
+            'currency' => 'USD',
 
             'reference_number' => (string) $order['reference_number'],
 
@@ -1321,7 +1333,7 @@ class CheckoutController extends Controller
             'payment_method',
             'reference_number',
             // 'amount',
-            // 'currency',
+            'currency',
             'override_custom_receipt_page',
             'override_custom_cancel_page',
             'merchant_defined_data1',
