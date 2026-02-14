@@ -191,6 +191,149 @@ class TokenPaymentService
         return $out;
     }
 
+    public function capturePayment(array $payload): array
+    {
+        $baseUrl = rtrim((string)env('REST_API_URL', ''), '/'); // у тебя .../pts/v2/payments
+        $merchantId = (string)env('MERCHANT_ID', '');
+        $keyId = (string)env('REST_API_SHARED_KEY', '');
+        $secretB64 = (string)env('REST_API_SHARED_SECRET', '');
+
+        $paymentId = (string)($payload['payment_id'] ?? '');
+        $amount    = (string)($payload['amount'] ?? '');
+        $currency  = (string)($payload['currency'] ?? 'USD');
+        $reference = (string)($payload['reference'] ?? '');
+
+        if ($paymentId === '' || $amount === '' || $reference === '') {
+            return $this->normalizedError('Missing payment_id / amount / reference');
+        }
+
+        // baseUrl у тебя уже заканчивается на /pts/v2/payments
+        $url = $baseUrl . '/' . $paymentId . '/captures';
+
+        $host = (string)parse_url($url, PHP_URL_HOST);
+        $path = (string)(parse_url($url, PHP_URL_PATH) ?: ('/pts/v2/payments/'.$paymentId.'/captures'));
+
+        $body = [
+            'clientReferenceInformation' => ['code' => $reference],
+            'orderInformation' => [
+                'amountDetails' => [
+                    'totalAmount' => $amount,
+                    'currency' => $currency,
+                ],
+            ],
+        ];
+
+        $json = json_encode($body, JSON_UNESCAPED_SLASHES);
+        if ($json === false) {
+            return $this->normalizedError('Failed to json_encode capture body');
+        }
+
+        $vDate = gmdate('D, d M Y H:i:s') . ' GMT';
+        $digest = 'SHA-256=' . base64_encode(hash('sha256', $json, true));
+        $requestTarget = 'post ' . $path;
+
+        $signatureString =
+            "host: {$host}\n" .
+            "digest: {$digest}\n" .
+            "v-c-date: {$vDate}\n" .
+            "request-target: {$requestTarget}\n" .
+            "v-c-merchant-id: {$merchantId}";
+
+        $secret = base64_decode($secretB64, true);
+        if ($secret === false) {
+            return $this->normalizedError('REST_API_SHARED_SECRET is not valid base64');
+        }
+
+        $sig = base64_encode(hash_hmac('sha256', $signatureString, $secret, true));
+        $signatureHeader =
+            'keyid="' . $keyId . '", ' .
+            'algorithm="HmacSHA256", ' .
+            'headers="host digest v-c-date request-target v-c-merchant-id", ' .
+            'signature="' . $sig . '"';
+
+        try {
+            $resp = \Illuminate\Support\Facades\Http::timeout(30)
+                ->withHeaders([
+                    'Content-Type' => 'application/json',
+                    'Host' => $host,
+                    'v-c-date' => $vDate,
+                    'v-c-merchant-id' => $merchantId,
+                    'Digest' => $digest,
+                    'Signature' => $signatureHeader,
+                ])
+                ->withBody($json, 'application/json')
+                ->post($url);
+        } catch (\Throwable $e) {
+            return $this->normalizedError('Capture HTTP failed: '.$e->getMessage());
+        }
+
+        $status = $resp->status();
+        $raw = $resp->body();
+        $parsed = $resp->json();
+
+        // Нормализация под твой формат
+        $decision = 'ERROR';
+        $reason   = null;
+        $txId     = null;
+
+        if (is_array($parsed)) {
+            $txId = (string)($parsed['id'] ?? '');
+            $st   = strtoupper((string)($parsed['status'] ?? ''));
+
+            if ($resp->successful()) {
+                // ✅ только финальные статусы считаем успехом (продлеваем)
+                if (in_array($st, ['SETTLED', 'COMPLETED'], true)) {
+                    $decision = 'ACCEPT';
+                    $reason   = $st;
+
+                // 🟡 PENDING — НЕ успех, подписку НЕ продлеваем
+                } elseif ($st === 'PENDING') {
+                    $decision = 'PENDING';
+                    $reason   = $st;
+
+                // ❌ остальное на 2xx — считаем отказом/неуспехом
+                } elseif ($st !== '') {
+                    $decision = 'DECLINE';
+                    $reason   = $st;
+
+                } else {
+                    $decision = 'ERROR';
+                    $reason   = 'Capture success but unknown status';
+                }
+            } else {
+                $decision = 'ERROR';
+                $reason   = 'HTTP ' . $status;
+            }
+
+            $reason = $reason ?: (string)(
+                $parsed['errorInformation']['message']
+                ?? $parsed['errorInformation']['reason']
+                ?? $st
+                ?? ''
+            );
+        } else {
+            $decision = 'ERROR';
+            $reason   = $resp->successful() ? 'Capture success but empty JSON' : ('HTTP ' . $status);
+        }
+
+
+        return [
+            'decision' => $decision,
+            'transaction_id' => $txId !== '' ? $txId : null,
+            'reason' => $reason,
+            'status' => $status,
+            'raw_payload' => $raw,
+            'parsed_payload' => is_array($parsed) ? $parsed : null,
+            'request' => [
+                'reference' => $reference,
+                'amount' => $amount,
+                'currency' => $currency,
+                'payment_id' => $paymentId,
+            ],
+        ];
+    }
+
+
     private function normalizedError(string $msg): array
     {
         return [

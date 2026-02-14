@@ -19,6 +19,8 @@ class BillingRecord extends Model
         'user_id',
         'billed_at',
         'description',
+        'reference_number',
+        'flow',
         'card_last_four',
         'card_brand',
         'amount',

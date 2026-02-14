@@ -41,21 +41,25 @@ class PaymentMethod extends Model
      * Get default payment method for a user (by provider).
      *
      * Rules:
-     * 1) is_active=1 AND is_default=1
-     * 2) fallback: last active (most recently verified/updated)
-     * 3) if none: throw clear error "no active payment method"
+     * 1) is_active=1 AND is_default=1 AND payment_instrument_id not null
+     * 2) fallback: last active tokenized method (verified/updated most recent)
+     * 3) if none: throw clear error
      */
     public static function getDefaultForUser(int $userId, string $provider = 'boa'): self
     {
         $provider = strtolower(trim($provider));
 
-        // 1) Active + Default
-        $method = self::query()
+        $base = self::query()
             ->where('user_id', $userId)
             ->where('provider', $provider)
             ->where('is_active', 1)
+            ->whereNotNull('payment_instrument_id')
+            ->where('payment_instrument_id', '!=', '');
+
+        // 1) Active + Default
+        $method = (clone $base)
             ->where('is_default', 1)
-            ->orderByDesc('verified_at')   // prefer verified cards if there are multiple defaults (bad data)
+            ->orderByDesc('verified_at')
             ->orderByDesc('updated_at')
             ->orderByDesc('id')
             ->first();
@@ -65,11 +69,7 @@ class PaymentMethod extends Model
         }
 
         // 2) Fallback: last active
-        $method = self::query()
-            ->where('user_id', $userId)
-            ->where('provider', $provider)
-            ->where('is_active', 1)
-            ->orderByRaw('verified_at IS NULL') // verified first (NULL goes last)
+        $method = (clone $base)
             ->orderByDesc('verified_at')
             ->orderByDesc('updated_at')
             ->orderByDesc('id')
