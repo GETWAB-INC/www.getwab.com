@@ -522,16 +522,15 @@ class BillingService
                     $planIn = (string)($data['subscription_plan'] ?? $data['plan'] ?? '');
                     $plan   = \App\Models\Subscription::normalizePlan($planIn);
 
+                    if (!in_array($plan, ['monthly', 'annual'], true)) {
+                        $plan = 'monthly';
+                    }
+
                     Log::channel('checkout')->info('trial payload plan', [
                         'user_id'   => $userId,
                         'plan_in'   => $planIn,
                         'plan_norm' => $plan,
                     ]);
-
-                    // fallback (если почему-то payload пустой)
-                    if (!in_array($plan, ['monthly', 'annual'], true)) {
-                        $plan = 'monthly';
-                    }
 
                     $data['subscription_plan'] = $plan;
                     $data['plan'] = $plan;
