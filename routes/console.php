@@ -9,8 +9,14 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote')->hourly();
 
-// Your new scheduled commands
-// Schedule::command('send:helloemail')->everyMinute();
-// Schedule::command('send:againemail')->everyMinute();
-// Schedule::command('send:lastemail')->everyMinute();
-// Schedule::command('mail:clean-imap-emails')->everyMinute();
+// 1) Renew orchestrator (monthly/annual renewals + retries)
+Schedule::command('subscription:renew --limit=200')
+    ->everyMinute()
+    ->withoutOverlapping(10)          // prevents two runs at once (10 min lock)
+    ->runInBackground();             // optional
+
+// 2) Expire trials only
+Schedule::command('subscription:set-expired')
+    ->everyFifteenMinutes()
+    ->withoutOverlapping(10)
+    ->runInBackground();             // optional
