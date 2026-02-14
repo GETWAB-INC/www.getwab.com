@@ -1285,8 +1285,8 @@ class CheckoutController extends Controller
             'transaction_type' => 'create_payment_token',
             'payment_method'   => 'card',
 
-            'amount'   => '0.00',
-            'currency' => 'USD',
+            // 'amount'   => '0.00',
+            // 'currency' => 'USD',
 
             'reference_number' => (string) $order['reference_number'],
 
@@ -1320,8 +1320,8 @@ class CheckoutController extends Controller
             'transaction_type',
             'payment_method',
             'reference_number',
-            'amount',
-            'currency',
+            // 'amount',
+            // 'currency',
             'override_custom_receipt_page',
             'override_custom_cancel_page',
             'merchant_defined_data1',
