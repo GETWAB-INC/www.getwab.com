@@ -53,12 +53,10 @@ class Subscription extends Model
     ];
 
 
-    public const PLAN_TRIAL   = 'trial';
     public const PLAN_MONTHLY = 'monthly';
     public const PLAN_ANNUAL  = 'annual';
 
     public const VALID_PLANS = [
-        self::PLAN_TRIAL,
         self::PLAN_MONTHLY,
         self::PLAN_ANNUAL,
     ];
@@ -70,7 +68,6 @@ class Subscription extends Model
         return match ($p) {
             'monthly', 'month', 'm' => self::PLAN_MONTHLY,
             'annual', 'yearly', 'year', 'y' => self::PLAN_ANNUAL,
-            'trial' => self::PLAN_TRIAL,
             default => $p,
         };
     }
@@ -281,10 +278,10 @@ class Subscription extends Model
 
         $subscriptionPlan = self::normalizePlan($subscriptionPlanIn);
 
+
         if (!in_array($subscriptionPlan, [self::PLAN_MONTHLY, self::PLAN_ANNUAL], true)) {
             throw new \InvalidArgumentException('Invalid subscription_plan for Subscription::store: ' . $subscriptionPlanIn);
         }
-
 
         $now = now();
 
@@ -310,7 +307,8 @@ class Subscription extends Model
 
         // ✅ CANON: успешная оплата (pay/renew success) должна “очистить хвосты” delinquency.
         // store() вызывается на успешной оплате, поэтому для non-trial принудительно сбрасываем.
-        if ($subscriptionPlan !== self::PLAN_TRIAL && $subscriptionStatus !== self::STATUS_TRIAL && $subscriptionStatus !== 'trial') {
+        if ($subscriptionStatus !== self::STATUS_TRIAL) {
+
             // статус должен быть active (если оплата прошла)
             $subscription->status = self::STATUS_ACTIVE;
 
@@ -324,8 +322,8 @@ class Subscription extends Model
         }
 
 
-        // Dates
-        if ($subscriptionPlan === self::PLAN_TRIAL || $subscriptionStatus === self::STATUS_TRIAL || $subscriptionStatus === 'trial') {
+        // Dates (CANON): trial определяется только статусом
+        if ($subscriptionStatus === self::STATUS_TRIAL) {
             $subscription->trial_start_at   = $now;
             $subscription->trial_end_at     = $now->copy()->addDays(7);
             $subscription->next_billing_at  = $now->copy()->addDays(7);
@@ -333,7 +331,6 @@ class Subscription extends Model
         } else {
             $subscription->next_billing_at = $subscription->calculateNextBillingDate();
             $subscription->expires_at      = $subscription->calculateExpireDate();
-            // trial_* можно не трогать (история), либо обнулять — я оставляю как есть
         }
 
         // Amount must reflect the plan price even during trial (charge happens later).
@@ -370,7 +367,8 @@ class Subscription extends Model
                     $existing->cancelled_at = null;
 
                     // ✅ CANON: успешная оплата очищает delinquency-поля
-                    if ($subscriptionPlan !== self::PLAN_TRIAL && $subscriptionStatus !== self::STATUS_TRIAL && $subscriptionStatus !== 'trial') {
+                    if ($subscriptionStatus !== self::STATUS_TRIAL) {
+
                         $existing->status = self::STATUS_ACTIVE;
 
                         $existing->renew_attempts = 0;
@@ -382,17 +380,20 @@ class Subscription extends Model
                     }
 
 
-                    if ($subscriptionPlan === self::PLAN_TRIAL || $subscriptionStatus === self::STATUS_TRIAL || $subscriptionStatus === 'trial') {
+                    if ($subscriptionStatus === self::STATUS_TRIAL) {
                         $existing->trial_start_at   = $now;
                         $existing->trial_end_at     = $now->copy()->addDays(7);
                         $existing->next_billing_at  = $now->copy()->addDays(7);
                         $existing->expires_at       = $now->copy()->addDays(7);
-                        $existing->amount           = 0.00;
+
+                        // trial: amount = price(plan) (чардж будет позже)
+                        $existing->amount = (float)(self::PRICES[$subscriptionType][$subscriptionPlan] ?? 0.00);
                     } else {
                         $existing->next_billing_at = $existing->calculateNextBillingDate();
                         $existing->expires_at      = $existing->calculateExpireDate();
                         $existing->amount          = (float)(self::PRICES[$subscriptionType][$subscriptionPlan] ?? 0.00);
                     }
+
 
                     $existing->currency = 'USD';
 
@@ -441,29 +442,22 @@ class Subscription extends Model
         $incomingStatus = strtolower(trim((string)$incomingStatus));
         $normalizedPlan = self::normalizePlan((string)$incomingPlan);
 
-        // ✅ Enforce single canonical plan format in DB: trial/monthly/annual
-        // If status is trial → plan MUST be 'trial'
-        if ($incomingStatus === self::STATUS_TRIAL || $incomingStatus === 'trial') {
-            $normalizedPlan = self::PLAN_TRIAL;
-        } else {
-            // Only monthly/annual allowed for non-trial
-            if (!in_array($normalizedPlan, self::VALID_PLANS, true) || $normalizedPlan === self::PLAN_TRIAL) {
-                throw new \InvalidArgumentException('Invalid plan for active subscription: ' . (string)$incomingPlan);
-            }
+        // CANON: trial = status, plan stays monthly|annual
+        if (!in_array($normalizedPlan, self::VALID_PLANS, true)) {
+            // если вдруг пришёл мусор — ставим monthly как безопасный дефолт
+            $normalizedPlan = self::PLAN_MONTHLY;
         }
+
 
         // Update plan
         $this->plan = $normalizedPlan;
 
-        // ✅ Recalculate status:
-        // if fpds_query AND currently within trial window → STATUS_TRIAL
-        // else → incoming status or ACTIVE
         if ($this->isFpdsQuerySubscription() && $this->isCurrentlyTrial()) {
             $this->status = self::STATUS_TRIAL;
-            $this->plan = self::PLAN_TRIAL; // keep consistent
         } else {
             $this->status = $incomingStatus !== '' ? $incomingStatus : self::STATUS_ACTIVE;
         }
+
 
         // ✅ Recalculate dates
         if ($this->status === self::STATUS_TRIAL) {
@@ -481,11 +475,9 @@ class Subscription extends Model
         $this->cancelled_at = null;
 
         // ✅ Amount (safe)
-        if ($this->status === self::STATUS_TRIAL || $this->plan === self::PLAN_TRIAL) {
-            $this->amount = 0.00;
-        } else {
-            $this->amount = (float)(self::PRICES[$this->subscription_type][$this->plan] ?? 0.00);
-        }
+        // trial: amount = price(plan) (чардж позже)
+        $this->amount = (float)(self::PRICES[$this->subscription_type][$this->plan] ?? 0.00);
+
 
         $this->currency = $this->currency ?: 'USD';
 
