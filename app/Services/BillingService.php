@@ -483,7 +483,7 @@ class BillingService
 
     /**
      * TRIAL subscription flow (NO MONEY):
-     * - create/update Subscription with status='trial', plan='trial'
+     * - create/update Subscription with status='trial', plan='monthly|annual'
      * - DO NOT create BillingRecord
      * Atomicity: same inTransaction contract as others.
      */
@@ -498,7 +498,8 @@ class BillingService
         $keys = ['fpds_query_trial']; // trial only
 
         try {
-            return $this->inTransaction(function () use ($keys, $payloads, $pending, $userId) {
+            return $this->inTransaction(function () use ($keys, $payloads, $userId, $paymentMeta) {
+
                 $messages = [];
                 $processedAny = false;
 
@@ -513,14 +514,43 @@ class BillingService
                     // minimal required fields for Subscription::store
                     $data['user_id'] = $userId;
 
-                    // Force TRIAL canonical status/plan
+                    // Force TRIAL canonical status (trial is STATUS, not PLAN)
                     $data['subscription_status'] = 'trial';
                     $data['status'] = 'trial';
-                    $data['subscription_plan'] = 'trial';
-                    $data['plan'] = 'trial';
+
+                    // PLAN must be monthly|annual (from payload)
+                    $planIn = (string)($data['subscription_plan'] ?? $data['plan'] ?? '');
+                    $plan   = \App\Models\Subscription::normalizePlan($planIn);
+
+                    Log::channel('checkout')->info('trial payload plan', [
+                        'user_id'   => $userId,
+                        'plan_in'   => $planIn,
+                        'plan_norm' => $plan,
+                    ]);
+
+                    // fallback (если почему-то payload пустой)
+                    if (!in_array($plan, ['monthly', 'annual'], true)) {
+                        $plan = 'monthly';
+                    }
+
+                    $data['subscription_plan'] = $plan;
+                    $data['plan'] = $plan;
+
 
                     // Critical: NO billing record for trial
                     $data['billing_record_id'] = null;
+
+                    // keep gateway traceability (robust fallback for different key names)
+                    $gwId = (string)(
+                        $paymentMeta['transaction_id']
+                        ?? $paymentMeta['transactionId']
+                        ?? $paymentMeta['TransactionID']
+                        ?? ''
+                    );
+
+                    if ((!isset($data['payment_gateway_id']) || $data['payment_gateway_id'] === '') && $gwId !== '') {
+                        $data['payment_gateway_id'] = $gwId;
+                    }
 
                     Subscription::store($data);
 
