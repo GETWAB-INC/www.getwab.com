@@ -721,6 +721,59 @@
             @endif
           @endforeach
 
+{{-- TRIAL / SUBSCRIPTION SUMMARY (NOT a billing transaction) --}}
+@if(isset($fpdsQuerySub) && $fpdsQuerySub)
+  @php
+    $isTrial = ($fpdsQuerySub->status === 'trial' || $fpdsQuerySub->plan === 'trial');
+  @endphp
+
+  @if($isTrial)
+    <div class="billing-data-row">
+      <div class="billing-cell-data billing-cell-date">
+        <div class="billing-cell-content">
+          <div class="billing-cell-data-text">
+            {{ optional($fpdsQuerySub->trial_start_at)->format('M d, Y') ?? '—' }}
+          </div>
+        </div>
+      </div>
+
+      <div class="billing-cell-data billing-cell-description">
+        <div class="billing-cell-content">
+          <div class="billing-cell-data-text">
+            FPDS Query Trial (no charge)
+            @if($fpdsQuerySub->trial_end_at)
+              <span class="text-muted">— ends {{ \Carbon\Carbon::parse($fpdsQuerySub->trial_end_at)->format('M d, Y') }}</span>
+            @endif
+          </div>
+        </div>
+      </div>
+
+      <div class="billing-cell-data billing-cell-card">
+        <div class="billing-cell-content">
+          <div class="billing-cell-data-center">
+            —
+          </div>
+        </div>
+      </div>
+
+      <div class="billing-cell-data billing-cell-amount">
+        <div class="billing-cell-content">
+          <div class="billing-cell-data-center">
+            —
+          </div>
+        </div>
+      </div>
+
+      <div class="billing-cell-data billing-cell-status">
+        <div class="billing-status-cell">
+          <div class="billing-cell-data-center trial">
+            Trial
+          </div>
+        </div>
+      </div>
+    </div>
+  @endif
+@endif
 
           @foreach ($billingHistory as $record)
     <div class="billing-data-row">

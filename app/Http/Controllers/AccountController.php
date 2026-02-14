@@ -176,25 +176,31 @@ class AccountController extends Controller
             ->orderByDesc('verified_at')
             ->orderByDesc('created_at')
             ->get([
-                'id',
-                'provider',
-                'brand',
-                'last_four',
-                'exp_month',
-                'exp_year',
-                'is_default',
-                'is_active',
-                'verified_at',
-                'created_at',
+                'id','provider','brand','last_four','exp_month','exp_year',
+                'is_default','is_active','verified_at','created_at',
             ]);
 
         $billingHistory = BillingRecord::where('user_id', $user->id)
             ->orderBy('billed_at', 'desc')
             ->get();
 
+        $subscriptions = Subscription::query()
+            ->where('user_id', $user->id)
+            ->whereNull('deleted_at')
+            ->get([
+                'id','subscription_type','status','plan','amount','currency',
+                'trial_start_at','trial_end_at','next_billing_at','expires_at',
+            ]);
+
+        // (опционально) быстрый доступ именно к FPDS Query
+        $fpdsQuerySub = $subscriptions->firstWhere('subscription_type', 'fpds_query');
+
         session(['last_account_section' => route('account.billing')]);
 
-        return view('account.billing', compact('user', 'paymentMethods', 'itemsToShow', 'billingHistory'));
+        return view('account.billing', compact(
+            'user','paymentMethods','itemsToShow','billingHistory',
+            'subscriptions','fpdsQuerySub'
+        ));
     }
 
     public function deletePaymentMethod($id)
