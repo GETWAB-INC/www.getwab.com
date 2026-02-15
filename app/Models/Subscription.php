@@ -248,6 +248,7 @@ class Subscription extends Model
 
     public static function store(array $data): Subscription
     {
+        
         $subscriptionType   = (string)($data['subscription_type'] ?? '');
         $subscriptionStatus = (string)($data['subscription_status'] ?? $data['status'] ?? '');
         $subscriptionPlanIn = (string)($data['subscription_plan'] ?? $data['plan'] ?? '');
@@ -269,6 +270,21 @@ class Subscription extends Model
 
         // Normalize status + plan
         $subscriptionStatus = strtolower(trim($subscriptionStatus));
+
+        // ✅ Status whitelist (prevent garbage values)
+        $allowedStatuses = [
+            self::STATUS_TRIAL,
+            self::STATUS_ACTIVE,
+            self::STATUS_PAST_DUE,
+            self::STATUS_SUSPENDED,
+            self::STATUS_CANCELLED,
+            self::STATUS_EXPIRED,
+        ];
+
+        if (!in_array($subscriptionStatus, $allowedStatuses, true)) {
+            // Safe default. Avoid accidental "paid mode" due to bad input.
+            $subscriptionStatus = self::STATUS_ACTIVE;
+        }
 
         // ✅ Plan normalization (always store lowercase: monthly|annual even for trial)
         // Trial is a STATUS, not a PLAN. We must keep the chosen paid plan to know what to charge after trial.
@@ -300,37 +316,54 @@ class Subscription extends Model
             $isNew = true;
         }
 
-        $subscription->billing_record_id = $billingRecordId;
-        $subscription->status = $subscriptionStatus;
+        // --- CANON: store() must be two-mode: TRIAL vs PAID ---
         $subscription->plan = $subscriptionPlan; // ✅ always lowercase
         $subscription->cancelled_at = null;
 
-        // ✅ CANON: успешная оплата (pay/renew success) должна “очистить хвосты” delinquency.
-        // store() вызывается на успешной оплате, поэтому для non-trial принудительно сбрасываем.
-        if ($subscriptionStatus !== self::STATUS_TRIAL) {
+        if ($subscriptionStatus === self::STATUS_TRIAL) {
+            // ===== TRIAL MODE =====
+            $subscription->status           = self::STATUS_TRIAL;
+            $subscription->billing_record_id = null; // ✅ trial has no billing record
 
-            // статус должен быть active (если оплата прошла)
-            $subscription->status = self::STATUS_ACTIVE;
+            $subscription->trial_start_at   = $now;
+            $subscription->trial_end_at     = $now->copy()->addDays(7);
 
-            // сброс retry/delinquency
+            $subscription->start_at         = $now;
+            $subscription->next_billing_at  = $subscription->trial_end_at->copy();
+            $subscription->expires_at       = $subscription->trial_end_at->copy();
+
+            // trial does NOT touch delinquency fields (keep them null)
             $subscription->renew_attempts = 0;
             $subscription->renew_next_attempt_at = null;
             $subscription->renew_last_error = null;
-
             $subscription->past_due_at = null;
             $subscription->grace_until = null;
-        }
 
-
-        // Dates (CANON): trial определяется только статусом
-        if ($subscriptionStatus === self::STATUS_TRIAL) {
-            $subscription->trial_start_at   = $now;
-            $subscription->trial_end_at     = $now->copy()->addDays(7);
-            $subscription->next_billing_at  = $now->copy()->addDays(7);
-            $subscription->expires_at       = $now->copy()->addDays(7);
         } else {
-            $subscription->next_billing_at = $subscription->calculateNextBillingDate();
-            $subscription->expires_at      = $subscription->calculateExpireDate();
+            // ===== PAID MODE (pay/renew success) =====
+            $subscription->status            = self::STATUS_ACTIVE;
+            $subscription->billing_record_id = $billingRecordId;
+
+            // ✅ MUST clear trial fields on paid activation
+            $subscription->trial_start_at = null;
+            $subscription->trial_end_at   = null;
+
+            // ✅ Paid period MUST start from now, not from old expires_at (trial_end)
+            $subscription->start_at = $now;
+
+            $subscription->next_billing_at = match (self::normalizePlan($subscriptionPlan)) {
+                self::PLAN_MONTHLY => $now->copy()->addMonth(),
+                self::PLAN_ANNUAL  => $now->copy()->addYear(),
+                default            => $now->copy()->addMonth(),
+            };
+            $subscription->expires_at = $subscription->next_billing_at->copy();
+
+            // ✅ clear retry/delinquency on success
+            $subscription->renew_attempts = 0;
+            $subscription->renew_next_attempt_at = null;
+            $subscription->renew_last_error = null;
+            $subscription->past_due_at = null;
+            $subscription->grace_until = null;
         }
 
         // Amount must reflect the plan price even during trial (charge happens later).
@@ -343,10 +376,14 @@ class Subscription extends Model
             $subscription->payment_gateway_id = $gatewayId;
         }
 
-        $subscription->notes = $isNew
-            ? "Subscription linked to billing #{$billingRecordId}"
-            : "Subscription updated, linked to billing #{$billingRecordId}";
-
+        // ✅ Notes: TRIAL vs PAID
+        if ($subscriptionStatus === self::STATUS_TRIAL) {
+            $subscription->notes = $isNew ? 'Trial activated' : 'Trial updated';
+        } else {
+            $subscription->notes = $isNew
+                ? ($billingRecordId ? "Subscription linked to billing #{$billingRecordId}" : "Subscription activated (billing id missing)")
+                : ($billingRecordId ? "Subscription updated, linked to billing #{$billingRecordId}" : "Subscription updated (billing id missing)");
+        }
 
         try {
             $subscription->save();
@@ -361,39 +398,54 @@ class Subscription extends Model
 
                 if ($existing) {
 
-                    $existing->billing_record_id = $billingRecordId;
-                    $existing->status = $subscriptionStatus;
+                                        // --- CANON: same two-mode logic for race-reload ---
                     $existing->plan = $subscriptionPlan; // ✅ lowercase
                     $existing->cancelled_at = null;
 
-                    // ✅ CANON: успешная оплата очищает delinquency-поля
-                    if ($subscriptionStatus !== self::STATUS_TRIAL) {
+                    if ($subscriptionStatus === self::STATUS_TRIAL) {
+                        // ===== TRIAL MODE =====
+                        $existing->status            = self::STATUS_TRIAL;
+                        $existing->billing_record_id = null;
 
-                        $existing->status = self::STATUS_ACTIVE;
+                        $existing->trial_start_at   = $now;
+                        $existing->trial_end_at     = $now->copy()->addDays(7);
+
+                        $existing->start_at         = $now;
+                        $existing->next_billing_at  = $existing->trial_end_at->copy();
+                        $existing->expires_at       = $existing->trial_end_at->copy();
 
                         $existing->renew_attempts = 0;
                         $existing->renew_next_attempt_at = null;
                         $existing->renew_last_error = null;
+                        $existing->past_due_at = null;
+                        $existing->grace_until = null;
 
+                    } else {
+                        // ===== PAID MODE =====
+                        $existing->status            = self::STATUS_ACTIVE;
+                        $existing->billing_record_id = $billingRecordId;
+
+                        $existing->trial_start_at = null;
+                        $existing->trial_end_at   = null;
+
+                        $existing->start_at = $now;
+
+                        $existing->next_billing_at = match (self::normalizePlan($subscriptionPlan)) {
+                            self::PLAN_MONTHLY => $now->copy()->addMonth(),
+                            self::PLAN_ANNUAL  => $now->copy()->addYear(),
+                            default            => $now->copy()->addMonth(),
+                        };
+                        $existing->expires_at = $existing->next_billing_at->copy();
+
+                        $existing->renew_attempts = 0;
+                        $existing->renew_next_attempt_at = null;
+                        $existing->renew_last_error = null;
                         $existing->past_due_at = null;
                         $existing->grace_until = null;
                     }
 
-
-                    if ($subscriptionStatus === self::STATUS_TRIAL) {
-                        $existing->trial_start_at   = $now;
-                        $existing->trial_end_at     = $now->copy()->addDays(7);
-                        $existing->next_billing_at  = $now->copy()->addDays(7);
-                        $existing->expires_at       = $now->copy()->addDays(7);
-
-                        // trial: amount = price(plan) (чардж будет позже)
-                        $existing->amount = (float)(self::PRICES[$subscriptionType][$subscriptionPlan] ?? 0.00);
-                    } else {
-                        $existing->next_billing_at = $existing->calculateNextBillingDate();
-                        $existing->expires_at      = $existing->calculateExpireDate();
-                        $existing->amount          = (float)(self::PRICES[$subscriptionType][$subscriptionPlan] ?? 0.00);
-                    }
-
+                    // Amount always follows plan price (trial тоже)
+                    $existing->amount = (float)(self::PRICES[$subscriptionType][$subscriptionPlan] ?? 0.00);
 
                     $existing->currency = 'USD';
 
@@ -402,7 +454,13 @@ class Subscription extends Model
                         $existing->payment_gateway_id = $gatewayId;
                     }
 
-                    $existing->notes = "Subscription updated after unique race, linked to billing #{$billingRecordId}";
+                    if ($subscriptionStatus === self::STATUS_TRIAL) {
+                        $existing->notes = 'Trial activated (race)';
+                    } else {
+                        $existing->notes = $billingRecordId
+                            ? "Subscription updated after unique race, linked to billing #{$billingRecordId}"
+                            : "Subscription updated after unique race (billing id missing)";
+                    }
 
                     $existing->save();
 
@@ -467,9 +525,20 @@ class Subscription extends Model
             $this->next_billing_at = $now->copy()->addDays(7);
             $this->expires_at      = $now->copy()->addDays(7);
         } else {
-            $this->next_billing_at = $this->calculateNextBillingDate();
-            $this->expires_at      = $this->calculateExpireDate();
+            // PAID: clear trial fields and anchor from now
+            $this->trial_start_at = null;
+            $this->trial_end_at   = null;
+
+            $this->start_at = $now;
+
+            $this->next_billing_at = match (self::normalizePlan($this->plan)) {
+                self::PLAN_MONTHLY => $now->copy()->addMonth(),
+                self::PLAN_ANNUAL  => $now->copy()->addYear(),
+                default            => $now->copy()->addMonth(),
+            };
+            $this->expires_at = $this->next_billing_at->copy();
         }
+
 
         // Common fields
         $this->cancelled_at = null;
