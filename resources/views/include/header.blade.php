@@ -15,7 +15,7 @@
         </div>
         <div class="dropdown-menu">
           @auth
-            <a href="https://getwab.com/fpds/query" class="dropdown-item">FPDS Query</a>
+            <a href="https://www.getwab.com/fpds/query" class="dropdown-item">FPDS Query</a>
             <a href="{{ route('library')}}" class="dropdown-item">FPDS Reports Library</a>
           @else
             <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>
@@ -29,7 +29,7 @@
       <div class="menu-item-wrapper">
         <div class="menu-item">
           @auth
-            <a href="https://getwab.com/fpds/query" class="menu-text">FPDS Query</a>
+            <a href="https://www.getwab.com/fpds/query" class="menu-text">FPDS Query</a>
           @else
             <a href="{{ route('products.fpds-query')}}" class="menu-text">FPDS Query</a>
           @endauth
@@ -105,7 +105,7 @@
     </div>
     <div class="mobile-submenu">
       @auth
-        <a href="https://getwab.com/fpds/query" class="mobile-submenu-item">FPDS Query</a>
+        <a href="https://www.getwab.com/fpds/query" class="mobile-submenu-item">FPDS Query</a>
         <a href="{{ route('library')}}" class="mobile-submenu-item">FPDS Reports Library</a>
       @else
         <a href="{{ route('products.fpds-query')}}" class="mobile-submenu-item">FPDS Query</a>
@@ -117,7 +117,7 @@
     {{-- Wnen FPDS Reparts is NOT ready --}}
     <div class="mobile-menu-item">
       @auth
-        <a href="https://getwab.com/fpds/query">FPDS Query</a>
+        <a href="https://www.getwab.com/fpds/query">FPDS Query</a>
       @else
         <a href="{{ route('products.fpds-query')}}">FPDS Query</a>
       @endauth 
@@ -173,7 +173,7 @@
         </div>
         <div class="dropdown-menu">
           @auth
-            <a href="https://getwab.com/fpds/query" class="dropdown-item">FPDS Query</a>
+            <a href="https://www.getwab.com/fpds/query" class="dropdown-item">FPDS Query</a>
             <a href="{{ route('library')}}" class="dropdown-item">FPDS Reports Library</a>
           @else
             <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>
@@ -187,7 +187,7 @@
       <div class="menu-item-wrapper-fixed">
         <div class="menu-item-fixed">
           @auth
-            <a href="https://getwab.com/fpds/query" class="dropdown-item">FPDS Query</a>
+            <a href="https://www.getwab.com/fpds/query" class="dropdown-item">FPDS Query</a>
           @else
             <a href="{{ route('products.fpds-query')}}" class="dropdown-item">FPDS Query</a>
           @endauth 

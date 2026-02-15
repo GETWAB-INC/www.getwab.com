@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Subscription;
+use App\Models\User;
+use Carbon\Carbon;
 
 class MainController extends Controller
 {
@@ -44,19 +47,53 @@ class MainController extends Controller
         return view('article');
     }
 
-    public function mail()
-    {
-        $user = (object) [
-            'id'   => 123,
-            'name' => 'John Doe',
-            
-        ];
 
-        $token = 'fake-verification-token-123456';
-        $url = 'https://www.getwab.com/';
 
-        return view('emails.reset-password', compact('user', 'token', 'url'));
-    }
+public function mail()
+{
+    // Текущий пользователь (пример)
+    $user = (object) [
+        'id'   => 21,
+        'name' => 'John Doe',
+        'email' => 'john@example.com',
+    ];
+
+    // Текущая подписка (твои данные)
+    $subscription = (object) [
+        'subscription_type' => 'fpds_query',
+        'status'            => 'trial',
+        'plan'              => 'monthly',
+
+        'trial_start_at'    => Carbon::parse('2026-02-15 02:31:01'),
+        'trial_end_at'      => Carbon::parse('2026-02-22 02:31:01'),
+
+        'next_billing_at'   => Carbon::parse('2026-02-22 02:31:01'),
+
+        'amount'            => '1.00',
+        'currency'          => 'USD',
+    ];
+
+    $trialStart = $subscription->trial_start_at->format('M d, Y H:i');
+    $trialEnd   = $subscription->trial_end_at->format('M d, Y H:i');
+    $billAt     = $subscription->next_billing_at->format('M d, Y H:i');
+
+    return view('emails.trial-created', [
+        'user'              => $user,
+        'product_name'      => 'FPDS Query',
+        'subscription_type' => $subscription->subscription_type,
+
+        'plan'              => $subscription->plan,
+        'plan_label'        => ucfirst($subscription->plan),
+
+        'trial_start_at'    => $trialStart,
+        'trial_end_at'      => $trialEnd,
+        'next_billing_at'   => $billAt,
+
+        'amount'            => $subscription->amount,
+        'currency'          => $subscription->currency,
+    ]);
+}
+
 
     public function adminer()
     {

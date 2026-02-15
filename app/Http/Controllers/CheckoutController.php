@@ -14,6 +14,9 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Throwable;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TrialCreated;
+
 
 class CheckoutController extends Controller
 {
@@ -1020,6 +1023,8 @@ class CheckoutController extends Controller
 
 
                     $messagesOut = array_merge($pmResult['messages'] ?? [], $subResult['messages'] ?? []);
+                    $trialSubscription = $subResult['trial_subscription'] ?? null;
+
                 }
 
                 // =========================
@@ -1087,13 +1092,98 @@ class CheckoutController extends Controller
 
                 Log::channel('billing')->info('Billing finalize: commit', $ctx);
 
-                return ['success' => true, 'messagesOut' => $messagesOut];
+                return [
+                    'success' => true,
+                    'messagesOut' => $messagesOut,
+                    'trial_subscription' => $trialSubscription ?? null,
+                ];
+
             });
+
+            // =========================================================
+            // AFTER COMMIT: Notification Outbox (exactly-once)
+            // =========================================================
+            if ($flow === 'token_create' && !empty($result['trial_subscription'])) {
+
+                $trialSub = $result['trial_subscription'];
+                $eventKey = 'trial_created:sub:' . (int)$trialSub->id;
+
+                $emailEventId = null;
+
+                // 1) INSERT outbox row (idempotency guard by UNIQUE(event_key))
+                try {
+                    $emailEventId = DB::table('email_events')->insertGetId([
+                        'user_id'         => (int)$trialSub->user_id,
+                        'subscription_id' => (int)$trialSub->id,
+                        'event_key'       => $eventKey,
+                        'type'            => 'trial_created',
+                        'status'          => 'queued',
+                        'attempts'        => 0,
+                        'sent_at'         => null,
+                        'last_error'      => null,
+                        'payload'         => json_encode([
+                            'subscription_id' => (int)$trialSub->id,
+                            'subscription_type' => (string)$trialSub->subscription_type,
+                            'plan' => (string)$trialSub->plan,
+                            'trial_start_at' => (string)$trialSub->trial_start_at,
+                            'trial_end_at' => (string)$trialSub->trial_end_at,
+                        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                        'created_at'      => now(),
+                        'updated_at'      => now(),
+                    ]);
+                } catch (\Throwable $e) {
+                    // Duplicate (SQLSTATE 23000) => event already exists => do NOT send again
+                    if ((string)$e->getCode() !== '23000') {
+                        Log::channel('billing')->error('email_events insert failed', $ctx + [
+                            'event_key' => $eventKey,
+                            'exception' => get_class($e),
+                            'message'   => $e->getMessage(),
+                        ]);
+                    }
+                    $emailEventId = null;
+                }
+
+                // 2) Send email ONLY if outbox row was inserted
+                if ($emailEventId) {
+                    try {
+                        DB::table('email_events')->where('id', $emailEventId)->update([
+                            'attempts'   => DB::raw('attempts + 1'),
+                            'updated_at' => now(),
+                        ]);
+
+                        $u = User::find((int)$trialSub->user_id);
+                        if ($u && $u->email) {
+                            Mail::to($u->email)->send(new TrialCreated($u, $trialSub));
+                        }
+
+                        DB::table('email_events')->where('id', $emailEventId)->update([
+                            'status'     => 'sent',
+                            'sent_at'    => now(),
+                            'last_error' => null,
+                            'updated_at' => now(),
+                        ]);
+                    } catch (\Throwable $mailEx) {
+                        DB::table('email_events')->where('id', $emailEventId)->update([
+                            'status'     => 'failed',
+                            'last_error' => mb_substr($mailEx->getMessage(), 0, 2000),
+                            'updated_at' => now(),
+                        ]);
+
+                        Log::channel('billing')->error('TrialCreated email send failed', $ctx + [
+                            'event_key' => $eventKey,
+                            'mail_exception' => get_class($mailEx),
+                            'mail_message' => $mailEx->getMessage(),
+                        ]);
+                        // billing НЕ трогаем
+                    }
+                }
+            }
 
             return view('thank-you', [
                 'messages' => $result['messagesOut'],
                 'data' => $dataForView,
             ]);
+
 
         } catch (Throwable $e) {
 

@@ -502,6 +502,7 @@ class BillingService
 
                 $messages = [];
                 $processedAny = false;
+                $trialSubscription = null;
 
                 foreach ($keys as $key) {
                     $data = $payloads[$key] ?? null;
@@ -551,7 +552,7 @@ class BillingService
                         $data['payment_gateway_id'] = $gwId;
                     }
 
-                    Subscription::store($data);
+                    $trialSubscription = Subscription::store($data);
 
                     $messages[] = "Trial subscription '{$key}' created successfully (no billing record).";
                 }
@@ -560,7 +561,12 @@ class BillingService
                     return ['success' => false, 'messages' => ['No trial subscription payload found in pending context.']];
                 }
 
-                return ['success' => true, 'messages' => $messages];
+                return [
+                    'success' => true,
+                    'messages' => $messages,
+                    'trial_subscription' => $trialSubscription,
+                ];
+
             });
         } catch (\Throwable $e) {
             Log::channel('checkout')->error('processTrialSubscriptions failed', [
