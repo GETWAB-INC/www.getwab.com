@@ -1152,9 +1152,32 @@ class CheckoutController extends Controller
                         ]);
 
                         $u = User::find((int)$trialSub->user_id);
-                        if ($u && $u->email) {
-                            Mail::to($u->email)->send(new TrialCreated($u, $trialSub));
+
+                        if (!$u || !$u->email) {
+
+                            Log::channel('billing')->warning('TrialCreated email skipped: user/email missing', [
+                                'subscription_id' => (int)$trialSub->id,
+                                'user_id'         => (int)$trialSub->user_id,
+                                'event_key'       => $eventKey,
+                            ]);
+
+                            throw new \RuntimeException('User email not found for TrialCreated');
                         }
+
+                        Log::channel('billing')->info('TrialCreated email sending', [
+                            'subscription_id' => (int)$trialSub->id,
+                            'user_id'         => (int)$trialSub->user_id,
+                            'event_key'       => $eventKey,
+                            'email'           => $u->email,
+                        ]);
+
+                        Mail::to($u->email)->send(new TrialCreated($u, $trialSub));
+
+                        Log::channel('billing')->info('TrialCreated email sent successfully', [
+                            'subscription_id' => (int)$trialSub->id,
+                            'user_id'         => (int)$trialSub->user_id,
+                            'event_key'       => $eventKey,
+                        ]);
 
                         DB::table('email_events')->where('id', $emailEventId)->update([
                             'status'     => 'sent',
@@ -1162,6 +1185,8 @@ class CheckoutController extends Controller
                             'last_error' => null,
                             'updated_at' => now(),
                         ]);
+
+
                     } catch (\Throwable $mailEx) {
                         DB::table('email_events')->where('id', $emailEventId)->update([
                             'status'     => 'failed',
