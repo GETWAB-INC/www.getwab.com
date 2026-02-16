@@ -168,8 +168,29 @@ class SubscriptionController extends Controller
         if ($currentPlan === $newPlan) {
             // CASE 1: same plan
             try {
+                // If user cancelled during an active trial window -> restore TRIAL (do NOT reset dates)
+                if (
+                    $subscription->isFpdsQuerySubscription()
+                    && $subscription->trial_end_at !== null
+                    && now()->lte($subscription->trial_end_at)
+                    && $subscription->billing_record_id === null
+                ) {
+                    $subscription->update([
+                        'status'         => Subscription::STATUS_TRIAL,
+                        'cancelled_at'   => null,
+                        'next_billing_at'=> $subscription->trial_end_at,
+                        'expires_at'     => $subscription->trial_end_at,
+                        'updated_at'     => now(),
+                    ]);
+
+                    return redirect()->back()->withSuccess('Trial restored successfully');
+                }
+
+                // Otherwise restore as ACTIVE (paid restore)
                 $subscription->updateSubscription(['status' => Subscription::STATUS_ACTIVE]);
+
                 return redirect()->back()->withSuccess('Subscription restored successfully');
+                
             } catch (\Exception $e) {
                 Log::error('Subscription restore failed: ' . $e->getMessage());
                 return redirect()->back()->withErrors(['subscription' => 'Failed to restore subscription']);
